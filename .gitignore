@@ -1,0 +1,5 @@
+.vscode/
+__pycache__
+tools/otp_info.h
+*.image
+*.bin
