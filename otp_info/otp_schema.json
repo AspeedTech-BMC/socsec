@@ -241,7 +241,7 @@
                     "type": "string",
                     "pattern": "0[xX][0-9a-fA-F]+"
                 },
-                "Enable patch code": {
+                "Disable patch code": {
                     "type": "boolean"
                 }
             }

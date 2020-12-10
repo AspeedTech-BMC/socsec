@@ -140,7 +140,7 @@
         "info": "SHA mode : {}"
     },
     {
-        "key": "Enable patch code",
+        "key": "Disable patch code",
         "type": "boolean",
         "dw_offset": 0,
         "bit_offset": 14,
