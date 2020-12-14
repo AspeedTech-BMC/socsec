@@ -84,7 +84,7 @@ make_otp() {
 	local rot_mode=$3
 
 	set +u
-	if [ "$1" = modegcm ]
+	if [ "$rot_mode" = modegcm ]
 	then
 		local otp_slug=$(make_slug $soc $rev $rot_mode)
 	else
@@ -566,6 +566,14 @@ exercise_soc_revs() {
 	done
 }
 
+compare_results() {
+	find tests/data/reference -type f | sort | while read R
+	do
+		G=tests/data/generated/$(echo $R | sed 's|tests/data/reference/||')
+		cmp $R $G
+	done
+}
+
 run() {
 	rm -rf tests/data/generated
 
@@ -577,6 +585,8 @@ run() {
 	exercise_sv_chain_image
 	exercise_signing_helpers
 	exercise_soc_revs
+
+	compare_results
 }
 
 report() {
