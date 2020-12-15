@@ -3,7 +3,7 @@
  * Do not edit it.
  */
 
-#define OTP_INFO_VER		"1.0.0"
+#define OTP_INFO_VER		"1.0.1"
 #define OTP_REG_RESERVED	-1
 #define OTP_REG_VALUE		-2
 #define OTP_REG_VALID_BIT	-3
@@ -46,6 +46,7 @@ static const struct otpstrap_info ast1030a0_strap_info[] = {
 	{ 7, 3, 5, "CPU Frequency : 800MHz" },
 	{ 7, 3, 6, "CPU Frequency : 800MHz" },
 	{ 7, 3, 7, "CPU Frequency : 800MHz" },
+	{ 10, 2, 0, "HCLK ratio AXI:AHB = default" },
 	{ 10, 2, 1, "HCLK ratio AXI:AHB = 2:1" },
 	{ 10, 2, 2, "HCLK ratio AXI:AHB = 3:1" },
 	{ 10, 2, 3, "HCLK ratio AXI:AHB = 4:1" },
@@ -164,6 +165,7 @@ static const struct otpstrap_info a0_strap_info[] = {
 	{ 7, 2, 1, "CPU Frequency : 800MHz" },
 	{ 7, 2, 2, "CPU Frequency : 1.2GHz" },
 	{ 7, 2, 3, "CPU Frequency : 1.4GHz" },
+	{ 10, 2, 0, "HCLK ratio AXI:AHB = default" },
 	{ 10, 2, 1, "HCLK ratio AXI:AHB = 2:1" },
 	{ 10, 2, 2, "HCLK ratio AXI:AHB = 3:1" },
 	{ 10, 2, 3, "HCLK ratio AXI:AHB = 4:1" },
@@ -286,6 +288,7 @@ static const struct otpstrap_info a1_strap_info[] = {
 	{ 7, 3, 5, "CPU Frequency : 800MHz" },
 	{ 7, 3, 6, "CPU Frequency : 800MHz" },
 	{ 7, 3, 7, "CPU Frequency : 800MHz" },
+	{ 10, 2, 0, "HCLK ratio AXI:AHB = default" },
 	{ 10, 2, 1, "HCLK ratio AXI:AHB = 2:1" },
 	{ 10, 2, 2, "HCLK ratio AXI:AHB = 3:1" },
 	{ 10, 2, 3, "HCLK ratio AXI:AHB = 4:1" },
@@ -408,6 +411,7 @@ static const struct otpstrap_info a2_strap_info[] = {
 	{ 7, 3, 5, "CPU Frequency : 800MHz" },
 	{ 7, 3, 6, "CPU Frequency : 800MHz" },
 	{ 7, 3, 7, "CPU Frequency : 800MHz" },
+	{ 10, 2, 0, "HCLK ratio AXI:AHB = default" },
 	{ 10, 2, 1, "HCLK ratio AXI:AHB = 2:1" },
 	{ 10, 2, 2, "HCLK ratio AXI:AHB = 3:1" },
 	{ 10, 2, 3, "HCLK ratio AXI:AHB = 4:1" },

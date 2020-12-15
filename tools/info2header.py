@@ -25,7 +25,7 @@ import jstyleson
 import sys
 import os
 
-INFO_VER = "1.0.0"
+INFO_VER = "1.0.1"
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))+'/'
 INFO_DIR = ROOT_DIR + '../otp_info/'
 OTP_INFO = [
