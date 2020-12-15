@@ -325,32 +325,6 @@ def rsa_encrypt(rsa_key_file, src_bin, order='little', randfunc=None):
     return src_enc
 
 
-def rsa_decrypt(key_type, rsa_key_file, src_bin, order='little'):
-    with open(rsa_key_file, 'rb') as f:
-        key_bin = f.read()
-        f.close()
-    rsa_key = RSA.importKey(key_bin)
-
-    src_bin = bytearray(src_bin)
-    if order == 'little':
-        src_bin.reverse()
-    if key_type == 'public':
-        cipher = Cipher_pkcs1_v1_5.new(rsa_key)
-        src_enc = cipher.decrypt(src_bin, "")
-    elif key_type == 'private':
-        t = RSA.construct((rsa_key.n, rsa_key.d, rsa_key.e))
-        cipher = Cipher_pkcs1_v1_5.new(t)
-        src_enc = cipher.decrypt(src_bin, "")
-    src_enc = bytearray(src_enc)
-    if order == 'little':
-        src_enc.reverse()
-    key_bit_length = bitarray(bin(rsa_key.n)[2:]).length()
-    key_byte_length = int((key_bit_length + 7) / 8)
-    if src_enc.__len__() < key_byte_length:
-        src_enc = src_enc + bytearray(key_byte_length - src_enc.__len__())
-    return src_enc
-
-
 def insert_bytearray(src, dst, offset):
     if offset+src.__len__() > dst.__len__():
         dst.extend(bytearray(offset-dst.__len__()+src.__len__()))
@@ -511,14 +485,6 @@ class Sec(object):
                                     enc_offset, aes_data_offset, aes_key,
                                     rsa_aes_key_path, alg_data,
                                     sign_image_size, key_in_otp):
-        # if not key_in_otp:
-        #     rsa_key_length = alg_data.signature_num_bytes
-        #     key_obj = sec_image[aes_data_offset:aes_data_offset + rsa_key_length]
-        #     aes_object = rsa_decrypt(
-        #         'public', rsa_aes_key_path, bytes(key_obj))
-        #     aes_key = bytes(aes_object[0:0x20])
-        #     aes_iv = bytes(aes_object[0x20:0x30])
-        # else:
         aes_iv = sec_image[aes_data_offset:aes_data_offset+16]
 
         ctr = Counter.new(128, initial_value=int.from_bytes(
