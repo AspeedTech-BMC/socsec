@@ -108,6 +108,10 @@
         "type": "string",
         "value": [
             {
+                "value": "default",
+                "bit": 0
+            },
+            {
                 "value": "2:1",
                 "bit": 1
             },
