@@ -1232,7 +1232,20 @@ class SecureBootVerify(object):
                          signature_num_bytes, public_key_num_bytes), \
             header_offset, retire_list
 
-    def parse_data(self, alg_data, data_region, retire_list):
+    def parse_data(self, info_struct, alg_data, data_region, retire_list):
+        if info_struct['version'] == 'A0':
+            type_lookup = {0x0: AES_OEM,
+                           0x1: AES_VAULT,
+                           0x8: RSA_OEM,
+                           0xa: RSA_SOC_PUB,
+                           0xe: RSA_SOC_PRI}
+        else:
+            type_lookup = {0x1: AES_VAULT,
+                           0x2: AES_OEM,
+                           0x8: RSA_OEM,
+                           0xa: RSA_SOC_PUB,
+                           0xe: RSA_SOC_PRI}
+
         key_list = []
         find_last = 0
         for i in range(16):
@@ -1241,7 +1254,7 @@ class SecureBootVerify(object):
             kl['ID'] = h & 0x7
             kl['RETIRE'] = retire_list[kl['ID']]
             kl['OFFSET'] = ((h >> 3) & 0x3ff) << 3
-            kl['TYPE'] = (h >> 14) & 0xf
+            kl['TYPE'] = type_lookup[(h >> 14) & 0xf]
             kl['PAR'] = (h >> 18) & 0x3
             key_list.append(kl)
             if h & (1 << 13):
@@ -1449,7 +1462,8 @@ class SecureBootVerify(object):
         alg_data, header_offset, retire_list = self.parse_config(soc_version,
                                                                  config_region)
 
-        key_list = self.parse_data(alg_data, data_region, retire_list)
+        key_list = self.parse_data(info_struct, alg_data, data_region,
+                                   retire_list)
         header = sec_image[header_offset:header_offset +
                            self.sec.ROT_HEADER_SIZE]
         (aes_data_offset, enc_offset, sign_image_size, signature_offset,
