@@ -84,7 +84,7 @@ class ECC (object):
     def do_ecc(self, data: bytearray) -> bytearray:
         result = bytearray(1024)
         offset = 0
-        for cursor in range(0, data.__len__(), 8):
+        for cursor in range(0, len(data), 8):
             eight_bytes = data[cursor:cursor+8]
             bits = self.byte2bits(eight_bytes)
             tmp = [0, 0, 0, 0, 0, 0, 0, 0]
@@ -128,11 +128,11 @@ def load_file(file_path: str):
 
 def dw_hex_to_bin(dw_hex_bytes: bytes):
     dw_hex_bytearray = bytearray(dw_hex_bytes.replace(b'\n', b''))
-    if dw_hex_bytearray.__len__() % 8 != 0:
+    if len(dw_hex_bytearray) % 8 != 0:
         raise ValueError("input string is not dw aligned")
 
     bin_array = bytearray()
-    for i in range(0, dw_hex_bytearray.__len__(), 8):
+    for i in range(0, len(dw_hex_bytearray), 8):
         dw_string = dw_hex_bytearray[i:i+8]
         dw_bytes = bytearray.fromhex(dw_string.decode())
         dw_bytes.reverse()
@@ -542,18 +542,18 @@ class OTP(object):
 
     def genDataMask(self, data_region_ignore, src, offset, ecc_region_enable, data_region_size, ecc_region_offset):
         if ecc_region_enable:
-            if (offset + src.__len__() - 1 >= ecc_region_offset):
+            if (offset + len(src) - 1 >= ecc_region_offset):
                 raise OtpError("Data region is out off range")
             start = int(offset / 8)
-            end = int((offset + src.__len__() - 1) / 8)
+            end = int((offset + len(src) - 1) / 8)
             for i in range(start, end + 1):
                 data_region_ignore[ecc_region_offset+i] = 0
         else:
-            if (offset + src.__len__() >= data_region_size):
+            if (offset + len(src) >= data_region_size):
                 raise OtpError("Data region is out off range")
 
         start = offset
-        end = offset + src.__len__()
+        end = offset + len(src)
         for i in range(start, end):
             if data_region_ignore[i] == 0:
                 raise OtpError("Data region is overlapping")
@@ -671,7 +671,7 @@ class OTP(object):
                 tmp.setall(False)
                 config_region_ignore[offset:offset+bit_length] = tmp
                 config_region[offset:offset+bit_length] = tmp
-                config_region[offset:offset+bit_value.__len__()] = bit_value
+                config_region[offset:offset+len(bit_value)] = bit_value
             elif info['type'] == 'hex':
                 dw_offset = info['dw_offset']
                 bit_offset = info['bit_offset']
@@ -687,7 +687,7 @@ class OTP(object):
                 tmp.setall(False)
                 config_region_ignore[offset:offset+bit_length] = tmp
                 config_region[offset:offset+bit_length] = tmp
-                config_region[offset:offset+bit_value.__len__()] = bit_value
+                config_region[offset:offset+len(bit_value)] = bit_value
 
             elif info['type'] == 'bit_shift':
                 dw_offset = info['dw_offset']
@@ -858,7 +858,7 @@ class OTP(object):
             else:
                 rsa_key_order = 'little'
 
-            data_size = data_region.__len__() + data_region_ignore.__len__()
+            data_size = len(data_region) + len(data_region_ignore)
             image_size = self.otp_info.HEADER_SIZE + data_size
             image_info = image_size | self.otp_info.INC_DATA
             image_info_all = image_info_all | self.otp_info.INC_DATA
@@ -902,7 +902,7 @@ class OTP(object):
                 otp_config['config_region'], config_info,
                 otp_info['config_region_size'])
 
-            config_size = config_region.__len__() + config_region_ignore.__len__()
+            config_size = len(config_region) + len(config_region_ignore)
             image_size = self.otp_info.HEADER_SIZE + config_size
             image_info = image_size | self.otp_info.INC_CONF
             image_info_all = image_info_all | self.otp_info.INC_CONF
@@ -938,8 +938,8 @@ class OTP(object):
                     otp_config['otp_strap'], strap_info,
                     otp_info['otp_strap_bit_size'])
 
-            strap_size = otp_strap.__len__() + otp_strap_reg_protect.__len__() + \
-                otp_strap_protect.__len__() + otp_strap_ignore.__len__()
+            strap_size = len(otp_strap) + len(otp_strap_reg_protect) + \
+                len(otp_strap_protect) + len(otp_strap_ignore)
             image_size = self.otp_info.HEADER_SIZE + strap_size
             image_info = image_size | self.otp_info.INC_STRAP
             image_info_all = image_info_all | self.otp_info.INC_STRAP
