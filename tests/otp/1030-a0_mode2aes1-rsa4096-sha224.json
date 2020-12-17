@@ -1,6 +1,6 @@
 {
     "name": "1030-a0_mode2aes1-rsa4096-sha224",
-    "version": "A0",
+    "version": "1030A0",
     "data_region": {
         "ecc_region": true,
         "key": [

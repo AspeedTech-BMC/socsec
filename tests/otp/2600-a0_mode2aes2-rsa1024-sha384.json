@@ -8,11 +8,13 @@
                 "types": "aes_vault",
                 "key_bin": "aes-vault0.bin",
                 "key_bin2": "aes-vault1.bin",
+                "iv_bin": "aes-iv.bin",
                 "offset": "0x40"
             },
             {
                 "types": "rsa_priv_aes",
                 "key_pem": "rsa1024.pem",
+                "iv_bin": "aes-iv.bin",
                 "offset": "0x80"
             },
             {

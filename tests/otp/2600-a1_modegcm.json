@@ -1,6 +1,6 @@
 {
-    "name": "1030-a0_mode2aes2-rsa4096-sha224",
-    "version": "1030A0",
+    "name": "modegcm",
+    "version": "A1",
     "data_region": {
         "ecc_region": true,
         "key": [
@@ -11,23 +11,16 @@
                 "offset": "0x40"
             },
             {
-                "types": "rsa_priv_aes",
-                "key_pem": "rsa4096.pem",
-                "offset": "0x80"
-            },
-            {
-                "types": "rsa_pub_oem",
-                "key_pem": "rsa4096.pub.pem",
-                "offset": "0x480",
+                
+                "types": "aes_oem",
+                "key_bin": "aes-gcm.bin",
+                "offset": "0x80",
                 "number_id": 0
             }
         ]
     },
     "config_region": {
-        "Secure Boot Mode": "Mode_2",
-        "Secure crypto RSA length": "RSA4096",
-        "Hash mode": "SHA224",
-        "Enable image encryption": true
+        "Secure Boot Mode": "Mode_GCM"
     },
     "otp_strap": {
         "Enable secure boot": {
