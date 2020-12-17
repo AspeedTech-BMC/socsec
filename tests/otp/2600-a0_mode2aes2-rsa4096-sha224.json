@@ -1,0 +1,51 @@
+{
+    "name": "2600-a0_mode2aes2-rsa4096-sha224",
+    "version": "A0",
+    "data_region": {
+        "ecc_region": true,
+        "key": [
+            {
+                "types": "aes_vault",
+                "key_bin": "aes-vault0.bin",
+                "key_bin2": "aes-vault1.bin",
+                "offset": "0x40"
+            },
+            {
+                "types": "rsa_priv_aes",
+                "key_pem": "rsa4096.pem",
+                "offset": "0x80"
+            },
+            {
+                "types": "rsa_pub_oem",
+                "key_pem": "rsa4096.pub.pem",
+                "offset": "0x480",
+                "number_id": 0
+            }
+        ]
+    },
+    "config_region": {
+        "Secure Boot Mode": "Mode_2",
+        "Secure crypto RSA length": "RSA4096",
+        "Hash mode": "SHA224",
+        "Enable image encryption": true
+    },
+    "otp_strap": {
+        "Enable secure boot": {
+            "value": true,
+            "otp_protect": false,
+            "ignore": false
+        },
+        "CPU frequency": {
+            "value": "1.2GHz",
+            "otp_protect": false,
+            "reg_protect": false,
+            "ignore": false
+        },
+        "Enable boot from uart5": {
+            "value": true,
+            "otp_protect": true,
+            "reg_protect": true,
+            "ignore": true
+        }
+    }
+}
