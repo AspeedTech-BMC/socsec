@@ -246,8 +246,8 @@ def rsa_signature(alg_data, rsa_key_file, src_bin,
         if order == 'little':
             signature.reverse()
 
-    if signature.__len__() < 512:
-        signature = signature + bytearray(512 - signature.__len__())
+    if len(signature) < 512:
+        signature = signature + bytearray(512 - len(signature))
 
     return signature
 
@@ -257,9 +257,9 @@ def rsa_verify(alg_data, rsa_key_file, signature, digest, order='little'):
     if order == 'little':
         rev_signature.reverse()
 
-    if rev_signature.__len__() < alg_data.signature_num_bytes:
+    if len(rev_signature) < alg_data.signature_num_bytes:
         rev_signature = rev_signature + \
-            bytearray(alg_data.signature_num_bytes - rev_signature.__len__())
+            bytearray(alg_data.signature_num_bytes - len(rev_signature))
 
     with open(rsa_key_file, 'rb') as f:
         key_file_bin = f.read()
@@ -286,9 +286,9 @@ def rsa_verify(alg_data, rsa_key_file, signature, digest, order='little'):
     sign_dec = bytearray(sign_dec)
     if order == 'little':
         sign_dec.reverse()
-        sign_dec = sign_dec[:digest.__len__()]
+        sign_dec = sign_dec[:len(digest)]
     else:
-        sign_dec = sign_dec[sign_dec.__len__() - digest.__len__():]
+        sign_dec = sign_dec[len(sign_dec) - len(digest):]
 
     if sign_dec == digest:
         return True
@@ -320,16 +320,16 @@ def rsa_encrypt(rsa_key_file, src_bin, order='little', randfunc=None):
 
     key_bit_length = bitarray(bin(rsa_key.n)[2:]).length()
     key_byte_length = int((key_bit_length + 7) / 8)
-    if src_enc.__len__() < key_byte_length:
-        src_enc = src_enc + bytearray(key_byte_length - src_enc.__len__())
+    if len(src_enc) < key_byte_length:
+        src_enc = src_enc + bytearray(key_byte_length - len(src_enc))
     return src_enc
 
 
 def insert_bytearray(src, dst, offset):
-    if offset+src.__len__() > dst.__len__():
-        dst.extend(bytearray(offset-dst.__len__()+src.__len__()))
+    if offset+len(src) > len(dst):
+        dst.extend(bytearray(offset-len(dst)+len(src)))
 
-    dst[offset:offset+src.__len__()] = src
+    dst[offset:offset+len(src)] = src
 
 
 class OTP_info(object):
@@ -515,7 +515,7 @@ class Sec(object):
         except (ValueError, KeyError):
             raise SecError("gcm verify failed")
 
-        # if image[enc_offset:] != plaintext[:image.__len__()-enc_offset]:
+        # if image[enc_offset:] != plaintext[:len(image)-enc_offset]:
         if image[enc_offset:] != plaintext:
             raise SecError("image decrypt failed")
 
@@ -1301,7 +1301,7 @@ class SecureBootVerify(object):
             if rsa_key_order == 'little':
                 dig = hb[:alg_data.hash_num_bytes]
             else:
-                dig = hb[hb.__len__()-alg_data.hash_num_bytes:]
+                dig = hb[len(hb)-alg_data.hash_num_bytes:]
             if dig == image_hash:
                 v_id = kl['ID']
                 verify_pass = 1
@@ -1665,7 +1665,7 @@ class secTool(object):
 
         args = parser.parse_args(argv[1:])
 
-        if(argv.__len__() == 1):
+        if(len(argv) == 1):
             parser.print_usage()
             sys.exit(1)
         args.func(args)
