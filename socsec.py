@@ -296,7 +296,7 @@ def rsa_verify(alg_data, rsa_key_file, signature, digest, order='little'):
         return False
 
 
-def rsa_encrypt(rsa_key_file, src_bin, order='little'):
+def rsa_encrypt(rsa_key_file, src_bin, order='little', randfunc=None):
     with open(rsa_key_file, 'rb') as f:
         key_bin = f.read()
         f.close()
@@ -308,10 +308,10 @@ def rsa_encrypt(rsa_key_file, src_bin, order='little'):
 
     if rsa_key.has_private():
         t = RSA.construct((rsa_key.n, rsa_key.d, rsa_key.e))
-        cipher = Cipher_pkcs1_v1_5.new(t)
+        cipher = Cipher_pkcs1_v1_5.new(t, randfunc)
         src_enc = cipher.encrypt(src_bin)
     else:
-        cipher = Cipher_pkcs1_v1_5.new(rsa_key)
+        cipher = Cipher_pkcs1_v1_5.new(rsa_key, randfunc)
         src_enc = cipher.encrypt(src_bin)
 
     src_enc = bytearray(src_enc)
@@ -653,7 +653,8 @@ class Sec(object):
                                   sign_image_size, signature_offset,
                                   enc_offset, aes_key, aes_iv, aes_data_offset,
                                   key_in_otp, rsa_aes_key_path, rsa_key_order,
-                                  signing_helper, signing_helper_with_files):
+                                  signing_helper, signing_helper_with_files,
+                                  rsa_aes_randfunc=None):
 
         # encrypt image
         ctr = Counter.new(128, initial_value=int.from_bytes(
@@ -672,7 +673,8 @@ class Sec(object):
             insert_bytearray(aes_key, aes_object, 0)
             insert_bytearray(aes_iv, aes_object, 0x20)
             enc_aes_object = rsa_encrypt(
-                rsa_aes_key_path, bytes(aes_object), order=rsa_key_order)
+                rsa_aes_key_path, bytes(aes_object), order=rsa_key_order,
+                randfunc=rsa_aes_randfunc)
             insert_bytearray(enc_aes_object, image, aes_data_offset)
 
         # sign the image
@@ -806,7 +808,8 @@ class Sec(object):
                               cot_verify_key_path,
                               cot_digest_fd,
                               signing_helper,
-                              signing_helper_with_files):
+                              signing_helper_with_files,
+                              deterministic):
         """Implements the 'make_vbmeta_image' command.
 
         Arguments:
@@ -824,6 +827,7 @@ class Sec(object):
             cot_digest_fd:
             signing_helper: Program which signs a hash and return signature.
             signing_helper_with_files: Same as signing_helper but uses files instead.
+            deterministic: IVs are read from deterministic sources
 
         Raises:
             SecError: If a chained partition is malformed.
@@ -935,7 +939,18 @@ class Sec(object):
                                        rsa_key_order,
                                        signing_helper, signing_helper_with_files)
         elif alg_data.algorithm_type == AES_RSA_SHA:
-            aes_iv = open('/dev/urandom', 'rb').read(16)
+            if deterministic:
+                aes_iv_path = '/dev/zero'
+                # The Cipher_pkcs1_v1_5 infra from pycryptodome==3.9.7 skips
+                # over 0 values returned by the supplied randfunc. Make our
+                # dummy implementation return non-zero values (0xff) instead.
+                def rsa_aes_randfunc(size): return bytes([0xff] * size)
+            else:
+                aes_iv_path = '/dev/urandom'
+                # Use the default randfunc selected by Cipher_pkcs1_v1_5.new()
+                rsa_aes_randfunc = None
+
+            aes_iv = open(aes_iv_path, 'rb').read(16)
 
             if aes_key_fd:
                 aes_key = bytearray(aes_key_fd.read())
@@ -952,9 +967,11 @@ class Sec(object):
                                            key_in_otp, rsa_aes_key_path,
                                            rsa_key_order,
                                            signing_helper,
-                                           signing_helper_with_files)
+                                           signing_helper_with_files,
+                                           rsa_aes_randfunc)
         elif alg_data.algorithm_type == AES_GCM:
-            gcm_aes_iv = open('/dev/urandom', 'rb').read(12)
+            aes_iv_path = '/dev/zero' if deterministic else '/dev/urandom'
+            gcm_aes_iv = open(aes_iv_path, 'rb').read(12)
             gcm_aes_iv = gcm_aes_iv + b"\x00\x00\x00\x01"
 
             if gcm_aes_key_fd:
@@ -1232,7 +1249,20 @@ class SecureBootVerify(object):
                          signature_num_bytes, public_key_num_bytes), \
             header_offset, retire_list
 
-    def parse_data(self, alg_data, data_region, retire_list):
+    def parse_data(self, info_struct, alg_data, data_region, retire_list):
+        if info_struct['version'] == 'A0':
+            type_lookup = {0x0: AES_OEM,
+                           0x1: AES_VAULT,
+                           0x8: RSA_OEM,
+                           0xa: RSA_SOC_PUB,
+                           0xe: RSA_SOC_PRI}
+        else:
+            type_lookup = {0x1: AES_VAULT,
+                           0x2: AES_OEM,
+                           0x8: RSA_OEM,
+                           0xa: RSA_SOC_PUB,
+                           0xe: RSA_SOC_PRI}
+
         key_list = []
         find_last = 0
         for i in range(16):
@@ -1241,7 +1271,7 @@ class SecureBootVerify(object):
             kl['ID'] = h & 0x7
             kl['RETIRE'] = retire_list[kl['ID']]
             kl['OFFSET'] = ((h >> 3) & 0x3ff) << 3
-            kl['TYPE'] = (h >> 14) & 0xf
+            kl['TYPE'] = type_lookup[(h >> 14) & 0xf]
             kl['PAR'] = (h >> 18) & 0x3
             key_list.append(kl)
             if h & (1 << 13):
@@ -1449,7 +1479,8 @@ class SecureBootVerify(object):
         alg_data, header_offset, retire_list = self.parse_config(soc_version,
                                                                  config_region)
 
-        key_list = self.parse_data(alg_data, data_region, retire_list)
+        key_list = self.parse_data(info_struct, alg_data, data_region,
+                                   retire_list)
         header = sec_image[header_offset:header_offset +
                            self.sec.ROT_HEADER_SIZE]
         (aes_data_offset, enc_offset, sign_image_size, signature_offset,
@@ -1545,6 +1576,14 @@ class secTool(object):
                                 metavar='APP',
                                 nargs='?',
                                 default=None,
+                                required=False)
+
+        # UNSAFE: IVs and other input data are read from deterministic sources.
+        # Used to implement the test suite
+        sub_parser.add_argument('--deterministic',
+                                help=argparse.SUPPRESS,
+                                default=False,
+                                action='store_true',
                                 required=False)
 
         enc_group = sub_parser.add_argument_group(
@@ -1674,7 +1713,8 @@ class secTool(object):
                                        args.cot_verify_key,
                                        args.cot_digest,
                                        args.signing_helper,
-                                       args.signing_helper_with_files)
+                                       args.signing_helper_with_files,
+                                       args.deterministic)
 
     def make_sv_chain_image(self, args):
         """Implements the 'make_sv_chain_image' sub-command."""
