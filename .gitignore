@@ -3,3 +3,6 @@ __pycache__
 tools/otp_info.h
 *.image
 *.bin
+*.coverage
+htmlcov
+tests/data/generated/
