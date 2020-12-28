@@ -1370,7 +1370,7 @@ class SecureBootVerify(object):
         if option == 1:
             aes_key = key['AES']
             aes_iv = sec_image[aes_data_offset:aes_data_offset+16]
-        if option in [2, 3]:
+        elif option in [2, 3]:
             rsa_key_length = alg_data.signature_num_bytes
             _key_obj = sec_image[aes_data_offset:aes_data_offset + rsa_key_length]
             key_obj = int.from_bytes(
@@ -1387,6 +1387,8 @@ class SecureBootVerify(object):
             else:
                 aes_key = bytes(aes_object[-0x30:-0x10])
                 aes_iv = bytes(aes_object[-0x10:])
+        else:
+            raise SecError("Cannot find decrypt key.")
 
         ctr = Counter.new(128, initial_value=int.from_bytes(
             aes_iv, byteorder='big'))
