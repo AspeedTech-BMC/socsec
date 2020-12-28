@@ -1347,7 +1347,7 @@ class SecureBootVerify(object):
         return v_id
 
     def mode2_decrypt(self, sec_image, sign_image_size, enc_offset,
-                      aes_data_offset, v_id, alg_data, key_list):
+                      aes_data_offset, v_id, alg_data, key_list, rsa_key_order):
         option = 0
         for kl in key_list:
             if kl['TYPE'] == AES_OEM:
@@ -1374,14 +1374,19 @@ class SecureBootVerify(object):
             rsa_key_length = alg_data.signature_num_bytes
             _key_obj = sec_image[aes_data_offset:aes_data_offset + rsa_key_length]
             key_obj = int.from_bytes(
-                _key_obj, byteorder='little', signed=False)
-            M = int.from_bytes(key['M'], byteorder='little', signed=False)
-            E = int.from_bytes(key['E'], byteorder='little', signed=False)
+                _key_obj, byteorder=rsa_key_order, signed=False)
+            M = int.from_bytes(key['M'], byteorder=rsa_key_order, signed=False)
+            E = int.from_bytes(key['E'], byteorder=rsa_key_order, signed=False)
+
             D = pow(key_obj, E, M)
             aes_object = D.to_bytes(
-                alg_data.signature_num_bytes, byteorder='little', signed=False)
-            aes_key = bytes(aes_object[0:0x20])
-            aes_iv = bytes(aes_object[0x20:0x30])
+                alg_data.signature_num_bytes, byteorder=rsa_key_order, signed=False)
+            if rsa_key_order == 'little':
+                aes_key = bytes(aes_object[0:0x20])
+                aes_iv = bytes(aes_object[0x20:0x30])
+            else:
+                aes_key = bytes(aes_object[-0x30:-0x10])
+                aes_iv = bytes(aes_object[-0x10:])
 
         ctr = Counter.new(128, initial_value=int.from_bytes(
             aes_iv, byteorder='big'))
@@ -1458,7 +1463,8 @@ class SecureBootVerify(object):
             if alg_data.algorithm_type == AES_RSA_SHA:
                 dec_image = self.mode2_decrypt(sec_image, sign_image_size,
                                                enc_offset, aes_data_offset,
-                                               v_id, alg_data, key_list)
+                                               v_id, alg_data, key_list,
+                                               rsa_key_order)
         else:
             dec_image, v_id = \
                 self.modeGCM_verify_n_decrypt(sec_image, sign_image_size,
