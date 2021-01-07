@@ -468,6 +468,90 @@ class OTP(object):
             header |= exp_length << 20
         return header
 
+    def genKeyHeader_a3_big(self, key_config, key_folder):
+        types = key_config['types']
+        offset = int(key_config['offset'], 16)
+        header = 0
+        header |= offset
+
+        if types == 'aes_vault':
+            header |= 1 << 14
+        elif types == 'aes_oem':
+            header |= 2 << 14
+        elif types == 'rsa_pub_oem':
+            header |= 9 << 14
+        elif types == 'rsa_pub_aes':
+            header |= 11 << 14
+        elif types == 'rsa_priv_aes':
+            header |= 13 << 14
+
+        if 'number_id' in key_config:
+            number_id = key_config['number_id']
+            header |= number_id
+
+        if types in ['rsa_pub_oem', 'rsa_pub_aes', 'rsa_priv_aes']:
+            rsa_key_file = key_folder + key_config['key_pem']
+            mod_length = rsa_bit_length(rsa_key_file, 'n')
+            if mod_length == 1024:
+                header |= 0 << 18
+            elif mod_length == 2048:
+                header |= 1 << 18
+            elif mod_length == 3072:
+                header |= 2 << 18
+            elif mod_length == 4096:
+                header |= 3 << 18
+            else:
+                raise ValueError("key_length is not supported")
+
+            if types in ['rsa_pub_oem', 'rsa_pub_aes']:
+                exp_length = rsa_bit_length(rsa_key_file, 'e')
+            else:
+                exp_length = rsa_bit_length(rsa_key_file, 'd')
+            header |= exp_length << 20
+        return header
+    
+    def genKeyHeader_a3_little(self, key_config, key_folder):
+        types = key_config['types']
+        offset = int(key_config['offset'], 16)
+        header = 0
+        header |= offset
+
+        if types == 'aes_vault':
+            header |= 1 << 14
+        elif types == 'aes_oem':
+            header |= 2 << 14
+        elif types == 'rsa_pub_oem':
+            header |= 8 << 14
+        elif types == 'rsa_pub_aes':
+            header |= 10 << 14
+        elif types == 'rsa_priv_aes':
+            header |= 12 << 14
+
+        if 'number_id' in key_config:
+            number_id = key_config['number_id']
+            header |= number_id
+
+        if types in ['rsa_pub_oem', 'rsa_pub_aes', 'rsa_priv_aes']:
+            rsa_key_file = key_folder + key_config['key_pem']
+            mod_length = rsa_bit_length(rsa_key_file, 'n')
+            if mod_length == 1024:
+                header |= 0 << 18
+            elif mod_length == 2048:
+                header |= 1 << 18
+            elif mod_length == 3072:
+                header |= 2 << 18
+            elif mod_length == 4096:
+                header |= 3 << 18
+            else:
+                raise ValueError("key_length is not supported")
+
+            if types in ['rsa_pub_oem', 'rsa_pub_aes']:
+                exp_length = rsa_bit_length(rsa_key_file, 'e')
+            else:
+                exp_length = rsa_bit_length(rsa_key_file, 'd')
+            header |= exp_length << 20
+        return header
+
     def key_to_bytearray_a0(self, key_config, key_folder):
         types = key_config['types']
 
@@ -804,9 +888,10 @@ class OTP(object):
                     order = otp_config['data_region']['rsa_key_order']
             if order == 'little':
                 key_to_bytearray = self.key_to_bytearray_a1
+                genKeyHeader = self.genKeyHeader_a3_little
             else:
                 key_to_bytearray = self.key_to_bytearray_a3_big
-            genKeyHeader = self.genKeyHeader_a1
+                genKeyHeader = self.genKeyHeader_a3_big
         elif otp_config['version'] == '1030A0':
             otp_info = self.otp_info.OTP_INFO['1030A0']
             version = '1030A0'
