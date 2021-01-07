@@ -1225,13 +1225,25 @@ class SecureBootVerify(object):
                            0x8: RSA_OEM,
                            0xa: RSA_SOC_PUB,
                            0xe: RSA_SOC_PRI}
-        else:
+        elif info_struct['version'] in ['A1', 'A2']:
             type_lookup = {0x1: AES_VAULT,
                            0x2: AES_OEM,
                            0x8: RSA_OEM,
                            0xa: RSA_SOC_PUB,
                            0xe: RSA_SOC_PRI}
-
+        elif info_struct['version'] == 'A3':
+            if info_struct['rsa_key_order'] == 'big':
+                type_lookup = {0x1: AES_VAULT,
+                               0x2: AES_OEM,
+                               0x9: RSA_OEM,
+                               0xb: RSA_SOC_PUB,
+                               0xd: RSA_SOC_PRI}
+            else:
+                type_lookup = {0x1: AES_VAULT,
+                               0x2: AES_OEM,
+                               0x8: RSA_OEM,
+                               0xa: RSA_SOC_PUB,
+                               0xc: RSA_SOC_PRI}
         key_list = []
         find_last = 0
         for i in range(16):
