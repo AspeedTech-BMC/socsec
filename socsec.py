@@ -635,7 +635,10 @@ class Sec(object):
         if key_in_otp:
             insert_bytearray(aes_iv, image, aes_data_offset)
         else:
-            aes_object = bytearray(48)
+            if rsa_key_order == 'little':
+                aes_object = bytearray(48)
+            else:
+                aes_object = bytearray(64)
             insert_bytearray(aes_key, aes_object, 0)
             insert_bytearray(aes_iv, aes_object, 0x20)
             enc_aes_object = rsa_encrypt(
@@ -1351,8 +1354,8 @@ class SecureBootVerify(object):
                 aes_key = bytes(aes_object[0:0x20])
                 aes_iv = bytes(aes_object[0x20:0x30])
             else:
-                aes_key = bytes(aes_object[-0x30:-0x10])
-                aes_iv = bytes(aes_object[-0x10:])
+                aes_key = bytes(aes_object[-0x40:-0x20])
+                aes_iv = bytes(aes_object[-0x20:-0x10])
         else:
             raise SecError("Cannot find decrypt key.")
 
