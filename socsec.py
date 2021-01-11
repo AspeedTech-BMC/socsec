@@ -1225,7 +1225,7 @@ class SecureBootVerify(object):
                            0x8: RSA_OEM,
                            0xa: RSA_SOC_PUB,
                            0xe: RSA_SOC_PRI}
-        elif info_struct['version'] in ['A1', 'A2']:
+        elif info_struct['version'] in ['A1', 'A2', '1030A0' ]:
             type_lookup = {0x1: AES_VAULT,
                            0x2: AES_OEM,
                            0x8: RSA_OEM,
@@ -1244,6 +1244,7 @@ class SecureBootVerify(object):
                                0x8: RSA_OEM,
                                0xa: RSA_SOC_PUB,
                                0xc: RSA_SOC_PRI}
+
         key_list = []
         find_last = 0
         for i in range(16):
