@@ -23,10 +23,10 @@
 set -eu
 set -x
 
-: ${OTPTOOL:=./otptool}
-: ${SOCSEC:=./socsec}
+: ${OTPTOOL:=$(which otptool)}
+: ${SOCSEC:=$(which socsec)}
 : ${BL1_IMAGE:=tests/data/bl1.bin}
-: ${RUN:=coverage run -p}
+: ${RUN:=$(which coverage) run -p}
 
 make_slug() {
 	local soc=$1
@@ -591,7 +591,7 @@ run() {
 
 report() {
 	coverage combine -a
-	coverage html --include=otptool.py,socsec.py
+	coverage html --include='*/socsec/otptool.py*,*/socsec/socsec.py,*/socsec/__init__.py'
 }
 
 clean
