@@ -1,0 +1,30 @@
+name: run-tests
+
+# Test master as well once the test suite is merged from the develop branch
+on:
+    push:
+        branches: [ develop ]
+    pull_request:
+        branches: [ develop ]
+
+jobs:
+    run-tests:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+
+            - name: Set up Python 3.9
+              uses: actions/setup-python@v2
+              with:
+                  python-version: 3.9
+
+            - name: Setup test environment
+              run: |
+                  python -m pip install --upgrade pip
+                  pip install -r requirements.txt
+                  python setup.py install
+
+            - name: Run tests
+              run: |
+                  ./run-tests
