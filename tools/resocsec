@@ -39,7 +39,7 @@ def frob_algorithm(algo):
     return algo.replace('-', '_') if algo else algo
 
 
-def secure_bootloader_mode2(args):
+def secure_bootstrap_image_mode2(args):
     sec = socsec.Sec()
     sec.make_secure_bl1_image(args.soc,
                               args.input,
@@ -62,7 +62,7 @@ def secure_bootloader_mode2(args):
                               args.deterministic)
 
 
-def secure_bootloader_mode2aes1(args):
+def secure_bootstrap_image_mode2aes1(args):
     sec = socsec.Sec()
     sec.make_secure_bl1_image(args.soc,
                               args.input,
@@ -85,7 +85,7 @@ def secure_bootloader_mode2aes1(args):
                               args.deterministic)
 
 
-def secure_bootloader_mode2aes2(args):
+def secure_bootstrap_image_mode2aes2(args):
     sec = socsec.Sec()
     sec.make_secure_bl1_image(args.soc,
                               args.input,
@@ -108,7 +108,7 @@ def secure_bootloader_mode2aes2(args):
                               args.deterministic)
 
 
-def secure_bootloader_modegcm(args):
+def secure_bootstrap_image_modegcm(args):
     sec = socsec.Sec()
     sec.make_secure_bl1_image(args.soc,
                               args.input,
@@ -136,8 +136,8 @@ def resocsec():
 
     subparsers = parser.add_subparsers(title='socsec utilities')
 
-    bl1 = subparsers.add_parser('secure-bootloader',
-                                help='Make a signed (and optionally encrypted) bootloader image')
+    bl1 = subparsers.add_parser('secure-bootstrap-image',
+                                help='Sign and optionally encrypt the bootstrap (SPL) image')
     bl1.add_argument('--deterministic', default=False, action='store_true',
                      help=argparse.SUPPRESS)
     bl1.add_argument('--rsa-key-endianness', default='little',
@@ -170,7 +170,7 @@ def resocsec():
     # Mode 2
     mode2 = schemes.add_parser('mode2', help='Unencrypted, RSA-signed image')
 
-    mode2.set_defaults(func=secure_bootloader_mode2)
+    mode2.set_defaults(func=secure_bootstrap_image_mode2)
     mode2.add_argument('soc', metavar='SOC', choices=socs,
                        help='The target SoC')
     mode2.add_argument('algorithm', metavar='ALGO', choices=mode2_algos,
@@ -186,7 +186,7 @@ def resocsec():
     mode2aes1 = schemes.add_parser('mode2aes1',
                                    help='AES-encrypted, RSA-signed image (Option 1)')
 
-    mode2aes1.set_defaults(func=secure_bootloader_mode2aes1)
+    mode2aes1.set_defaults(func=secure_bootstrap_image_mode2aes1)
     mode2aes1.add_argument('soc', metavar='SOC', choices=socs,
                            help='The target SoC')
     mode2aes1.add_argument('algorithm', metavar='ALGO', choices=mode2aes_algos,
@@ -210,7 +210,7 @@ def resocsec():
     mode2aes2 = schemes.add_parser('mode2aes2',
                                    help='AES-encrypted, RSA-signed image (Option 2)')
 
-    mode2aes2.set_defaults(func=secure_bootloader_mode2aes2)
+    mode2aes2.set_defaults(func=secure_bootstrap_image_mode2aes2)
     mode2aes2.add_argument('soc', metavar='SOC', choices=socs,
                            help='The target SoC')
     mode2aes2.add_argument('algorithm', metavar='ALGO', choices=mode2aes_algos,
@@ -236,7 +236,7 @@ def resocsec():
     modegcm = schemes.add_parser('modegcm',
                                  help='AES-GCM encrypted-and-authenticated image')
 
-    modegcm.set_defaults(func=secure_bootloader_modegcm,
+    modegcm.set_defaults(func=secure_bootstrap_image_modegcm,
                          algorithm='AES-GCM')
     modegcm.add_argument('soc', metavar='SOC', choices=socs,
                          help='The target SoC')
