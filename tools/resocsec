@@ -143,8 +143,9 @@ def resocsec():
                      help='Rollback protection index')
     bl1.add_argument('--header-offset', type=lambda x: int(x, 0),
                      help='Root-of-Trust header offset')
-    bl1.add_argument('--sign-stream', help='Helper for signing via stdio')
-    bl1.add_argument('--sign-file', help='Helper for signing files')
+    helpers = bl1.add_mutually_exclusive_group()
+    helpers.add_argument('--sign-stream', help='Helper for signing via stdio')
+    helpers.add_argument('--sign-file', help='Helper for signing files')
 
     schemes = bl1.add_subparsers(title='Secure-boot modes')
 
