@@ -35,6 +35,10 @@ mode2aes_algos = list(f'AES-RSA{rsa}-SHA{sha}'
                       for sha in (224, 256, 384, 512))
 
 
+def frob_algorithm(algo):
+    return algo.replace('-', '_') if algo else algo
+
+
 def secure_bootloader_mode2(args):
     sec = socsec.Sec()
     sec.make_secure_bl1_image(args.soc,
@@ -42,7 +46,7 @@ def secure_bootloader_mode2(args):
                               args.rsa_key,
                               None,  # GCM AES key
                               args.output,
-                              args.algorithm.replace('-', '_'),
+                              frob_algorithm(args.algorithm),
                               args.header_offset,
                               args.rollback_index,
                               None,  # Offset of encrypted image
@@ -65,7 +69,7 @@ def secure_bootloader_mode2aes1(args):
                               args.rsa_key,
                               None,  # GCM AES key
                               args.output,
-                              args.algorithm.replace('-', '_'),
+                              frob_algorithm(args.algorithm),
                               args.header_offset,
                               args.rollback_index,
                               args.encrypted_payload_offset,
@@ -88,7 +92,7 @@ def secure_bootloader_mode2aes2(args):
                               args.rsa_key,
                               None,  # GCM AES key
                               args.output,
-                              args.algorithm.replace('-', '_'),
+                              frob_algorithm(args.algorithm),
                               args.header_offset,
                               args.rollback_index,
                               args.encrypted_payload_offset,
@@ -111,7 +115,7 @@ def secure_bootloader_modegcm(args):
                               None,  # RSA private key
                               args.aes_key,
                               args.output,
-                              args.algorithm.replace('-', '_'),
+                              frob_algorithm(args.algorithm),
                               args.header_offset,
                               args.rollback_index,
                               args.encrypted_payload_offset,
