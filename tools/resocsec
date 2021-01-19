@@ -27,63 +27,66 @@ import socsec
 
 socs = ['2600', '1030']
 mode2_algos = list(f'RSA{rsa}-SHA{sha}'
-                            for rsa in (1024, 2048, 3072, 4096)
-                                for sha in (224, 256, 384, 512))
+                   for rsa in (1024, 2048, 3072, 4096)
+                   for sha in (224, 256, 384, 512))
 
 mode2aes_algos = list(f'AES-RSA{rsa}-SHA{sha}'
-                            for rsa in (1024, 2048, 3072, 4096)
-                                for sha in (224, 256, 384, 512))
+                      for rsa in (1024, 2048, 3072, 4096)
+                      for sha in (224, 256, 384, 512))
+
 
 def secure_bootloader_mode2(args):
     sec = socsec.Sec()
     sec.make_secure_bl1_image(args.soc,
                               args.input,
                               args.rsa_key,
-                              None, # GCM AES key
+                              None,  # GCM AES key
                               args.output,
                               args.algorithm.replace('-', '_'),
                               args.header_offset,
                               args.rollback_index,
-                              None, # Offset of encrypted image
-                              None, # AES key
-                              None, # RSA public key to encrypt AES key
-                              False, # Key in OTP
+                              None,  # Offset of encrypted image
+                              None,  # AES key
+                              None,  # RSA public key to encrypt AES key
+                              False,  # Key in OTP
                               args.rsa_key_endianness,
-                              None, # Chain-of-trust algorithm
-                              None, # Chain-of-trust verification key
-                              None, # Chain-of-trust digest
+                              None,  # Chain-of-trust algorithm
+                              None,  # Chain-of-trust verification key
+                              None,  # Chain-of-trust digest
                               args.sign_stream,
                               args.sign_file,
                               args.deterministic)
+
 
 def secure_bootloader_mode2aes1(args):
     sec = socsec.Sec()
     sec.make_secure_bl1_image(args.soc,
                               args.input,
                               args.rsa_key,
-                              None, # GCM AES key
+                              None,  # GCM AES key
                               args.output,
                               args.algorithm.replace('-', '_'),
                               args.header_offset,
                               args.rollback_index,
                               args.encrypted_payload_offset,
                               args.aes_key,
-                              None, # RSA public key to encrypt AES key
-                              True, # Key in OTP
+                              None,  # RSA public key to encrypt AES key
+                              True,  # Key in OTP
                               args.rsa_key_endianness,
-                              None, # Chain-of-trust algorithm
-                              None, # Chain-of-trust verification key
-                              None, # Chain-of-trust digest
+                              None,  # Chain-of-trust algorithm
+                              None,  # Chain-of-trust verification key
+                              None,  # Chain-of-trust digest
                               args.sign_stream,
                               args.sign_file,
                               args.deterministic)
+
 
 def secure_bootloader_mode2aes2(args):
     sec = socsec.Sec()
     sec.make_secure_bl1_image(args.soc,
                               args.input,
                               args.rsa_key,
-                              None, # GCM AES key
+                              None,  # GCM AES key
                               args.output,
                               args.algorithm.replace('-', '_'),
                               args.header_offset,
@@ -91,36 +94,38 @@ def secure_bootloader_mode2aes2(args):
                               args.encrypted_payload_offset,
                               args.aes_key,
                               args.rsa_aes_key,
-                              False, # Key in OTP
+                              False,  # Key in OTP
                               args.rsa_key_endianness,
-                              None, # Chain-of-trust algorithm
-                              None, # Chain-of-trust verification key
-                              None, # Chain-of-trust digest
+                              None,  # Chain-of-trust algorithm
+                              None,  # Chain-of-trust verification key
+                              None,  # Chain-of-trust digest
                               args.sign_stream,
                               args.sign_file,
                               args.deterministic)
+
 
 def secure_bootloader_modegcm(args):
     sec = socsec.Sec()
     sec.make_secure_bl1_image(args.soc,
                               args.input,
-                              None, # RSA private key
+                              None,  # RSA private key
                               args.aes_key,
                               args.output,
                               args.algorithm.replace('-', '_'),
                               args.header_offset,
                               args.rollback_index,
                               args.encrypted_payload_offset,
-                              None, # AES key
-                              None, # RSA public key to encrypt AES key
-                              False, # Key in OTP
+                              None,  # AES key
+                              None,  # RSA public key to encrypt AES key
+                              False,  # Key in OTP
                               args.rsa_key_endianness,
-                              None, # Chain-of-trust algorithm
-                              None, # Chain-of-trust verification key
-                              None, # Chain-of-trust digest
+                              None,  # Chain-of-trust algorithm
+                              None,  # Chain-of-trust verification key
+                              None,  # Chain-of-trust digest
                               args.sign_stream,
                               args.sign_file,
                               args.deterministic)
+
 
 def resocsec():
     parser = argparse.ArgumentParser(description="Really Easy SOCSEC!")
@@ -128,7 +133,7 @@ def resocsec():
     subparsers = parser.add_subparsers(title='socsec utilities')
 
     bl1 = subparsers.add_parser('secure-bootloader',
-               help='Make a signed (and optionally encrypted) bootloader image')
+                                help='Make a signed (and optionally encrypted) bootloader image')
     bl1.add_argument('--deterministic', default=False, action='store_true',
                      help=argparse.SUPPRESS)
     bl1.add_argument('--rsa-key-endianness', default='little',
@@ -160,7 +165,7 @@ def resocsec():
 
     # Mode 2 Option 1
     mode2aes1 = schemes.add_parser('mode2aes1',
-                              help='AES-encrypted, RSA-signed image (Option 1)')
+                                   help='AES-encrypted, RSA-signed image (Option 1)')
 
     mode2aes1.set_defaults(func=secure_bootloader_mode2aes1)
     mode2aes1.add_argument('soc', metavar='SOC', choices=socs,
@@ -184,7 +189,7 @@ def resocsec():
 
     # Mode 2 Option 2
     mode2aes2 = schemes.add_parser('mode2aes2',
-                              help='AES-encrypted, RSA-signed image (Option 2)')
+                                   help='AES-encrypted, RSA-signed image (Option 2)')
 
     mode2aes2.set_defaults(func=secure_bootloader_mode2aes2)
     mode2aes2.add_argument('soc', metavar='SOC', choices=socs,
@@ -210,7 +215,7 @@ def resocsec():
 
     # Mode GCM
     modegcm = schemes.add_parser('modegcm',
-                         help='AES-GCM encrypted-and-authenticated image')
+                                 help='AES-GCM encrypted-and-authenticated image')
 
     modegcm.set_defaults(func=secure_bootloader_modegcm,
                          algorithm='AES-GCM')
@@ -235,6 +240,7 @@ def resocsec():
         args.func(args)
     else:
         parser.print_help()
+
 
 if __name__ == '__main__':
     resocsec()
