@@ -23,7 +23,7 @@
 # Really Easy socsec
 
 import argparse
-import socsec
+from socsec import socsec
 
 socs = ['2600', '1030']
 mode2_algos = list(f'RSA{rsa}-SHA{sha}'
@@ -37,6 +37,19 @@ mode2aes_algos = list(f'AES-RSA{rsa}-SHA{sha}'
 
 def frob_algorithm(algo):
     return algo.replace('-', '_') if algo else algo
+
+
+def secure_chained_images(args):
+    pass
+    sec = socsec.Sec()
+    cot_part = [':'.join(image) for image in args.images]
+    sec.make_sv_chain_image(frob_algorithm(args.algorithm),
+                            cot_part,
+                            args.rollback_index,
+                            "",  # Image relative path: Require full path in args
+                            args.rsa_key_endianness,
+                            args.sign_stream,
+                            args.sign_file)
 
 
 def secure_bootstrap_image_mode2(args):
@@ -135,6 +148,33 @@ def resocsec():
     parser = argparse.ArgumentParser(description="Really Easy SOCSEC!")
 
     subparsers = parser.add_subparsers(title='socsec utilities')
+
+    chained = subparsers.add_parser('secure-chained-images',
+                                    help='Sign the second- (u-boot) and third- (FIT) stage images for secure-boot verification')
+
+    chained.add_argument('--deterministic', default=False, action='store_true',
+                         help=argparse.SUPPRESS)
+    chained.add_argument('--rsa-key-endianness', default='little',
+                         choices=['little', 'big'],
+                         help='Configure RSA key endianness in the OTP')
+    chained.add_argument('--rollback-index', default=0, type=int,
+                         help='Rollback protection index')
+
+    helpers = chained.add_mutually_exclusive_group()
+    helpers.add_argument('--sign-stream', help='Helper for signing via stdio')
+    helpers.add_argument('--sign-file', help='Helper for signing files')
+
+    chained.add_argument('algorithm', metavar='ALGO', choices=mode2_algos,
+                         help='The RSA signing scheme')
+
+    image_help = '''Parameters for signing a chained stage image. Takes 4
+    arguments: the path to the input image, the output path for the signed
+    image, the (private) RSA signing key and the (public) RSA verification
+    key. May be specified multiple times to sign multiple images'''
+    chained.add_argument('--image', dest='images', nargs=4, action='append',
+                         required=True, help=image_help,
+                         metavar=('INPUT', 'OUTPUT', 'SIGN_KEY', 'VERIFY_KEY'))
+    chained.set_defaults(func=secure_chained_images)
 
     bl1 = subparsers.add_parser('secure-bootstrap-image',
                                 help='Sign and optionally encrypt the bootstrap (SPL) image')
