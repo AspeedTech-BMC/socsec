@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 # Copyright (c) 2020 ASPEED Technology Inc.
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -38,6 +36,12 @@ from Crypto.Cipher import AES
 from Crypto.PublicKey import RSA
 from bitarray import bitarray
 from Crypto.Cipher import PKCS1_v1_5 as Cipher_pkcs1_v1_5
+
+from socsec import parse_path
+from socsec import insert_bytearray
+from socsec import rsa_bit_length
+from socsec import rsa_key_to_bin
+from socsec import OTP_info
 
 RSA_SHA = 1        # mode 2
 AES_RSA_SHA = 2    # mode 2 with aes encryption
@@ -98,14 +102,6 @@ class ChainPartitionDescriptor(object):
         self.next_verify_key_path = next_verify_key_path
 
 
-def parse_path(path):
-    if path is None or path == '':
-        return os.path.dirname(os.path.abspath(__file__))+'/'
-    if path[-1] != '/':
-        path += '/'
-    return path
-
-
 def parse_number(string):
     """Parse a string as a number.
 
@@ -124,83 +120,6 @@ def parse_number(string):
         ValueError: If the number could not be parsed.
     """
     return int(string, 0)
-
-
-def rsa_bit_length(rsa_key_file: str, var: str) -> int:
-    with open(rsa_key_file, 'rb') as f:
-        key_file_bin = f.read()
-        f.close()
-    rsa_key = RSA.importKey(key_file_bin)
-
-    return _rsa_bit_length(rsa_key, var)
-
-
-def _rsa_bit_length(rsa_key, var):
-    if var == 'n':
-        key_bit_length = bitarray(bin(rsa_key.n)[2:]).length()
-    elif var == 'e':
-        key_bit_length = bitarray(bin(rsa_key.e)[2:]).length()
-    elif var == 'd':
-        key_bit_length = bitarray(bin(rsa_key.d)[2:]).length()
-    return key_bit_length
-
-
-def rsa_key_to_bin(rsa_key_file, types, order='little'):
-    if order not in ['little', 'big']:
-        raise ValueError("order error")
-
-    with open(rsa_key_file, 'rb') as f:
-        key_file_bin = f.read()
-        f.close()
-    rsa_key = RSA.importKey(key_file_bin)
-    rsa_len = _rsa_bit_length(rsa_key, 'n')
-
-    n = bitarray(bin(rsa_key.n)[2:])
-    e = bitarray(bin(rsa_key.e)[2:])
-    n_remain = (8-(n.length() % 8)) % 8
-    e_remain = (8-(e.length() % 8)) % 8
-    for _ in range(0, n_remain):
-        n.insert(0, 0)
-    for _ in range(0, e_remain):
-        e.insert(0, 0)
-
-    n = n.tobytes()
-    e = e.tobytes()
-    n_b = bytearray(n)
-    e_b = bytearray(e)
-    if order == 'little':
-        n_b.reverse()
-        e_b.reverse()
-
-    if types == 'public':
-        exp = e_b
-    elif types == 'private':
-        d = bitarray(bin(rsa_key.d)[2:])
-        d_remain = (8-(d.length() % 8)) % 8
-        for _ in range(0, d_remain):
-            d.insert(0, 0)
-        d = d.tobytes()
-        d_b = bytearray(d)
-        if order == 'little':
-            d_b.reverse()
-        exp = d_b
-    else:
-        raise ValueError("types error")
-
-    if rsa_len == 1024:
-        m_len = 128
-    elif rsa_len == 2048:
-        m_len = 256
-    elif rsa_len == 3072:
-        m_len = 384
-    else:
-        m_len = 512
-
-    key_bin = bytearray(m_len * 2)
-    insert_bytearray(n_b, key_bin, 0)
-    insert_bytearray(exp, key_bin, m_len)
-
-    return key_bin
 
 
 def rsa_signature(alg_data, rsa_key_file, src_bin,
@@ -323,70 +242,6 @@ def rsa_encrypt(rsa_key_file, src_bin, order='little', randfunc=None):
     if len(src_enc) < key_byte_length:
         src_enc = src_enc + bytearray(key_byte_length - len(src_enc))
     return src_enc
-
-
-def insert_bytearray(src, dst, offset):
-    if offset+len(src) > len(dst):
-        dst.extend(bytearray(offset-len(dst)+len(src)))
-
-    dst[offset:offset+len(src)] = src
-
-
-class OTP_info(object):
-    ROOT_DIR = os.path.dirname(os.path.abspath(__file__))+'/'
-    MAGIC_WORD_OTP = 'SOCOTP'
-    HEADER_FORMAT = '<8s8s5I'
-    HEADER_SIZE = struct.calcsize(HEADER_FORMAT)
-    CHECKSUM_LEN = 32
-    INC_DATA = 1 << 31
-    INC_CONF = 1 << 30
-    INC_STRAP = 1 << 29
-    INC_ECC = 1 << 28
-    INC_DUMP = 1 << 27
-    INC_ORDER = 1 << 26
-
-    OTP_INFO = {
-        'A0': {
-            'config': ROOT_DIR+'otp_info/a0_config.json',
-            'strap': ROOT_DIR+'otp_info/a0_strap.json',
-            'data_region_size': 8192,
-            'ecc_region_offset': 7168,
-            'config_region_size': 64,
-            'otp_strap_bit_size': 64,
-        },
-        'A1': {
-            'config': ROOT_DIR+'otp_info/a1_config.json',
-            'strap': ROOT_DIR+'otp_info/a1_strap.json',
-            'data_region_size': 8192,
-            'ecc_region_offset': 7168,
-            'config_region_size': 64,
-            'otp_strap_bit_size': 64,
-        },
-        'A2': {
-            'config': ROOT_DIR+'otp_info/a2_config.json',
-            'strap': ROOT_DIR+'otp_info/a2_strap.json',
-            'data_region_size': 8192,
-            'ecc_region_offset': 7168,
-            'config_region_size': 64,
-            'otp_strap_bit_size': 64,
-        },
-        'A3': {
-            'config': ROOT_DIR+'otp_info/a2_config.json',
-            'strap': ROOT_DIR+'otp_info/a2_strap.json',
-            'data_region_size': 8192,
-            'ecc_region_offset': 7168,
-            'config_region_size': 64,
-            'otp_strap_bit_size': 64,
-        },
-        '1030A0': {
-            'config': ROOT_DIR+'otp_info/1030a0_config.json',
-            'strap': ROOT_DIR+'otp_info/1030a0_strap.json',
-            'data_region_size': 8192,
-            'ecc_region_offset': 7168,
-            'config_region_size': 64,
-            'otp_strap_bit_size': 64,
-        }
-    }
 
 
 class Sec(object):
@@ -1723,9 +1578,3 @@ class secTool(object):
                                         args.output,
                                         args.otp_image,
                                         args.cot_offset)
-
-
-if __name__ == '__main__':
-
-    tool = secTool()
-    tool.run(sys.argv)

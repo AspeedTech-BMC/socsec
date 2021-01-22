@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 # Copyright (c) 2020 ASPEED Technology Inc.
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -1126,9 +1124,3 @@ class otpTool(object):
                                 args.key_folder,
                                 args.user_data_folder,
                                 args.output_folder)
-
-
-if __name__ == '__main__':
-
-    tool = otpTool()
-    tool.run(sys.argv)
