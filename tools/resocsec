@@ -1,0 +1,240 @@
+#!/usr/bin/python3
+
+# Copyright (c) 2020 IBM Corp.
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+# Really Easy socsec
+
+import argparse
+import socsec
+
+socs = ['2600', '1030']
+mode2_algos = list(f'RSA{rsa}-SHA{sha}'
+                            for rsa in (1024, 2048, 3072, 4096)
+                                for sha in (224, 256, 384, 512))
+
+mode2aes_algos = list(f'AES-RSA{rsa}-SHA{sha}'
+                            for rsa in (1024, 2048, 3072, 4096)
+                                for sha in (224, 256, 384, 512))
+
+def secure_bootloader_mode2(args):
+    sec = socsec.Sec()
+    sec.make_secure_bl1_image(args.soc,
+                              args.input,
+                              args.rsa_key,
+                              None, # GCM AES key
+                              args.output,
+                              args.algorithm.replace('-', '_'),
+                              args.header_offset,
+                              args.rollback_index,
+                              None, # Offset of encrypted image
+                              None, # AES key
+                              None, # RSA public key to encrypt AES key
+                              False, # Key in OTP
+                              args.rsa_key_endianness,
+                              None, # Chain-of-trust algorithm
+                              None, # Chain-of-trust verification key
+                              None, # Chain-of-trust digest
+                              args.sign_stream,
+                              args.sign_file,
+                              args.deterministic)
+
+def secure_bootloader_mode2aes1(args):
+    sec = socsec.Sec()
+    sec.make_secure_bl1_image(args.soc,
+                              args.input,
+                              args.rsa_key,
+                              None, # GCM AES key
+                              args.output,
+                              args.algorithm.replace('-', '_'),
+                              args.header_offset,
+                              args.rollback_index,
+                              args.encrypted_payload_offset,
+                              args.aes_key,
+                              None, # RSA public key to encrypt AES key
+                              True, # Key in OTP
+                              args.rsa_key_endianness,
+                              None, # Chain-of-trust algorithm
+                              None, # Chain-of-trust verification key
+                              None, # Chain-of-trust digest
+                              args.sign_stream,
+                              args.sign_file,
+                              args.deterministic)
+
+def secure_bootloader_mode2aes2(args):
+    sec = socsec.Sec()
+    sec.make_secure_bl1_image(args.soc,
+                              args.input,
+                              args.rsa_key,
+                              None, # GCM AES key
+                              args.output,
+                              args.algorithm.replace('-', '_'),
+                              args.header_offset,
+                              args.rollback_index,
+                              args.encrypted_payload_offset,
+                              args.aes_key,
+                              args.rsa_aes_key,
+                              False, # Key in OTP
+                              args.rsa_key_endianness,
+                              None, # Chain-of-trust algorithm
+                              None, # Chain-of-trust verification key
+                              None, # Chain-of-trust digest
+                              args.sign_stream,
+                              args.sign_file,
+                              args.deterministic)
+
+def secure_bootloader_modegcm(args):
+    sec = socsec.Sec()
+    sec.make_secure_bl1_image(args.soc,
+                              args.input,
+                              None, # RSA private key
+                              args.aes_key,
+                              args.output,
+                              args.algorithm.replace('-', '_'),
+                              args.header_offset,
+                              args.rollback_index,
+                              args.encrypted_payload_offset,
+                              None, # AES key
+                              None, # RSA public key to encrypt AES key
+                              False, # Key in OTP
+                              args.rsa_key_endianness,
+                              None, # Chain-of-trust algorithm
+                              None, # Chain-of-trust verification key
+                              None, # Chain-of-trust digest
+                              args.sign_stream,
+                              args.sign_file,
+                              args.deterministic)
+
+def resocsec():
+    parser = argparse.ArgumentParser(description="Really Easy SOCSEC!")
+
+    subparsers = parser.add_subparsers(title='socsec utilities')
+
+    bl1 = subparsers.add_parser('secure-bootloader',
+               help='Make a signed (and optionally encrypted) bootloader image')
+    bl1.add_argument('--deterministic', default=False, action='store_true',
+                     help=argparse.SUPPRESS)
+    bl1.add_argument('--rsa-key-endianness', default='little',
+                     choices=['little', 'big'],
+                     help='Configure RSA key endianness in the OTP')
+    bl1.add_argument('--rollback-index', default=0, type=int,
+                     help='Rollback protection index')
+    bl1.add_argument('--header-offset', type=lambda x: int(x, 0),
+                     help='Root-of-Trust header offset')
+    bl1.add_argument('--sign-stream', help="Helper for signing via stdio")
+    bl1.add_argument('--sign-file', help="Helper for signing files")
+
+    schemes = bl1.add_subparsers(title='Secure-boot modes')
+
+    # Mode 2
+    mode2 = schemes.add_parser('mode2', help='Unencrypted, RSA-signed image')
+
+    mode2.set_defaults(func=secure_bootloader_mode2)
+    mode2.add_argument('soc', metavar='SOC', choices=socs,
+                       help='The target SoC')
+    mode2.add_argument('algorithm', metavar='ALGO', choices=mode2_algos,
+                       help='The RSA signing scheme')
+    mode2.add_argument('rsa_key', metavar='RSA_KEY',
+                       help='Private RSA key for signing the image')
+    mode2.add_argument('input', metavar='INPUT', type=argparse.FileType('rb'),
+                       help='The bootloader image to sign')
+    mode2.add_argument('output', metavar='OUTPUT', type=argparse.FileType('wb'),
+                       help='The signed bootloader image')
+
+    # Mode 2 Option 1
+    mode2aes1 = schemes.add_parser('mode2aes1',
+                              help='AES-encrypted, RSA-signed image (Option 1)')
+
+    mode2aes1.set_defaults(func=secure_bootloader_mode2aes1)
+    mode2aes1.add_argument('soc', metavar='SOC', choices=socs,
+                           help='The target SoC')
+    mode2aes1.add_argument('algorithm', metavar='ALGO', choices=mode2aes_algos,
+                           help='The cryptographic scheme')
+    mode2aes1.add_argument('aes_key', metavar='AES_KEY',
+                           type=argparse.FileType('rb'),
+                           help='AES encryption key')
+    mode2aes1.add_argument('rsa_key', metavar='RSA_KEY',
+                           help='Private RSA key for signing the image')
+    mode2aes1.add_argument('input', metavar='INPUT',
+                           type=argparse.FileType('rb'),
+                           help='The bootloader image to sign')
+    mode2aes1.add_argument('output', metavar='OUTPUT',
+                           type=argparse.FileType('wb'),
+                           help='The signed bootloader image')
+    mode2aes1.add_argument('--encrypted-payload-offset', metavar="OFFSET",
+                           type=lambda x: int(x, 0),
+                           help='Offset of the encrypted payload in the image')
+
+    # Mode 2 Option 2
+    mode2aes2 = schemes.add_parser('mode2aes2',
+                              help='AES-encrypted, RSA-signed image (Option 2)')
+
+    mode2aes2.set_defaults(func=secure_bootloader_mode2aes2)
+    mode2aes2.add_argument('soc', metavar='SOC', choices=socs,
+                           help='The target SoC')
+    mode2aes2.add_argument('algorithm', metavar='ALGO', choices=mode2aes_algos,
+                           help='The cryptographic scheme')
+    mode2aes2.add_argument('aes_key', metavar='AES_KEY',
+                           type=argparse.FileType('rb'),
+                           help='AES encryption key')
+    mode2aes2.add_argument('rsa_aes_key', metavar='RSA_AES_KEY',
+                           help='Public RSA key for encrypting the AES key')
+    mode2aes2.add_argument('rsa_key', metavar='RSA_KEY',
+                           help='Private RSA key for signing the image')
+    mode2aes2.add_argument('input', metavar='INPUT',
+                           type=argparse.FileType('rb'),
+                           help='The bootloader image to sign')
+    mode2aes2.add_argument('output', metavar='OUTPUT',
+                           type=argparse.FileType('wb'),
+                           help='The signed bootloader image')
+    mode2aes2.add_argument('--encrypted-payload-offset', metavar="OFFSET",
+                           type=lambda x: int(x, 0),
+                           help='Offset of the encrypted payload in the image')
+
+    # Mode GCM
+    modegcm = schemes.add_parser('modegcm',
+                         help='AES-GCM encrypted-and-authenticated image')
+
+    modegcm.set_defaults(func=secure_bootloader_modegcm,
+                         algorithm='AES-GCM')
+    modegcm.add_argument('soc', metavar='SOC', choices=socs,
+                         help='The target SoC')
+    modegcm.add_argument('aes_key', metavar='AES_KEY',
+                         type=argparse.FileType('rb'),
+                         help='AES GCM encryption key')
+    modegcm.add_argument('input', metavar='INPUT',
+                         type=argparse.FileType('rb'),
+                         help='The bootloader image to encrypt/authenticate')
+    modegcm.add_argument('output', metavar='OUTPUT',
+                         type=argparse.FileType('wb'),
+                         help='The encrypted/authenticated bootloader image')
+    modegcm.add_argument('--encrypted-payload-offset', metavar="OFFSET",
+                         type=lambda x: int(x, 0),
+                         help='Offset of the encrypted payload in the image')
+
+    args = parser.parse_args()
+
+    if 'func' in args:
+        args.func(args)
+    else:
+        parser.print_help()
+
+if __name__ == '__main__':
+    resocsec()

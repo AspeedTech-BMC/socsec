@@ -11,8 +11,11 @@ This tool is used to generate ast2600 secure boot RoT and CoT image.
 #### Setting Up
 
 ```bash
-sudo apt-get install python3 python3-pip
+sudo apt-get install python3 python3-pip python3-virtualenv
+virtualenv .venv
+source .venv/bin/activate
 pip3 install -r requirements.txt
+python3 setup.py install
 ```
 
 #### Key Generation

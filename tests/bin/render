@@ -1,0 +1,67 @@
+#!/bin/sh
+
+# Copyright (c) 2020 IBM Corp.
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+set -eu
+set -x
+
+render() {
+	local soc=$1
+	local rev=$2
+	local mode=$3
+	local rot_rsa=$4
+	local rot_sha=$5
+
+	local slug=${soc}-${rev}_${mode}-rsa${rot_rsa}-sha${rot_sha}
+	local config=tests/otp/${slug}.json
+
+	local REV=$(echo $rev | tr '[a-z]' '[A-Z]')
+
+	cp tests/otp/${mode}-template.json $config
+	sed -ri "s/@@SLUG@@/${slug}/g" $config
+	sed -ri "s/@@VERSION@@/${REV}/g" $config
+	sed -ri "s/@@RSA@@/${rot_rsa}/g" $config
+	sed -ri "s/@@SHA@@/${rot_sha}/g" $config
+	sed -ri "s/@@MODE@@/Mode_2/g" $config
+}
+
+for soc in 2600 1030
+do
+	# A3 is not yet listed as supported in otp_info/otp_schema.json
+	for rev in a0 a1 a2
+	do
+		for mode in mode2 mode2aes1 mode2aes2
+		do
+			if [ $soc = "1030" -a $rev != 'a0' ]
+			then
+				continue
+			fi
+
+			for rsa in 1024 2048 3072 4096
+			do
+				for sha in 224 256 384 512
+				do
+					render $soc $rev $mode $rsa $sha
+				done
+			done
+		done
+	done
+done
