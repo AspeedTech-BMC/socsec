@@ -180,10 +180,17 @@ def rsa_verify(alg_data, rsa_key_file, signature, digest, order='little'):
         rev_signature = rev_signature + \
             bytearray(alg_data.signature_num_bytes - len(rev_signature))
 
-    with open(rsa_key_file, 'rb') as f:
-        key_file_bin = f.read()
+    with open(rsa_key_file, 'r') as f:
+        pos = 0
+        for line in f:
+            if line.find('-----BEGIN', 0) == 0:
+                print(f"Found PEM header at position {pos}")
+                break
+            pos += len(line)
+        f.seek(pos)
+        key_file_str = f.read()
         f.close()
-    rsakey = RSA.importKey(key_file_bin)
+    rsakey = RSA.importKey(key_file_str)
     try:
         if rsakey.d:
             cmd = "openssl rsautl -verify -raw -inkey " + rsa_key_file
@@ -216,10 +223,17 @@ def rsa_verify(alg_data, rsa_key_file, signature, digest, order='little'):
 
 
 def rsa_encrypt(rsa_key_file, src_bin, order='little', randfunc=None):
-    with open(rsa_key_file, 'rb') as f:
-        key_bin = f.read()
+    with open(rsa_key_file, 'r') as f:
+        pos = 0
+        for line in f:
+            if line.find('-----BEGIN', 0) == 0:
+                print(f"Found PEM header at position {pos}")
+                break
+            pos += len(line)
+        f.seek(pos)
+        key_str = f.read()
         f.close()
-    rsa_key = RSA.importKey(key_bin)
+    rsa_key = RSA.importKey(key_str)
 
     src_bin = bytearray(src_bin)
     if order == 'little':
