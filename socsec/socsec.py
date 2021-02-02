@@ -37,6 +37,7 @@ from Crypto.PublicKey import RSA
 from bitarray import bitarray
 from Crypto.Cipher import PKCS1_v1_5 as Cipher_pkcs1_v1_5
 
+from socsec import rsa_importkey
 from socsec import parse_path
 from socsec import insert_bytearray
 from socsec import rsa_bit_length
@@ -180,19 +181,9 @@ def rsa_verify(alg_data, rsa_key_file, signature, digest, order='little'):
         rev_signature = rev_signature + \
             bytearray(alg_data.signature_num_bytes - len(rev_signature))
 
-    with open(rsa_key_file, 'r') as f:
-        pos = 0
-        for line in f:
-            if line.find('-----BEGIN', 0) == 0:
-                print(f"Found PEM header at position {pos}")
-                break
-            pos += len(line)
-        f.seek(pos)
-        key_file_str = f.read()
-        f.close()
-    rsakey = RSA.importKey(key_file_str)
+    rsa_key = rsa_importkey(rsa_key_file)
     try:
-        if rsakey.d:
+        if rsa_key.d:
             cmd = "openssl rsautl -verify -raw -inkey " + rsa_key_file
     except (AttributeError):
         cmd = "openssl rsautl -verify -raw --pubin -inkey " + rsa_key_file
@@ -223,17 +214,7 @@ def rsa_verify(alg_data, rsa_key_file, signature, digest, order='little'):
 
 
 def rsa_encrypt(rsa_key_file, src_bin, order='little', randfunc=None):
-    with open(rsa_key_file, 'r') as f:
-        pos = 0
-        for line in f:
-            if line.find('-----BEGIN', 0) == 0:
-                print(f"Found PEM header at position {pos}")
-                break
-            pos += len(line)
-        f.seek(pos)
-        key_str = f.read()
-        f.close()
-    rsa_key = RSA.importKey(key_str)
+    rsa_key = rsa_importkey(rsa_key_file)
 
     src_bin = bytearray(src_bin)
     if order == 'little':
@@ -1094,7 +1075,7 @@ class SecureBootVerify(object):
                            0x8: RSA_OEM,
                            0xa: RSA_SOC_PUB,
                            0xe: RSA_SOC_PRI}
-        elif info_struct['version'] in ['A1', 'A2', '1030A0' ]:
+        elif info_struct['version'] in ['A1', 'A2', '1030A0']:
             type_lookup = {0x1: AES_VAULT,
                            0x2: AES_OEM,
                            0x8: RSA_OEM,
