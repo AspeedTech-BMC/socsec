@@ -65,10 +65,7 @@ def _rsa_bit_length(rsa_key, var):
 
 
 def rsa_bit_length(rsa_key_file: str, var: str) -> int:
-    with open(rsa_key_file, 'rb') as f:
-        key_file_bin = f.read()
-        f.close()
-    rsa_key = rsa_importkey(key_file_bin)
+    rsa_key = rsa_importkey(rsa_key_file)
 
     return _rsa_bit_length(rsa_key, var)
 
@@ -77,10 +74,7 @@ def rsa_key_to_bin(rsa_key_file, types, order='little'):
     if order not in ['little', 'big']:
         raise ValueError("order error")
 
-    with open(rsa_key_file, 'rb') as f:
-        key_file_bin = f.read()
-        f.close()
-    rsa_key = rsa_importkey(key_file_bin)
+    rsa_key = rsa_importkey(rsa_key_file)
     rsa_len = _rsa_bit_length(rsa_key, 'n')
 
     n = bitarray(bin(rsa_key.n)[2:])
