@@ -25,7 +25,7 @@ import os
 import struct
 import subprocess
 import tempfile
-import hexdump
+import binascii
 from Crypto.Hash import SHA
 from Crypto.Hash import SHA224
 from Crypto.Hash import SHA256
@@ -121,6 +121,56 @@ def parse_number(string):
         ValueError: If the number could not be parsed.
     """
     return int(string, 0)
+
+
+def chunks(seq, size):
+    '''Generator that cuts sequence (bytes, memoryview, etc.)
+       into chunks of given size. If `seq` length is not multiply
+       of `size`, the lengh of the last chunk returned will be
+       less than requested.
+
+       >>> list( chunks([1,2,3,4,5,6,7], 3) )
+       [[1, 2, 3], [4, 5, 6], [7]]
+    '''
+    d, m = divmod(len(seq), size)
+    for i in range(d):
+        yield seq[i*size:(i+1)*size]
+    if m:
+        yield seq[d*size:]
+
+
+def hexdump(data):
+    '''
+    Transform binary data to the hex dump text format:
+
+    00000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
+    '''
+    generator = chunks(data, 16)
+    for addr, d in enumerate(generator):
+        # 00000000:
+        line = '%08X: ' % (addr*16)
+        # 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+        dumpstr = ' '.join(
+            chunks(binascii.hexlify(d).decode('ascii').upper(), 2))
+        line += dumpstr[:8*3]
+        if len(d) > 8:  # insert separator if needed
+            line += ' ' + dumpstr[8*3:]
+        # ................
+        # calculate indentation, which may be different for the last line
+        pad = 2
+        if len(d) < 16:
+            pad += 3*(16 - len(d))
+        if len(d) <= 8:
+            pad += 1
+        line += ' '*pad
+
+        for byte in d:
+            # printable ASCII range 0x20 to 0x7E
+            if 0x20 <= byte <= 0x7E:
+                line += chr(byte)
+            else:
+                line += '.'
+        print(line)
 
 
 def rsa_signature(alg_data, rsa_key_file, src_bin,
@@ -1307,9 +1357,9 @@ class SecureBootVerify(object):
                     print('Key Type: OEM DSS public keys')
                     print('ID: {}'.format(v_id))
                     print('M:')
-                    hexdump.hexdump(kl['M'])
+                    hexdump(kl['M'])
                     print('E:')
-                    hexdump.hexdump(kl['E'])
+                    hexdump(kl['E'])
                     break
 
             if alg_data.algorithm_type == AES_RSA_SHA:
