@@ -628,6 +628,7 @@ class Sec(object):
                               cot_digest_fd,
                               signing_helper,
                               signing_helper_with_files,
+                              stack_intersects_verification_region,
                               deterministic):
         """Implements the 'make_vbmeta_image' command.
 
@@ -661,8 +662,13 @@ class Sec(object):
                 header_offset = 0x20
             if enc_offset == None:
                 enc_offset = 0x50
-            if bl1_image_len > (60 * 1024):
-                raise SecError("The maximum size of BL1 image is 60 KBytes.")
+            if ((stack_intersects_verification_region is None) or
+                (stack_intersects_verification_region == 'true')):
+                bl1_max_len = 60 * 1024
+            else:
+                bl1_max_len = 64 * 1024 - 512
+            if bl1_image_len > bl1_max_len:
+                raise SecError(f"The maximum size of BL1 image is {bl1_max_len} bytes.")
         elif soc_version == '1030':
             if header_offset == None:
                 header_offset = 0x400
@@ -1367,7 +1373,8 @@ class secTool(object):
             argv: Pass sys.argv from main.
         """
         parser = argparse.ArgumentParser()
-        subparsers = parser.add_subparsers(title='subcommands')
+        subparsers = parser.add_subparsers(title='subcommands',
+                                           dest='subparser_name')
 
         sub_parser = subparsers.add_parser('make_secure_bl1_image',
                                            help='Makes a signed bl1 image.')
@@ -1379,6 +1386,23 @@ class secTool(object):
                                 help='Bootloader 1 Image (e.g. u-boot-spl.bin), which will be verified by soc',
                                 type=argparse.FileType('rb'),
                                 required=False)
+        stack_intersects_verification_region_help='''By default, the
+        maximum size of SPL images socsec will sign is 60KB, since,
+        historically, the SoCs have been using the top of the SRAM
+        for the SPL execution stack. However, on 2600 (A1) and above
+        SoCs, an additional 24KB SRAM can be used for the stack,
+        allowing the verification region to occuppy the entire 64KB
+        (including signature). For these models of boards, this
+        layout will also be the default in future SDK releases.
+        Use this parameter to explicitly indicate that the SPL image
+        being signed has (=true) or has not (=false) the SPL stack
+        overlapping the 64KB verification region. With this argument
+        set to \'false\', socsec will sign SPL images up towards
+        64KB (including 512B signature)'''
+        sub_parser.add_argument('--stack_intersects_verification_region',
+                                dest='stack_intersects_verification_region',
+                                choices=['true', 'false'], default=None,
+                                help=stack_intersects_verification_region_help)
         sub_parser.add_argument('--header_offset',
                                 help='RoT header offsest',
                                 type=parse_number,
@@ -1534,6 +1558,11 @@ class secTool(object):
         if(len(argv) == 1):
             parser.print_usage()
             sys.exit(1)
+
+        if (args.subparser_name == 'make_secure_bl1_image' and
+                args.stack_intersects_verification_region is None):
+            print('WARNING: --stack_intersects_verification_region={true|false} '
+                  'must be specified to ensure forwards compatibility.')
         args.func(args)
 
     def make_secure_bl1_image(self, args):
@@ -1554,6 +1583,7 @@ class secTool(object):
                                        args.cot_digest,
                                        args.signing_helper,
                                        args.signing_helper_with_files,
+                                       args.stack_intersects_verification_region,
                                        args.deterministic)
 
     def make_sv_chain_image(self, args):
