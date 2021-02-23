@@ -24,6 +24,7 @@ from pkg_resources import resource_filename as pkgdata
 import struct
 from Crypto.PublicKey import RSA
 
+
 def parse_path(path):
     if path is None or path == '':
         return os.path.abspath(os.path.curdir)+'/'
@@ -39,6 +40,20 @@ def insert_bytearray(src, dst, offset):
     dst[offset:offset+len(src)] = src
 
 
+def rsa_importkey(key_file):
+    with open(key_file, 'r') as f:
+        pos = 0
+        for line in f:
+            if line.find('-----BEGIN', 0) == 0:
+                print(f"Found PEM header at position {pos}")
+                break
+            pos += len(line)
+        f.seek(pos)
+        key_file_str = f.read()
+        f.close()
+    return RSA.importKey(key_file_str)
+
+
 def _rsa_bit_length(rsa_key, var):
     if var == 'n':
         key_bit_length = bitarray(bin(rsa_key.n)[2:]).length()
@@ -50,10 +65,7 @@ def _rsa_bit_length(rsa_key, var):
 
 
 def rsa_bit_length(rsa_key_file: str, var: str) -> int:
-    with open(rsa_key_file, 'rb') as f:
-        key_file_bin = f.read()
-        f.close()
-    rsa_key = RSA.importKey(key_file_bin)
+    rsa_key = rsa_importkey(rsa_key_file)
 
     return _rsa_bit_length(rsa_key, var)
 
@@ -62,10 +74,7 @@ def rsa_key_to_bin(rsa_key_file, types, order='little'):
     if order not in ['little', 'big']:
         raise ValueError("order error")
 
-    with open(rsa_key_file, 'rb') as f:
-        key_file_bin = f.read()
-        f.close()
-    rsa_key = RSA.importKey(key_file_bin)
+    rsa_key = rsa_importkey(rsa_key_file)
     rsa_len = _rsa_bit_length(rsa_key, 'n')
 
     n = bitarray(bin(rsa_key.n)[2:])

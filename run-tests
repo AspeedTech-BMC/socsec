@@ -21,7 +21,6 @@
 # SOFTWARE.
 
 set -eu
-set -x
 
 : ${OTPTOOL:=$(which otptool)}
 : ${SOCSEC:=$(which socsec)}
@@ -591,7 +590,7 @@ run() {
 
 report() {
 	coverage combine -a
-	coverage html --include='*/socsec/otptool.py*,*/socsec/socsec.py,*/socsec/__init__.py'
+	coverage html --include='*/socsec/otptool.py*,*/socsec/socsec.py,*/socsec/__init__.py' || true
 }
 
 clean

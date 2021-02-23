@@ -37,6 +37,7 @@ from Crypto.PublicKey import RSA
 from bitarray import bitarray
 from Crypto.Cipher import PKCS1_v1_5 as Cipher_pkcs1_v1_5
 
+from socsec import rsa_importkey
 from socsec import parse_path
 from socsec import insert_bytearray
 from socsec import rsa_bit_length
@@ -180,12 +181,9 @@ def rsa_verify(alg_data, rsa_key_file, signature, digest, order='little'):
         rev_signature = rev_signature + \
             bytearray(alg_data.signature_num_bytes - len(rev_signature))
 
-    with open(rsa_key_file, 'rb') as f:
-        key_file_bin = f.read()
-        f.close()
-    rsakey = RSA.importKey(key_file_bin)
+    rsa_key = rsa_importkey(rsa_key_file)
     try:
-        if rsakey.d:
+        if rsa_key.d:
             cmd = "openssl rsautl -verify -raw -inkey " + rsa_key_file
     except (AttributeError):
         cmd = "openssl rsautl -verify -raw --pubin -inkey " + rsa_key_file
@@ -216,10 +214,7 @@ def rsa_verify(alg_data, rsa_key_file, signature, digest, order='little'):
 
 
 def rsa_encrypt(rsa_key_file, src_bin, order='little', randfunc=None):
-    with open(rsa_key_file, 'rb') as f:
-        key_bin = f.read()
-        f.close()
-    rsa_key = RSA.importKey(key_bin)
+    rsa_key = rsa_importkey(rsa_key_file)
 
     src_bin = bytearray(src_bin)
     if order == 'little':
@@ -633,6 +628,7 @@ class Sec(object):
                               cot_digest_fd,
                               signing_helper,
                               signing_helper_with_files,
+                              stack_intersects_verification_region,
                               deterministic):
         """Implements the 'make_vbmeta_image' command.
 
@@ -666,8 +662,13 @@ class Sec(object):
                 header_offset = 0x20
             if enc_offset == None:
                 enc_offset = 0x50
-            if bl1_image_len > (60 * 1024):
-                raise SecError("The maximum size of BL1 image is 60 KBytes.")
+            if ((stack_intersects_verification_region is None) or
+                (stack_intersects_verification_region == 'true')):
+                bl1_max_len = 60 * 1024
+            else:
+                bl1_max_len = 64 * 1024 - 512
+            if bl1_image_len > bl1_max_len:
+                raise SecError(f"The maximum size of BL1 image is {bl1_max_len} bytes.")
         elif soc_version == '1030':
             if header_offset == None:
                 header_offset = 0x400
@@ -1080,7 +1081,7 @@ class SecureBootVerify(object):
                            0x8: RSA_OEM,
                            0xa: RSA_SOC_PUB,
                            0xe: RSA_SOC_PRI}
-        elif info_struct['version'] in ['A1', 'A2', '1030A0' ]:
+        elif info_struct['version'] in ['A1', 'A2', '1030A0']:
             type_lookup = {0x1: AES_VAULT,
                            0x2: AES_OEM,
                            0x8: RSA_OEM,
@@ -1372,7 +1373,8 @@ class secTool(object):
             argv: Pass sys.argv from main.
         """
         parser = argparse.ArgumentParser()
-        subparsers = parser.add_subparsers(title='subcommands')
+        subparsers = parser.add_subparsers(title='subcommands',
+                                           dest='subparser_name')
 
         sub_parser = subparsers.add_parser('make_secure_bl1_image',
                                            help='Makes a signed bl1 image.')
@@ -1384,6 +1386,23 @@ class secTool(object):
                                 help='Bootloader 1 Image (e.g. u-boot-spl.bin), which will be verified by soc',
                                 type=argparse.FileType('rb'),
                                 required=False)
+        stack_intersects_verification_region_help='''By default, the
+        maximum size of SPL images socsec will sign is 60KB, since,
+        historically, the SoCs have been using the top of the SRAM
+        for the SPL execution stack. However, on 2600 (A1) and above
+        SoCs, an additional 24KB SRAM can be used for the stack,
+        allowing the verification region to occuppy the entire 64KB
+        (including signature). For these models of boards, this
+        layout will also be the default in future SDK releases.
+        Use this parameter to explicitly indicate that the SPL image
+        being signed has (=true) or has not (=false) the SPL stack
+        overlapping the 64KB verification region. With this argument
+        set to \'false\', socsec will sign SPL images up towards
+        64KB (including 512B signature)'''
+        sub_parser.add_argument('--stack_intersects_verification_region',
+                                dest='stack_intersects_verification_region',
+                                choices=['true', 'false'], default=None,
+                                help=stack_intersects_verification_region_help)
         sub_parser.add_argument('--header_offset',
                                 help='RoT header offsest',
                                 type=parse_number,
@@ -1539,6 +1558,11 @@ class secTool(object):
         if(len(argv) == 1):
             parser.print_usage()
             sys.exit(1)
+
+        if (args.subparser_name == 'make_secure_bl1_image' and
+                args.stack_intersects_verification_region is None):
+            print('WARNING: --stack_intersects_verification_region={true|false} '
+                  'must be specified to ensure forwards compatibility.')
         args.func(args)
 
     def make_secure_bl1_image(self, args):
@@ -1559,6 +1583,7 @@ class secTool(object):
                                        args.cot_digest,
                                        args.signing_helper,
                                        args.signing_helper_with_files,
+                                       args.stack_intersects_verification_region,
                                        args.deterministic)
 
     def make_sv_chain_image(self, args):
