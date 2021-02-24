@@ -232,7 +232,7 @@ def resocsec():
     overlapping the 64KB verification region. With this argument
     set to \'false\', socsec will sign SPL images up towards
     64KB (including 512B signature)'''
-    sub_parser.add_argument('--stack-intersects-verification-region',
+    bl1.add_argument('--stack-intersects-verification-region',
                             dest='stack_intersects_verification_region',
                             choices=['true', 'false'], default=None,
                             help=stack_intersects_verification_region_help)
