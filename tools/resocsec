@@ -67,6 +67,7 @@ def secure_bootstrap_image_mode2(args):
                               None,  # RSA public key to encrypt AES key
                               False,  # Key in OTP
                               args.rsa_key_endianness,
+                              None,  # Flash patch offset for ast2605
                               frob_algorithm(args.chain_style_signed[0]),
                               args.chain_style_signed[1],
                               args.chain_style_digest,
@@ -91,6 +92,7 @@ def secure_bootstrap_image_mode2aes1(args):
                               None,  # RSA public key to encrypt AES key
                               True,  # Key in OTP
                               args.rsa_key_endianness,
+                              None,  # Flash patch offset for ast2605
                               frob_algorithm(args.chain_style_signed[0]),
                               args.chain_style_signed[1],
                               args.chain_style_digest,
@@ -115,6 +117,7 @@ def secure_bootstrap_image_mode2aes2(args):
                               args.rsa_aes_key,
                               False,  # Key in OTP
                               args.rsa_key_endianness,
+                              None,  # Flash patch offset for ast2605
                               frob_algorithm(args.chain_style_signed[0]),
                               args.chain_style_signed[1],
                               args.chain_style_digest,
@@ -139,6 +142,7 @@ def secure_bootstrap_image_modegcm(args):
                               None,  # RSA public key to encrypt AES key
                               False,  # Key in OTP
                               args.rsa_key_endianness,
+                              None,  # Flash patch offset for ast2605
                               frob_algorithm(args.chain_style_signed[0]),
                               args.chain_style_signed[1],
                               args.chain_style_digest,

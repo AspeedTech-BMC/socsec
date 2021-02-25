@@ -623,6 +623,7 @@ class Sec(object):
                               enc_offset, aes_key_fd, rsa_aes_key_path,
                               key_in_otp,
                               rsa_key_order,
+                              flash_patch_offset, 
                               cot_algorithm_name,
                               cot_verify_key_path,
                               cot_digest_fd,
@@ -630,25 +631,30 @@ class Sec(object):
                               signing_helper_with_files,
                               stack_intersects_verification_region,
                               deterministic):
-        """Implements the 'make_vbmeta_image' command.
+        """Implements the 'make_secure_bl1_image' command.
 
         Arguments:
-            bl1_image: Bootloader 1 image.
+            soc_version: SOC version, e.g. '2600', '2605', '1030'
+            bl1_image_fd: Bootloader 1 image fd.
             sign_key_path: Path to rsa signing key to use or None.
-            output: File to write the image to.
+            gcm_aes_key_fd: aes key for GCM_AES mode.
+            output_fd: File to write the image to.
             algorithm_name: Name of algorithm to use.
+            header_offset: secure image header offset.
             rollback_index: The rollback index to use.
-            enc_offset:
-            aes_key_fd;
-            rsa_aes_key_path;
-            key_in_otp:
-            cot_algorithm_name:
-            cot_verify_key_path:
-            cot_digest_fd:
+            enc_offset: image encryption start offset.
+            aes_key_fd; aes key for AES_RSA**_SHA* mode.
+            rsa_aes_key_path; rsa key for AES_RSA**_SHA* mode when key_in_otp is false
+            key_in_otp: AES_RSA**_SHA* mode and the aes key is in the OTP
+            rsa_key_order: bit endian or little endian.
+            flash_patch_offset: for ast2605, default is 0x50
+            cot_algorithm_name: Name of algorithm for CoT.
+            cot_verify_key_path: rsa public key for verify CoT image.
+            cot_digest_fd: 
             signing_helper: Program which signs a hash and return signature.
             signing_helper_with_files: Same as signing_helper but uses files instead.
+            stack_intersects_verification_region: allows the signing of images that occupy the entire 64KB verifiable region
             deterministic: IVs are read from deterministic sources
-
         Raises:
             SecError: If a chained partition is malformed.
         """
@@ -657,7 +663,7 @@ class Sec(object):
 
         bl1_image = bytearray(bl1_image_fd.read())
         bl1_image_len = len(bl1_image)
-        if soc_version == '2600':
+        if soc_version in ['2600', '2605']:
             if header_offset == None:
                 header_offset = 0x20
             if enc_offset == None:
@@ -669,6 +675,10 @@ class Sec(object):
                 bl1_max_len = 64 * 1024 - 512
             if bl1_image_len > bl1_max_len:
                 raise SecError(f"The maximum size of BL1 image is {bl1_max_len} bytes.")
+            if soc_version == '2605' and flash_patch_offset == None:
+                flash_patch_offset = 0x50
+            else:
+                flash_patch_offset = 0
         elif soc_version == '1030':
             if header_offset == None:
                 header_offset = 0x400
@@ -676,6 +686,7 @@ class Sec(object):
                 enc_offset = 0x430
             if bl1_image_len > (768 * 1024):
                 raise SecError("The maximum size of BL1 image is 768 KBytes.")
+            flash_patch_offset = 0
         else:
             raise SecError("SOC version is not avaliable")
 
@@ -729,7 +740,8 @@ class Sec(object):
 
         bl1_header_checksum = -(aes_data_offset + enc_offset +
                                 sign_image_size + signature_offset +
-                                revision_low + revision_high) & 0xFFFFFFFF
+                                revision_low + revision_high +
+                                flash_patch_offset) & 0xFFFFFFFF
         bl1_header = struct.pack(
             self.ROT_HEADER_FORMAT,
             aes_data_offset,
@@ -738,7 +750,7 @@ class Sec(object):
             signature_offset,
             revision_low,
             revision_high,
-            0,
+            flash_patch_offset,
             bl1_header_checksum
         )
         bl1_image.extend(bytearray(sign_image_size - bl1_image_len))
@@ -1469,6 +1481,10 @@ class secTool(object):
         enc_group.add_argument('--rsa_aes',
                                help='Path to RSA public key file, which is used to encrypt aes key',
                                nargs='?')
+        sub_parser.add_argument('--flash_patch_offset',
+                                help='Flash patch offset for ast2605',
+                                type=parse_number,
+                                default=None)
 
         cot_group = sub_parser.add_argument_group(
             'cot_group', 'Chain of trust argument')
@@ -1578,6 +1594,7 @@ class secTool(object):
                                        args.rsa_aes,
                                        args.key_in_otp,
                                        args.rsa_key_order,
+                                       args.flash_patch_offset,
                                        args.cot_algorithm,
                                        args.cot_verify_key,
                                        args.cot_digest,
