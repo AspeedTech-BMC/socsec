@@ -229,9 +229,8 @@
                     "pattern": "0[xX][0-9a-fA-F]+"
                 },
                 "Manifest ID": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 63
+                    "type": "string",
+                    "pattern": "0[xX][0-9a-fA-F]+"
                 },
                 "Patch code location": {
                     "type": "string",
@@ -242,6 +241,9 @@
                     "pattern": "0[xX][0-9a-fA-F]+"
                 },
                 "Disable patch code": {
+                    "type": "boolean"
+                },
+                "Disable Boot from Uart": {
                     "type": "boolean"
                 }
             }
