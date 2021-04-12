@@ -829,9 +829,9 @@ class OTP(object):
 
                 tmp = bitarray(bit_length)
                 tmp.setall(False)
+                bit_value = bitarray(bin(bit)[2:][::-1])
                 otp_strap[bit_offset:bit_offset+bit_length] = tmp
-                otp_strap[bit_offset:bit_offset+bit_length] = \
-                    bitarray(bin(bit)[2:][::-1])
+                otp_strap[bit_offset:bit_offset+len(bit_value)] = bit_value
 
             tmp = bitarray(bit_length)
             tmp.setall(False)
