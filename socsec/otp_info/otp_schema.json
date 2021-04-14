@@ -552,8 +552,8 @@
                         "value": {
                             "type": "string",
                             "enum": [
-                                "video_device",
-                                "vga_device"
+                                "vga_device",
+                                "video_device"
                             ]
                         }
                     }
