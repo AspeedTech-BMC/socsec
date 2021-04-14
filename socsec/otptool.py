@@ -375,7 +375,7 @@ class OTP(object):
             "additionalProperties": False,
             "properties": config_schema
         }
-        schema['properties']['strap_region'] = {
+        schema['properties']['otp_strap'] = {
             "type": "object",
             "additionalProperties": False,
             "properties": strap_schema
