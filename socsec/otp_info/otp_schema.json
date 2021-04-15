@@ -243,6 +243,9 @@
                 "Disable patch code": {
                     "type": "boolean"
                 },
+                "Enable patch code": {
+                    "type": "boolean"
+                },
                 "Disable Boot from Uart": {
                     "type": "boolean"
                 }
