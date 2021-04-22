@@ -96,6 +96,7 @@ make_otp() {
 	local slug=$(make_slug $@)
 
 	$RUN $OTPTOOL \
+		make_otp_image \
 		--key_folder tests/keys \
 		--output_folder tests/data/generated/${slug} \
 		tests/otp/${otp_slug}.json

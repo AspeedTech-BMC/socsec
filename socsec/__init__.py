@@ -176,6 +176,12 @@ def hexdump(data):
         print(line)
 
 
+class key_type(object):
+    def __init__(self, value, key_type, need_id, information):
+        self.value = value
+        self.key_type = key_type
+        self.need_id = need_id
+        self.information = information
 
 
 class OTP_info(object):
@@ -183,6 +189,10 @@ class OTP_info(object):
     HEADER_FORMAT = '<8s8s5I'
     HEADER_SIZE = struct.calcsize(HEADER_FORMAT)
     CHECKSUM_LEN = 32
+    OTP_KEY_TYPE_RSA = 1
+    OTP_KEY_TYPE_AES = 2
+    OTP_KEY_TYPE_VAULT = 3
+    OTP_KEY_TYPE_HMAC = 4
     INC_DATA = 1 << 31
     INC_CONF = 1 << 30
     INC_STRAP = 1 << 29
@@ -232,3 +242,52 @@ class OTP_info(object):
             'otp_strap_bit_size': 64,
         }
     }
+
+    a0_key_type = [
+        key_type(0, OTP_KEY_TYPE_AES, 0,
+                 'AES-256 as OEM platform key for image encryption/decryption'),
+        key_type(1, OTP_KEY_TYPE_VAULT, 0,
+                 'AES-256 as secret vault key'),
+        key_type(4, OTP_KEY_TYPE_HMAC, 1,
+                 'HMAC as encrypted OEM HMAC keys in Mode 1'),
+        key_type(8, OTP_KEY_TYPE_RSA, 1,
+                 'RSA-public as OEM DSS public keys in Mode 2'),
+        key_type(9, OTP_KEY_TYPE_RSA, 0,
+                 'RSA-public as SOC public key'),
+        key_type(10, OTP_KEY_TYPE_RSA, 0,
+                 'RSA-public as AES key decryption key'),
+        key_type(13, OTP_KEY_TYPE_RSA, 0,
+                 'RSA-private as SOC private key'),
+        key_type(14, OTP_KEY_TYPE_RSA, 0,
+                 'RSA-private as AES key decryption key'),
+    ]
+    a1_key_type = [
+        key_type(1, OTP_KEY_TYPE_VAULT, 0,
+                 'AES-256 as secret vault key'),
+        key_type(2, OTP_KEY_TYPE_AES, 1,
+                 'AES-256 as OEM platform key for image encryption/decryption in Mode 2 or AES-256 as OEM DSS keys for Mode GCM'),
+        key_type(8, OTP_KEY_TYPE_RSA, 1,
+                 'RSA-public as OEM DSS public keys in Mode 2'),
+        key_type(10, OTP_KEY_TYPE_RSA, 0,
+                 'RSA-public as AES key decryption key'),
+        key_type(14, OTP_KEY_TYPE_RSA, 0,
+                 'RSA-private as AES key decryption key'),
+    ]
+    a3_key_type = [
+        key_type(1, OTP_KEY_TYPE_VAULT, 0,
+                 'AES-256 as secret vault key'),
+        key_type(2, OTP_KEY_TYPE_AES, 1,
+                 'AES-256 as OEM platform key for image encryption/decryption in Mode 2 or AES-256 as OEM DSS keys for Mode GCM'),
+        key_type(8, OTP_KEY_TYPE_RSA, 1,
+                 'RSA-public as OEM DSS public keys in Mode 2'),
+        key_type(9, OTP_KEY_TYPE_RSA, 1,
+                 'RSA-public as OEM DSS public keys in Mode 2(big endian)'),
+        key_type(10, OTP_KEY_TYPE_RSA, 0,
+                 'RSA-public as AES key decryption key'),
+        key_type(11, OTP_KEY_TYPE_RSA, 0,
+                 'RSA-public as AES key decryption key(big endian)'),
+        key_type(12, OTP_KEY_TYPE_RSA, 0,
+                 'RSA-private as AES key decryption key'),
+        key_type(13, OTP_KEY_TYPE_RSA, 0,
+                 'RSA-private as AES key decryption key(big endian)'),
+    ]
