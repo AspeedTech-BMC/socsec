@@ -1144,14 +1144,14 @@ class SecureBootVerify(object):
                 if rsa_len != alg_data.signature_num_bytes:
                     raise SecError(
                         "OTP key type is not compatible with config")
+                
+                key_offset = kl['OFFSET']
 
-                kl['M'] = data_region[kl['OFFSET']: kl['OFFSET']+rsa_len]
+                kl['M'] = data_region[key_offset: key_offset+rsa_len]
                 if kl['TYPE'] == RSA_SOC_PRI:
-                    e_len = rsa_len
+                    kl['E'] = data_region[key_offset + rsa_len: key_offset + rsa_len*2]
                 else:
-                    e_len = 3
-                kl['E'] = data_region[kl['OFFSET'] +
-                                      rsa_len: kl['OFFSET']+rsa_len + e_len]
+                    kl['E'] = bytearray([0x01,0x0,0x01])
             elif kl['TYPE'] == AES_OEM:
                 kl['AES'] = data_region[kl['OFFSET']: kl['OFFSET']+32]
             elif kl['TYPE'] == AES_VAULT:

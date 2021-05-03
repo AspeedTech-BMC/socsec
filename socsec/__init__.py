@@ -78,6 +78,8 @@ def rsa_key_to_bin(rsa_key_file, types, order='little'):
     rsa_key = rsa_importkey(rsa_key_file)
     rsa_len = _rsa_bit_length(rsa_key, 'n')
 
+    m_len = int(rsa_len/8)
+
     n = bitarray(bin(rsa_key.n)[2:])
     e = bitarray(bin(rsa_key.e)[2:])
     n_remain = (8-(n.length() % 8)) % 8
@@ -96,7 +98,11 @@ def rsa_key_to_bin(rsa_key_file, types, order='little'):
         e_b.reverse()
 
     if types == 'public':
-        exp = e_b
+        exp = bytearray([0x01, 0x0, 0x01])
+        if e_b != exp:
+            raise ValueError("Incorrect public key, e must be \"0x10001\"")
+        key_bin = bytearray(m_len)
+        insert_bytearray(n_b, key_bin, 0)
     elif types == 'private':
         d = bitarray(bin(rsa_key.d)[2:])
         d_remain = (8-(d.length() % 8)) % 8
@@ -106,22 +112,11 @@ def rsa_key_to_bin(rsa_key_file, types, order='little'):
         d_b = bytearray(d)
         if order == 'little':
             d_b.reverse()
-        exp = d_b
+        key_bin = bytearray(m_len * 2)
+        insert_bytearray(n_b, key_bin, 0)
+        insert_bytearray(d_b, key_bin, m_len)
     else:
         raise ValueError("types error")
-
-    if rsa_len == 1024:
-        m_len = 128
-    elif rsa_len == 2048:
-        m_len = 256
-    elif rsa_len == 3072:
-        m_len = 384
-    else:
-        m_len = 512
-
-    key_bin = bytearray(m_len * 2)
-    insert_bytearray(n_b, key_bin, 0)
-    insert_bytearray(exp, key_bin, m_len)
 
     return key_bin
 
@@ -189,10 +184,11 @@ class OTP_info(object):
     HEADER_FORMAT = '<8s8s5I'
     HEADER_SIZE = struct.calcsize(HEADER_FORMAT)
     CHECKSUM_LEN = 32
-    OTP_KEY_TYPE_RSA = 1
-    OTP_KEY_TYPE_AES = 2
-    OTP_KEY_TYPE_VAULT = 3
-    OTP_KEY_TYPE_HMAC = 4
+    OTP_KEY_TYPE_RSA_PUB = 1
+    OTP_KEY_TYPE_RSA_PRIV = 2
+    OTP_KEY_TYPE_AES = 3
+    OTP_KEY_TYPE_VAULT = 4
+    OTP_KEY_TYPE_HMAC = 5
     INC_DATA = 1 << 31
     INC_CONF = 1 << 30
     INC_STRAP = 1 << 29
@@ -250,15 +246,15 @@ class OTP_info(object):
                  'AES-256 as secret vault key'),
         key_type(4, OTP_KEY_TYPE_HMAC, 1,
                  'HMAC as encrypted OEM HMAC keys in Mode 1'),
-        key_type(8, OTP_KEY_TYPE_RSA, 1,
+        key_type(8, OTP_KEY_TYPE_RSA_PUB, 1,
                  'RSA-public as OEM DSS public keys in Mode 2'),
-        key_type(9, OTP_KEY_TYPE_RSA, 0,
+        key_type(9, OTP_KEY_TYPE_RSA_PUB, 0,
                  'RSA-public as SOC public key'),
-        key_type(10, OTP_KEY_TYPE_RSA, 0,
+        key_type(10, OTP_KEY_TYPE_RSA_PUB, 0,
                  'RSA-public as AES key decryption key'),
-        key_type(13, OTP_KEY_TYPE_RSA, 0,
+        key_type(13, OTP_KEY_TYPE_RSA_PRIV, 0,
                  'RSA-private as SOC private key'),
-        key_type(14, OTP_KEY_TYPE_RSA, 0,
+        key_type(14, OTP_KEY_TYPE_RSA_PRIV, 0,
                  'RSA-private as AES key decryption key'),
     ]
     a1_key_type = [
@@ -266,11 +262,11 @@ class OTP_info(object):
                  'AES-256 as secret vault key'),
         key_type(2, OTP_KEY_TYPE_AES, 1,
                  'AES-256 as OEM platform key for image encryption/decryption in Mode 2 or AES-256 as OEM DSS keys for Mode GCM'),
-        key_type(8, OTP_KEY_TYPE_RSA, 1,
+        key_type(8, OTP_KEY_TYPE_RSA_PUB, 1,
                  'RSA-public as OEM DSS public keys in Mode 2'),
-        key_type(10, OTP_KEY_TYPE_RSA, 0,
+        key_type(10, OTP_KEY_TYPE_RSA_PUB, 0,
                  'RSA-public as AES key decryption key'),
-        key_type(14, OTP_KEY_TYPE_RSA, 0,
+        key_type(14, OTP_KEY_TYPE_RSA_PRIV, 0,
                  'RSA-private as AES key decryption key'),
     ]
     a3_key_type = [
@@ -278,16 +274,16 @@ class OTP_info(object):
                  'AES-256 as secret vault key'),
         key_type(2, OTP_KEY_TYPE_AES, 1,
                  'AES-256 as OEM platform key for image encryption/decryption in Mode 2 or AES-256 as OEM DSS keys for Mode GCM'),
-        key_type(8, OTP_KEY_TYPE_RSA, 1,
+        key_type(8, OTP_KEY_TYPE_RSA_PUB, 1,
                  'RSA-public as OEM DSS public keys in Mode 2'),
-        key_type(9, OTP_KEY_TYPE_RSA, 1,
+        key_type(9, OTP_KEY_TYPE_RSA_PUB, 1,
                  'RSA-public as OEM DSS public keys in Mode 2(big endian)'),
-        key_type(10, OTP_KEY_TYPE_RSA, 0,
+        key_type(10, OTP_KEY_TYPE_RSA_PUB, 0,
                  'RSA-public as AES key decryption key'),
-        key_type(11, OTP_KEY_TYPE_RSA, 0,
+        key_type(11, OTP_KEY_TYPE_RSA_PUB, 0,
                  'RSA-public as AES key decryption key(big endian)'),
-        key_type(12, OTP_KEY_TYPE_RSA, 0,
+        key_type(12, OTP_KEY_TYPE_RSA_PRIV, 0,
                  'RSA-private as AES key decryption key'),
-        key_type(13, OTP_KEY_TYPE_RSA, 0,
+        key_type(13, OTP_KEY_TYPE_RSA_PRIV, 0,
                  'RSA-private as AES key decryption key(big endian)'),
     ]

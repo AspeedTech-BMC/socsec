@@ -1142,7 +1142,8 @@ class OTP(object):
             print('key[{}]:'.format(i))
             print("Key Type: {}".format(info))
 
-            if key_type == self.otp_info.OTP_KEY_TYPE_RSA:
+            if key_type in [self.otp_info.OTP_KEY_TYPE_RSA_PRIV,
+                            self.otp_info.OTP_KEY_TYPE_RSA_PUB]:
                 if key_length == 0:
                     rsa_len = 1024//8
                     rsa_type = 'RSA1024'
@@ -1157,8 +1158,11 @@ class OTP(object):
                     rsa_type = 'RSA4096'
                 exp_length = math.ceil(exp_length/8)
                 rsa_mod = data_region[key_offset: key_offset+rsa_len]
-                rsa_exp = data_region[key_offset +
+                if key_type == self.otp_info.OTP_KEY_TYPE_RSA_PRIV:
+                    rsa_exp = data_region[key_offset +
                                       rsa_len: key_offset+rsa_len+exp_length]
+                else:
+                    rsa_exp = bytearray([0x01, 0x0, 0x01])
                 print('RSA Length: {}'.format(rsa_type))
                 print('RSA exponent bit length: {}'.format(exp_length))
                 if need_id == 1:
