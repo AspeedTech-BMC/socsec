@@ -1487,6 +1487,10 @@ class OTP(object):
             ver = 'A2'
             key_type_list = self.otp_info.a1_key_type
             otp_info = self.otp_info.OTP_INFO['A2']
+        elif ver_s[:2] == 'A3':
+            ver = 'A3'
+            key_type_list = self.otp_info.a3_key_type
+            otp_info = self.otp_info.OTP_INFO['A3']
         elif ver_s[:6] == '1030A0':
             ver = '1030A0'
             key_type_list = self.otp_info.a1_key_type
@@ -1550,6 +1554,10 @@ class OTP(object):
             ver = 'A2'
             key_type_list = self.otp_info.a1_key_type
             otp_info = self.otp_info.OTP_INFO['A2']
+        elif ver_s[:2] == 'A3':
+            ver = 'A3'
+            key_type_list = self.otp_info.a1_key_type
+            otp_info = self.otp_info.OTP_INFO['A3']
         elif ver_s[:4] == '1030A0':
             ver = '1030A0'
             key_type_list = self.otp_info.a1_key_type
