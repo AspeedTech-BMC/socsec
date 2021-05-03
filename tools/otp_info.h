@@ -3,7 +3,7 @@
  * Do not edit it.
  */
 
-#define OTP_INFO_VER		"1.0.1"
+#define OTP_INFO_VER		"1.0.2"
 #define OTP_REG_RESERVED	-1
 #define OTP_REG_VALUE		-2
 #define OTP_REG_VALID_BIT	-3
@@ -671,8 +671,8 @@ static const struct otpconf_info a1_conf_info[] = {
 };
 
 static const struct otpconf_info a2_conf_info[] = {
-	{ 0, 1, 1, 0, "Enable OTP Memory BIST Mode" },
-	{ 0, 1, 1, 1, "Disable OTP Memory BIST Mode" },
+	{ 0, 0, 1, 0, "Enable OTP Memory BIST Mode" },
+	{ 0, 0, 1, 1, "Disable OTP Memory BIST Mode" },
 	{ 0, 1, 1, 0, "Disable Secure Boot" },
 	{ 0, 1, 1, 1, "Enable Secure Boot" },
 	{ 0, 3, 1, 0, "User region ECC disable" },

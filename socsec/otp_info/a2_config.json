@@ -3,7 +3,7 @@
         "key": "Disable OTP Memory BIST Mode",
         "type": "boolean",
         "dw_offset": 0,
-        "bit_offset": 1,
+        "bit_offset": 0,
         "info": [
             "Enable OTP Memory BIST Mode",
             "Disable OTP Memory BIST Mode"
