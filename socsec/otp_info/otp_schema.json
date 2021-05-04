@@ -176,6 +176,18 @@
                         "SHA512"
                     ]
                 },
+                "Signature Scheme": {
+                    "type": "string",
+                    "enum": [
+                        "ECDSA_384",
+                        "RSAPSS_2048_SHA256",
+                        "RSAPSS_3072_SHA384",
+                        "RSAPSS_4096_SHA512",
+                        "RSAPKCS1_2048_SHA256",
+                        "RSAPKCS1_3072_SHA384",
+                        "RSAPKCS1_4096_SHA512"
+                    ]
+                },
                 "Secure Region size": {
                     "type": "string",
                     "pattern": "0[xX][0-9a-fA-F]+"

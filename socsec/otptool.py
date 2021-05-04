@@ -216,7 +216,8 @@ class OTP(object):
                         "A1",
                         "A2",
                         "A3",
-                        "1030A0"
+                        "1030A0",
+                        "1030A1"
                     ]
                 },
                 "data_region": {
@@ -918,6 +919,12 @@ class OTP(object):
             version = '1030A0'
             genKeyHeader = self.genKeyHeader_a1
             key_to_bytearray = self.key_to_bytearray_a1
+        elif otp_config['version'] == '1030A1':
+            otp_config['data_region']['rsa_key_order'] = 'big'
+            otp_info = self.otp_info.OTP_INFO['1030A1']
+            version = '1030A1'
+            genKeyHeader = self.genKeyHeader_a3_big
+            key_to_bytearray = self.key_to_bytearray_a3_big
         else:
             raise OtpError('version is invalid')
 
@@ -1495,6 +1502,10 @@ class OTP(object):
             ver = '1030A0'
             key_type_list = self.otp_info.a1_key_type
             otp_info = self.otp_info.OTP_INFO['1030A0']
+        elif ver_s[:6] == '1030A1':
+            ver = '1030A1'
+            key_type_list = self.otp_info.ast1030a1_key_type
+            otp_info = self.otp_info.OTP_INFO['1030A1']
         else:
             print('OTP image version is invalid: {}'.format(ver_s))
             return False
@@ -1562,6 +1573,10 @@ class OTP(object):
             ver = '1030A0'
             key_type_list = self.otp_info.a1_key_type
             otp_info = self.otp_info.OTP_INFO['1030A0']
+        elif ver_s[:6] == '1030A1':
+            ver = '1030A1'
+            key_type_list = self.otp_info.ast1030a1_key_type
+            otp_info = self.otp_info.OTP_INFO['1030A1']
         else:
             print('OTP image version is invalid: {}'.format(ver_s))
             return False

@@ -236,6 +236,14 @@ class OTP_info(object):
             'ecc_region_offset': 7168,
             'config_region_size': 64,
             'otp_strap_bit_size': 64,
+        },
+        '1030A1': {
+            'config': pkgdata('socsec', 'otp_info/1030a1_config.json'),
+            'strap': pkgdata('socsec', 'otp_info/1030a1_strap.json'),
+            'data_region_size': 8192,
+            'ecc_region_offset': 7168,
+            'config_region_size': 64,
+            'otp_strap_bit_size': 64,
         }
     }
 
@@ -270,6 +278,24 @@ class OTP_info(object):
                  'RSA-private as AES key decryption key'),
     ]
     a3_key_type = [
+        key_type(1, OTP_KEY_TYPE_VAULT, 0,
+                 'AES-256 as secret vault key'),
+        key_type(2, OTP_KEY_TYPE_AES, 1,
+                 'AES-256 as OEM platform key for image encryption/decryption in Mode 2 or AES-256 as OEM DSS keys for Mode GCM'),
+        key_type(8, OTP_KEY_TYPE_RSA_PUB, 1,
+                 'RSA-public as OEM DSS public keys in Mode 2'),
+        key_type(9, OTP_KEY_TYPE_RSA_PUB, 1,
+                 'RSA-public as OEM DSS public keys in Mode 2(big endian)'),
+        key_type(10, OTP_KEY_TYPE_RSA_PUB, 0,
+                 'RSA-public as AES key decryption key'),
+        key_type(11, OTP_KEY_TYPE_RSA_PUB, 0,
+                 'RSA-public as AES key decryption key(big endian)'),
+        key_type(12, OTP_KEY_TYPE_RSA_PRIV, 0,
+                 'RSA-private as AES key decryption key'),
+        key_type(13, OTP_KEY_TYPE_RSA_PRIV, 0,
+                 'RSA-private as AES key decryption key(big endian)'),
+    ]
+    ast1030a1_key_type = [
         key_type(1, OTP_KEY_TYPE_VAULT, 0,
                  'AES-256 as secret vault key'),
         key_type(2, OTP_KEY_TYPE_AES, 1,
