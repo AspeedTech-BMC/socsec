@@ -650,13 +650,9 @@ class Sec(object):
                 next_alg_data = self.parse_cot_info(info)
                 next_vk_n = part_image[npkey_offset:npkey_offset +
                                        int(next_alg_data.public_key_num_bytes / 2)]
-                next_vk_e = part_image[int(npkey_offset + next_alg_data.public_key_num_bytes / 2):
-                                       npkey_offset + next_alg_data.public_key_num_bytes]
                 next_vk_n = int.from_bytes(
                     next_vk_n, byteorder=rsa_key_order, signed=False)
-                next_vk_e = int.from_bytes(
-                    next_vk_e, byteorder=rsa_key_order, signed=False)
-                next_vk_obj = RSA.construct((next_vk_n, next_vk_e))
+                next_vk_obj = RSA.construct((next_vk_n, 65537))
                 signing_file = tempfile.NamedTemporaryFile()
                 next_vk_obj.exportKey
                 signing_file.write(next_vk_obj.publickey().exportKey('PEM'))
@@ -817,7 +813,6 @@ class Sec(object):
                             verify_key_path, cot_digest_fd, cot_data_offset):
 
         if cot_alg_data.algorithm_type == RSA_SHA:
-            e_bits = rsa_bit_length(verify_key_path, 'e')
             cot_data = bytearray(rsa_key_to_bin(verify_key_path, 'public'))
         elif cot_alg_data.algorithm_type == HASH_BINDING:
             cot_data = bytearray(cot_digest_fd.read())
@@ -825,7 +820,7 @@ class Sec(object):
             raise SecError(
                 "COT only support RSA_SHA and HASH_BINDING algorithm")
 
-        info = self._cot_info(cot_alg_data, e_bits)
+        info = self._cot_info(cot_alg_data, 17)
         cot_header = struct.pack(
             self.COT_INFO_FORMAT,
             info,
@@ -1078,8 +1073,7 @@ class Sec(object):
             sign_image_size = npkey_offset + alg_data.public_key_num_bytes
             insert_bytearray(npkey_bin, image, npkey_offset)
 
-            e_bits = rsa_bit_length(descriptor.next_verify_key_path, 'e')
-            info = self._cot_info(alg_data, e_bits)
+            info = self._cot_info(alg_data, 17)
         else:
             sign_image_size = (image_len + 0xf) & (~0xf)
             info = 0
