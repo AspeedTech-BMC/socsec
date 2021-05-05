@@ -33,14 +33,45 @@ render() {
 	local slug=${soc}-${rev}_${mode}-rsa${rot_rsa}-sha${rot_sha}
 	local config=tests/otp/${slug}.json
 
-	local REV=$(echo $rev | tr '[a-z]' '[A-Z]')
+	if [ $soc = "1030" ]
+	then
+		local soc_rev=${soc}${rev^^}
+	else
+		local soc_rev=${rev^^}
+	fi
 
 	cp tests/otp/${mode}-template.json $config
 	sed -ri "s/@@SLUG@@/${slug}/g" $config
-	sed -ri "s/@@VERSION@@/${REV}/g" $config
+	sed -ri "s/@@VERSION@@/${soc_rev}/g" $config
 	sed -ri "s/@@RSA@@/${rot_rsa}/g" $config
 	sed -ri "s/@@SHA@@/${rot_sha}/g" $config
 	sed -ri "s/@@MODE@@/Mode_2/g" $config
+}
+# render_v2 is for AST1030A1 new signature schema
+render_v2() {
+	local soc=$1
+	local rev=$2
+	local mode=$3
+	local rot_rsa=$4
+	local rot_sha=$5
+	local rsa_padding=$6
+
+	local slug=${soc}-${rev}_${mode}${rsa_padding}-rsa${rot_rsa}-sha${rot_sha}
+	local config=tests/otp/${slug}.json
+
+	if [ $soc = "1030" ]
+	then
+		local soc_rev=${soc}${rev^^}
+	else
+		local soc_rev=${rev^^}
+	fi
+
+	cp tests/otp/${mode}-template.json $config
+	sed -ri "s/@@SLUG@@/${slug}/g" $config
+	sed -ri "s/@@VERSION@@/${soc_rev}/g" $config
+	sed -ri "s/@@PADDING@@/${rsa_padding^^}/g" $config
+	sed -ri "s/@@RSA@@/${rot_rsa}/g" $config
+	sed -ri "s/@@SHA@@/${rot_sha}/g" $config
 }
 
 for soc in 2600 1030
@@ -54,6 +85,12 @@ do
 			then
 				continue
 			fi
+			
+			# AST2600A0 template is different from general
+			if [ $soc = "2600" -a $rev = 'a0' ]
+			then
+				continue
+			fi
 
 			for rsa in 1024 2048 3072 4096
 			do
@@ -62,6 +99,18 @@ do
 					render $soc $rev $mode $rsa $sha
 				done
 			done
+		done
+	done
+done
+
+# AST1030A1 has new signature schema
+for mode in mode2v2 mode2v2aes1 mode2v2aes2
+do
+	for rsa_padding in pss pkcs1
+	do
+		for algo in "2048 256" "3072 384" "4096 512"
+		do
+			render_v2 1030 a1 $mode $algo $rsa_padding
 		done
 	done
 done

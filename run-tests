@@ -104,10 +104,18 @@ make_otp() {
 
 verify_image() {
 	local soc=$1
+	local rev=$2
 	local slug=$(make_slug $@)
 
+	if [ $soc = "1030" ]
+	then
+		local soc_rev=${soc}${rev^^}
+	else
+		local soc_rev=${soc}
+	fi
+	echo $soc_rev
 	$RUN $SOCSEC verify \
-		--soc $soc \
+		--soc $soc_rev \
 		--sec_image tests/data/generated/${slug}/bl1.signed.bin \
 		--output tests/data/generated/${slug}/bl1.bin \
 		--otp_image tests/data/generated/${slug}/otp-all.image
@@ -157,6 +165,184 @@ make_mode2_bl1_image() {
 		$args
 
 	verify_image $soc $rev mode2 $rot_rsa $rot_sha $@
+}
+
+make_mode2v2pss_bl1_image() {
+	local soc=$1
+	local rev=$2
+	local rot_rsa=$3
+	local rot_sha=$4
+	shift 4
+
+	local slug=$(make_slug $soc $rev mode2v2pss $rot_rsa $rot_sha $@)
+
+	mkdir -p tests/data/generated/${slug}
+
+	make_otp $soc $rev mode2v2pss $rot_rsa $rot_sha $@
+
+	args=$(parse_config $@)
+
+	$RUN $SOCSEC make_secure_bl1_image \
+		--soc $soc \
+		--algorithm RSA${rot_rsa}_SHA${rot_sha} \
+		--bl1_image $BL1_IMAGE \
+		--output tests/data/generated/${slug}/bl1.signed.bin \
+		--rsa_sign_key tests/keys/rsa${rot_rsa}.pem \
+		--deterministic \
+		--rsa_padding pss \
+		$args
+
+	verify_image $soc $rev mode2v2pss $rot_rsa $rot_sha $@
+}
+
+make_mode2v2pkcs1_bl1_image() {
+	local soc=$1
+	local rev=$2
+	local rot_rsa=$3
+	local rot_sha=$4
+	shift 4
+
+	local slug=$(make_slug $soc $rev mode2v2pkcs1 $rot_rsa $rot_sha $@)
+
+	mkdir -p tests/data/generated/${slug}
+
+	make_otp $soc $rev mode2v2pkcs1 $rot_rsa $rot_sha $@
+
+	args=$(parse_config $@)
+
+	$RUN $SOCSEC make_secure_bl1_image \
+		--soc $soc \
+		--algorithm RSA${rot_rsa}_SHA${rot_sha} \
+		--bl1_image $BL1_IMAGE \
+		--rsa_key_order big \
+		--output tests/data/generated/${slug}/bl1.signed.bin \
+		--rsa_sign_key tests/keys/rsa${rot_rsa}.pem \
+		--rsa_padding pkcs1 \
+		$args
+
+	verify_image $soc $rev mode2v2pkcs1 $rot_rsa $rot_sha $@
+}
+
+make_mode2v2aes1pss_bl1_image() {
+	local soc=$1
+	local rev=$2
+	local rot_rsa=$3
+	local rot_sha=$4
+	shift 4
+
+	local slug=$(make_slug $soc $rev mode2v2aes1pss $rot_rsa $rot_sha $@)
+
+	mkdir -p tests/data/generated/${slug}
+
+	make_otp $soc $rev mode2v2aes1pss $rot_rsa $rot_sha $@
+
+	args=$(parse_config $@)
+
+	$RUN $SOCSEC make_secure_bl1_image \
+		--soc $soc \
+		--algorithm AES_RSA${rot_rsa}_SHA${rot_sha} \
+		--bl1_image $BL1_IMAGE \
+		--output tests/data/generated/${slug}/bl1.signed.bin \
+		--rsa_sign_key tests/keys/rsa${rot_rsa}.pem \
+		--key_in_otp \
+		--aes_key tests/keys/aes-oem.bin \
+		--deterministic \
+		--rsa_padding pss \
+		$args
+
+	verify_image $soc $rev mode2v2aes1pss $rot_rsa $rot_sha $@
+}
+
+make_mode2v2aes2pss_bl1_image() {
+	local soc=$1
+	local rev=$2
+	local rot_rsa=$3
+	local rot_sha=$4
+	shift 4
+
+	local slug=$(make_slug $soc $rev mode2v2aes2pss $rot_rsa $rot_sha $@)
+
+	mkdir -p tests/data/generated/${slug}
+
+	make_otp $soc $rev mode2v2aes2pss $rot_rsa $rot_sha $@
+
+	args=$(parse_config $@)
+
+	$RUN $SOCSEC make_secure_bl1_image \
+		--soc $soc \
+		--algorithm AES_RSA${rot_rsa}_SHA${rot_sha} \
+		--bl1_image $BL1_IMAGE \
+		--output tests/data/generated/${slug}/bl1.signed.bin \
+		--rsa_sign_key tests/keys/rsa${rot_rsa}.pem \
+		--aes_key tests/keys/aes-oem.bin \
+		--rsa_aes tests/keys/rsa${rot_rsa}.pub.pem \
+		--deterministic \
+		--rsa_padding pss \
+		$args
+
+	verify_image $soc $rev mode2v2aes2pss $rot_rsa $rot_sha $@
+}
+
+make_mode2v2aes1pkcs1_bl1_image() {
+	local soc=$1
+	local rev=$2
+	local rot_rsa=$3
+	local rot_sha=$4
+	shift 4
+
+	local slug=$(make_slug $soc $rev mode2v2aes1pkcs1 $rot_rsa $rot_sha $@)
+
+	mkdir -p tests/data/generated/${slug}
+
+	make_otp $soc $rev mode2v2aes1pkcs1 $rot_rsa $rot_sha $@
+
+	args=$(parse_config $@)
+
+	$RUN $SOCSEC make_secure_bl1_image \
+		--soc $soc \
+		--algorithm AES_RSA${rot_rsa}_SHA${rot_sha} \
+		--bl1_image $BL1_IMAGE \
+		--output tests/data/generated/${slug}/bl1.signed.bin \
+		--rsa_sign_key tests/keys/rsa${rot_rsa}.pem \
+		--rsa_key_order big \
+		--key_in_otp \
+		--aes_key tests/keys/aes-oem.bin \
+		--deterministic \
+		--rsa_padding pkcs1 \
+		$args
+
+	verify_image $soc $rev mode2v2aes1pkcs1 $rot_rsa $rot_sha $@
+}
+
+make_mode2v2aes2pkcs1_bl1_image() {
+	local soc=$1
+	local rev=$2
+	local rot_rsa=$3
+	local rot_sha=$4
+	shift 4
+
+	local slug=$(make_slug $soc $rev mode2v2aes2pkcs1 $rot_rsa $rot_sha $@)
+
+	mkdir -p tests/data/generated/${slug}
+
+	make_otp $soc $rev mode2v2aes2pkcs1 $rot_rsa $rot_sha $@
+
+	args=$(parse_config $@)
+
+	$RUN $SOCSEC make_secure_bl1_image \
+		--soc $soc \
+		--algorithm AES_RSA${rot_rsa}_SHA${rot_sha} \
+		--bl1_image $BL1_IMAGE \
+		--output tests/data/generated/${slug}/bl1.signed.bin \
+		--rsa_sign_key tests/keys/rsa${rot_rsa}.pem \
+		--rsa_key_order big \
+		--aes_key tests/keys/aes-oem.bin \
+		--rsa_aes tests/keys/rsa${rot_rsa}.pub.pem \
+		--deterministic \
+		--rsa_padding pkcs1 \
+		$args
+
+	verify_image $soc $rev mode2v2aes2pkcs1 $rot_rsa $rot_sha $@
 }
 
 make_cot_mode2_bl1_image() {
@@ -566,6 +752,20 @@ exercise_soc_revs() {
 	done
 }
 
+exercise_mode2v2() {
+	for mode in mode2v2 mode2v2aes1 mode2v2aes2
+	do
+		for rsa_padding in pkcs1 pss
+		do
+			for algo in "2048 256" "3072 384" "4096 512"
+			do
+				echo make_${mode}${rsa_padding}_bl1_image 1030 a1 ${algo}
+				make_${mode}${rsa_padding}_bl1_image 1030 a1 ${algo}
+			done
+		done
+	done
+}
+
 compare_results() {
 	find tests/data/reference -type f | sort | while read R
 	do
@@ -585,6 +785,7 @@ run() {
 	exercise_sv_chain_image
 	exercise_signing_helpers
 	exercise_soc_revs
+	exercise_mode2v2
 
 	compare_results
 }
