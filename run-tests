@@ -56,7 +56,21 @@ make_slug() {
 
 		shift 2
 
-		echo -n ${soc}-${rev}_${rot_mode}-rsa${rot_rsa}-sha${rot_sha}
+		if [ $# -eq 1  ]
+		then
+			if [ $1 = "big" -o $1 = "little" ]
+			then
+				local order=$1
+
+				shift 1
+
+				echo -n ${soc}-${rev}_${rot_mode}-rsa${rot_rsa}-sha${rot_sha}-${order}
+			else
+				echo -n ${soc}-${rev}_${rot_mode}-rsa${rot_rsa}-sha${rot_sha}
+			fi
+		else
+			echo -n ${soc}-${rev}_${rot_mode}-rsa${rot_rsa}-sha${rot_sha}
+		fi
 
 		if [ $# -ge 3 ]
 		then
@@ -90,7 +104,18 @@ make_otp() {
 		local rot_rsa=$4
 		local rot_sha=$5
 
-		local otp_slug=$(make_slug $soc $rev $rot_mode $rot_rsa $rot_sha)
+		if [ $# -eq 6  ]
+		then
+			if [ $6 = "big" -o $6 = 'little' ]
+			then
+				local order=$6
+				local otp_slug=$(make_slug $soc $rev $rot_mode $rot_rsa $rot_sha $order)
+			else
+				local otp_slug=$(make_slug $soc $rev $rot_mode $rot_rsa $rot_sha)
+			fi
+		else
+			local otp_slug=$(make_slug $soc $rev $rot_mode $rot_rsa $rot_sha)
+		fi
 	fi
 	set -u
 	local slug=$(make_slug $@)
@@ -107,9 +132,10 @@ verify_image() {
 	local rev=$2
 	local slug=$(make_slug $@)
 
+	local REV=$(echo $rev | tr '[a-z]' '[A-Z]')
 	if [ $soc = "1030" ]
 	then
-		local soc_rev=${soc}${rev^^}
+		local soc_rev=${soc}${REV}
 	else
 		local soc_rev=${soc}
 	fi
@@ -132,6 +158,12 @@ parse_config() {
 			;;
 		sign-file)
 			args="--signing_helper_with_files ./tests/bin/sign-file"
+			;;
+		little)
+			args="--rsa_key_order little"
+			;;
+		big)
+			args="--rsa_key_order big"
 			;;
 		*)
 			;;
@@ -766,6 +798,34 @@ exercise_mode2v2() {
 	done
 }
 
+exercise_bl1_mode2_big() {
+	for rot_rsa in 2048 3072 4096
+	do
+		for rot_sha in 256 384 512
+		do
+			make_mode2_bl1_image 2600 a3 $rot_rsa $rot_sha big &
+			make_mode2aes1_bl1_image 2600 a3 $rot_rsa $rot_sha big &
+			make_mode2aes2_bl1_image 2600 a3 $rot_rsa $rot_sha big &
+		done
+
+		wait
+	done
+}
+
+exercise_bl1_mode2_little() {
+	for rot_rsa in 2048 3072 4096
+	do
+		for rot_sha in 256 384 512
+		do
+			make_mode2_bl1_image 2600 a3 $rot_rsa $rot_sha little &
+			make_mode2aes1_bl1_image 2600 a3 $rot_rsa $rot_sha little &
+			make_mode2aes2_bl1_image 2600 a3 $rot_rsa $rot_sha little &
+		done
+
+		wait
+	done
+}
+
 compare_results() {
 	find tests/data/reference -type f | sort | while read R
 	do
@@ -786,6 +846,8 @@ run() {
 	exercise_signing_helpers
 	exercise_soc_revs
 	exercise_mode2v2
+	exercise_bl1_mode2_big
+	exercise_bl1_mode2_little
 
 	compare_results
 }
