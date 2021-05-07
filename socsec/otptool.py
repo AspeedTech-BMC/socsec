@@ -24,6 +24,7 @@ import array
 import jstyleson
 import struct
 import os
+import math
 from bitarray import bitarray
 from jsonschema import validate
 from Crypto.Hash import SHA256
@@ -31,6 +32,7 @@ from socsec import parse_path
 from socsec import insert_bytearray
 from socsec import rsa_bit_length
 from socsec import rsa_key_to_bin
+from socsec import hexdump
 from socsec import OTP_info
 
 
@@ -117,6 +119,10 @@ class ECC (object):
         return result
 
 
+def BIT(off):
+    return 1 << off
+
+
 def load_file(file_path: str):
     with open(file_path, 'rb') as f:
         file_bin = f.read()
@@ -170,6 +176,23 @@ def writeDWHexFile(in_bin: bytearray, dst_path: str):
         outf.close()
 
 
+class image_header(object):
+    def __init__(self, header):
+        (self.magic, self.ver, self.image_info, self.data_info,
+         self.config_info, self.strap_info,
+         self.checksum_offset) = struct.unpack(OTP.otp_info.HEADER_FORMAT, header)
+
+
+class strap_sts(object):
+    def __init__(self):
+        self.value = 0
+        self.option_array = [0] * 7
+        self.remain_times = 0
+        self.writeable_option = -1
+        self.reg_protected = 0
+        self.protected = 0
+
+
 class OTP(object):
     """otptool command-line tool."""
     otp_info = OTP_info
@@ -193,7 +216,8 @@ class OTP(object):
                         "A1",
                         "A2",
                         "A3",
-                        "1030A0"
+                        "1030A0",
+                        "1030A1"
                     ]
                 },
                 "data_region": {
@@ -375,7 +399,7 @@ class OTP(object):
             "additionalProperties": False,
             "properties": config_schema
         }
-        schema['properties']['strap_region'] = {
+        schema['properties']['otp_strap'] = {
             "type": "object",
             "additionalProperties": False,
             "properties": strap_schema
@@ -507,7 +531,7 @@ class OTP(object):
                 exp_length = rsa_bit_length(rsa_key_file, 'd')
             header |= exp_length << 20
         return header
-    
+
     def genKeyHeader_a3_little(self, key_config, key_folder):
         types = key_config['types']
         offset = int(key_config['offset'], 16)
@@ -829,9 +853,9 @@ class OTP(object):
 
                 tmp = bitarray(bit_length)
                 tmp.setall(False)
+                bit_value = bitarray(bin(bit)[2:][::-1])
                 otp_strap[bit_offset:bit_offset+bit_length] = tmp
-                otp_strap[bit_offset:bit_offset+bit_length] = \
-                    bitarray(bin(bit)[2:][::-1])
+                otp_strap[bit_offset:bit_offset+len(bit_value)] = bit_value
 
             tmp = bitarray(bit_length)
             tmp.setall(False)
@@ -895,6 +919,12 @@ class OTP(object):
             version = '1030A0'
             genKeyHeader = self.genKeyHeader_a1
             key_to_bytearray = self.key_to_bytearray_a1
+        elif otp_config['version'] == '1030A1':
+            otp_config['data_region']['rsa_key_order'] = 'big'
+            otp_info = self.otp_info.OTP_INFO['1030A1']
+            version = '1030A1'
+            genKeyHeader = self.genKeyHeader_a3_big
+            key_to_bytearray = self.key_to_bytearray_a3_big
         else:
             raise OtpError('version is invalid')
 
@@ -1079,6 +1109,519 @@ class OTP(object):
         writeBinFile(header+data_all+config_all +
                      otp_strap_all+checksum, all_image_output)
 
+    def otp_print_image_data(self, ver, key_type_list, data_region, config_region):
+        key_header = []
+        find_last = 0
+        for i in range(16):
+            h = struct.unpack('<I', data_region[(i*4):(i*4+4)])[0]
+            key_header.append(h)
+            if h & (1 << 13):
+                find_last = 1
+                break
+
+        if find_last == 0:
+            print("Can not find Last Key List in OTP data region")
+            return False
+        i = 0
+        for h in key_header:
+            key_id = h & 0x7
+            key_offset = ((h >> 3) & 0x3ff) << 3
+            key_type_h = (h >> 14) & 0xf
+            key_length = (h >> 18) & 0x3
+            exp_length = (h >> 20) & 0xfff
+            key_type = None
+            info = None
+            need_id = None
+
+            for kt in key_type_list:
+                if key_type_h == kt.value:
+                    key_type = kt.key_type
+                    info = kt.information
+                    need_id = kt.need_id
+
+            if key_type == None:
+                print('key type cannot recognize')
+                return False
+
+            if kt.information == '':
+                continue
+
+            print('key[{}]:'.format(i))
+            print("Key Type: {}".format(info))
+
+            if key_type in [self.otp_info.OTP_KEY_TYPE_RSA_PRIV,
+                            self.otp_info.OTP_KEY_TYPE_RSA_PUB]:
+                if key_length == 0:
+                    rsa_len = 1024//8
+                    rsa_type = 'RSA1024'
+                elif key_length == 1:
+                    rsa_len = 2048//8
+                    rsa_type = 'RSA2048'
+                elif key_length == 2:
+                    rsa_len = 3072//8
+                    rsa_type = 'RSA3072'
+                else:
+                    rsa_len = 4096//8
+                    rsa_type = 'RSA4096'
+                exp_length = math.ceil(exp_length/8)
+                rsa_mod = data_region[key_offset: key_offset+rsa_len]
+                if key_type == self.otp_info.OTP_KEY_TYPE_RSA_PRIV:
+                    rsa_exp = data_region[key_offset +
+                                      rsa_len: key_offset+rsa_len+exp_length]
+                else:
+                    rsa_exp = bytearray([0x01, 0x0, 0x01])
+                print('RSA Length: {}'.format(rsa_type))
+                print('RSA exponent bit length: {}'.format(exp_length))
+                if need_id == 1:
+                    print('Key Number ID: {}'.format(key_id))
+                print('Key Value:')
+                print('RSA mod:')
+                hexdump(rsa_mod)
+                print('RSA exp:')
+                hexdump(rsa_exp)
+            elif key_type == self.otp_info.OTP_KEY_TYPE_AES:
+                print('Key Value:')
+                print('AES Key:')
+                hexdump(data_region[key_offset: key_offset+32])
+            elif key_type == self.otp_info.OTP_KEY_TYPE_VAULT:
+                print('Key Value:')
+                print('AES Key 1:')
+                hexdump(data_region[key_offset: key_offset+32])
+                print('AES Key 2:')
+                hexdump(data_region[key_offset+32: key_offset+64])
+
+            print('')
+            i = i + 1
+
+        conf = []
+        for i in range(16):
+            h = struct.unpack('<I', config_region[(i*4):(i*4+4)])[0]
+            conf.append(h)
+        patch_size = (((conf[14] >> 11) & 0x3f) + 1) * 4
+        patch_offset = (conf[14] & 0x7ff) * 4
+
+        if patch_size == 4 and patch_offset == 0:
+            return True
+
+        print('OTP Patch:')
+        hexdump(data_region[patch_offset:patch_offset+patch_size])
+
+    def otp_print_image_config(self, config_info, config_region, config_ignore):
+        print("DW    BIT        Value       Description")
+        print("__________________________________________________________________________")
+        OTPCFG = []
+        OTPCFG_IGNORE = []
+        for i in range(16):
+            h = struct.unpack('<I', config_region[(i*4):(i*4+4)])[0]
+            hm = struct.unpack('<I', config_ignore[(i*4):(i*4+4)])[0]
+            OTPCFG.append(h)
+            OTPCFG_IGNORE.append(hm)
+
+        for ci in config_info:
+            dw_offset = ci['dw_offset']
+            bit_offset = ci['bit_offset']
+            info_type = ci['type']
+            if info_type == 'boolean':
+                bit_length = 1
+                dw_length = 1
+            else:
+                bit_length = ci['bit_length']
+                dw_length = math.ceil(bit_length / 32)
+            mask = (1 << bit_length) - 1
+            ov = 0
+            oi = 0
+            i = 0
+            for o in range(dw_offset, dw_offset+dw_length):
+                ov = ov | (OTPCFG[o] << (32*i))
+                oi = oi | (OTPCFG_IGNORE[o] << (32*i))
+                i = i + 1
+            otp_value = (ov >> bit_offset) & mask
+            otp_ignore = (oi >> bit_offset) & mask
+
+            if otp_ignore == mask:
+                continue
+            elif otp_ignore != 0:
+                print('bit_length: {}'.format(bit_length))
+                print('otp_ignore: 0x{:X}'.format(otp_ignore))
+                print('otp_value: 0x{:X}'.format(otp_value))
+                print('mask: 0x{:X}'.format(mask))
+                print('Ignore mask error')
+                return False
+
+            if info_type == 'boolean':
+                if otp_value == 0:
+                    info = ci['info'][0]
+                else:
+                    info = ci['info'][1]
+            elif info_type == 'string':
+                vl = ci['value']
+                for v in vl:
+                    if otp_value == v['bit']:
+                        info = ci['info'].format(v['value'])
+            elif info_type == 'hex':
+                h = '0x{}'.format(otp_value)
+                info = ci['info'].format(h)
+                if info == '':
+                    info = 'error: 0x{:X}'.format(otp_value)
+            elif info_type == 'bit_shift':
+                val = ''
+                for j in range(7):
+                    if otp_value == (1 << j):
+                        val = val + '1 '
+                    else:
+                        val = val + '0 '
+                info = ci['info'].format(val)
+
+            if info != '':
+                print('0x{:<4X}'.format(dw_offset), end='')
+                if bit_length == 1:
+                    print('0x{:<9X}'.format(bit_offset), end='')
+                else:
+                    print('0x{:<2X}:0x{:<4X}'.format(
+                        bit_offset + bit_length - 1, bit_offset), end='')
+                print('0x{:<10X}'.format(otp_value), end='')
+                print('{}'.format(info))
+
+    def otp_print_image_strap(self, ver, strap_info, strap, strap_pro, strap_reg_pro, strap_ignore):
+        OTPSTRAP = struct.unpack('<Q', strap)[0]
+        OTPSTRAP_PRO = struct.unpack('<Q', strap_pro)[0]
+        OTPSTRAP_IGNORE = struct.unpack('<Q', strap_ignore)[0]
+        if ver != 'A0':
+            OTPSTRAP_REG_PRO = struct.unpack('<Q', strap_reg_pro)[0]
+
+        if ver == 'A0':
+            print("BIT(hex)   Value       Protect     Description")
+        else:
+            print("BIT(hex)   Value       Reg_Protect Protect     Description")
+        print("__________________________________________________________________________________________")
+
+        for si in strap_info:
+            info_type = si['type']
+            if info_type == 'boolean':
+                bit_length = 1
+            else:
+                bit_length = si['bit_length']
+
+            bit_offset = si['bit_offset']
+
+            mask = BIT(bit_length) - 1
+            otp_value = (OTPSTRAP >> bit_offset) & mask
+            otp_protect = (OTPSTRAP_PRO >> bit_offset) & mask
+            otp_ignore = (OTPSTRAP_IGNORE >> bit_offset) & mask
+
+            if ver != 'A0':
+                otp_reg_protect = (OTPSTRAP_REG_PRO >> bit_offset) & mask
+            else:
+                otp_reg_protect = 0
+
+            if otp_ignore == mask:
+                continue
+            elif otp_ignore != 0:
+                return False
+
+            if info_type == 'boolean':
+                if otp_value == 0:
+                    info = si['info'][0]
+                else:
+                    info = si['info'][1]
+            elif info_type == 'string':
+                vl = si['value']
+                for v in vl:
+                    if otp_value == v['bit']:
+                        info = si['info'].format(v['value'])
+
+            if info != '':
+                if bit_length == 1:
+                    print('0x{:<9X}'.format(bit_offset), end='')
+                else:
+                    print('0x{:<2X}:0x{:<4X}'.format(
+                        bit_offset + bit_length - 1, bit_offset), end='')
+                print('0x{:<10X}'.format(otp_value), end='')
+                if ver != 'A0':
+                    print('0x{:<10X}'.format(otp_reg_protect), end='')
+                print('0x{:<10X}'.format(otp_protect), end='')
+                print('{}'.format(info))
+
+    def otp_strap_status(self, ver, strap_dw):
+        ret = []
+
+        if ver == 'A0':
+            for i in range(64):
+                otpstrap = strap_sts()
+                otpstrap.value = 0
+                otpstrap.remain_times = 7
+                otpstrap.writeable_option = -1
+                otpstrap.protected = 0
+                ret.append(otpstrap)
+            strap_end = 14
+        else:
+            for i in range(64):
+                otpstrap = strap_sts()
+                otpstrap.value = 0
+                otpstrap.remain_times = 6
+                otpstrap.writeable_option = -1
+                otpstrap.reg_protected = 0
+                otpstrap.protected = 0
+                ret.append(otpstrap)
+            strap_end = 12
+
+        for i in range(0, strap_end, 2):
+            option = int(i / 2)
+            for j in range(32):
+                bit_value = (strap_dw[i] >> j) & 0x1
+                if bit_value == 0 and ret[j].writeable_option == -1:
+                    ret[j].writeable_option = option
+                if bit_value == 1:
+                    ret[j].remain_times = ret[j].remain_times - 1
+                ret[j].value = ret[j].value ^ bit_value
+                ret[j].option_array[option] = bit_value
+
+            for j in range(32, 64):
+                bit_value = (strap_dw[i+1] >> (j - 32)) & 0x1
+                if bit_value == 0 and ret[j].writeable_option == -1:
+                    ret[j].writeable_option = option
+                if bit_value == 1:
+                    ret[j].remain_times = ret[j].remain_times - 1
+                ret[j].value = ret[j].value ^ bit_value
+                ret[j].option_array[option] = bit_value
+
+        if ver != 'A0':
+            for j in range(32):
+                if ((strap_dw[12] >> j) & 0x1) == 1:
+                    ret[j].reg_protected = 1
+            for j in range(32, 64):
+                if ((strap_dw[13] >> (j - 32)) & 0x1) == 1:
+                    ret[j].reg_protected = 1
+
+        for j in range(32):
+            if ((strap_dw[14] >> j) & 0x1) == 1:
+                ret[j].protected = 1
+        for j in range(32, 64):
+            if ((strap_dw[15] >> (j - 32)) & 0x1) == 1:
+                ret[j].protected = 1
+        return ret
+
+    def otp_print_strap_info(self, ver, strap_info, strap_dw):
+        strap_status = self.otp_strap_status(ver, strap_dw)
+
+        if ver == 'A0':
+            print("BIT(hex) Value  Remains  Protect   Description")
+        else:
+            print("BIT(hex) Value  Remains  Reg_Protect Protect   Description")
+            print(
+                "___________________________________________________________________________________________________")
+
+        for si in strap_info:
+            otp_value = 0
+            otp_protect = 0
+            bit_offset = si['bit_offset']
+            info_type = si['type']
+            if info_type == 'boolean':
+                length = 1
+            else:
+                length = si['bit_length']
+            for j in range(length):
+                otp_value |= strap_status[bit_offset + j].value << j
+                otp_protect |= strap_status[bit_offset + j].protected << j
+
+            info = ''
+            if info_type == 'boolean':
+                if otp_value == 0:
+                    info = si['info'][0]
+                else:
+                    info = si['info'][1]
+            elif info_type == 'string':
+                vl = si['value']
+                for v in vl:
+                    if otp_value == v['bit']:
+                        info = si['info'].format(v['value'])
+                if info == '':
+                    info = 'error: 0x{:X}'.format(otp_value)
+            if info == '':
+                continue
+            for j in range(length):
+                print(
+                    '0x{:<7X}'.format(si['bit_offset'] + j), end='')
+                print(
+                    '0x{:<5X}'.format(strap_status[bit_offset + j].value), end='')
+                print(
+                    '{:<9}'.format(strap_status[bit_offset + j].remain_times), end='')
+                if ver != 'A0':
+                    print(
+                        '0x{:<10X}'.format(strap_status[bit_offset + j].reg_protected), end='')
+                print(
+                    '0x{:<7X}'.format(strap_status[bit_offset + j].protected), end='')
+                if length == 1:
+                    print(' {}'.format(info))
+                    continue
+
+                if j == 0:
+                    print('/{}'.format(info))
+                elif j == length - 1:
+                    print('\\ \"')
+                else:
+                    print('| \"')
+
+    def check_image(self, otp_image):
+        header = image_header(otp_image[0:self.otp_info.HEADER_SIZE])
+
+        magic = header.magic[0:len(self.otp_info.MAGIC_WORD_OTP)].decode()
+        if magic != self.otp_info.MAGIC_WORD_OTP:
+            raise OtpError('OTP image magic word is invalid')
+
+        image_size = header.image_info & 0xffff
+        sha = SHA256.new(otp_image[:image_size])
+        digest = sha.digest()
+        co = header.checksum_offset
+        if digest != otp_image[co:co+32]:
+            raise OtpError('OTP image checksum is invalid')
+
+        return 0
+
+    def _print_otp_image(self, otp_image):
+        header = image_header(otp_image[0:self.otp_info.HEADER_SIZE])
+
+        ver_s = header.ver.decode()
+        if ver_s[:2] == 'A0':
+            ver = 'A0'
+            key_type_list = self.otp_info.a0_key_type
+            otp_info = self.otp_info.OTP_INFO['A0']
+        elif ver_s[:2] == 'A1':
+            ver = 'A1'
+            key_type_list = self.otp_info.a1_key_type
+            otp_info = self.otp_info.OTP_INFO['A1']
+        elif ver_s[:2] == 'A2':
+            ver = 'A2'
+            key_type_list = self.otp_info.a1_key_type
+            otp_info = self.otp_info.OTP_INFO['A2']
+        elif ver_s[:2] == 'A3':
+            ver = 'A3'
+            key_type_list = self.otp_info.a3_key_type
+            otp_info = self.otp_info.OTP_INFO['A3']
+        elif ver_s[:6] == '1030A0':
+            ver = '1030A0'
+            key_type_list = self.otp_info.a1_key_type
+            otp_info = self.otp_info.OTP_INFO['1030A0']
+        elif ver_s[:6] == '1030A1':
+            ver = '1030A1'
+            key_type_list = self.otp_info.ast1030a1_key_type
+            otp_info = self.otp_info.OTP_INFO['1030A1']
+        else:
+            print('OTP image version is invalid: {}'.format(ver_s))
+            return False
+
+        with open(otp_info['strap'], 'r') as strap_info_fd:
+            strap_info = jstyleson.load(strap_info_fd)
+
+        with open(otp_info['config'], 'r') as config_info_fd:
+            config_info = jstyleson.load(config_info_fd)
+
+        print('OTP image version: {}'.format(ver))
+
+        data_offset = header.data_info & 0xffff
+        data_region = otp_image[data_offset:data_offset+8192]
+        # data_region_ignore = otp_image[data_offset+8219:data_offset+8192*2]
+        conf_offset = header.config_info & 0xffff
+        config_region = otp_image[conf_offset:conf_offset+64]
+        config_region_ignore = otp_image[conf_offset+64:conf_offset+64*2]
+        strap_offset = header.strap_info & 0xffff
+        strap_region = otp_image[strap_offset:strap_offset+8]
+        strap_region_pro = otp_image[strap_offset+8:strap_offset+16]
+        if ver == 'A0':
+            strap_region_reg_pro = None
+            strap_region_ignore = otp_image[strap_offset+16:strap_offset+24]
+        else:
+            strap_region_reg_pro = otp_image[strap_offset+16:strap_offset+24]
+            strap_region_ignore = otp_image[strap_offset+24:strap_offset+32]
+
+        if header.image_info & self.otp_info.INC_DATA:
+            print('OTP data region :')
+            self.otp_print_image_data(
+                ver, key_type_list, data_region, config_region)
+
+        if header.image_info & self.otp_info.INC_CONF:
+            print('OTP config region :')
+            self.otp_print_image_config(
+                config_info, config_region, config_region_ignore)
+
+        if header.image_info & self.otp_info.INC_STRAP:
+            print('OTP strap :')
+            self.otp_print_image_strap(
+                ver, strap_info, strap_region, strap_region_pro, strap_region_reg_pro, strap_region_ignore)
+
+    def _print_dump_image(self, otp_image):
+        header = image_header(otp_image[0:self.otp_info.HEADER_SIZE])
+
+        ver_s = header.ver.decode()
+        if ver_s[:2] == 'A0':
+            ver = 'A0'
+            key_type_list = self.otp_info.a0_key_type
+            otp_info = self.otp_info.OTP_INFO['A0']
+        elif ver_s[:2] == 'A1':
+            ver = 'A1'
+            key_type_list = self.otp_info.a1_key_type
+            otp_info = self.otp_info.OTP_INFO['A1']
+        elif ver_s[:2] == 'A2':
+            ver = 'A2'
+            key_type_list = self.otp_info.a1_key_type
+            otp_info = self.otp_info.OTP_INFO['A2']
+        elif ver_s[:2] == 'A3':
+            ver = 'A3'
+            key_type_list = self.otp_info.a1_key_type
+            otp_info = self.otp_info.OTP_INFO['A3']
+        elif ver_s[:4] == '1030A0':
+            ver = '1030A0'
+            key_type_list = self.otp_info.a1_key_type
+            otp_info = self.otp_info.OTP_INFO['1030A0']
+        elif ver_s[:6] == '1030A1':
+            ver = '1030A1'
+            key_type_list = self.otp_info.ast1030a1_key_type
+            otp_info = self.otp_info.OTP_INFO['1030A1']
+        else:
+            print('OTP image version is invalid: {}'.format(ver_s))
+            return False
+
+        with open(otp_info['strap'], 'r') as strap_info_fd:
+            strap_info = jstyleson.load(strap_info_fd)
+
+        with open(otp_info['config'], 'r') as config_info_fd:
+            config_info = jstyleson.load(config_info_fd)
+
+        print('OTP dump image version: {}'.format(ver_s))
+
+        data_offset = header.data_info & 0xffff
+        data_region = otp_image[data_offset:data_offset+8192]
+        conf_offset = header.config_info & 0xffff
+        config_region = otp_image[conf_offset:conf_offset+64]
+        config_region_ignore = bytearray(64)
+        strap_region = otp_image[conf_offset+64:conf_offset+128]
+
+        print('OTP data region :')
+        self.otp_print_image_data(
+            ver, key_type_list, data_region, config_region)
+
+        print('OTP config region :')
+        self.otp_print_image_config(
+            config_info, config_region, config_region_ignore)
+
+        print('OTP strap :')
+        strap_region_dw = []
+        for i in range(0, 16):
+            h = struct.unpack('<I', strap_region[(i*4):(i*4+4)])[0]
+            strap_region_dw.append(h)
+        self.otp_print_strap_info(ver, strap_info, strap_region_dw)
+
+    def print_otp_image(self, otp_image_fd):
+        otp_image = bytearray(otp_image_fd.read())
+        header = image_header(otp_image[0:self.otp_info.HEADER_SIZE])
+
+        self.check_image(otp_image)
+
+        if header.image_info & self.otp_info.INC_DUMP:
+            self._print_dump_image(otp_image)
+        else:
+            self._print_otp_image(otp_image)
+
 
 class otpTool(object):
     """Object for otptool command-line tool."""
@@ -1094,23 +1637,37 @@ class otpTool(object):
             argv: Pass sys.argv from main.
         """
         parser = argparse.ArgumentParser()
-        parser.add_argument('config',
-                            help='configuration file',
-                            type=argparse.FileType('r'))
 
-        parser.add_argument('--key_folder',
-                            help='key folder',
-                            type=parse_path,
-                            default='')
-        parser.add_argument('--user_data_folder',
-                            help='user data folder',
-                            type=parse_path,
-                            default='')
-        parser.add_argument('--output_folder',
-                            help='output folder',
-                            type=parse_path,
-                            default='')
-        parser.set_defaults(func=self.make_otp_image)
+        subparsers = parser.add_subparsers(title='subcommands',
+                                           dest='subparser_name')
+
+        sub_parser = subparsers.add_parser('make_otp_image',
+                                           help='Makes otp image.')
+        sub_parser.add_argument('config',
+                                help='configuration file',
+                                type=argparse.FileType('r'))
+
+        sub_parser.add_argument('--key_folder',
+                                help='key folder',
+                                type=parse_path,
+                                default='')
+        sub_parser.add_argument('--user_data_folder',
+                                help='user data folder',
+                                type=parse_path,
+                                default='')
+        sub_parser.add_argument('--output_folder',
+                                help='output folder',
+                                type=parse_path,
+                                default='')
+        sub_parser.set_defaults(func=self.make_otp_image)
+
+        sub_parser = subparsers.add_parser('print',
+                                           help='print otp image information.')
+        sub_parser.add_argument('otp_image',
+                                help='OTP image',
+                                type=argparse.FileType('rb'))
+        sub_parser.set_defaults(func=self.print_otp_image)
+
         args = parser.parse_args(argv[1:])
 
         try:
@@ -1124,3 +1681,6 @@ class otpTool(object):
                                 args.key_folder,
                                 args.user_data_folder,
                                 args.output_folder)
+
+    def print_otp_image(self, args):
+        self.otp.print_otp_image(args.otp_image)

@@ -25,7 +25,6 @@ import os
 import struct
 import subprocess
 import tempfile
-import hexdump
 from Crypto.Hash import SHA
 from Crypto.Hash import SHA224
 from Crypto.Hash import SHA256
@@ -37,10 +36,12 @@ from Crypto.PublicKey import RSA
 from bitarray import bitarray
 from Crypto.Cipher import PKCS1_v1_5 as Cipher_pkcs1_v1_5
 
+from socsec import rsa_importkey
 from socsec import parse_path
 from socsec import insert_bytearray
 from socsec import rsa_bit_length
 from socsec import rsa_key_to_bin
+from socsec import hexdump
 from socsec import OTP_info
 
 RSA_SHA = 1        # mode 2
@@ -84,12 +85,13 @@ class Algorithm(object):
     """
 
     def __init__(self, algorithm_type, hash_alg, hash_num_bytes,
-                 signature_num_bytes, public_key_num_bytes):
+                 signature_num_bytes, public_key_num_bytes, rsa_padding='pkcs1'):
         self.algorithm_type = algorithm_type
         self.hash_alg = hash_alg
         self.hash_num_bytes = hash_num_bytes
         self.signature_num_bytes = signature_num_bytes
         self.public_key_num_bytes = public_key_num_bytes
+        self.rsa_padding = rsa_padding
 
 
 class ChainPartitionDescriptor(object):
@@ -122,8 +124,78 @@ def parse_number(string):
     return int(string, 0)
 
 
-def rsa_signature(alg_data, rsa_key_file, src_bin,
-                  signing_helper, signing_helper_with_files, order='little'):
+def print_rsa_key(rsa_key_file):
+
+    with open(rsa_key_file, 'r') as f:
+        key_file_str = f.read()
+    rsa_key = RSA.importKey(key_file_str)
+
+    n_bit = bitarray(bin(rsa_key.n)[2:])
+    e_bit = bitarray(bin(rsa_key.e)[2:])
+    d_bit = bitarray(bin(rsa_key.d)[2:])
+    n_remain = (8-(n_bit.length() % 8)) % 8
+    e_remain = (8-(e_bit.length() % 8)) % 8
+    d_remain = (8-(d_bit.length() % 8)) % 8
+    for _ in range(0, n_remain):
+        n_bit.insert(0, 0)
+    for _ in range(0, e_remain):
+        e_bit.insert(0, 0)
+    for _ in range(0, d_remain):
+        d_bit.insert(0, 0)
+
+    n_byte = bytearray(n_bit.tobytes())
+    e_byte = bytearray(e_bit.tobytes())
+    d_byte = bytearray(d_bit.tobytes())
+
+    print('n')
+    hexdump(n_byte)
+    print('e')
+    hexdump(e_byte)
+    print('d')
+    hexdump(d_byte)
+
+
+def mgf1(mgf_seed, mask_len, hash_type):
+    '''
+    Mask Generation Function based on a hash function as defined in Section B.2.1 of [RFC8017]
+    @Input:
+        mgs_seed - seed from which mask is generated, an octet string
+        mask_len - intended length in octets of the mask, at most 2^32 hLen
+        hash_type - the digest hash function to use, default is SHA1
+    Outout:
+        mask: an octet string of length mask_len
+    '''
+    # get hash length given hash function
+    h_len = 32
+
+    # If maskLen > 2^32 hLen, output "mask too long" and stop.
+    if mask_len > 0x10000:
+        raise ValueError('mask too long')
+
+    # Let T be the empty octet string.
+    T = b''
+
+    # For counter i from 0 to \ceil (mask_len / h_len) - 1
+    for i in range(0, int((mask_len+h_len-1)/h_len)):
+        sha = hash_type.new()
+        sha.update(mgf_seed)
+
+        # Convert counter to an octet string C of length 4 octets
+        # C = i2osp(i, 4)
+        C = i.to_bytes(4, byteorder='big', signed=False)
+
+        # Concatenate the hash of the seed mgfSeed and C to the octet string T
+        # T = T || Hash(mgfSeed || C)
+        sha.update(C)
+        # T = T + hash_class.digest()
+        T = b"".join([T, sha.digest()])
+
+    # Output the leading maskLen octets of T as the octet string mask.
+    return T[:mask_len]
+
+
+def rsa_pkcs15_sign(alg_data, rsa_key_file, src_bin,
+                    signing_helper, signing_helper_with_files, order='little'):
     src_bin = bytearray(src_bin)
     if order == 'little':
         src_bin.reverse()
@@ -171,7 +243,81 @@ def rsa_signature(alg_data, rsa_key_file, src_bin,
     return signature
 
 
-def rsa_verify(alg_data, rsa_key_file, signature, digest, order='little'):
+def rsa_pss_sign(alg_data, rsa_key_file, mHash,
+                 signing_helper, signing_helper_with_files, deterministic):
+    emLen = alg_data.signature_num_bytes
+    MSBits = (emLen - 1) & 0x7
+
+    if deterministic:
+        salt = bytearray(20)
+    else:
+        salt = os.urandom(20)
+
+    padding1 = bytearray(8)
+    m_ = padding1+mHash+salt
+
+    sha = alg_data.hash_alg.new(m_)
+    H = sha.digest()
+
+    # emLen – sLen – hLen – 2
+    padding2 = bytearray(emLen - 20 - alg_data.hash_num_bytes - 2)
+    DB = padding2+b'\x01'+salt
+
+    maskedDB_len = emLen - 1 - alg_data.hash_num_bytes  # emLen - bc_len - hLen
+    dbMask = mgf1(H, maskedDB_len, alg_data.hash_alg)
+
+    maskedDB = bytearray(a ^ b for (a, b) in zip(DB, dbMask))
+    if MSBits:
+        maskedDB[0] = maskedDB[0] & 0xFF >> (8 - MSBits)
+
+    EM = maskedDB+H+b'\xbc'
+    p = subprocess.Popen(
+        ['openssl', 'rsautl', '-sign', '-raw', '-inkey', rsa_key_file],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE)
+    (pout, perr) = p.communicate(input=EM)
+    retcode = p.wait()
+    if retcode != 0:
+        raise ValueError('Error signing: {}'.format(perr))
+
+    sign = bytearray(pout)
+    if len(sign) < 512:
+        sign = sign + bytearray(512 - len(sign))
+
+    print("rsa key")
+    print_rsa_key(rsa_key_file)
+    print('mHash')
+    hexdump(mHash)
+    print('salt')
+    hexdump(salt)
+    print('M\'')
+    hexdump(m_)
+    print('H')
+    hexdump(H)
+    print('DB')
+    hexdump(DB)
+    print('dbMask')
+    hexdump(dbMask)
+    print('EM')
+    hexdump(EM)
+    print('signature')
+    hexdump(sign[:emLen])
+
+    return sign[:emLen]
+
+
+def rsa_sign(alg_data, rsa_key_file, src_bin,
+             signing_helper, signing_helper_with_files, deterministic, order='little'):
+    if alg_data.rsa_padding == 'pkcs1':
+        return rsa_pkcs15_sign(alg_data, rsa_key_file, src_bin,
+                               signing_helper, signing_helper_with_files, order)
+    else:
+        return rsa_pss_sign(alg_data, rsa_key_file, src_bin,
+                            signing_helper, signing_helper_with_files, deterministic)
+
+
+def rsa_raw_ver(alg_data, rsa_key_file, signature, order='little'):
     rev_signature = bytearray(signature)
     if order == 'little':
         rev_signature.reverse()
@@ -180,12 +326,9 @@ def rsa_verify(alg_data, rsa_key_file, signature, digest, order='little'):
         rev_signature = rev_signature + \
             bytearray(alg_data.signature_num_bytes - len(rev_signature))
 
-    with open(rsa_key_file, 'rb') as f:
-        key_file_bin = f.read()
-        f.close()
-    rsakey = RSA.importKey(key_file_bin)
+    rsa_key = rsa_importkey(rsa_key_file)
     try:
-        if rsakey.d:
+        if rsa_key.d:
             cmd = "openssl rsautl -verify -raw -inkey " + rsa_key_file
     except (AttributeError):
         cmd = "openssl rsautl -verify -raw --pubin -inkey " + rsa_key_file
@@ -205,6 +348,13 @@ def rsa_verify(alg_data, rsa_key_file, signature, digest, order='little'):
     sign_dec = bytearray(sign_dec)
     if order == 'little':
         sign_dec.reverse()
+
+    return sign_dec
+
+
+def rsa_pkcs15_verify(alg_data, rsa_key_file, signature, digest, order='little'):
+    sign_dec = rsa_raw_ver(alg_data, rsa_key_file, signature, order)
+    if order == 'little':
         sign_dec = sign_dec[:len(digest)]
     else:
         sign_dec = sign_dec[len(sign_dec) - len(digest):]
@@ -215,11 +365,61 @@ def rsa_verify(alg_data, rsa_key_file, signature, digest, order='little'):
         return False
 
 
+def rsa_pss_em_ver(alg_data, EM, mHash):
+    emLen = alg_data.signature_num_bytes
+    maskedDB_len = emLen - 1 - alg_data.hash_num_bytes  # emLen - bc_len - H_len
+    maskedDB = EM[:maskedDB_len]
+    H = EM[maskedDB_len:maskedDB_len+alg_data.hash_num_bytes]
+    dbMask = mgf1(H, maskedDB_len, alg_data.hash_alg)
+    DB = bytes(a ^ b for (a, b) in zip(maskedDB, dbMask))
+    salt = DB[-20:]
+    m_ = bytearray(8)+mHash+salt
+    sha = alg_data.hash_alg.new(m_)
+    h_ = sha.digest()
+
+    print('mHash')
+    hexdump(mHash)
+    print('EM')
+    hexdump(EM)
+    print('maskedDB')
+    hexdump(maskedDB)
+    print('H')
+    hexdump(H)
+    print('dbMask')
+    hexdump(dbMask)
+    print('DB')
+    hexdump(DB)
+    print('salt')
+    hexdump(salt)
+    print('M\'')
+    hexdump(m_)
+    print('H\'')
+    hexdump(h_)
+    print('H')
+    hexdump(H)
+
+    if h_ == H:
+        print("pass")
+        return True
+    else:
+        print("fail")
+        return False
+
+
+def rsa_pss_verify(alg_data, rsa_key_file, signature, mHash):
+    EM = rsa_raw_ver(alg_data, rsa_key_file, signature, 'big')
+    return rsa_pss_em_ver(alg_data, EM, mHash)
+
+
+def rsa_verify(alg_data, rsa_key_file, signature, digest, order='little'):
+    if alg_data.rsa_padding == 'pkcs1':
+        return rsa_pkcs15_verify(alg_data, rsa_key_file, signature, digest, order)
+    else:
+        return rsa_pss_verify(alg_data, rsa_key_file, signature, digest)
+
+
 def rsa_encrypt(rsa_key_file, src_bin, order='little', randfunc=None):
-    with open(rsa_key_file, 'rb') as f:
-        key_bin = f.read()
-        f.close()
-    rsa_key = RSA.importKey(key_bin)
+    rsa_key = rsa_importkey(rsa_key_file)
 
     src_bin = bytearray(src_bin)
     if order == 'little':
@@ -255,7 +455,7 @@ class Sec(object):
     COT_HEADER_FORMAT = '<16s6I472s'
     COT_HEADER_SIZE = struct.calcsize(COT_HEADER_FORMAT)
 
-    def parse_algorithm(self, algorithm_name):
+    def parse_algorithm(self, algorithm_name, rsa_padding='pkcs1'):
         algorithm_type = -1
         rsa_len = 0
         sha_len = 0
@@ -323,8 +523,21 @@ class Sec(object):
             hash_alg = None
             hash_num_bytes = 0
 
+        if algorithm_type in [AES_RSA_SHA, RSA_SHA]:
+            if rsa_padding == 'pss':
+                val = 0
+                if signature_num_bytes == 256 and hash_num_bytes == 32:
+                    val = 1
+                elif signature_num_bytes == 384 and hash_num_bytes == 48:
+                    val = 1
+                elif signature_num_bytes == 512 and hash_num_bytes == 64:
+                    val = 1
+                if val == 0:
+                    raise SecError(
+                        "PSS padding is for RSA2048_SHA256,RSA3072_SHA384 or RSA4096_SHA512")
+
         return Algorithm(algorithm_type, hash_alg, hash_num_bytes,
-                         signature_num_bytes, public_key_num_bytes)
+                         signature_num_bytes, public_key_num_bytes, rsa_padding=rsa_padding)
 
     def verify_bl1_mode_2_image(self, sec_image, verify_key_path, alg_data,
                                 sign_image_size, signature_offset, rsa_key_order):
@@ -437,13 +650,9 @@ class Sec(object):
                 next_alg_data = self.parse_cot_info(info)
                 next_vk_n = part_image[npkey_offset:npkey_offset +
                                        int(next_alg_data.public_key_num_bytes / 2)]
-                next_vk_e = part_image[int(npkey_offset + next_alg_data.public_key_num_bytes / 2):
-                                       npkey_offset + next_alg_data.public_key_num_bytes]
                 next_vk_n = int.from_bytes(
                     next_vk_n, byteorder=rsa_key_order, signed=False)
-                next_vk_e = int.from_bytes(
-                    next_vk_e, byteorder=rsa_key_order, signed=False)
-                next_vk_obj = RSA.construct((next_vk_n, next_vk_e))
+                next_vk_obj = RSA.construct((next_vk_n, 65537))
                 signing_file = tempfile.NamedTemporaryFile()
                 next_vk_obj.exportKey
                 signing_file.write(next_vk_obj.publickey().exportKey('PEM'))
@@ -458,14 +667,14 @@ class Sec(object):
                               header_offset,
                               sign_image_size, signature_offset,
                               rsa_key_order,
-                              signing_helper, signing_helper_with_files):
+                              signing_helper, signing_helper_with_files, deterministic):
 
         # sign the image
         sha = alg_data.hash_alg.new(image[0:sign_image_size])
         digest = sha.digest()
-        signature = rsa_signature(
+        signature = rsa_sign(
             alg_data, sign_key_path, digest,
-            signing_helper, signing_helper_with_files, order=rsa_key_order)
+            signing_helper, signing_helper_with_files, deterministic, order=rsa_key_order)
 
         insert_bytearray(signature, image, signature_offset)
 
@@ -475,7 +684,7 @@ class Sec(object):
                                   enc_offset, aes_key, aes_iv, aes_data_offset,
                                   key_in_otp, rsa_aes_key_path, rsa_key_order,
                                   signing_helper, signing_helper_with_files,
-                                  rsa_aes_randfunc=None):
+                                  deterministic, rsa_aes_randfunc=None):
 
         # encrypt image
         ctr = Counter.new(128, initial_value=int.from_bytes(
@@ -504,9 +713,9 @@ class Sec(object):
         # sign the image
         sha = alg_data.hash_alg.new(image[0:sign_image_size])
         digest = sha.digest()
-        signature = rsa_signature(
+        signature = rsa_sign(
             alg_data, sign_key_path, digest,
-            signing_helper, signing_helper_with_files, order=rsa_key_order)
+            signing_helper, signing_helper_with_files, deterministic, order=rsa_key_order)
         insert_bytearray(signature, image, signature_offset)
 
     def make_bl1_mode_gcm_image(self, image, alg_data, gcm_aes_key, gcm_aes_iv,
@@ -604,7 +813,6 @@ class Sec(object):
                             verify_key_path, cot_digest_fd, cot_data_offset):
 
         if cot_alg_data.algorithm_type == RSA_SHA:
-            e_bits = rsa_bit_length(verify_key_path, 'e')
             cot_data = bytearray(rsa_key_to_bin(verify_key_path, 'public'))
         elif cot_alg_data.algorithm_type == HASH_BINDING:
             cot_data = bytearray(cot_digest_fd.read())
@@ -612,7 +820,7 @@ class Sec(object):
             raise SecError(
                 "COT only support RSA_SHA and HASH_BINDING algorithm")
 
-        info = self._cot_info(cot_alg_data, e_bits)
+        info = self._cot_info(cot_alg_data, 17)
         cot_header = struct.pack(
             self.COT_INFO_FORMAT,
             info,
@@ -624,35 +832,43 @@ class Sec(object):
         insert_bytearray(cot_data, image, cot_data_offset)
 
     def make_secure_bl1_image(self, soc_version, bl1_image_fd, sign_key_path, gcm_aes_key_fd, output_fd,
-                              algorithm_name, header_offset, rollback_index,
+                              algorithm_name, rsa_padding, header_offset, rollback_index,
                               enc_offset, aes_key_fd, rsa_aes_key_path,
                               key_in_otp,
                               rsa_key_order,
+                              flash_patch_offset,
                               cot_algorithm_name,
                               cot_verify_key_path,
                               cot_digest_fd,
                               signing_helper,
                               signing_helper_with_files,
+                              stack_intersects_verification_region,
                               deterministic):
-        """Implements the 'make_vbmeta_image' command.
+        """Implements the 'make_secure_bl1_image' command.
 
         Arguments:
-            bl1_image: Bootloader 1 image.
+            soc_version: SOC version, e.g. '2600', '2605', '1030'
+            bl1_image_fd: Bootloader 1 image fd.
             sign_key_path: Path to rsa signing key to use or None.
-            output: File to write the image to.
+            gcm_aes_key_fd: aes key for GCM_AES mode.
+            output_fd: File to write the image to.
             algorithm_name: Name of algorithm to use.
+            rsa_padding:
+            header_offset: secure image header offset.
             rollback_index: The rollback index to use.
-            enc_offset:
-            aes_key_fd;
-            rsa_aes_key_path;
-            key_in_otp:
-            cot_algorithm_name:
-            cot_verify_key_path:
-            cot_digest_fd:
+            enc_offset: image encryption start offset.
+            aes_key_fd; aes key for AES_RSA**_SHA* mode.
+            rsa_aes_key_path; rsa key for AES_RSA**_SHA* mode when key_in_otp is false
+            key_in_otp: AES_RSA**_SHA* mode and the aes key is in the OTP
+            rsa_key_order: bit endian or little endian.
+            flash_patch_offset: for ast2605, default is 0x50
+            cot_algorithm_name: Name of algorithm for CoT.
+            cot_verify_key_path: rsa public key for verify CoT image.
+            cot_digest_fd: 
             signing_helper: Program which signs a hash and return signature.
             signing_helper_with_files: Same as signing_helper but uses files instead.
+            stack_intersects_verification_region: allows the signing of images that occupy the entire 64KB verifiable region
             deterministic: IVs are read from deterministic sources
-
         Raises:
             SecError: If a chained partition is malformed.
         """
@@ -661,13 +877,23 @@ class Sec(object):
 
         bl1_image = bytearray(bl1_image_fd.read())
         bl1_image_len = len(bl1_image)
-        if soc_version == '2600':
+        if soc_version in ['2600', '2605']:
             if header_offset == None:
                 header_offset = 0x20
             if enc_offset == None:
                 enc_offset = 0x50
-            if bl1_image_len > (60 * 1024):
-                raise SecError("The maximum size of BL1 image is 60 KBytes.")
+            if ((stack_intersects_verification_region is None) or
+                    (stack_intersects_verification_region == 'true')):
+                bl1_max_len = 60 * 1024
+            else:
+                bl1_max_len = 64 * 1024 - 512
+            if bl1_image_len > bl1_max_len:
+                raise SecError(
+                    f"The maximum size of BL1 image is {bl1_max_len} bytes.")
+            if soc_version == '2605' and flash_patch_offset == None:
+                flash_patch_offset = 0x50
+            else:
+                flash_patch_offset = 0
         elif soc_version == '1030':
             if header_offset == None:
                 header_offset = 0x400
@@ -675,6 +901,7 @@ class Sec(object):
                 enc_offset = 0x430
             if bl1_image_len > (768 * 1024):
                 raise SecError("The maximum size of BL1 image is 768 KBytes.")
+            flash_patch_offset = 0
         else:
             raise SecError("SOC version is not avaliable")
 
@@ -688,7 +915,14 @@ class Sec(object):
         if rsa_key_order not in ['big', 'little']:
             raise SecError("RSA key order should be 'big' or 'little'")
 
-        alg_data = self.parse_algorithm(algorithm_name)
+        if rsa_padding not in ['pkcs1', 'pss']:
+            raise SecError(
+                "RSA padding is invalid, only support pkcs1 and pss")
+        if rsa_padding == 'pss':
+            rsa_key_order = 'big'
+
+        alg_data = self.parse_algorithm(
+            algorithm_name, rsa_padding=rsa_padding)
 
         aes_data_offset = 0
         sign_image_size = 0
@@ -728,7 +962,8 @@ class Sec(object):
 
         bl1_header_checksum = -(aes_data_offset + enc_offset +
                                 sign_image_size + signature_offset +
-                                revision_low + revision_high) & 0xFFFFFFFF
+                                revision_low + revision_high +
+                                flash_patch_offset) & 0xFFFFFFFF
         bl1_header = struct.pack(
             self.ROT_HEADER_FORMAT,
             aes_data_offset,
@@ -737,7 +972,7 @@ class Sec(object):
             signature_offset,
             revision_low,
             revision_high,
-            0,
+            flash_patch_offset,
             bl1_header_checksum
         )
         bl1_image.extend(bytearray(sign_image_size - bl1_image_len))
@@ -761,7 +996,7 @@ class Sec(object):
                                        header_offset,
                                        sign_image_size, signature_offset,
                                        rsa_key_order,
-                                       signing_helper, signing_helper_with_files)
+                                       signing_helper, signing_helper_with_files, deterministic)
         elif alg_data.algorithm_type == AES_RSA_SHA:
             if deterministic:
                 aes_iv_path = '/dev/zero'
@@ -792,7 +1027,7 @@ class Sec(object):
                                            rsa_key_order,
                                            signing_helper,
                                            signing_helper_with_files,
-                                           rsa_aes_randfunc)
+                                           deterministic, rsa_aes_randfunc)
         elif alg_data.algorithm_type == AES_GCM:
             aes_iv_path = '/dev/zero' if deterministic else '/dev/urandom'
             gcm_aes_iv = open(aes_iv_path, 'rb').read(12)
@@ -838,8 +1073,7 @@ class Sec(object):
             sign_image_size = npkey_offset + alg_data.public_key_num_bytes
             insert_bytearray(npkey_bin, image, npkey_offset)
 
-            e_bits = rsa_bit_length(descriptor.next_verify_key_path, 'e')
-            info = self._cot_info(alg_data, e_bits)
+            info = self._cot_info(alg_data, 17)
         else:
             sign_image_size = (image_len + 0xf) & (~0xf)
             info = 0
@@ -864,9 +1098,9 @@ class Sec(object):
         sha = alg_data.hash_alg.new(image[0:sign_image_size])
         digest = sha.digest()
 
-        signature = rsa_signature(
+        signature = rsa_sign(
             alg_data, descriptor.sign_key_path, digest,
-            signing_helper, signing_helper_with_files, order=rsa_key_order)
+            signing_helper, signing_helper_with_files, False, order=rsa_key_order)
 
         insert_bytearray(signature, image, signature_offset)
 
@@ -953,8 +1187,15 @@ class SecureBootVerify(object):
             else:
                 info_struct['rsa_key_order'] = 'little'
         elif ver[:6] == '1030A0':
-            otp_info = self.otp.OTP_INFO['A2']
+            otp_info = self.otp.OTP_INFO['1030A0']
             info_struct['version'] = '1030A0'
+        elif ver[:6] == '1030A1':
+            otp_info = self.otp.OTP_INFO['1030A1']
+            info_struct['version'] = '1030A1'
+            if image_info & self.otp.INC_ORDER:
+                info_struct['rsa_key_order'] = 'big'
+            else:
+                info_struct['rsa_key_order'] = 'little'
         else:
             raise SecError('OTP image version is invalid')
 
@@ -995,8 +1236,6 @@ class SecureBootVerify(object):
         cfg4 = struct.unpack('<I', config_region[12:16])[0]
 
         sb_mode = (cfg0 >> 7) & 0x1
-        rsa_len = (cfg0 >> 10) & 0x3
-        sha_len = (cfg0 >> 12) & 0x3
         enc_mode = (cfg0 >> 27) & 0x1
         header_offset = cfg3 & 0xffff
         key_retire = (cfg4 & 0x7f) | ((cfg4 >> 16) & 0x7f)
@@ -1005,7 +1244,7 @@ class SecureBootVerify(object):
         if header_offset == 0:
             if soc_version == '2600':
                 header_offset = 0x20
-            elif soc_version == '1030':
+            elif soc_version in ['1030A0', '1030A1']:
                 header_offset = 0x400
 
         for i in range(7):
@@ -1024,7 +1263,7 @@ class SecureBootVerify(object):
                 else:
                     algorithm_type = RSA_SHA
                     print('Algorithm: RSA_SHA')
-        elif soc_version == '1030':
+        elif soc_version in ['1030A0', '1030A1']:
             if sb_mode == 1:
                 raise SecError("PFR mode")
 
@@ -1034,6 +1273,34 @@ class SecureBootVerify(object):
             else:
                 algorithm_type = RSA_SHA
                 print('Algorithm: RSA_SHA')
+
+        if soc_version in ['2600', '1030A0']:
+            # 2600 and 1030A0 only support pkcs1 padding
+            rsa_padding = 'pkcs1'
+            rsa_len = (cfg0 >> 10) & 0x3
+            sha_len = (cfg0 >> 12) & 0x3
+        else:
+            # 1030A1 support pss padding
+            sign_scheme = (cfg0 >> 10) & 0xf
+            if sign_scheme == 4:
+                rsa_padding = 'pss'
+                rsa_len = 1
+                sha_len = 1
+            elif sign_scheme == 8:
+                rsa_padding = 'pss'
+                rsa_len = 2
+                sha_len = 2
+            elif sign_scheme == 12:
+                rsa_padding = 'pss'
+                rsa_len = 3
+                sha_len = 3
+            else:
+                rsa_padding = 'pkcs1'
+                rsa_len = (cfg0 >> 10) & 0x3
+                sha_len = (cfg0 >> 12) & 0x3
+                if [rsa_len, sha_len] not in [[1, 1], [2, 2], [3, 3]]:
+                    raise SecError(
+                        "Signature scheme not support : 0x{:X}".format(sign_scheme))
 
         if rsa_len == 0:
             signature_num_bytes = 128
@@ -1070,7 +1337,7 @@ class SecureBootVerify(object):
             print('HASH length: 512')
 
         return Algorithm(algorithm_type, hash_alg, hash_num_bytes,
-                         signature_num_bytes, public_key_num_bytes), \
+                         signature_num_bytes, public_key_num_bytes, rsa_padding), \
             header_offset, retire_list
 
     def parse_data(self, info_struct, alg_data, data_region, retire_list):
@@ -1080,13 +1347,13 @@ class SecureBootVerify(object):
                            0x8: RSA_OEM,
                            0xa: RSA_SOC_PUB,
                            0xe: RSA_SOC_PRI}
-        elif info_struct['version'] in ['A1', 'A2', '1030A0' ]:
+        elif info_struct['version'] in ['A1', 'A2', '1030A0']:
             type_lookup = {0x1: AES_VAULT,
                            0x2: AES_OEM,
                            0x8: RSA_OEM,
                            0xa: RSA_SOC_PUB,
                            0xe: RSA_SOC_PRI}
-        elif info_struct['version'] == 'A3':
+        elif info_struct['version'] in ['A3', '1030A1']:
             if info_struct['rsa_key_order'] == 'big':
                 type_lookup = {0x1: AES_VAULT,
                                0x2: AES_OEM,
@@ -1132,13 +1399,14 @@ class SecureBootVerify(object):
                     raise SecError(
                         "OTP key type is not compatible with config")
 
-                kl['M'] = data_region[kl['OFFSET']: kl['OFFSET']+rsa_len]
+                key_offset = kl['OFFSET']
+
+                kl['M'] = data_region[key_offset: key_offset+rsa_len]
                 if kl['TYPE'] == RSA_SOC_PRI:
-                    e_len = rsa_len
+                    kl['E'] = data_region[key_offset +
+                                          rsa_len: key_offset + rsa_len*2]
                 else:
-                    e_len = 3
-                kl['E'] = data_region[kl['OFFSET'] +
-                                      rsa_len: kl['OFFSET']+rsa_len + e_len]
+                    kl['E'] = bytearray([0x01, 0x0, 0x01])
             elif kl['TYPE'] == AES_OEM:
                 kl['AES'] = data_region[kl['OFFSET']: kl['OFFSET']+32]
             elif kl['TYPE'] == AES_VAULT:
@@ -1165,18 +1433,23 @@ class SecureBootVerify(object):
                 continue
             M = int.from_bytes(kl['M'], byteorder=rsa_key_order, signed=False)
             E = int.from_bytes(kl['E'], byteorder=rsa_key_order, signed=False)
-            hashFromSignature = pow(signature, E, M)
-            hb = hashFromSignature.to_bytes(
+            sign_dec = pow(signature, E, M).to_bytes(
                 alg_data.signature_num_bytes, byteorder=rsa_key_order, signed=False)
 
-            if rsa_key_order == 'little':
-                dig = hb[:alg_data.hash_num_bytes]
+            if alg_data.rsa_padding == 'pkcs1':
+                if rsa_key_order == 'little':
+                    dig = sign_dec[:alg_data.hash_num_bytes]
+                else:
+                    dig = sign_dec[len(sign_dec)-alg_data.hash_num_bytes:]
+                if dig == image_hash:
+                    v_id = kl['ID']
+                    verify_pass = 1
+                    break
             else:
-                dig = hb[len(hb)-alg_data.hash_num_bytes:]
-            if dig == image_hash:
-                v_id = kl['ID']
-                verify_pass = 1
-                break
+                if rsa_pss_em_ver(alg_data, sign_dec, image_hash):
+                    v_id = kl['ID']
+                    verify_pass = 1
+                    break
 
         if verify_pass == 0:
             raise SecError("Mode 2 verify failed")
@@ -1294,9 +1567,9 @@ class SecureBootVerify(object):
                     print('Key Type: OEM DSS public keys')
                     print('ID: {}'.format(v_id))
                     print('M:')
-                    hexdump.hexdump(kl['M'])
+                    hexdump(kl['M'])
                     print('E:')
-                    hexdump.hexdump(kl['E'])
+                    hexdump(kl['E'])
                     break
 
             if alg_data.algorithm_type == AES_RSA_SHA:
@@ -1372,7 +1645,8 @@ class secTool(object):
             argv: Pass sys.argv from main.
         """
         parser = argparse.ArgumentParser()
-        subparsers = parser.add_subparsers(title='subcommands')
+        subparsers = parser.add_subparsers(title='subcommands',
+                                           dest='subparser_name')
 
         sub_parser = subparsers.add_parser('make_secure_bl1_image',
                                            help='Makes a signed bl1 image.')
@@ -1384,6 +1658,23 @@ class secTool(object):
                                 help='Bootloader 1 Image (e.g. u-boot-spl.bin), which will be verified by soc',
                                 type=argparse.FileType('rb'),
                                 required=False)
+        stack_intersects_verification_region_help = '''By default, the
+        maximum size of SPL images socsec will sign is 60KB, since,
+        historically, the SoCs have been using the top of the SRAM
+        for the SPL execution stack. However, on 2600 (A1) and above
+        SoCs, an additional 24KB SRAM can be used for the stack,
+        allowing the verification region to occuppy the entire 64KB
+        (including signature). For these models of boards, this
+        layout will also be the default in future SDK releases.
+        Use this parameter to explicitly indicate that the SPL image
+        being signed has (=true) or has not (=false) the SPL stack
+        overlapping the 64KB verification region. With this argument
+        set to \'false\', socsec will sign SPL images up towards
+        64KB (including 512B signature)'''
+        sub_parser.add_argument('--stack_intersects_verification_region',
+                                dest='stack_intersects_verification_region',
+                                choices=['true', 'false'], default=None,
+                                help=stack_intersects_verification_region_help)
         sub_parser.add_argument('--header_offset',
                                 help='RoT header offsest',
                                 type=parse_number,
@@ -1391,7 +1682,8 @@ class secTool(object):
         sub_parser.add_argument('--rsa_sign_key',
                                 help='Path to RSA private key file, which will use to sign BL1_IMAGE')
         sub_parser.add_argument('--rsa_key_order',
-                                help='This value the OTP setting(e.g. little, big), default value is "little"',
+                                help='This value the OTP setting(e.g. little, big), default value is "little". \
+                                      If RSA padding mode is PSS, rsa_key_order will be big endian',
                                 metavar='ORDER',
                                 default="little")
         sub_parser.add_argument('--gcm_aes_key',
@@ -1406,6 +1698,11 @@ class secTool(object):
                                       RSA algo support RSA1024, RSA2048, RSA3072 and RSA4096, HASH algo support SHA224, SHA256, SHA384 and SHA512',
                                 metavar='ALGORITHM',
                                 default='NONE')
+        sub_parser.add_argument('--rsa_padding',
+                                help='Algorithm to use (default: pkcs1 e.g. pkcs1, pss), \
+                                      RSA support pkcs1 padding or pss padding',
+                                metavar='PADDING',
+                                default='pkcs1')
         sub_parser.add_argument('--rollback_index',
                                 help='Rollback Index',
                                 type=parse_number,
@@ -1450,6 +1747,10 @@ class secTool(object):
         enc_group.add_argument('--rsa_aes',
                                help='Path to RSA public key file, which is used to encrypt aes key',
                                nargs='?')
+        sub_parser.add_argument('--flash_patch_offset',
+                                help='Flash patch offset for ast2605',
+                                type=parse_number,
+                                default=None)
 
         cot_group = sub_parser.add_argument_group(
             'cot_group', 'Chain of trust argument')
@@ -1509,7 +1810,7 @@ class secTool(object):
         sub_parser = subparsers.add_parser('verify',
                                            help='verify the image')
         sub_parser.add_argument('--soc',
-                                help='soc id (e.g. 2600, 1030)',
+                                help='soc id (e.g. 2600, 1030A0, 1030A1)',
                                 metavar='SOC',
                                 default='2600')
         sub_parser.add_argument('--sec_image',
@@ -1539,6 +1840,11 @@ class secTool(object):
         if(len(argv) == 1):
             parser.print_usage()
             sys.exit(1)
+
+        if (args.subparser_name == 'make_secure_bl1_image' and
+                args.stack_intersects_verification_region is None):
+            print('WARNING: --stack_intersects_verification_region={true|false} '
+                  'must be specified to ensure forwards compatibility.')
         args.func(args)
 
     def make_secure_bl1_image(self, args):
@@ -1547,6 +1853,7 @@ class secTool(object):
                                        args.bl1_image, args.rsa_sign_key,
                                        args.gcm_aes_key,
                                        args.output, args.algorithm,
+                                       args.rsa_padding,
                                        args.header_offset,
                                        args.rollback_index,
                                        args.enc_offset,
@@ -1554,11 +1861,13 @@ class secTool(object):
                                        args.rsa_aes,
                                        args.key_in_otp,
                                        args.rsa_key_order,
+                                       args.flash_patch_offset,
                                        args.cot_algorithm,
                                        args.cot_verify_key,
                                        args.cot_digest,
                                        args.signing_helper,
                                        args.signing_helper_with_files,
+                                       args.stack_intersects_verification_region,
                                        args.deterministic)
 
     def make_sv_chain_image(self, args):

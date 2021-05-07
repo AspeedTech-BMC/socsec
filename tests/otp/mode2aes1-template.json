@@ -3,6 +3,7 @@
     "version": "@@VERSION@@",
     "data_region": {
         "ecc_region": true,
+        "rsa_key_order": "@@KEY_ORDER@@",
         "key": [
             {
                 "types": "aes_vault",

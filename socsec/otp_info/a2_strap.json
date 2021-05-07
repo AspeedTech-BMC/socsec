@@ -200,11 +200,11 @@
         "type": "string",
         "value": [
             {
-                "value": "video_device",
+                "value": "vga_device",
                 "bit": 0
             },
             {
-                "value": "vga_device",
+                "value": "video_device",
                 "bit": 1
             }
         ],

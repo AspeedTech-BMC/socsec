@@ -14,7 +14,8 @@
             "enum": [
                 "A0",
                 "A1",
-                "A2"
+                "A2",
+                "A3"
             ]
         },
         "data_region": {
@@ -29,6 +30,13 @@
                 },
                 "ecc_region": {
                     "type": "boolean"
+                },
+                "rsa_key_order": {
+                    "type": "string",
+                    "enum": [
+                        "little",
+                        "big"
+                    ]
                 },
                 "key": {
                     "type": "array",
@@ -168,6 +176,18 @@
                         "SHA512"
                     ]
                 },
+                "Signature Scheme": {
+                    "type": "string",
+                    "enum": [
+                        "ECDSA_384",
+                        "RSAPSS_2048_SHA256",
+                        "RSAPSS_3072_SHA384",
+                        "RSAPSS_4096_SHA512",
+                        "RSAPKCS1_2048_SHA256",
+                        "RSAPKCS1_3072_SHA384",
+                        "RSAPKCS1_4096_SHA512"
+                    ]
+                },
                 "Secure Region size": {
                     "type": "string",
                     "pattern": "0[xX][0-9a-fA-F]+"
@@ -229,9 +249,8 @@
                     "pattern": "0[xX][0-9a-fA-F]+"
                 },
                 "Manifest ID": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 63
+                    "type": "string",
+                    "pattern": "0[xX][0-9a-fA-F]+"
                 },
                 "Patch code location": {
                     "type": "string",
@@ -242,6 +261,12 @@
                     "pattern": "0[xX][0-9a-fA-F]+"
                 },
                 "Disable patch code": {
+                    "type": "boolean"
+                },
+                "Enable patch code": {
+                    "type": "boolean"
+                },
+                "Disable Boot from Uart": {
                     "type": "boolean"
                 }
             }
@@ -485,7 +510,7 @@
                         }
                     }
                 },
-                "CPU/AXI clock ration": {
+                "CPU/AXI clock ratio": {
                     "type": "object",
                     "additionalProperties": false,
                     "required": [
@@ -550,8 +575,8 @@
                         "value": {
                             "type": "string",
                             "enum": [
-                                "video_device",
-                                "vga_device"
+                                "vga_device",
+                                "video_device"
                             ]
                         }
                     }

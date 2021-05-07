@@ -120,13 +120,13 @@
         "info": "SHA mode : {}"
     },
     {
-        "key": "Disable patch code",
+        "key": "Enable patch code",
         "type": "boolean",
         "dw_offset": 0,
         "bit_offset": 14,
         "info": [
-            "Enable patch code",
-            "Disable patch code"
+            "Disable patch code",
+            "Enable patch code"
         ]
     },
     {
