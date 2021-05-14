@@ -51,7 +51,9 @@
                                     "aes_vault",
                                     "rsa_pub_oem",
                                     "rsa_pub_aes",
-                                    "rsa_priv_aes"
+                                    "rsa_priv_aes",
+                                    "ecdsa_pub",
+                                    "ecdsa_parameters"
                                 ]
                             },
                             "key_bin": {
@@ -145,6 +147,7 @@
                 "Secure Boot Mode": {
                     "type": "string",
                     "enum": [
+                        "Normal",
                         "Mode_2",
                         "Mode_GCM",
                         "Mode_PFR"
@@ -179,7 +182,10 @@
                 "Signature Scheme": {
                     "type": "string",
                     "enum": [
-                        "ECDSA_384",
+                        "ECDSA384",
+                        "ECDSA384_RSA2048",
+                        "ECDSA384_RSA3072",
+                        "ECDSA384_RSA4096",
                         "RSAPSS_2048_SHA256",
                         "RSAPSS_3072_SHA384",
                         "RSAPSS_4096_SHA512",

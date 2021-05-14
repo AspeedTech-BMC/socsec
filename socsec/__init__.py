@@ -20,6 +20,7 @@
 
 from bitarray import bitarray
 import os
+from ecdsa.keys import VerifyingKey
 from pkg_resources import resource_filename as pkgdata
 import struct
 from Crypto.PublicKey import RSA
@@ -121,6 +122,33 @@ def rsa_key_to_bin(rsa_key_file, types, order='little'):
     return key_bin
 
 
+def ecdsa_key_to_bin(ecdsa_key_file):
+    with open(ecdsa_key_file, 'r') as f:
+        ecdsa_key_str = f.read()
+    vk = VerifyingKey.from_pem(ecdsa_key_str)
+    _x = vk.pubkey.point.x()
+    _y = vk.pubkey.point.y()
+    x = bitarray(bin(_x)[2:])
+    y = bitarray(bin(_y)[2:])
+    x_remain = (8-(x.length() % 8)) % 8
+    y_remain = (8-(y.length() % 8)) % 8
+    for _ in range(0, x_remain):
+        x.insert(0, 0)
+    for _ in range(0, y_remain):
+        y.insert(0, 0)
+
+    x = x.tobytes()
+    y = y.tobytes()
+    x_b = bytearray(x)
+    y_b = bytearray(y)
+
+    key_bin = bytearray(48 * 2)
+    insert_bytearray(x_b, key_bin, 0)
+    insert_bytearray(y_b, key_bin, 48)
+
+    return key_bin
+
+
 def chunks(seq, size):
     '''Generator that cuts sequence (bytes, memoryview, etc.)
        into chunks of given size. If `seq` length is not multiply
@@ -189,6 +217,8 @@ class OTP_info(object):
     OTP_KEY_TYPE_AES = 3
     OTP_KEY_TYPE_VAULT = 4
     OTP_KEY_TYPE_HMAC = 5
+    OTP_KEY_ECDSA384 = 6
+    OTP_KEY_ECDSA384P = 7
     INC_DATA = 1 << 31
     INC_CONF = 1 << 30
     INC_STRAP = 1 << 29
@@ -312,4 +342,8 @@ class OTP_info(object):
                  'RSA-private as AES key decryption key'),
         key_type(13, OTP_KEY_TYPE_RSA_PRIV, 0,
                  'RSA-private as AES key decryption key(big endian)'),
+        key_type(5, OTP_KEY_ECDSA384P, 0,
+                 'ECDSA384 cure parameter'),
+        key_type(7, OTP_KEY_ECDSA384, 0,
+                 'ECDSA-public as OEM DSS public keys'),
     ]
