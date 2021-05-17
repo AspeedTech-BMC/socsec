@@ -795,8 +795,6 @@ class Sec(object):
         # sign the image
         sha = SHA384.new(image[0:sign_image_size])
         digest = sha.digest()
-        print('digest')
-        hexdump(digest)
 
         signature = ecdsa_sign(ecdsa_sign_key, digest,
                                signing_helper, signing_helper_with_files)
@@ -806,7 +804,7 @@ class Sec(object):
                                       header_offset,
                                       sign_image_size, signature_offset,
                                       enc_offset, aes_key, aes_iv, aes_data_offset,
-                                      key_in_otp, rsa_aes_key_path, rsa_key_order,
+                                      key_in_otp, rsa_aes_key_path,
                                       signing_helper, signing_helper_with_files,
                                       deterministic, rsa_aes_randfunc=None):
 
@@ -823,22 +821,17 @@ class Sec(object):
         if key_in_otp:
             insert_bytearray(aes_iv, image, aes_data_offset)
         else:
-            if rsa_key_order == 'little':
-                aes_object = bytearray(48)
-            else:
-                aes_object = bytearray(64)
+            aes_object = bytearray(64)
             insert_bytearray(aes_key, aes_object, 0)
             insert_bytearray(aes_iv, aes_object, 0x20)
             enc_aes_object = rsa_encrypt(
-                rsa_aes_key_path, bytes(aes_object), order=rsa_key_order,
+                rsa_aes_key_path, bytes(aes_object), order='big',
                 randfunc=rsa_aes_randfunc)
             insert_bytearray(enc_aes_object, image, aes_data_offset)
 
         # sign the image
         sha = SHA384.new(image[0:sign_image_size])
         digest = sha.digest()
-        print('digest')
-        hexdump(digest)
         signature = ecdsa_sign(ecdsa_sign_key, digest,
                                signing_helper, signing_helper_with_files)
         insert_bytearray(signature, image, signature_offset)
@@ -1191,7 +1184,6 @@ class Sec(object):
                                                enc_offset, aes_key,
                                                aes_iv, aes_data_offset,
                                                key_in_otp, rsa_aes_key_path,
-                                               rsa_key_order,
                                                signing_helper,
                                                signing_helper_with_files,
                                                deterministic, rsa_aes_randfunc)
@@ -1746,20 +1738,13 @@ class SecureBootVerify(object):
     def modeecdsa_verify(self, sec_image, sign_image_size, signature_offset,
                          key_list, rsa_key_order):
         verify_pass = 0
-        parameter_pass = 0
         v_id = 0
         _signature = sec_image[signature_offset:signature_offset + 0x60]
-        print('_signature')
-        hexdump(_signature)
-        signature = int.from_bytes(
-            _signature, byteorder=rsa_key_order, signed=False)
         sign_image = sec_image[:sign_image_size]
         sha = SHA384.new(sign_image)
         image_hash = sha.digest()
-        print('image_hash')
-        hexdump(image_hash)
         for kl in key_list:
-            if kl['TYPE'] not in [ECDSA_PUB, ECDSA_PARMETER]:
+            if kl['TYPE'] != ECDSA_PUB:
                 continue
             if kl['RETIRE'] == 1:
                 continue
@@ -1768,14 +1753,15 @@ class SecureBootVerify(object):
                 Qy = int.from_bytes(kl['Qy'], byteorder='big', signed=False)
                 Q = Point(NIST384p.curve, Qx, Qy)
                 vk = VerifyingKey.from_public_point(Q, curve=NIST384p)
-                if vk.verify_digest(_signature, image_hash):
+                try:
+                    ret = vk.verify_digest(_signature, image_hash)
+                except:
+                    ret = 0
+                if ret:
                     verify_pass = 1
-            if kl['TYPE'] == ECDSA_PARMETER:
-                # TODO check parameter
-                v_id = kl['ID']
-                parameter_pass = 1
+                    v_id = kl['ID']
 
-        if verify_pass & parameter_pass == 0:
+        if verify_pass == 0:
             raise SecError("Mode ECDSA verify failed")
 
         return v_id
@@ -1821,7 +1807,7 @@ class SecureBootVerify(object):
                                               aes_data_offset, key_list)
         elif alg_data.algorithm_type in [ECDSA_P384, AES_ECDSA_P384]:
             v_id = self.modeecdsa_verify(sec_image, sign_image_size, signature_offset,
-                                         key_list, rsa_key_order)
+                                         key_list, 'big')
             for kl in key_list:
                 if kl['TYPE'] == ECDSA_PUB and kl['ID'] == v_id:
                     print('Verify key ...')
@@ -1836,7 +1822,7 @@ class SecureBootVerify(object):
                 dec_image = self.mode2_decrypt(sec_image, sign_image_size,
                                                enc_offset, aes_data_offset,
                                                v_id, alg_data, key_list,
-                                               rsa_key_order)
+                                               'big')
 
         return dec_image
 

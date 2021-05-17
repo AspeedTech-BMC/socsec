@@ -13,7 +13,7 @@
         ]
     },
     "config_region": {
-        "Secure Boot Mode": "Mode_2",
+        "Secure Boot Mode": "Normal",
         "Signature Scheme": "RSAPSS_4096_SHA512",
         "Enable image encryption": false
     },

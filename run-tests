@@ -34,7 +34,7 @@ make_slug() {
 
 	shift 3
 
-	if [ "$rot_mode" = "modegcm" ]
+	if [ "$rot_mode" = "modegcm" ] || [ "$rot_mode" = "modeecdsa" ] || [ "$rot_mode" = "modeecdsaaes1" ]
 	then
 		echo -n ${soc}-${rev}_${rot_mode}
 
@@ -49,6 +49,14 @@ make_slug() {
 
 				echo -n _cot-rsa${cot_rsa}-sha${cot_sha}
 			fi
+		fi
+	elif [ "$rot_mode" = "modeecdsaaes2" ]
+	then
+		if [ $# -eq 1  ]
+		then
+			local rot_rsa=$1
+			shift 1
+			echo -n ${soc}-${rev}_${rot_mode}-rsa${rot_rsa}
 		fi
 	else
 		local rot_rsa=$1
@@ -97,9 +105,16 @@ make_otp() {
 	local rot_mode=$3
 
 	set +u
-	if [ "$rot_mode" = modegcm ]
+	if [ "$rot_mode" = "modegcm" ] || [ "$rot_mode" = "modeecdsa" ] || [ "$rot_mode" = "modeecdsaaes1" ]
 	then
 		local otp_slug=$(make_slug $soc $rev $rot_mode)
+	elif [ "$rot_mode" = "modeecdsaaes2" ]
+	then
+		if [ $# -eq 4 ]
+		then
+			local rot_rsa=$4
+			local otp_slug=$(make_slug $soc $rev $rot_mode $rot_rsa)
+		fi
 	else
 		local rot_rsa=$4
 		local rot_sha=$5
@@ -141,7 +156,6 @@ verify_image() {
 	fi
 	echo $soc_rev
 	$RUN $SOCSEC verify \
-		--soc $soc_rev \
 		--sec_image tests/data/generated/${slug}/bl1.signed.bin \
 		--output tests/data/generated/${slug}/bl1.bin \
 		--otp_image tests/data/generated/${slug}/otp-all.image
@@ -436,6 +450,91 @@ make_mode2v2aes2pubpkcs1_bl1_image() {
 		$args
 
 	verify_image $soc $rev mode2v2aes2pubpkcs1 $rot_rsa $rot_sha $@
+}
+
+make_ecdsa_bl1_image() {
+	local soc=$1
+	local rev=$2
+	shift 2
+
+	local slug=$(make_slug $soc $rev modeecdsa $@)
+
+	mkdir -p tests/data/generated/${slug}
+
+	make_otp $soc $rev modeecdsa $@
+
+	args=$(parse_config $@)
+
+	echo $slug
+
+	$RUN $SOCSEC make_secure_bl1_image \
+		--soc $soc \
+		--algorithm ECDSA384 \
+		--bl1_image $BL1_IMAGE \
+		--output tests/data/generated/${slug}/bl1.signed.bin \
+		--ecdsa_sign_key tests/keys/ecdsa.pem \
+		$args
+
+	verify_image $soc $rev modeecdsa $@
+}
+
+make_ecdsaaes1_bl1_image() {
+	local soc=$1
+	local rev=$2
+	shift 2
+
+	local slug=$(make_slug $soc $rev modeecdsaaes1 $@)
+
+	mkdir -p tests/data/generated/${slug}
+
+	make_otp $soc $rev modeecdsaaes1 $@
+
+	args=$(parse_config $@)
+
+	echo $slug
+
+	$RUN $SOCSEC make_secure_bl1_image \
+		--soc $soc \
+		--algorithm AES_ECDSA384 \
+		--bl1_image $BL1_IMAGE \
+		--output tests/data/generated/${slug}/bl1.signed.bin \
+		--ecdsa_sign_key tests/keys/ecdsa.pem \
+		--aes_key tests/keys/aes-oem.bin \
+		--key_in_otp \
+		--deterministic \
+		$args
+	
+	verify_image $soc $rev modeecdsaaes1 $@
+}
+
+make_ecdsaaes2_bl1_image() {
+	local soc=$1
+	local rev=$2
+	local rot_rsa=$3
+	shift 3
+
+	local slug=$(make_slug $soc $rev modeecdsaaes2 ${rot_rsa} $@)
+
+	mkdir -p tests/data/generated/${slug}
+
+	make_otp $soc $rev modeecdsaaes2 $rot_rsa $@
+
+	args=$(parse_config $@)
+
+	echo $slug
+
+	$RUN $SOCSEC make_secure_bl1_image \
+		--soc $soc \
+		--algorithm AES_ECDSA384_RSA${rot_rsa} \
+		--bl1_image $BL1_IMAGE \
+		--output tests/data/generated/${slug}/bl1.signed.bin \
+		--ecdsa_sign_key tests/keys/ecdsa.pem \
+		--aes_key tests/keys/aes-oem.bin \
+		--rsa_aes tests/keys/rsa${rot_rsa}.pem \
+		--deterministic \
+		$args
+	
+	verify_image $soc $rev modeecdsaaes2 $rot_rsa $@
 }
 
 
@@ -888,6 +987,16 @@ exercise_bl1_mode2_little() {
 	done
 }
 
+exercise_bl1_ecdsa() {
+	make_ecdsa_bl1_image 1030 a1
+	make_ecdsaaes1_bl1_image 1030 a1
+
+	for rot_rsa in 2048 3072 4096
+	do
+		make_ecdsaaes2_bl1_image 1030 a1 ${rot_rsa}
+	done
+}
+
 compare_results() {
 	find tests/data/reference -type f | sort | while read R
 	do
@@ -910,6 +1019,7 @@ run() {
 	exercise_mode2v2
 	exercise_bl1_mode2_big
 	exercise_bl1_mode2_little
+	exercise_bl1_ecdsa
 
 	compare_results
 }

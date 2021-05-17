@@ -1276,8 +1276,10 @@ class OTP(object):
             elif key_type == self.otp_info.OTP_KEY_ECDSA384:
                 print('ASN1 OID: secp384r1')
                 print('NIST CURVE: P-384')
-                print('pub:')
-                hexdump(data_region[key_offset: key_offset+48])
+                print('Qx:')
+                hexdump(data_region[key_offset: key_offset+0x30])
+                print('Qy:')
+                hexdump(data_region[key_offset+0x30: key_offset+0x60])
             elif key_type == self.otp_info.OTP_KEY_ECDSA384P:
                 print('ASN1 OID: secp384r1')
                 print('NIST CURVE: P-384')
