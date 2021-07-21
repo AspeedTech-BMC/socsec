@@ -988,7 +988,7 @@ class Sec(object):
                 bl1_max_len = 64 * 1024 - 512
             if bl1_image_len > bl1_max_len:
                 raise SecError(
-                    f"The maximum size of BL1 image is {bl1_max_len} bytes.")
+                    "The maximum size of BL1 image is {} bytes.".format(bl1_max_len))
             if soc_version == '2605' and flash_patch_offset == None:
                 flash_patch_offset = 0x50
             else:

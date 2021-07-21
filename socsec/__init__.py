@@ -47,7 +47,7 @@ def rsa_importkey(key_file):
         pos = 0
         for line in f:
             if line.find('-----BEGIN', 0) == 0:
-                print(f"Found PEM header at position {pos}")
+                print("Found PEM header at position {}".format(pos))
                 break
             pos += len(line)
         f.seek(pos)
