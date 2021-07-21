@@ -892,7 +892,19 @@ class OTP(object):
 
                 config_region_ignore[offset+offset_value] = 0
                 config_region[offset+offset_value] = 1
+            elif info['type'] == 'rev_id':
+                dw_offset = info['dw_offset']
+                bit_offset = info['bit_offset']
+                offset = dw_offset*32 + bit_offset
+                bit_length = info['bit_length']
+                value_start = info['value_start']
+                offset_value = value - value_start
 
+                if offset_value < 0 or offset_value > bit_length:
+                    raise OtpError('"{}": value is out of range'.format(key))
+
+                config_region_ignore[offset+offset_value] = 0
+                config_region[offset+offset_value] = 1
             else:
                 raise OtpError('"{}": value is invalid'.format(key))
 

@@ -109,6 +109,8 @@ class ChainPartitionDescriptor(object):
         self.verify_key_path = verify_key_path
         self.next_verify_key_path = next_verify_key_path
 
+def BIT(off):
+    return 1 << off
 
 def parse_number(string):
     """Parse a string as a number.
@@ -928,7 +930,7 @@ class Sec(object):
 
     def make_secure_bl1_image(self, soc_version, bl1_image_fd, rsa_sign_key_path,
                               ecdsa_sign_key_path, gcm_aes_key_fd, output_fd,
-                              algorithm_name, rsa_padding, header_offset, rollback_index,
+                              algorithm_name, rsa_padding, header_offset, revision_id,
                               enc_offset, aes_key_fd, rsa_aes_key_path,
                               key_in_otp,
                               rsa_key_order,
@@ -952,7 +954,7 @@ class Sec(object):
             algorithm_name: Name of algorithm to use.
             rsa_padding:
             header_offset: secure image header offset.
-            rollback_index: The rollback index to use.
+            revision_id: Revision id for rollback prevention.
             enc_offset: image encryption start offset.
             aes_key_fd; aes key for AES_RSA**_SHA* mode.
             rsa_aes_key_path; rsa key for AES_RSA**_SHA* mode when key_in_otp is false
@@ -1062,6 +1064,16 @@ class Sec(object):
         else:
             enc_offset = 0
             signature_offset = sign_image_size
+        
+        if revision_id < 0 or revision_id > 63:
+            raise SecError( "revision_id is out of range. (0 <= revision_id <= 64)")
+        
+        for i in range(revision_id):
+            if i < 32:
+                revision_low |= BIT(i)
+            else:
+                j = i - 32
+                revision_high |= BIT(j)
 
         bl1_header_checksum = -(aes_data_offset + enc_offset +
                                 sign_image_size + signature_offset +
@@ -1251,7 +1263,7 @@ class Sec(object):
 
         return image
 
-    def make_sv_chain_image(self, algorithm, cot_part, rollback_index,
+    def make_sv_chain_image(self, algorithm, cot_part,
                             image_relative_path, rsa_key_order,
                             signing_helper, signing_helper_with_files):
 
@@ -1947,8 +1959,8 @@ class secTool(object):
                                       RSA support pkcs1 padding or pss padding',
                                 metavar='PADDING',
                                 default='pkcs1')
-        sub_parser.add_argument('--rollback_index',
-                                help='Rollback Index',
+        sub_parser.add_argument('--revision_id',
+                                help='Revision id for rollback prevention (0 <= REVISION_ID < 64)',
                                 type=parse_number,
                                 default=0)
         sub_parser.add_argument('--signing_helper',
@@ -2029,10 +2041,6 @@ class secTool(object):
                                 help='',
                                 nargs='+',
                                 metavar='BL2_IMAGE:BL2_OUT:BL2_SIGN_KEY:BL2_VERIFY_KEY BL3_IMAGE:BL3_OUT:BL3_SIGN_KEY:BL3_VERIFY_KEY')
-        sub_parser.add_argument('--rollback_index',
-                                help='Rollback Index',
-                                type=parse_number,
-                                default=0)
         sub_parser.add_argument('--image_relative_path',
                                 help='Image relative path',
                                 type=parse_path,
@@ -2096,7 +2104,7 @@ class secTool(object):
                                        args.output, args.algorithm,
                                        args.rsa_padding,
                                        args.header_offset,
-                                       args.rollback_index,
+                                       args.revision_id,
                                        args.enc_offset,
                                        args.aes_key,
                                        args.rsa_aes,
@@ -2115,7 +2123,6 @@ class secTool(object):
         """Implements the 'make_sv_chain_image' sub-command."""
         self.sec.make_sv_chain_image(args.algorithm,
                                      args.cot_part,
-                                     args.rollback_index,
                                      args.image_relative_path,
                                      args.rsa_key_order,
                                      args.signing_helper,

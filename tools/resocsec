@@ -45,7 +45,7 @@ def secure_chained_images(args):
     cot_part = [':'.join(image) for image in args.images]
     sec.make_sv_chain_image(frob_algorithm(args.algorithm),
                             cot_part,
-                            args.rollback_index,
+                            args.revision_id,
                             "",  # Image relative path: Require full path in args
                             args.rsa_key_endianness,
                             args.sign_stream,
@@ -61,7 +61,7 @@ def secure_bootstrap_image_mode2(args):
                               args.output,
                               frob_algorithm(args.algorithm),
                               args.header_offset,
-                              args.rollback_index,
+                              args.revision_id,
                               None,  # Offset of encrypted image
                               None,  # AES key
                               None,  # RSA public key to encrypt AES key
@@ -86,7 +86,7 @@ def secure_bootstrap_image_mode2aes1(args):
                               args.output,
                               frob_algorithm(args.algorithm),
                               args.header_offset,
-                              args.rollback_index,
+                              args.revision_id,
                               args.encrypted_payload_offset,
                               args.aes_key,
                               None,  # RSA public key to encrypt AES key
@@ -111,7 +111,7 @@ def secure_bootstrap_image_mode2aes2(args):
                               args.output,
                               frob_algorithm(args.algorithm),
                               args.header_offset,
-                              args.rollback_index,
+                              args.revision_id,
                               args.encrypted_payload_offset,
                               args.aes_key,
                               args.rsa_aes_key,
@@ -136,7 +136,7 @@ def secure_bootstrap_image_modegcm(args):
                               args.output,
                               frob_algorithm(args.algorithm),
                               args.header_offset,
-                              args.rollback_index,
+                              args.revision_id,
                               args.encrypted_payload_offset,
                               None,  # AES key
                               None,  # RSA public key to encrypt AES key

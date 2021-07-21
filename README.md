@@ -49,7 +49,7 @@ usage: socsec make_secure_bl1_image [-h] [--soc SOC] [--bl1_image BL1_IMAGE]
                                     [--rsa_key_order ORDER]
                                     [--gcm_aes_key GCM_AES_KEY]
                                     [--output OUTPUT] [--algorithm ALGORITHM]
-                                    [--rollback_index ROLLBACK_INDEX]
+                                    [--revision_id REVISION_ID]
                                     [--signing_helper [APP]]
                                     [--signing_helper_with_files [APP]]
                                     [--enc_offset ENC_OFFSET]
@@ -82,8 +82,8 @@ optional arguments:
                         AES_RSA2048_SHA256, RSA2048_SHA256, ...), RSA algo
                         support RSA1024, RSA2048, RSA3072 and RSA4096, HASH
                         algo support SHA224, SHA256, SHA384 and SHA512
-  --rollback_index ROLLBACK_INDEX
-                        Rollback Index
+  --revision_id REVISION_ID
+                        Revision id for rollback prevention
   --signing_helper [APP]
                         Path to helper used for signing
   --signing_helper_with_files [APP]
@@ -120,7 +120,6 @@ cot_group:
 usage: socsec make_sv_chain_image [-h] [--algorithm ALGORITHM]
                                   [--rsa_key_order ORDER]
                                   [--cot_part BL2_IMAGE:BL2_OUT:BL2_SIGN_KEY:BL2_VERIFY_KEY BL3_IMAGE:BL3_OUT:BL3_SIGN_KEY:BL3_VERIFY_KEY [BL2_IMAGE:BL2_OUT:BL2_SIGN_KEY:BL2_VERIFY_KEY BL3_IMAGE:BL3_OUT:BL3_SIGN_KEY:BL3_VERIFY_KEY ...]]
-                                  [--rollback_index ROLLBACK_INDEX]
                                   [--image_relative_path IMAGE_RELATIVE_PATH]
                                   [--signing_helper [APP]]
                                   [--signing_helper_with_files [APP]]
@@ -136,8 +135,6 @@ optional arguments:
                         This value the OTP setting(e.g. little, big), default
                         value is "little"
   --cot_part BL2_IMAGE:BL2_OUT:BL2_SIGN_KEY:BL2_VERIFY_KEY BL3_IMAGE:BL3_OUT:BL3_SIGN_KEY:BL3_VERIFY_KEY [BL2_IMAGE:BL2_OUT:BL2_SIGN_KEY:BL2_VERIFY_KEY BL3_IMAGE:BL3_OUT:BL3_SIGN_KEY:BL3_VERIFY_KEY ...]
-  --rollback_index ROLLBACK_INDEX
-                        Rollback Index
   --image_relative_path IMAGE_RELATIVE_PATH
                         Image relative path
   --signing_helper [APP]
