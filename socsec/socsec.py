@@ -1267,6 +1267,7 @@ class Sec(object):
                             image_relative_path, rsa_key_order,
                             signing_helper, signing_helper_with_files):
 
+        print('WARNING: ASPEED CoT is deprecated.')
         cot_alg_data = self.parse_algorithm(algorithm)
 
         descriptors = []
@@ -2009,7 +2010,7 @@ class secTool(object):
                                 default=None)
 
         cot_group = sub_parser.add_argument_group(
-            'cot_group', 'Chain of trust argument')
+            'cot_group', '(deprecated)Chain of trust argument')
 
         cot_group.add_argument('--cot_algorithm',
                                help='Algorithm to use (default: NONE e.g. RSA2048_SHA256), \
@@ -2027,7 +2028,7 @@ class secTool(object):
         sub_parser.set_defaults(func=self.make_secure_bl1_image)
 
         sub_parser = subparsers.add_parser('make_sv_chain_image',
-                                           help='Makes a signature verified cot image.')
+                                           help='(deprecated)Makes a signature verified cot image.')
         sub_parser.add_argument('--algorithm',
                                 help='Algorithm to use (default: NONE e.g. RSA2048_SHA256, RSA3072_SHA384, ...), \
                                       RSA algo support RSA1024, RSA2048, RSA3072 and RSA4096, HASH algo support SHA224, SHA256, SHA384 and SHA512',
