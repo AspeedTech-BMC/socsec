@@ -1918,7 +1918,7 @@ class secTool(object):
         historically, the SoCs have been using the top of the SRAM
         for the SPL execution stack. However, on 2600 (A1) and above
         SoCs, an additional 24KB SRAM can be used for the stack,
-        allowing the verification region to occuppy the entire 64KB
+        allowing the verification region to occupy the entire 64KB
         (including signature). For these models of boards, this
         layout will also be the default in future SDK releases.
         Use this parameter to explicitly indicate that the SPL image
@@ -1931,7 +1931,7 @@ class secTool(object):
                                 choices=['true', 'false'], default=None,
                                 help=stack_intersects_verification_region_help)
         sub_parser.add_argument('--header_offset',
-                                help='RoT header offsest',
+                                help='RoT header offset',
                                 type=parse_number,
                                 default=None)
         sub_parser.add_argument('--rsa_sign_key',
@@ -1961,7 +1961,7 @@ class secTool(object):
                                 metavar='PADDING',
                                 default='pkcs1')
         sub_parser.add_argument('--revision_id',
-                                help='Revision id for rollback prevention (0 <= REVISION_ID < 64)',
+                                help='Revision id for rollback prevention (0 <= REVISION_ID <= 64)',
                                 type=parse_number,
                                 default=0)
         sub_parser.add_argument('--signing_helper',
