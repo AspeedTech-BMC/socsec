@@ -141,9 +141,9 @@ def print_rsa_key(rsa_key_file):
     n_bit = bitarray(bin(rsa_key.n)[2:])
     e_bit = bitarray(bin(rsa_key.e)[2:])
     d_bit = bitarray(bin(rsa_key.d)[2:])
-    n_remain = (8-(n_bit.length() % 8)) % 8
-    e_remain = (8-(e_bit.length() % 8)) % 8
-    d_remain = (8-(d_bit.length() % 8)) % 8
+    n_remain = (8-(len(n_bit) % 8)) % 8
+    e_remain = (8-(len(e_bit) % 8)) % 8
+    d_remain = (8-(len(d_bit) % 8)) % 8
     for _ in range(0, n_remain):
         n_bit.insert(0, 0)
     for _ in range(0, e_remain):
@@ -445,7 +445,7 @@ def rsa_encrypt(rsa_key_file, src_bin, order='little', randfunc=None):
     if order == 'little':
         src_enc.reverse()
 
-    key_bit_length = bitarray(bin(rsa_key.n)[2:]).length()
+    key_bit_length = len(bitarray(bin(rsa_key.n)[2:]))
     key_byte_length = int((key_bit_length + 7) / 8)
     if len(src_enc) < key_byte_length:
         src_enc = src_enc + bytearray(key_byte_length - len(src_enc))

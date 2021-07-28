@@ -1792,8 +1792,8 @@ class otpTool(object):
 
         try:
             args.func(args)
-        except AttributeError:
-            parser.error("too few arguments")
+        except AttributeError as ex:
+            print(ex)
             sys.exit(1)
 
     def make_otp_image(self, args):

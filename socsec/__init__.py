@@ -58,11 +58,11 @@ def rsa_importkey(key_file):
 
 def _rsa_bit_length(rsa_key, var):
     if var == 'n':
-        key_bit_length = bitarray(bin(rsa_key.n)[2:]).length()
+        key_bit_length = len(bitarray(bin(rsa_key.n)[2:]))
     elif var == 'e':
-        key_bit_length = bitarray(bin(rsa_key.e)[2:]).length()
+        key_bit_length = len(bitarray(bin(rsa_key.e)[2:]))
     elif var == 'd':
-        key_bit_length = bitarray(bin(rsa_key.d)[2:]).length()
+        key_bit_length = len(bitarray(bin(rsa_key.d)[2:]))
     return key_bit_length
 
 
@@ -83,8 +83,8 @@ def rsa_key_to_bin(rsa_key_file, types, order='little'):
 
     n = bitarray(bin(rsa_key.n)[2:])
     e = bitarray(bin(rsa_key.e)[2:])
-    n_remain = (8-(n.length() % 8)) % 8
-    e_remain = (8-(e.length() % 8)) % 8
+    n_remain = (8-(len(n) % 8)) % 8
+    e_remain = (8-(len(e) % 8)) % 8
     for _ in range(0, n_remain):
         n.insert(0, 0)
     for _ in range(0, e_remain):
@@ -106,7 +106,7 @@ def rsa_key_to_bin(rsa_key_file, types, order='little'):
         insert_bytearray(n_b, key_bin, 0)
     elif types == 'private':
         d = bitarray(bin(rsa_key.d)[2:])
-        d_remain = (8-(d.length() % 8)) % 8
+        d_remain = (8-(len(d) % 8)) % 8
         for _ in range(0, d_remain):
             d.insert(0, 0)
         d = d.tobytes()
@@ -130,8 +130,8 @@ def ecdsa_key_to_bin(ecdsa_key_file):
     _y = vk.pubkey.point.y()
     x = bitarray(bin(_x)[2:])
     y = bitarray(bin(_y)[2:])
-    x_remain = (8-(x.length() % 8)) % 8
-    y_remain = (8-(y.length() % 8)) % 8
+    x_remain = (8-(len(x) % 8)) % 8
+    y_remain = (8-(len(y) % 8)) % 8
     for _ in range(0, x_remain):
         x.insert(0, 0)
     for _ in range(0, y_remain):
