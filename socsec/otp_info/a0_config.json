@@ -279,7 +279,7 @@
     },
     {
         "key": "Manifest ID",
-        "type": "hex",
+        "type": "rev_id",
         "value_start": 0,
         "dw_offset": 10,
         "bit_offset": 0,

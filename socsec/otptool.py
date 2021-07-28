@@ -363,6 +363,11 @@ class OTP(object):
                     'type': 'string',
                     'pattern': '0[xX][0-9a-fA-F]+'
                 }
+            elif i['type'] == 'rev_id':
+                config_schema[i['key']] = {
+                    'type': 'string',
+                    'pattern': '0[xX][0-9a-fA-F]+'
+                }
 
         for i in strap_info:
             val = {}
@@ -897,14 +902,15 @@ class OTP(object):
                 bit_offset = info['bit_offset']
                 offset = dw_offset*32 + bit_offset
                 bit_length = info['bit_length']
-                value_start = info['value_start']
-                offset_value = value - value_start
+                offset_value = int(value, 16) - value_start
 
                 if offset_value < 0 or offset_value > bit_length:
                     raise OtpError('"{}": value is out of range'.format(key))
 
-                config_region_ignore[offset+offset_value] = 0
-                config_region[offset+offset_value] = 1
+                for i in range(bit_length):
+                    config_region_ignore[offset+i] = 0
+                for i in range(offset_value):
+                    config_region[offset+i] = 1
             else:
                 raise OtpError('"{}": value is invalid'.format(key))
 
