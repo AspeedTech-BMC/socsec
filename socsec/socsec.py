@@ -1065,7 +1065,7 @@ class Sec(object):
             enc_offset = 0
             signature_offset = sign_image_size
         
-        if revision_id < 0 or revision_id > 63:
+        if revision_id < 0 or revision_id > 64:
             raise SecError( "revision_id is out of range. (0 <= revision_id <= 64)")
         
         for i in range(revision_id):
