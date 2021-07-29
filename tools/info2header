@@ -25,7 +25,7 @@ import jstyleson
 import sys
 import os
 
-INFO_VER = "1.0.4"
+INFO_VER = "1.0.5"
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))+'/'
 INFO_DIR = ROOT_DIR + '../socsec/otp_info/'
 OTP_INFO = [
@@ -46,6 +46,12 @@ OTP_INFO = [
         'strap': INFO_DIR+'a2_strap.json',
         'conf_name': 'a2_conf_info',
         'strap_name': 'a2_strap_info'
+    },
+    {
+        'config': INFO_DIR+'a3_config.json',
+        'strap': INFO_DIR+'a2_strap.json',
+        'conf_name': 'a3_conf_info',
+        'strap_name': 'a3_strap_info'
     }
 ]
 

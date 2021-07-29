@@ -142,6 +142,10 @@
         "User define data: random number high": "0x0",
         // OTPCFG7[14-0]
         "SCU0C8[14:0] auto setting value": "0x0",
+        // OTPCFG7[15]
+        // false: Disable write protection for SCU0C8 and SCU0D8
+        // true : Enable write protection for SCU0C8 and SCU0D8
+        "Enable write protection for SCU0C8 and SCU0D8": false,
         // OTPCFG7[30-16]
         "SCU0D8[14:0] auto setting value": "0x0",
         // OTPCFG7[31]

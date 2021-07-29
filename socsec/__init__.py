@@ -252,7 +252,7 @@ class OTP_info(object):
             'otp_strap_bit_size': 64,
         },
         'A3': {
-            'config': pkgdata('socsec', 'otp_info/a2_config.json'),
+            'config': pkgdata('socsec', 'otp_info/a3_config.json'),
             'strap': pkgdata('socsec', 'otp_info/a2_strap.json'),
             'data_region_size': 8192,
             'ecc_region_offset': 7168,

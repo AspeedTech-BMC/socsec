@@ -32,22 +32,16 @@ OTP_INFO = [
         'name': 'A1',
         'config': INFO_DIR+'a1_config.json',
         'strap': INFO_DIR+'a1_strap.json',
-        'conf_name': 'a1_conf_info',
-        'strap_name': 'a1_strap_info'
     },
     {
         'name': 'A2',
         'config': INFO_DIR+'a2_config.json',
         'strap': INFO_DIR+'a2_strap.json',
-        'conf_name': 'a2_conf_info',
-        'strap_name': 'a2_strap_info'
     },
     {
         'name': 'A3',
-        'config': INFO_DIR+'a2_config.json',
+        'config': INFO_DIR+'a3_config.json',
         'strap': INFO_DIR+'a2_strap.json',
-        'conf_name': 'a2_conf_info',
-        'strap_name': 'a2_strap_info'
     },
 ]
 
