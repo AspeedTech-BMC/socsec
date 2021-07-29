@@ -3,7 +3,7 @@
  * Do not edit it.
  */
 
-#define OTP_INFO_VER		"1.0.3"
+#define OTP_INFO_VER		"1.0.4"
 #define OTP_REG_RESERVED	-1
 #define OTP_REG_VALUE		-2
 #define OTP_REG_VALID_BIT	-3
@@ -488,6 +488,10 @@ static const struct otpconf_info a1_conf_info[] = {
 	{ 4, 0, 8, OTP_REG_VALID_BIT, "Keys retire : %s" },
 	{ 5, 0, 32, OTP_REG_VALUE, "User define data, random number low : 0x%x" },
 	{ 6, 0, 32, OTP_REG_VALUE, "User define data, random number high : 0x%x" },
+	{ 7, 0, 15, OTP_REG_VALUE, "SCU0C8[14:0] auto setting : 0x%x" },
+	{ 7, 16, 15, OTP_REG_VALUE, "SCU0D8[14:0] auto setting : 0x%x" },
+	{ 7, 31, 1, 0, "Disable chip security setting" },
+	{ 7, 31, 1, 1, "Enable chip security setting" },
 	{ 14, 0, 11, OTP_REG_VALUE, "Patch code location (DW): 0x%x" },
 	{ 14, 11, 6, OTP_REG_VALUE, "Patch code size (DW): 0x%x" }
 };
@@ -534,6 +538,8 @@ static const struct otpconf_info a2_conf_info[] = {
 	{ 0, 26, 1, 1, "Copy Boot Image to Internal SRAM" },
 	{ 0, 27, 1, 0, "Disable image encryption" },
 	{ 0, 27, 1, 1, "Enable image encryption" },
+	{ 0, 28, 1, 0, "Enable Flash Patch Code" },
+	{ 0, 28, 1, 1, "Disable Flash Patch Code" },
 	{ 0, 29, 1, 0, "OTP key retire Region : Writable" },
 	{ 0, 29, 1, 1, "OTP key retire Region : Write Protect" },
 	{ 0, 30, 1, 0, "Boot from UART/VUART when normal boot is fail" },
@@ -562,6 +568,10 @@ static const struct otpconf_info a2_conf_info[] = {
 	{ 4, 0, 8, OTP_REG_VALID_BIT, "Keys retire : %s" },
 	{ 5, 0, 32, OTP_REG_VALUE, "User define data, random number low : 0x%x" },
 	{ 6, 0, 32, OTP_REG_VALUE, "User define data, random number high : 0x%x" },
+	{ 7, 0, 15, OTP_REG_VALUE, "SCU0C8[14:0] auto setting : 0x%x" },
+	{ 7, 16, 15, OTP_REG_VALUE, "SCU0D8[14:0] auto setting : 0x%x" },
+	{ 7, 31, 1, 0, "Disable chip security setting" },
+	{ 7, 31, 1, 1, "Enable chip security setting" },
 	{ 14, 0, 11, OTP_REG_VALUE, "Patch code location (DW): 0x%x" },
 	{ 14, 11, 6, OTP_REG_VALUE, "Patch code size (DW): 0x%x" }
 };

@@ -218,6 +218,9 @@
                 "Enable image encryption": {
                     "type": "boolean"
                 },
+                "Disable Flash Patch Code": {
+                    "type": "boolean"
+                },
                 "Enable write Protect of OTP key retire bits": {
                     "type": "boolean"
                 },
@@ -251,6 +254,17 @@
                 "User define data: random number high": {
                     "type": "string",
                     "pattern": "0[xX][0-9a-fA-F]+"
+                },
+                "SCU0C8[14:0] auto setting value": {
+                    "type": "string",
+                    "pattern": "0[xX][0-9a-fA-F]+"
+                },
+                "SCU0D8[14:0] auto setting value": {
+                    "type": "string",
+                    "pattern": "0[xX][0-9a-fA-F]+"
+                },
+                "Enable chip security setting": {
+                    "type": "boolean"
                 },
                 "Redundancy Repair": {
                     "type": "string",

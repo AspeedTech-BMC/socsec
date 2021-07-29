@@ -229,6 +229,16 @@
         ]
     },
     {
+        "key": "Disable Flash Patch Code",
+        "type": "boolean",
+        "dw_offset": 0,
+        "bit_offset": 28,
+        "info": [
+            "Enable Flash Patch Code",
+            "Disable Flash Patch Code"
+        ]
+    },
+    {
         "key": "Enable write Protect of OTP key retire bits",
         "type": "boolean",
         "dw_offset": 0,
@@ -301,13 +311,13 @@
         "info": "Boot from UART using: {}"
     },
     {
-        "key": "Disable Auto Boot from UART or VUART",
+        "key": "Disable Auto Boot from UART",
         "type": "boolean",
         "dw_offset": 3,
         "bit_offset": 17,
         "info": [
-            "Enable Auto Boot from UART or VUART",
-            "Disable Auto Boot from UART or VUART"
+            "Enable Auto Boot from UART",
+            "Disable Auto Boot from UART"
         ]
     },
     {
@@ -401,6 +411,32 @@
         "bit_offset": 0,
         "bit_length": 32,
         "info": "User define data, random number high : {}"
+    },
+    {
+        "key": "SCU0C8[14:0] auto setting value",
+        "type": "hex",
+        "dw_offset": 7,
+        "bit_offset": 0,
+        "bit_length": 15,
+        "info": "SCU0C8[14:0] auto setting : {}"
+    },
+    {
+        "key": "SCU0D8[14:0] auto setting value",
+        "type": "hex",
+        "dw_offset": 7,
+        "bit_offset": 16,
+        "bit_length": 15,
+        "info": "SCU0D8[14:0] auto setting : {}"
+    },
+    {
+        "key": "Enable chip security setting",
+        "type": "boolean",
+        "dw_offset": 7,
+        "bit_offset": 31,
+        "info": [
+            "Disable chip security setting",
+            "Enable chip security setting"
+        ]
     },
     {
         "key": "Manifest ID",
