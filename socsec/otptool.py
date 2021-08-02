@@ -850,6 +850,8 @@ class OTP(object):
                 offset = dw_offset*32+bit_offset
                 if value:
                     config_region[offset] = 1
+                else:
+                    config_region[offset] = 0
                 config_region_ignore[offset] = 0
             elif info['type'] == 'string':
                 info_value = info['value']
@@ -927,6 +929,17 @@ class OTP(object):
         otp_strap_reg_protect.setall(False)
         otp_strap_protect.setall(False)
         otp_strap_ignore.setall(True)
+
+        for i in strap_info:
+            if i['type'] == 'reserved':
+                bit_length = i['bit_length']
+                bit_offset = i['bit_offset']
+                tmp = bitarray(bit_length)
+                tmp.setall(True)
+                otp_strap_reg_protect[bit_offset:bit_offset+bit_length] = tmp
+                otp_strap_protect[bit_offset:bit_offset+bit_length] = tmp
+                tmp.setall(False)
+                otp_strap_ignore[bit_offset:bit_offset+bit_length] = tmp
 
         for config in otp_strap_config:
             info = None
@@ -1326,6 +1339,22 @@ class OTP(object):
         print('OTP Patch:')
         hexdump(data_region[patch_offset:patch_offset+patch_size])
 
+    def otp_print_revid(self, rid):
+        print("     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f")
+        print("___________________________________________________")
+        for i in range(64):
+            if i < 32:
+                j = 0
+                bit_offset = i
+            else:
+                j = 1
+                bit_offset = i - 32
+            if i % 16 == 0:
+                print("{:<2X} | ".format(i), end='')
+            print("{}  ".format((rid[j] >> bit_offset) & 0x1), end='')
+            if (i + 1) % 16 == 0:
+                print("\n", end='')
+
     def otp_print_image_config(self, config_info, config_region, config_ignore):
         print("DW    BIT        Value       Description")
         print("__________________________________________________________________________")
@@ -1337,6 +1366,9 @@ class OTP(object):
             OTPCFG.append(h)
             OTPCFG_IGNORE.append(hm)
 
+        rid_flag = False
+        rid = [0] * 2
+        rid_offset = 0
         for ci in config_info:
             dw_offset = ci['dw_offset']
             bit_offset = ci['bit_offset']
@@ -1357,10 +1389,26 @@ class OTP(object):
                 i = i + 1
             otp_value = (ov >> bit_offset) & mask
             otp_ignore = (oi >> bit_offset) & mask
-
             if otp_ignore == mask:
                 continue
-            elif otp_ignore != 0:
+            ret = True
+            if info_type in ['boolean', 'string', 'hex']:
+                if otp_ignore != 0:
+                    ret = False
+            elif info_type == 'bit_shift':
+                if (otp_value + otp_ignore) & mask != mask:
+                    ret = False
+            elif info_type == 'rev_id':
+                if OTPCFG_IGNORE[dw_offset] != 0 or \
+                   OTPCFG_IGNORE[dw_offset+1] != 0:
+                    ret = False
+                else:
+                    rid_flag = True
+                    rid[0] = OTPCFG[dw_offset]
+                    rid[1] = OTPCFG[dw_offset+1]
+                    rid_offset = dw_offset
+                    continue
+            if not ret:
                 print('bit_length: {}'.format(bit_length))
                 print('otp_ignore: 0x{:X}'.format(otp_ignore))
                 print('otp_value: 0x{:X}'.format(otp_value))
@@ -1401,6 +1449,12 @@ class OTP(object):
                         bit_offset + bit_length - 1, bit_offset), end='')
                 print('0x{:<10X}'.format(otp_value), end='')
                 print('{}'.format(info))
+        print()
+        if rid_flag:
+            print('OTP Manifest ID(revision id), OTPCFG{:X}, OTPCFG{:X}'.format(
+                rid_offset, rid_offset+1))
+            self.otp_print_revid(rid)
+            print()
 
     def otp_print_image_strap(self, ver, strap_info, strap, strap_pro, strap_reg_pro, strap_ignore):
         OTPSTRAP = struct.unpack('<Q', strap)[0]
@@ -1438,7 +1492,7 @@ class OTP(object):
                 continue
             elif otp_ignore != 0:
                 return False
-
+            info = ''
             if info_type == 'boolean':
                 if otp_value == 0:
                     info = si['info'][0]
@@ -1449,6 +1503,8 @@ class OTP(object):
                 for v in vl:
                     if otp_value == v['bit']:
                         info = si['info'].format(v['value'])
+            elif info_type == 'reserved':
+                info = 'Reserved'
 
             if info != '':
                 if bit_length == 1:
@@ -1645,13 +1701,15 @@ class OTP(object):
         config_region = otp_image[conf_offset:conf_offset+64]
         config_region_ignore = otp_image[conf_offset+64:conf_offset+64*2]
         strap_offset = header.strap_info & 0xffff
-        strap_region = otp_image[strap_offset:strap_offset+8]
-        strap_region_pro = otp_image[strap_offset+8:strap_offset+16]
         if ver == 'A0':
+            strap_region = otp_image[strap_offset:strap_offset+8]
             strap_region_reg_pro = None
+            strap_region_pro = otp_image[strap_offset+8:strap_offset+16]
             strap_region_ignore = otp_image[strap_offset+16:strap_offset+24]
         else:
-            strap_region_reg_pro = otp_image[strap_offset+16:strap_offset+24]
+            strap_region = otp_image[strap_offset:strap_offset+8]
+            strap_region_reg_pro = otp_image[strap_offset+8:strap_offset+16]
+            strap_region_pro = otp_image[strap_offset+16:strap_offset+24]
             strap_region_ignore = otp_image[strap_offset+24:strap_offset+32]
 
         if header.image_info & self.otp_info.INC_DATA:
