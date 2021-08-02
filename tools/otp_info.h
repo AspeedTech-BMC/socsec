@@ -3,7 +3,7 @@
  * Do not edit it.
  */
 
-#define OTP_INFO_VER		"1.0.5"
+#define OTP_INFO_VER		"1.1.0"
 #define OTP_REG_RESERVED	-1
 #define OTP_REG_VALUE		-2
 #define OTP_REG_VALID_BIT	-3
@@ -173,6 +173,7 @@ static const struct otpstrap_info a1_strap_info[] = {
 	{ 12, 2, 1, "VGA memory size : 16MB" },
 	{ 12, 2, 2, "VGA memory size : 32MB" },
 	{ 12, 2, 3, "VGA memory size : 64MB" },
+	{ 14, 1, OTP_REG_RESERVED, "Reserved" },
 	{ 15, 1, 0, "CPU/AXI clock ratio : 2:1" },
 	{ 15, 1, 1, "CPU/AXI clock ratio : 1:1" },
 	{ 16, 1, 0, "Enable ARM JTAG debug" },
@@ -197,8 +198,13 @@ static const struct otpstrap_info a1_strap_info[] = {
 	{ 25, 2, 1, "Internal bridge speed selection : 1/2x" },
 	{ 25, 2, 2, "Internal bridge speed selection : 1/4x" },
 	{ 25, 2, 3, "Internal bridge speed selection : 1/8x" },
+	{ 27, 2, 0, "Reset Source of eMMC part : GPIOY3" },
+	{ 27, 2, 1, "Reset Source of eMMC part : GPIO18A2" },
+	{ 27, 2, 2, "Reset Source of eMMC part : GPIO18B6" },
+	{ 27, 2, 3, "Reset Source of eMMC part : GPIO18A2" },
 	{ 29, 1, 0, "Enable RVAS function" },
 	{ 29, 1, 1, "Disable RVAS function" },
+	{ 30, 2, OTP_REG_RESERVED, "Reserved" },
 	{ 32, 1, 0, "MAC 3 : RMII/NCSI" },
 	{ 32, 1, 1, "MAC 3 : RGMII" },
 	{ 33, 1, 0, "MAC 4 : RMII/NCSI" },
@@ -261,8 +267,10 @@ static const struct otpstrap_info a1_strap_info[] = {
 	{ 59, 1, 1, "Enable host SPI auxiliary control pins" },
 	{ 60, 1, 0, "Disable GPIO pass through" },
 	{ 60, 1, 1, "Enable GPIO pass through" },
+	{ 61, 1, OTP_REG_RESERVED, "Reserved" },
 	{ 62, 1, 0, "Disable dedicate GPIO strap pins" },
-	{ 62, 1, 1, "Enable dedicate GPIO strap pins" }
+	{ 62, 1, 1, "Enable dedicate GPIO strap pins" },
+	{ 63, 1, OTP_REG_RESERVED, "Reserved" }
 };
 
 static const struct otpstrap_info a2_strap_info[] = {
@@ -296,6 +304,7 @@ static const struct otpstrap_info a2_strap_info[] = {
 	{ 12, 2, 1, "VGA memory size : 16MB" },
 	{ 12, 2, 2, "VGA memory size : 32MB" },
 	{ 12, 2, 3, "VGA memory size : 64MB" },
+	{ 14, 1, OTP_REG_RESERVED, "Reserved" },
 	{ 15, 1, 0, "CPU/AXI clock ratio : 2:1" },
 	{ 15, 1, 1, "CPU/AXI clock ratio : 1:1" },
 	{ 16, 1, 0, "Enable ARM JTAG debug" },
@@ -320,8 +329,13 @@ static const struct otpstrap_info a2_strap_info[] = {
 	{ 25, 2, 1, "Internal bridge speed selection : 1/2x" },
 	{ 25, 2, 2, "Internal bridge speed selection : 1/4x" },
 	{ 25, 2, 3, "Internal bridge speed selection : 1/8x" },
+	{ 27, 2, 0, "Reset Source of eMMC part : GPIOY3" },
+	{ 27, 2, 1, "Reset Source of eMMC part : GPIO18A2" },
+	{ 27, 2, 2, "Reset Source of eMMC part : GPIO18B6" },
+	{ 27, 2, 3, "Reset Source of eMMC part : GPIO18A2" },
 	{ 29, 1, 0, "Enable RVAS function" },
 	{ 29, 1, 1, "Disable RVAS function" },
+	{ 30, 2, OTP_REG_RESERVED, "Reserved" },
 	{ 32, 1, 0, "MAC 3 : RMII/NCSI" },
 	{ 32, 1, 1, "MAC 3 : RGMII" },
 	{ 33, 1, 0, "MAC 4 : RMII/NCSI" },
@@ -384,8 +398,10 @@ static const struct otpstrap_info a2_strap_info[] = {
 	{ 59, 1, 1, "Enable host SPI auxiliary control pins" },
 	{ 60, 1, 0, "Disable GPIO pass through" },
 	{ 60, 1, 1, "Enable GPIO pass through" },
+	{ 61, 1, OTP_REG_RESERVED, "Reserved" },
 	{ 62, 1, 0, "Disable dedicate GPIO strap pins" },
-	{ 62, 1, 1, "Enable dedicate GPIO strap pins" }
+	{ 62, 1, 1, "Enable dedicate GPIO strap pins" },
+	{ 63, 1, OTP_REG_RESERVED, "Reserved" }
 };
 
 static const struct otpstrap_info a3_strap_info[] = {
@@ -419,6 +435,7 @@ static const struct otpstrap_info a3_strap_info[] = {
 	{ 12, 2, 1, "VGA memory size : 16MB" },
 	{ 12, 2, 2, "VGA memory size : 32MB" },
 	{ 12, 2, 3, "VGA memory size : 64MB" },
+	{ 14, 1, OTP_REG_RESERVED, "Reserved" },
 	{ 15, 1, 0, "CPU/AXI clock ratio : 2:1" },
 	{ 15, 1, 1, "CPU/AXI clock ratio : 1:1" },
 	{ 16, 1, 0, "Enable ARM JTAG debug" },
@@ -443,8 +460,13 @@ static const struct otpstrap_info a3_strap_info[] = {
 	{ 25, 2, 1, "Internal bridge speed selection : 1/2x" },
 	{ 25, 2, 2, "Internal bridge speed selection : 1/4x" },
 	{ 25, 2, 3, "Internal bridge speed selection : 1/8x" },
+	{ 27, 2, 0, "Reset Source of eMMC part : GPIOY3" },
+	{ 27, 2, 1, "Reset Source of eMMC part : GPIO18A2" },
+	{ 27, 2, 2, "Reset Source of eMMC part : GPIO18B6" },
+	{ 27, 2, 3, "Reset Source of eMMC part : GPIO18A2" },
 	{ 29, 1, 0, "Enable RVAS function" },
 	{ 29, 1, 1, "Disable RVAS function" },
+	{ 30, 2, OTP_REG_RESERVED, "Reserved" },
 	{ 32, 1, 0, "MAC 3 : RMII/NCSI" },
 	{ 32, 1, 1, "MAC 3 : RGMII" },
 	{ 33, 1, 0, "MAC 4 : RMII/NCSI" },
@@ -507,8 +529,10 @@ static const struct otpstrap_info a3_strap_info[] = {
 	{ 59, 1, 1, "Enable host SPI auxiliary control pins" },
 	{ 60, 1, 0, "Disable GPIO pass through" },
 	{ 60, 1, 1, "Enable GPIO pass through" },
+	{ 61, 1, OTP_REG_RESERVED, "Reserved" },
 	{ 62, 1, 0, "Disable dedicate GPIO strap pins" },
-	{ 62, 1, 1, "Enable dedicate GPIO strap pins" }
+	{ 62, 1, 1, "Enable dedicate GPIO strap pins" },
+	{ 63, 1, OTP_REG_RESERVED, "Reserved" }
 };
 
 static const struct otpconf_info a0_conf_info[] = {

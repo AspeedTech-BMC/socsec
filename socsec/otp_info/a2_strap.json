@@ -170,6 +170,12 @@
         "info": "VGA memory size : {}"
     },
     {
+        "key": "OTPSTRAP[14] Reserved",
+        "type": "reserved",
+        "bit_offset": 14,
+        "bit_length": 1
+    },
+    {
         "key": "CPU/AXI clock ratio",
         "type": "string",
         "value": [
@@ -309,6 +315,31 @@
         "info": "Internal bridge speed selection : {}"
     },
     {
+        "key": "Select Reset Source of eMMC part",
+        "type": "string",
+        "value": [
+            {
+                "value": "GPIOY3",
+                "bit": 0
+            },
+            {
+                "value": "GPIO18A2",
+                "bit": 1
+            },
+            {
+                "value": "GPIO18B6",
+                "bit": 2
+            },
+            {
+                "value": "GPIO18A2",
+                "bit": 3
+            }
+        ],
+        "bit_offset": 27,
+        "bit_length": 2,
+        "info": "Reset Source of eMMC part : {}"
+    },
+    {
         "key": "Disable RVAS function",
         "type": "boolean",
         "bit_offset": 29,
@@ -316,6 +347,12 @@
             "Enable RVAS function",
             "Disable RVAS function"
         ]
+    },
+    {
+        "key": "OTPSTRAP[1E-1D] Reserved",
+        "type": "reserved",
+        "bit_offset": 30,
+        "bit_length": 2
     },
     {
         "key": "MAC 3 RMII mode",
@@ -669,6 +706,12 @@
         ]
     },
     {
+        "key": "OTPSTRAP[3D] Reserved",
+        "type": "reserved",
+        "bit_offset": 61,
+        "bit_length": 1
+    },
+    {
         "key": "Enable Dedicate GPIO Strap Pins",
         "type": "boolean",
         "bit_offset": 62,
@@ -676,5 +719,11 @@
             "Disable dedicate GPIO strap pins",
             "Enable dedicate GPIO strap pins"
         ]
+    },
+    {
+        "key": "OTPSTRAP[3F] Reserved",
+        "type": "reserved",
+        "bit_offset": 63,
+        "bit_length": 1
     }
 ]

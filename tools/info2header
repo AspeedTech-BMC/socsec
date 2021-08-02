@@ -25,7 +25,7 @@ import jstyleson
 import sys
 import os
 
-INFO_VER = "1.0.5"
+INFO_VER = "1.1.0"
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))+'/'
 INFO_DIR = ROOT_DIR + '../socsec/otp_info/'
 OTP_INFO = [
@@ -99,7 +99,7 @@ def conf2info(config):
 def strap2info(config):
     ret = []
     for i in config:
-        if 'info' not in i:
+        if 'info' not in i and i['type'] != 'reserved':
             continue
         bit_offset = i['bit_offset']
         if i['type'] == 'boolean':
@@ -116,6 +116,9 @@ def strap2info(config):
                 tmp = info.format(v['value'])
                 ret.append('\t{{ {}, {}, {}, \"{}\" }},\n'.format(
                     bit_offset, length, bit, tmp))
+        elif i['type'] == 'reserved':
+            length = i['bit_length']
+            ret.append('\t{{ {}, {}, OTP_REG_RESERVED, \"Reserved\" }},\n'.format(bit_offset, length))
 
     if ret.__len__() == 0:
         return ''

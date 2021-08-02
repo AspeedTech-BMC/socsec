@@ -333,6 +333,15 @@
             "otp_protect": false,
             "ignore": true
         },
+        // OTPSTRAP[28:27]
+        "Select Reset Source of eMMC part": {
+            // 0: GPIOY3
+            // 1: GPIO18A2
+            // 2: GPIO18B6
+            "value": "GPIOY3",
+            "otp_protect": false,
+            "ignore": true
+        },
         // OTPSTRAP[29]
         "Disable RVAS function": {
             // false: Enable RVAS function
