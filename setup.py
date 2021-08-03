@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
         name="socsec",
-        version="1.6",
+        version="0.2.1",
         author="ASPEED Technology",
         author_email="bmc-sw@aspeedtech.com",
         description="Secure-boot utilities for ASPEED BMC SoCs",
