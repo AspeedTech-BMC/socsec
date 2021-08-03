@@ -98,113 +98,196 @@
                     }
                 },
                 "user_data": {
-                    "type": "array",
                     "additionalProperties": false,
                     "items": {
-                        "type": "object",
                         "additionalProperties": false,
                         "properties": {
-                            "types": {
-                                "type": "string",
-                                "enum": [
-                                    "hex",
-                                    "dw_hex",
-                                    "bin"
-                                ]
-                            },
                             "file": {
                                 "type": "string"
                             },
                             "offset": {
-                                "type": "string",
-                                "pattern": "0[xX][0-9a-fA-F]+"
+                                "pattern": "0[xX][0-9a-fA-F]+",
+                                "type": "string"
+                            },
+                            "types": {
+                                "enum": [
+                                    "hex",
+                                    "dw_hex",
+                                    "bin"
+                                ],
+                                "type": "string"
                             }
-                        }
-                    }
+                        },
+                        "type": "object"
+                    },
+                    "type": "array"
                 }
             }
+            
         },
         "config_region": {
-            "type": "object",
             "additionalProperties": false,
             "properties": {
-                "Disable Secure Region programming": {
+                "Boot From UART Port Selection": {
+                    "enum": [
+                        "UART5",
+                        "UART1"
+                    ],
+                    "type": "string"
+                },
+                "Copy Boot Image to Internal SRAM": {
                     "type": "boolean"
                 },
-                "Enable Secure Boot": {
+                "Disable Auto Boot from UART": {
                     "type": "boolean"
                 },
-                "User region ECC enable": {
+                "Disable Auto Boot from UART or VUART": {
                     "type": "boolean"
                 },
-                "Secure Region ECC enable": {
+                "Disable Auto Boot from VUART2 over LPC": {
+                    "type": "boolean"
+                },
+                "Disable Auto Boot from VUART2 over PCIE": {
+                    "type": "boolean"
+                },
+                "Disable Boot from Uart": {
+                    "type": "boolean"
+                },
+                "Disable Flash Patch Code": {
+                    "type": "boolean"
+                },
+                "Disable OTP Memory BIST Mode": {
+                    "type": "boolean"
+                },
+                "Disable ROM code based programming control": {
+                    "type": "boolean"
+                },
+                "Disable Uart Message of ROM code": {
                     "type": "boolean"
                 },
                 "Disable low security key": {
                     "type": "boolean"
                 },
-                "Ignore Secure Boot hardware strap": {
+                "Disable patch code": {
                     "type": "boolean"
                 },
-                "Secure Boot Mode": {
-                    "type": "string",
-                    "enum": [
-                        "Normal",
-                        "Mode_2",
-                        "Mode_GCM",
-                        "Mode_PFR"
-                    ]
+                "Enable Secure Boot": {
+                    "type": "boolean"
                 },
-                "OTP bit cell modes": {
-                    "type": "string",
-                    "enum": [
-                        "single",
-                        "differential",
-                        "differential-redundant"
-                    ]
+                "Enable chip security setting": {
+                    "type": "boolean"
                 },
-                "Secure crypto RSA length": {
-                    "type": "string",
-                    "enum": [
-                        "RSA1024",
-                        "RSA2048",
-                        "RSA3072",
-                        "RSA4096"
-                    ]
+                "Enable image encryption": {
+                    "type": "boolean"
+                },
+                "Enable patch code": {
+                    "type": "boolean"
+                },
+                "Enable write Protect of OTP key retire bits": {
+                    "type": "boolean"
+                },
+                "Enable write protection for SCU0C8 and SCU0D8": {
+                    "type": "boolean"
+                },
+                "Erase RSA public key after secure boot check": {
+                    "type": "boolean"
+                },
+                "Erase signature data after secure boot check": {
+                    "type": "boolean"
+                },
+                "Extra Data Write Protection Region Size": {
+                    "pattern": "0[xX][0-9a-fA-F]+",
+                    "type": "string"
                 },
                 "Hash mode": {
-                    "type": "string",
                     "enum": [
                         "SHA224",
                         "SHA256",
                         "SHA384",
                         "SHA512"
-                    ]
+                    ],
+                    "type": "string"
                 },
-                "Signature Scheme": {
-                    "type": "string",
+                "Ignore Secure Boot hardware strap": {
+                    "type": "boolean"
+                },
+                "Key Revision": {
+                    "pattern": "0[xX][0-9a-fA-F]+",
+                    "type": "string"
+                },
+                "Keys Retire ID": {
+                    "maximum": 7,
+                    "minimum": 0,
+                    "type": "integer"
+                },
+                "Manifest ID": {
+                    "pattern": "0[xX][0-9a-fA-F]+",
+                    "type": "string"
+                },
+                "OTP memory lock enable": {
+                    "type": "boolean"
+                },
+                "Patch code location": {
+                    "pattern": "0[xX][0-9a-fA-F]+",
+                    "type": "string"
+                },
+                "Patch code size": {
+                    "pattern": "0[xX][0-9a-fA-F]+",
+                    "type": "string"
+                },
+                "Rollback prevention shift bit number": {
+                    "pattern": "0[xX][0-9a-fA-F]+",
+                    "type": "string"
+                },
+                "SCU0C8[14:0] auto setting value": {
+                    "pattern": "0[xX][0-9a-fA-F]+",
+                    "type": "string"
+                },
+                "SCU0D8[14:0] auto setting value": {
+                    "pattern": "0[xX][0-9a-fA-F]+",
+                    "type": "string"
+                },
+                "Secure Boot Mode": {
                     "enum": [
-                        "ECDSA384",
-                        "ECDSA384_RSA2048",
-                        "ECDSA384_RSA3072",
-                        "ECDSA384_RSA4096",
-                        "RSAPSS_2048_SHA256",
-                        "RSAPSS_3072_SHA384",
-                        "RSAPSS_4096_SHA512",
-                        "RSAPKCS1_2048_SHA256",
-                        "RSAPKCS1_3072_SHA384",
-                        "RSAPKCS1_4096_SHA512"
-                    ]
+                        "Mode_GCM",
+                        "Mode_2"
+                    ],
+                    "type": "string"
+                },
+                "Secure Region ECC enable": {
+                    "type": "boolean"
                 },
                 "Secure Region size": {
-                    "type": "string",
-                    "pattern": "0[xX][0-9a-fA-F]+"
+                    "pattern": "0[xX][0-9a-fA-F]+",
+                    "type": "string"
                 },
-                "Write Protect: Secure Region": {
+                "Secure boot header offset": {
+                    "pattern": "0[xX][0-9a-fA-F]+",
+                    "type": "string"
+                },
+                "Secure crypto RSA length": {
+                    "enum": [
+                        "RSA1024",
+                        "RSA2048",
+                        "RSA3072",
+                        "RSA4096"
+                    ],
+                    "type": "string"
+                },
+                "User define data: random number high": {
+                    "pattern": "0[xX][0-9a-fA-F]+",
+                    "type": "string"
+                },
+                "User define data: random number low": {
+                    "pattern": "0[xX][0-9a-fA-F]+",
+                    "type": "string"
+                },
+                "User region ECC enable": {
                     "type": "boolean"
                 },
-                "Write Protect: User region": {
-                    "type": "boolean"
+                "Vender ID": {
+                    "pattern": "0[xX][0-9a-fA-F]+",
+                    "type": "string"
                 },
                 "Write Protect: Configure region": {
                     "type": "boolean"
@@ -212,1244 +295,1193 @@
                 "Write Protect: OTP strap region": {
                     "type": "boolean"
                 },
-                "Copy Boot Image to Internal SRAM": {
+                "Write Protect: Secure Region": {
                     "type": "boolean"
                 },
-                "Enable image encryption": {
-                    "type": "boolean"
-                },
-                "Disable Flash Patch Code": {
-                    "type": "boolean"
-                },
-                "Enable write Protect of OTP key retire bits": {
-                    "type": "boolean"
-                },
-                "Data region redundancy repair enable": {
-                    "type": "boolean"
-                },
-                "OTP memory lock enable": {
-                    "type": "boolean"
-                },
-                "Vender ID": {
-                    "type": "string",
-                    "pattern": "0[xX][0-9a-fA-F]+"
-                },
-                "Key Revision": {
-                    "type": "string",
-                    "pattern": "0[xX][0-9a-fA-F]+"
-                },
-                "Secure boot header offset": {
-                    "type": "string",
-                    "pattern": "0[xX][0-9a-fA-F]+"
-                },
-                "Keys Retire ID": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 7
-                },
-                "User define data: random number low": {
-                    "type": "string",
-                    "pattern": "0[xX][0-9a-fA-F]+"
-                },
-                "User define data: random number high": {
-                    "type": "string",
-                    "pattern": "0[xX][0-9a-fA-F]+"
-                },
-                "SCU0C8[14:0] auto setting value": {
-                    "type": "string",
-                    "pattern": "0[xX][0-9a-fA-F]+"
-                },
-                "SCU0D8[14:0] auto setting value": {
-                    "type": "string",
-                    "pattern": "0[xX][0-9a-fA-F]+"
-                },
-                "Enable chip security setting": {
-                    "type": "boolean"
-                },
-                "Redundancy Repair": {
-                    "type": "string",
-                    "pattern": "0[xX][0-9a-fA-F]+"
-                },
-                "Manifest ID": {
-                    "type": "string",
-                    "pattern": "0[xX][0-9a-fA-F]+"
-                },
-                "Patch code location": {
-                    "type": "string",
-                    "pattern": "0[xX][0-9a-fA-F]+"
-                },
-                "Patch code size": {
-                    "type": "string",
-                    "pattern": "0[xX][0-9a-fA-F]+"
-                },
-                "Disable patch code": {
-                    "type": "boolean"
-                },
-                "Enable patch code": {
-                    "type": "boolean"
-                },
-                "Disable Boot from Uart": {
+                "Write Protect: User region": {
                     "type": "boolean"
                 }
-            }
+            },
+            "type": "object"
         },
         "otp_strap": {
-            "type": "object",
             "additionalProperties": false,
             "properties": {
-                "Enable secure boot": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "Enable boot from eMMC": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "Boot from debug SPI": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "Disable ARM CM3": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "Enable dedicated VGA BIOS ROM": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "MAC 1 RMII mode": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "string",
-                            "enum": [
-                                "RMII/NCSI",
-                                "RGMII"
-                            ]
-                        }
-                    }
-                },
-                "MAC 2 RMII mode": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "string",
-                            "enum": [
-                                "RMII/NCSI",
-                                "RGMII"
-                            ]
-                        }
-                    }
-                },
-                "CPU frequency": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "string",
-                            "enum": [
-                                "800MHz",
-                                "1.2GHz",
-                                "1.6GHz"
-                            ]
-                        }
-                    }
-                },
-                "HCLK ratio": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "string",
-                            "enum": [
-                                "2:1",
-                                "3:1",
-                                "4:1"
-                            ]
-                        }
-                    }
-                },
-                "VGA memory size": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "string",
-                            "enum": [
-                                "8MB",
-                                "16MB",
-                                "32MB",
-                                "64MB"
-                            ]
-                        }
-                    }
-                },
-                "CPU/AXI clock ratio": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "string",
-                            "enum": [
-                                "2:1",
-                                "1:1"
-                            ]
-                        }
-                    }
-                },
-                "Disable ARM JTAG debug": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "VGA class code": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "string",
-                            "enum": [
-                                "vga_device",
-                                "video_device"
-                            ]
-                        }
-                    }
-                },
-                "Disable debug 0": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "Boot from eMMC speed mode": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "string",
-                            "enum": [
-                                "normal",
-                                "high"
-                            ]
-                        }
-                    }
-                },
-                "Disable PCIe EHCI": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "Enable PCIe EHCI": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "Disable ARM JTAG trust world debug": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "Disable VGA XDMA": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "Disable dedicated BMC function": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "Enable dedicate PCIe RC reset": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "DRAM types": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "string",
-                            "enum": [
-                                "DDR3",
-                                "DDR4"
-                            ]
-                        }
-                    }
-                },
-                "Disable watchdog to reset full chip": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "Internal bridge speed selection": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "string",
-                            "enum": [
-                                "1x",
-                                "1/2x",
-                                "1/4x",
-                                "1/8x"
-                            ]
-                        }
-                    }
-                },
-                "Disable RVAS function": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "MAC 3 RMII mode": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "string",
-                            "enum": [
-                                "RMII/NCSI",
-                                "RGMII"
-                            ]
-                        }
-                    }
-                },
-                "MAC 4 RMII mode": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "string",
-                            "enum": [
-                                "RMII/NCSI",
-                                "RGMII"
-                            ]
-                        }
-                    }
-                },
-                "SuperIO configuration address selection": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "string",
-                            "enum": [
-                                "0x2e",
-                                "0x4e"
-                            ]
-                        }
-                    }
-                },
-                "Disable LPC to decode SuperIO": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "Disable debug 1": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "Enable ACPI": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "Select LPC/eSPI": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "string",
-                            "enum": [
-                                "eSPI",
-                                "LPC"
-                            ]
-                        }
-                    }
-                },
-                "Enable SAFS": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "Enable boot from uart5": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "Enable boot SPI 3B address mode auto-clear": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "Enable SPI 3B/4B address mode auto detection": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "Enable boot SPI or eMMC ABR": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "boolean"
-                        }
-                    }
-                },
                 "Boot SPI ABR Mode": {
-                    "type": "object",
                     "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
                     "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
                         "otp_protect": {
                             "type": "boolean"
                         },
                         "reg_protect": {
                             "type": "boolean"
                         },
-                        "ignore": {
-                            "type": "boolean"
-                        },
                         "value": {
-                            "type": "string",
                             "enum": [
                                 "dual",
                                 "single"
-                            ]
+                            ],
+                            "type": "string"
                         }
-                    }
-                },
-                "Boot SPI flash size": {
-                    "type": "object",
-                    "additionalProperties": false,
+                    },
                     "required": [
                         "value"
                     ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "string",
-                            "enum": [
-                                "0",
-                                "2",
-                                "4",
-                                "8",
-                                "16",
-                                "32",
-                                "64",
-                                "128"
-                            ]
-                        }
-                    }
-                },
-                "Enable host SPI ABR": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "Enable host SPI ABR mode select pin": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "Host SPI ABR Mode": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "string",
-                            "enum": [
-                                "dual",
-                                "single"
-                            ]
-                        }
-                    }
-                },
-                "Host SPI flash size": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "string",
-                            "enum": [
-                                "0",
-                                "2",
-                                "4",
-                                "8",
-                                "16",
-                                "32",
-                                "64",
-                                "128"
-                            ]
-                        }
-                    }
-                },
-                "Enable boot SPI auxiliary control pins": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
-                        "ignore": {
-                            "type": "boolean"
-                        },
-                        "value": {
-                            "type": "boolean"
-                        }
-                    }
+                    "type": "object"
                 },
                 "Boot SPI CRTM size": {
-                    "type": "object",
                     "additionalProperties": false,
-                    "required": [
-                        "value"
-                    ],
                     "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
                         "otp_protect": {
                             "type": "boolean"
                         },
                         "reg_protect": {
                             "type": "boolean"
                         },
-                        "ignore": {
-                            "type": "boolean"
-                        },
                         "value": {
-                            "type": "string",
                             "enum": [
                                 "0",
                                 "256",
                                 "512",
                                 "1024"
-                            ]
+                            ],
+                            "type": "string"
                         }
-                    }
-                },
-                "Host SPI CRTM size": {
-                    "type": "object",
-                    "additionalProperties": false,
+                    },
                     "required": [
                         "value"
                     ],
+                    "type": "object"
+                },
+                "Boot SPI flash size": {
+                    "additionalProperties": false,
                     "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
                         "otp_protect": {
                             "type": "boolean"
                         },
                         "reg_protect": {
                             "type": "boolean"
                         },
+                        "value": {
+                            "enum": [
+                                "0",
+                                "2",
+                                "4",
+                                "8",
+                                "16",
+                                "32",
+                                "64",
+                                "128"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Boot from debug SPI": {
+                    "additionalProperties": false,
+                    "properties": {
                         "ignore": {
                             "type": "boolean"
                         },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
                         "value": {
-                            "type": "string",
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Boot from eMMC speed mode": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "enum": [
+                                "normal",
+                                "high"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "CPU frequency": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "enum": [
+                                "1.2GHz",
+                                "1.6GHz",
+                                "1.2GHz",
+                                "1.6GHz",
+                                "800MHz",
+                                "800MHz",
+                                "800MHz",
+                                "800MHz"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "CPU/AXI clock ratio": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "enum": [
+                                "2:1",
+                                "1:1"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Disable ARM CM3": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Disable ARM JTAG debug": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Disable ARM JTAG trust world debug": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Disable LPC to decode SuperIO": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Disable RVAS function": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Disable debug 0": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Disable debug 1": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Disable dedicated BMC function": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Disable watchdog to reset full chip": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Enable ACPI": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Enable Dedicate GPIO Strap Pins": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Enable GPIO Pass Through": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Enable PCIe EHCI": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Enable SAFS": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Enable SPI 3B/4B address mode auto detection": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Enable boot SPI 3B address mode auto-clear": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Enable boot SPI auxiliary control pins": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Enable boot SPI or eMMC ABR": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Enable boot from eMMC": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Enable boot from uart5": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Enable dedicate PCIe RC reset": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Enable dedicated VGA BIOS ROM": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Enable host SPI ABR": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Enable host SPI ABR mode select pin": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Enable host SPI auxiliary control pins": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Enable secure boot": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "HCLK ratio": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "enum": [
+                                "default",
+                                "2:1",
+                                "3:1",
+                                "4:1"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Host SPI ABR Mode": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "enum": [
+                                "dual",
+                                "single"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Host SPI CRTM size": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
                             "enum": [
                                 "0",
                                 "1024",
                                 "2048",
                                 "4096"
-                            ]
+                            ],
+                            "type": "string"
                         }
-                    }
-                },
-                "Enable host SPI auxiliary control pins": {
-                    "type": "object",
-                    "additionalProperties": false,
+                    },
                     "required": [
                         "value"
                     ],
+                    "type": "object"
+                },
+                "Host SPI flash size": {
+                    "additionalProperties": false,
                     "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
                         "otp_protect": {
                             "type": "boolean"
                         },
                         "reg_protect": {
                             "type": "boolean"
                         },
-                        "ignore": {
-                            "type": "boolean"
-                        },
                         "value": {
-                            "type": "boolean"
+                            "enum": [
+                                "0",
+                                "2",
+                                "4",
+                                "8",
+                                "16",
+                                "32",
+                                "64",
+                                "128"
+                            ],
+                            "type": "string"
                         }
-                    }
-                },
-                "Enable GPIO Pass Through": {
-                    "type": "object",
-                    "additionalProperties": false,
+                    },
                     "required": [
                         "value"
                     ],
+                    "type": "object"
+                },
+                "Internal bridge speed selection": {
+                    "additionalProperties": false,
                     "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
                         "otp_protect": {
                             "type": "boolean"
                         },
                         "reg_protect": {
                             "type": "boolean"
                         },
-                        "ignore": {
-                            "type": "boolean"
-                        },
                         "value": {
-                            "type": "boolean"
+                            "enum": [
+                                "1x",
+                                "1/2x",
+                                "1/4x",
+                                "1/8x"
+                            ],
+                            "type": "string"
                         }
-                    }
-                },
-                "Disable Low Security Secure Boot Key": {
-                    "type": "object",
-                    "additionalProperties": false,
+                    },
                     "required": [
                         "value"
                     ],
+                    "type": "object"
+                },
+                "MAC 1 RMII mode": {
+                    "additionalProperties": false,
                     "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
                         "otp_protect": {
                             "type": "boolean"
                         },
                         "reg_protect": {
                             "type": "boolean"
                         },
-                        "ignore": {
-                            "type": "boolean"
-                        },
                         "value": {
-                            "type": "boolean"
+                            "enum": [
+                                "RMII/NCSI",
+                                "RGMII"
+                            ],
+                            "type": "string"
                         }
-                    }
-                },
-                "Enable Dedicate GPIO Strap Pins": {
-                    "type": "object",
-                    "additionalProperties": false,
+                    },
                     "required": [
                         "value"
                     ],
+                    "type": "object"
+                },
+                "MAC 2 RMII mode": {
+                    "additionalProperties": false,
                     "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
                         "otp_protect": {
                             "type": "boolean"
                         },
                         "reg_protect": {
                             "type": "boolean"
                         },
+                        "value": {
+                            "enum": [
+                                "RMII/NCSI",
+                                "RGMII"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "MAC 3 RMII mode": {
+                    "additionalProperties": false,
+                    "properties": {
                         "ignore": {
                             "type": "boolean"
                         },
-                        "value": {
+                        "otp_protect": {
                             "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "enum": [
+                                "RMII/NCSI",
+                                "RGMII"
+                            ],
+                            "type": "string"
                         }
-                    }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "MAC 4 RMII mode": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "enum": [
+                                "RMII/NCSI",
+                                "RGMII"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "OTPSTRAP[14] Reserved": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {}
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "OTPSTRAP[1E-1D] Reserved": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {}
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "OTPSTRAP[3D] Reserved": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {}
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "OTPSTRAP[3F] Reserved": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {}
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Select LPC/eSPI": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "enum": [
+                                "eSPI",
+                                "LPC"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "Select Reset Source of eMMC part": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "enum": [
+                                "GPIOY3",
+                                "GPIO18A2",
+                                "GPIO18B6",
+                                "GPIO18A2"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "SuperIO configuration address selection": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "enum": [
+                                "0x2e",
+                                "0x4e"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "VGA class code": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "enum": [
+                                "vga_device",
+                                "video_device"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "VGA memory size": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "reg_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "enum": [
+                                "8MB",
+                                "16MB",
+                                "32MB",
+                                "64MB"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
                 }
-            }
+            },
+            "type": "object"
         }
     }
 }
