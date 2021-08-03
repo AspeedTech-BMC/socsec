@@ -849,10 +849,15 @@ class OTP(object):
                 bit_offset = info['bit_offset']
                 offset = dw_offset*32+bit_offset
                 if value:
-                    config_region[offset] = 1
+                    in_val = 1
                 else:
-                    config_region[offset] = 0
+                    in_val = 0
+                config_region[offset] = in_val
                 config_region_ignore[offset] = 0
+                if dw_offset == 0:
+                    offset = 32+bit_offset
+                    config_region[offset] = in_val
+                    config_region_ignore[offset] = 0
             elif info['type'] == 'string':
                 info_value = info['value']
                 dw_offset = info['dw_offset']
@@ -869,6 +874,11 @@ class OTP(object):
                 config_region_ignore[offset:offset+bit_length] = tmp
                 config_region[offset:offset+bit_length] = tmp
                 config_region[offset:offset+len(bit_value)] = bit_value
+                if dw_offset == 0:
+                    offset = 32+bit_offset
+                    config_region_ignore[offset:offset+bit_length] = tmp
+                    config_region[offset:offset+bit_length] = tmp
+                    config_region[offset:offset+len(bit_value)] = bit_value
             elif info['type'] == 'hex':
                 dw_offset = info['dw_offset']
                 bit_offset = info['bit_offset']
@@ -885,7 +895,11 @@ class OTP(object):
                 config_region_ignore[offset:offset+bit_length] = tmp
                 config_region[offset:offset+bit_length] = tmp
                 config_region[offset:offset+len(bit_value)] = bit_value
-
+                if dw_offset == 0:
+                    offset = 32+bit_offset
+                    config_region_ignore[offset:offset+bit_length] = tmp
+                    config_region[offset:offset+bit_length] = tmp
+                    config_region[offset:offset+len(bit_value)] = bit_value
             elif info['type'] == 'bit_shift':
                 dw_offset = info['dw_offset']
                 bit_offset = info['bit_offset']
