@@ -54,7 +54,7 @@
         "type": "string",
         "value": [
             {
-                "value": "Mode_2",
+                "value": "Normal",
                 "bit": 0
             },
             {
@@ -72,8 +72,20 @@
         "type": "string",
         "value": [
             {
-                "value": "ECDSA_384",
+                "value": "ECDSA384",
                 "bit": 0
+            },
+            {
+                "value": "ECDSA384_RSA2048",
+                "bit": 1
+            },
+            {
+                "value": "ECDSA384_RSA3072",
+                "bit": 2
+            },
+            {
+                "value": "ECDSA384_RSA4096",
+                "bit": 3
             },
             {
                 "value": "RSAPSS_2048_SHA256",
@@ -264,7 +276,7 @@
     },
     {
         "key": "Manifest ID",
-        "type": "hex",
+        "type": "rev_id",
         "value_start": 0,
         "dw_offset": 10,
         "bit_offset": 0,

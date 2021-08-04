@@ -1,10 +1,12 @@
 # AST2600 Secure Boot
 
-AST2600 support two root of trust (RoT) measurement modes: `Mode_2` & `Mode_GCM` (`Mode_1` has been eliminated). The following chapter will introduce the hardware RoT and the software chain of trust (CoT)
+AST2600 support root of trust (RoT) measurement. The following chapter will 
+introduce the secure image generation tool `socsec` and otp image generation 
+tool `otptool`.
 
 ## SOCSEC
 
-This tool is used to generate ast2600 secure boot RoT and CoT image.
+This tool is used to generate ast2600 secure boot image.
 
 ### Usage
 
@@ -44,17 +46,21 @@ openssl rand 32 > aes_key.bin
 
 ```bash
 usage: socsec make_secure_bl1_image [-h] [--soc SOC] [--bl1_image BL1_IMAGE]
+                                    [--stack_intersects_verification_region {true,false}]
                                     [--header_offset HEADER_OFFSET]
                                     [--rsa_sign_key RSA_SIGN_KEY]
+                                    [--ecdsa_sign_key ECDSA_SIGN_KEY]
                                     [--rsa_key_order ORDER]
                                     [--gcm_aes_key GCM_AES_KEY]
                                     [--output OUTPUT] [--algorithm ALGORITHM]
-                                    [--rollback_index ROLLBACK_INDEX]
+                                    [--rsa_padding PADDING]
+                                    [--revision_id REVISION_ID]
                                     [--signing_helper [APP]]
                                     [--signing_helper_with_files [APP]]
                                     [--enc_offset ENC_OFFSET]
                                     [--aes_key [AES_KEY]] [--key_in_otp]
                                     [--rsa_aes [RSA_AES]]
+                                    [--flash_patch_offset FLASH_PATCH_OFFSET]
                                     [--cot_algorithm [ALGORITHM]]
                                     [--cot_verify_key [COT_VERIFY_KEY] |
                                     --cot_digest COT_DIGEST]
@@ -65,14 +71,33 @@ optional arguments:
   --bl1_image BL1_IMAGE
                         Bootloader 1 Image (e.g. u-boot-spl.bin), which will
                         be verified by soc
+  --stack_intersects_verification_region {true,false}
+                        By default, the maximum size of SPL images socsec will
+                        sign is 60KB, since, historically, the SoCs have been
+                        using the top of the SRAM for the SPL execution stack.
+                        However, on 2600 (A1) and above SoCs, an additional
+                        24KB SRAM can be used for the stack, allowing the
+                        verification region to occupy the entire 64KB
+                        (including signature). For these models of boards,
+                        this layout will also be the default in future SDK
+                        releases. Use this parameter to explicitly indicate
+                        that the SPL image being signed has (=true) or has not
+                        (=false) the SPL stack overlapping the 64KB
+                        verification region. With this argument set to
+                        'false', socsec will sign SPL images up towards 64KB
+                        (including 512B signature)
   --header_offset HEADER_OFFSET
-                        RoT header offsest
+                        RoT header offset
   --rsa_sign_key RSA_SIGN_KEY
                         Path to RSA private key file, which will use to sign
                         BL1_IMAGE
+  --ecdsa_sign_key ECDSA_SIGN_KEY
+                        Path to ECDSA private key file, which will use to sign
+                        BL1_IMAGE
   --rsa_key_order ORDER
                         This value the OTP setting(e.g. little, big), default
-                        value is "little"
+                        value is "little". If RSA padding mode is PSS,
+                        rsa_key_order will be big endian
   --gcm_aes_key GCM_AES_KEY
                         Path to aes private key file, which will use to sign
                         BL1_IMAGE
@@ -82,12 +107,18 @@ optional arguments:
                         AES_RSA2048_SHA256, RSA2048_SHA256, ...), RSA algo
                         support RSA1024, RSA2048, RSA3072 and RSA4096, HASH
                         algo support SHA224, SHA256, SHA384 and SHA512
-  --rollback_index ROLLBACK_INDEX
-                        Rollback Index
+  --rsa_padding PADDING
+                        Algorithm to use (default: pkcs1 e.g. pkcs1, pss), RSA
+                        support pkcs1 padding or pss padding
+  --revision_id REVISION_ID
+                        Revision id for rollback prevention (0 <= REVISION_ID
+                        <= 64)
   --signing_helper [APP]
                         Path to helper used for signing
   --signing_helper_with_files [APP]
                         Path to helper used for signing using files
+  --flash_patch_offset FLASH_PATCH_OFFSET
+                        Flash patch offset for ast2605
 
 enc_group:
   Enable aes encryption in mode 2
@@ -100,7 +131,7 @@ enc_group:
                         aes key
 
 cot_group:
-  Chain of trust argument
+  (deprecated)Chain of trust argument
 
   --cot_algorithm [ALGORITHM]
                         Algorithm to use (default: NONE e.g. RSA2048_SHA256),
@@ -114,13 +145,12 @@ cot_group:
                         Path to digest result of next chain image
 ```
 
-* CoT image generating command
+* (DEPRECATED) CoT image generating command
 
 ```bash
 usage: socsec make_sv_chain_image [-h] [--algorithm ALGORITHM]
                                   [--rsa_key_order ORDER]
                                   [--cot_part BL2_IMAGE:BL2_OUT:BL2_SIGN_KEY:BL2_VERIFY_KEY BL3_IMAGE:BL3_OUT:BL3_SIGN_KEY:BL3_VERIFY_KEY [BL2_IMAGE:BL2_OUT:BL2_SIGN_KEY:BL2_VERIFY_KEY BL3_IMAGE:BL3_OUT:BL3_SIGN_KEY:BL3_VERIFY_KEY ...]]
-                                  [--rollback_index ROLLBACK_INDEX]
                                   [--image_relative_path IMAGE_RELATIVE_PATH]
                                   [--signing_helper [APP]]
                                   [--signing_helper_with_files [APP]]
@@ -136,8 +166,6 @@ optional arguments:
                         This value the OTP setting(e.g. little, big), default
                         value is "little"
   --cot_part BL2_IMAGE:BL2_OUT:BL2_SIGN_KEY:BL2_VERIFY_KEY BL3_IMAGE:BL3_OUT:BL3_SIGN_KEY:BL3_VERIFY_KEY [BL2_IMAGE:BL2_OUT:BL2_SIGN_KEY:BL2_VERIFY_KEY BL3_IMAGE:BL3_OUT:BL3_SIGN_KEY:BL3_VERIFY_KEY ...]
-  --rollback_index ROLLBACK_INDEX
-                        Rollback Index
   --image_relative_path IMAGE_RELATIVE_PATH
                         Image relative path
   --signing_helper [APP]
@@ -149,12 +177,11 @@ optional arguments:
 * Verify command
 The verify tool can check the validity of the combination of OTP image and RoT secure image.
 ```bash
-usage: socsec verify [-h] [--soc SOC] --sec_image IMAGE [--output IMAGE]
-                     --otp_image IMAGE [--cot_offset IMAGE]
+usage: socsec verify [-h] --sec_image IMAGE [--output IMAGE] --otp_image IMAGE
+                     [--cot_offset IMAGE]
 
 optional arguments:
   -h, --help          show this help message and exit
-  --soc SOC           soc id (e.g. 2600, 1030)
   --sec_image IMAGE   Path to secure image
   --output IMAGE      Output non-secure image
   --otp_image IMAGE   Path to otp image
@@ -176,7 +203,7 @@ socsec make_secure_bl1_image \
     --cot_verify_key path/to/test_bl2_public_4096.pem \
 ```
 
-* CoT secure image
+* (DEPRECATED) CoT secure image
 
 ```bash
 socsec make_sv_chain_image \
@@ -220,15 +247,15 @@ introduce in next chapter.
 
 AST2600 built-in 64Kbit one time programmable (OTP) memory for configuration, strap, key storage, patch and user data. Each memory bit cell inside the OTP memory is capable to be programmed once. Typically, the data stored the OTP memory are non-volatile and can preserve permanently, but to improve the FIT (failure in time) of the OTP memory, ECC is recommended to enable.
 
-### Usage
+### Make OTP image
 
 Using this tool to generate the otp image, and using OTP Utility to program that image into OTP memory.
 
 ```bash
-usage: otptool [-h] [--key_folder KEY_FOLDER]
-               [--user_data_folder USER_DATA_FOLDER]
-               [--output_folder OUTPUT_FOLDER]
-               config
+usage: otptool make_otp_image [-h] [--key_folder KEY_FOLDER]
+                              [--user_data_folder USER_DATA_FOLDER]
+                              [--output_folder OUTPUT_FOLDER]
+                              config
 
 positional arguments:
   config                configuration file
@@ -242,7 +269,6 @@ optional arguments:
   --output_folder OUTPUT_FOLDER
                         output folder
 ```
-
 #### Argument
 
 * `config`: the config file is a json format document, which content otp data region, otp config region and otp strap description. Below is an example.
@@ -259,3 +285,14 @@ optional arguments:
 configs/ast2600/security/otp/sample.json is an example for all otp config and otp strap.
 
 `data_region` object is to describe the otp data region, which contain key, user data, otp patch, and ecc code. The figure below is data region layout. When `ecc_region` enable, otp tool will generate the ECC code. The otp patch should put inside user data region (non-secure region).
+
+### Print OTP image
+```bash
+usage: otptool print [-h] otp_image
+
+positional arguments:
+  otp_image   OTP image
+
+optional arguments:
+  -h, --help  show this help message and exit
+```

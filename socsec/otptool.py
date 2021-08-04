@@ -32,8 +32,10 @@ from socsec import parse_path
 from socsec import insert_bytearray
 from socsec import rsa_bit_length
 from socsec import rsa_key_to_bin
+from socsec import ecdsa_key_to_bin
 from socsec import hexdump
 from socsec import OTP_info
+from ecdsa import SigningKey, NIST384p
 
 
 class OtpError(Exception):
@@ -253,7 +255,9 @@ class OTP(object):
                                             "aes_vault",
                                             "rsa_pub_oem",
                                             "rsa_pub_aes",
-                                            "rsa_priv_aes"
+                                            "rsa_priv_aes",
+                                            "ecdsa_pub",
+                                            "ecdsa_parameters"
                                         ]
                                     },
                                     "key_bin": {
@@ -355,6 +359,11 @@ class OTP(object):
                     'maximum': i['bit_length'] - 1
                 }
             elif i['type'] == 'hex':
+                config_schema[i['key']] = {
+                    'type': 'string',
+                    'pattern': '0[xX][0-9a-fA-F]+'
+                }
+            elif i['type'] == 'rev_id':
                 config_schema[i['key']] = {
                     'type': 'string',
                     'pattern': '0[xX][0-9a-fA-F]+'
@@ -574,6 +583,52 @@ class OTP(object):
             header |= exp_length << 20
         return header
 
+    def genKeyHeader_1030a1_big(self, key_config, key_folder):
+        types = key_config['types']
+        offset = int(key_config['offset'], 16)
+        header = 0
+        header |= offset
+
+        if types == 'aes_vault':
+            header |= 1 << 14
+        elif types == 'aes_oem':
+            header |= 2 << 14
+        elif types == 'rsa_pub_oem':
+            header |= 9 << 14
+        elif types == 'rsa_pub_aes':
+            header |= 11 << 14
+        elif types == 'rsa_priv_aes':
+            header |= 13 << 14
+        elif types == 'ecdsa_parameters':
+            header |= 5 << 14
+        elif types == 'ecdsa_pub':
+            header |= 7 << 14
+
+        if 'number_id' in key_config:
+            number_id = key_config['number_id']
+            header |= number_id
+
+        if types in ['rsa_pub_oem', 'rsa_pub_aes', 'rsa_priv_aes']:
+            rsa_key_file = key_folder + key_config['key_pem']
+            mod_length = rsa_bit_length(rsa_key_file, 'n')
+            if mod_length == 1024:
+                header |= 0 << 18
+            elif mod_length == 2048:
+                header |= 1 << 18
+            elif mod_length == 3072:
+                header |= 2 << 18
+            elif mod_length == 4096:
+                header |= 3 << 18
+            else:
+                raise ValueError("key_length is not supported")
+
+            if types in ['rsa_pub_oem', 'rsa_pub_aes']:
+                exp_length = rsa_bit_length(rsa_key_file, 'e')
+            else:
+                exp_length = rsa_bit_length(rsa_key_file, 'd')
+            header |= exp_length << 20
+        return header
+
     def key_to_bytearray_a0(self, key_config, key_folder):
         types = key_config['types']
 
@@ -626,6 +681,40 @@ class OTP(object):
             aes_key_bin2 = load_file(key_folder + key_config['key_bin2'])
             insert_key_bin = bytearray(aes_key_bin)
             insert_bytearray(bytearray(aes_key_bin2), insert_key_bin, 0x20)
+        else:
+            insert_key_bin = load_file(key_folder + key_config['key_bin'])
+
+        return insert_key_bin
+
+    def key_to_bytearray_1030a1_big(self, key_config, key_folder):
+        types = key_config['types']
+
+        if types in ['rsa_pub_oem', 'rsa_pub_aes', 'rsa_priv_aes']:
+            rsa_key_file = key_folder + key_config['key_pem']
+            if types in ['rsa_pub_oem', 'rsa_pub_aes']:
+                insert_key_bin = rsa_key_to_bin(
+                    rsa_key_file, 'public', order='big')
+            else:
+                insert_key_bin = rsa_key_to_bin(
+                    rsa_key_file, 'private', order='big')
+        elif types in ['aes_vault']:
+            aes_key_bin = load_file(key_folder + key_config['key_bin'])
+            aes_key_bin2 = load_file(key_folder + key_config['key_bin2'])
+            insert_key_bin = bytearray(aes_key_bin)
+            insert_bytearray(bytearray(aes_key_bin2), insert_key_bin, 0x20)
+        elif types == 'ecdsa_pub':
+            ecdsa_key_bin = ecdsa_key_to_bin(
+                key_folder + key_config['key_pem'])
+            insert_key_bin = bytearray(ecdsa_key_bin)
+        elif types == 'ecdsa_parameters':
+            gx = NIST384p.generator.x().to_bytes(48, byteorder='big', signed=False)
+            gy = NIST384p.generator.y().to_bytes(48, byteorder='big', signed=False)
+            p = NIST384p.curve.p().to_bytes(48, byteorder='big', signed=False)
+            n = NIST384p.order.to_bytes(48, byteorder='big', signed=False)
+            insert_key_bin = bytearray(gx)
+            insert_bytearray(bytearray(gy), insert_key_bin, 0x30)
+            insert_bytearray(bytearray(p), insert_key_bin, 0x60)
+            insert_bytearray(bytearray(n), insert_key_bin, 0x90)
         else:
             insert_key_bin = load_file(key_folder + key_config['key_bin'])
 
@@ -760,8 +849,15 @@ class OTP(object):
                 bit_offset = info['bit_offset']
                 offset = dw_offset*32+bit_offset
                 if value:
-                    config_region[offset] = 1
+                    in_val = 1
+                else:
+                    in_val = 0
+                config_region[offset] = in_val
                 config_region_ignore[offset] = 0
+                if dw_offset == 0:
+                    offset = 32+bit_offset
+                    config_region[offset] = in_val
+                    config_region_ignore[offset] = 0
             elif info['type'] == 'string':
                 info_value = info['value']
                 dw_offset = info['dw_offset']
@@ -778,6 +874,11 @@ class OTP(object):
                 config_region_ignore[offset:offset+bit_length] = tmp
                 config_region[offset:offset+bit_length] = tmp
                 config_region[offset:offset+len(bit_value)] = bit_value
+                if dw_offset == 0:
+                    offset = 32+bit_offset
+                    config_region_ignore[offset:offset+bit_length] = tmp
+                    config_region[offset:offset+bit_length] = tmp
+                    config_region[offset:offset+len(bit_value)] = bit_value
             elif info['type'] == 'hex':
                 dw_offset = info['dw_offset']
                 bit_offset = info['bit_offset']
@@ -794,7 +895,11 @@ class OTP(object):
                 config_region_ignore[offset:offset+bit_length] = tmp
                 config_region[offset:offset+bit_length] = tmp
                 config_region[offset:offset+len(bit_value)] = bit_value
-
+                if dw_offset == 0:
+                    offset = 32+bit_offset
+                    config_region_ignore[offset:offset+bit_length] = tmp
+                    config_region[offset:offset+bit_length] = tmp
+                    config_region[offset:offset+len(bit_value)] = bit_value
             elif info['type'] == 'bit_shift':
                 dw_offset = info['dw_offset']
                 bit_offset = info['bit_offset']
@@ -808,7 +913,20 @@ class OTP(object):
 
                 config_region_ignore[offset+offset_value] = 0
                 config_region[offset+offset_value] = 1
+            elif info['type'] == 'rev_id':
+                dw_offset = info['dw_offset']
+                bit_offset = info['bit_offset']
+                offset = dw_offset*32 + bit_offset
+                bit_length = info['bit_length']
+                offset_value = int(value, 16) - value_start
 
+                if offset_value < 0 or offset_value > bit_length:
+                    raise OtpError('"{}": value is out of range'.format(key))
+
+                for i in range(bit_length):
+                    config_region_ignore[offset+i] = 0
+                for i in range(offset_value):
+                    config_region[offset+i] = 1
             else:
                 raise OtpError('"{}": value is invalid'.format(key))
 
@@ -825,6 +943,17 @@ class OTP(object):
         otp_strap_reg_protect.setall(False)
         otp_strap_protect.setall(False)
         otp_strap_ignore.setall(True)
+
+        for i in strap_info:
+            if i['type'] == 'reserved':
+                bit_length = i['bit_length']
+                bit_offset = i['bit_offset']
+                tmp = bitarray(bit_length)
+                tmp.setall(True)
+                otp_strap_reg_protect[bit_offset:bit_offset+bit_length] = tmp
+                otp_strap_protect[bit_offset:bit_offset+bit_length] = tmp
+                tmp.setall(False)
+                otp_strap_ignore[bit_offset:bit_offset+bit_length] = tmp
 
         for config in otp_strap_config:
             info = None
@@ -923,8 +1052,8 @@ class OTP(object):
             otp_config['data_region']['rsa_key_order'] = 'big'
             otp_info = self.otp_info.OTP_INFO['1030A1']
             version = '1030A1'
-            genKeyHeader = self.genKeyHeader_a3_big
-            key_to_bytearray = self.key_to_bytearray_a3_big
+            genKeyHeader = self.genKeyHeader_1030a1_big
+            key_to_bytearray = self.key_to_bytearray_1030a1_big
         else:
             raise OtpError('version is invalid')
 
@@ -1167,7 +1296,7 @@ class OTP(object):
                 rsa_mod = data_region[key_offset: key_offset+rsa_len]
                 if key_type == self.otp_info.OTP_KEY_TYPE_RSA_PRIV:
                     rsa_exp = data_region[key_offset +
-                                      rsa_len: key_offset+rsa_len+exp_length]
+                                          rsa_len: key_offset+rsa_len+exp_length]
                 else:
                     rsa_exp = bytearray([0x01, 0x0, 0x01])
                 print('RSA Length: {}'.format(rsa_type))
@@ -1189,6 +1318,24 @@ class OTP(object):
                 hexdump(data_region[key_offset: key_offset+32])
                 print('AES Key 2:')
                 hexdump(data_region[key_offset+32: key_offset+64])
+            elif key_type == self.otp_info.OTP_KEY_ECDSA384:
+                print('ASN1 OID: secp384r1')
+                print('NIST CURVE: P-384')
+                print('Qx:')
+                hexdump(data_region[key_offset: key_offset+0x30])
+                print('Qy:')
+                hexdump(data_region[key_offset+0x30: key_offset+0x60])
+            elif key_type == self.otp_info.OTP_KEY_ECDSA384P:
+                print('ASN1 OID: secp384r1')
+                print('NIST CURVE: P-384')
+                print('Gx:')
+                hexdump(data_region[key_offset: key_offset+0x30])
+                print('Gy:')
+                hexdump(data_region[key_offset+0x30: key_offset+0x60])
+                print('p:')
+                hexdump(data_region[key_offset+0x60: key_offset+0x90])
+                print('n:')
+                hexdump(data_region[key_offset+0x90: key_offset+0xc0])
 
             print('')
             i = i + 1
@@ -1206,6 +1353,22 @@ class OTP(object):
         print('OTP Patch:')
         hexdump(data_region[patch_offset:patch_offset+patch_size])
 
+    def otp_print_revid(self, rid):
+        print("     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f")
+        print("___________________________________________________")
+        for i in range(64):
+            if i < 32:
+                j = 0
+                bit_offset = i
+            else:
+                j = 1
+                bit_offset = i - 32
+            if i % 16 == 0:
+                print("{:<2X} | ".format(i), end='')
+            print("{}  ".format((rid[j] >> bit_offset) & 0x1), end='')
+            if (i + 1) % 16 == 0:
+                print("\n", end='')
+
     def otp_print_image_config(self, config_info, config_region, config_ignore):
         print("DW    BIT        Value       Description")
         print("__________________________________________________________________________")
@@ -1217,6 +1380,9 @@ class OTP(object):
             OTPCFG.append(h)
             OTPCFG_IGNORE.append(hm)
 
+        rid_flag = False
+        rid = [0] * 2
+        rid_offset = 0
         for ci in config_info:
             dw_offset = ci['dw_offset']
             bit_offset = ci['bit_offset']
@@ -1237,10 +1403,26 @@ class OTP(object):
                 i = i + 1
             otp_value = (ov >> bit_offset) & mask
             otp_ignore = (oi >> bit_offset) & mask
-
             if otp_ignore == mask:
                 continue
-            elif otp_ignore != 0:
+            ret = True
+            if info_type in ['boolean', 'string', 'hex']:
+                if otp_ignore != 0:
+                    ret = False
+            elif info_type == 'bit_shift':
+                if (otp_value + otp_ignore) & mask != mask:
+                    ret = False
+            elif info_type == 'rev_id':
+                if OTPCFG_IGNORE[dw_offset] != 0 or \
+                   OTPCFG_IGNORE[dw_offset+1] != 0:
+                    ret = False
+                else:
+                    rid_flag = True
+                    rid[0] = OTPCFG[dw_offset]
+                    rid[1] = OTPCFG[dw_offset+1]
+                    rid_offset = dw_offset
+                    continue
+            if not ret:
                 print('bit_length: {}'.format(bit_length))
                 print('otp_ignore: 0x{:X}'.format(otp_ignore))
                 print('otp_value: 0x{:X}'.format(otp_value))
@@ -1281,6 +1463,12 @@ class OTP(object):
                         bit_offset + bit_length - 1, bit_offset), end='')
                 print('0x{:<10X}'.format(otp_value), end='')
                 print('{}'.format(info))
+        print()
+        if rid_flag:
+            print('OTP Manifest ID(revision id), OTPCFG{:X}, OTPCFG{:X}'.format(
+                rid_offset, rid_offset+1))
+            self.otp_print_revid(rid)
+            print()
 
     def otp_print_image_strap(self, ver, strap_info, strap, strap_pro, strap_reg_pro, strap_ignore):
         OTPSTRAP = struct.unpack('<Q', strap)[0]
@@ -1318,7 +1506,7 @@ class OTP(object):
                 continue
             elif otp_ignore != 0:
                 return False
-
+            info = ''
             if info_type == 'boolean':
                 if otp_value == 0:
                     info = si['info'][0]
@@ -1329,6 +1517,8 @@ class OTP(object):
                 for v in vl:
                     if otp_value == v['bit']:
                         info = si['info'].format(v['value'])
+            elif info_type == 'reserved':
+                info = 'Reserved'
 
             if info != '':
                 if bit_length == 1:
@@ -1525,13 +1715,15 @@ class OTP(object):
         config_region = otp_image[conf_offset:conf_offset+64]
         config_region_ignore = otp_image[conf_offset+64:conf_offset+64*2]
         strap_offset = header.strap_info & 0xffff
-        strap_region = otp_image[strap_offset:strap_offset+8]
-        strap_region_pro = otp_image[strap_offset+8:strap_offset+16]
         if ver == 'A0':
+            strap_region = otp_image[strap_offset:strap_offset+8]
             strap_region_reg_pro = None
+            strap_region_pro = otp_image[strap_offset+8:strap_offset+16]
             strap_region_ignore = otp_image[strap_offset+16:strap_offset+24]
         else:
-            strap_region_reg_pro = otp_image[strap_offset+16:strap_offset+24]
+            strap_region = otp_image[strap_offset:strap_offset+8]
+            strap_region_reg_pro = otp_image[strap_offset+8:strap_offset+16]
+            strap_region_pro = otp_image[strap_offset+16:strap_offset+24]
             strap_region_ignore = otp_image[strap_offset+24:strap_offset+32]
 
         if header.image_info & self.otp_info.INC_DATA:
@@ -1672,8 +1864,8 @@ class otpTool(object):
 
         try:
             args.func(args)
-        except AttributeError:
-            parser.error("too few arguments")
+        except AttributeError as ex:
+            print(ex)
             sys.exit(1)
 
     def make_otp_image(self, args):

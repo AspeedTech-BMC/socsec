@@ -278,8 +278,34 @@
         "info": "User define data, random number high : {}"
     },
     {
-        "key": "Manifest ID",
+        "key": "SCU0C8[14:0] auto setting value",
         "type": "hex",
+        "dw_offset": 7,
+        "bit_offset": 0,
+        "bit_length": 15,
+        "info": "SCU0C8[14:0] auto setting : {}"
+    },
+    {
+        "key": "SCU0D8[14:0] auto setting value",
+        "type": "hex",
+        "dw_offset": 7,
+        "bit_offset": 16,
+        "bit_length": 15,
+        "info": "SCU0D8[14:0] auto setting : {}"
+    },
+    {
+        "key": "Enable chip security setting",
+        "type": "boolean",
+        "dw_offset": 7,
+        "bit_offset": 31,
+        "info": [
+            "Disable chip security setting",
+            "Enable chip security setting"
+        ]
+    },
+    {
+        "key": "Manifest ID",
+        "type": "rev_id",
         "value_start": 0,
         "dw_offset": 10,
         "bit_offset": 0,

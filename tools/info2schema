@@ -1,0 +1,270 @@
+#!/usr/bin/env python3
+
+# Copyright (c) 2021 ASPEED Technology Inc.
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+import argparse
+import jstyleson
+import sys
+import os
+
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))+'/'
+INFO_DIR = ROOT_DIR + '../socsec/otp_info/'
+OTP_INFO = [
+    {
+        'name': 'A1',
+        'config': INFO_DIR+'a1_config.json',
+        'strap': INFO_DIR+'a1_strap.json',
+    },
+    {
+        'name': 'A2',
+        'config': INFO_DIR+'a2_config.json',
+        'strap': INFO_DIR+'a2_strap.json',
+    },
+    {
+        'name': 'A3',
+        'config': INFO_DIR+'a3_config.json',
+        'strap': INFO_DIR+'a2_strap.json',
+    },
+]
+
+def OTPValidate():
+    schema = {
+        "type": "object",
+        "required": [
+            "name",
+            "version"
+        ],
+        "additionalProperties": False,
+        "properties": {
+            "name": {
+                "type": "string"
+            },
+            "version": {
+                "type": "string",
+                "enum": [
+                    "A0",
+                    "A1",
+                    "A2",
+                    "A3",
+                    "1030A0",
+                    "1030A1"
+                ]
+            },
+            "data_region": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": [
+                    "ecc_region"
+                ],
+                "properties": {
+                    "patch": {
+                        "type": "boolean"
+                    },
+                    "ecc_region": {
+                        "type": "boolean"
+                    },
+                    "rsa_key_order": {
+                        "type": "string",
+                        "enum": [
+                            "little",
+                            "big",
+                        ]
+                    },
+                    "key": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "additionalProperties": False,
+                            "properties": {
+                                "types": {
+                                    "type": "string",
+                                    "enum": [
+                                        "aes_oem",
+                                        "aes_vault",
+                                        "rsa_pub_oem",
+                                        "rsa_pub_aes",
+                                        "rsa_priv_aes",
+                                        "ecdsa_pub",
+                                        "ecdsa_parameters"
+                                    ]
+                                },
+                                "key_bin": {
+                                    "type": "string"
+                                },
+                                "key_bin2": {
+                                    "type": "string"
+                                },
+                                "iv_bin": {
+                                    "type": "string"
+                                },
+                                "key_pem": {
+                                    "type": "string"
+                                },
+                                "rsa_pem": {
+                                    "type": "string"
+                                },
+                                "number_id": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 7
+                                },
+                                "sha_mode": {
+                                    "type": "string",
+                                    "enum": [
+                                        "SHA224",
+                                        "SHA256",
+                                        "SHA384",
+                                        "SHA512"
+                                    ]
+                                },
+                                "offset": {
+                                    "type": "string",
+                                    "pattern": "0[xX][0-9a-fA-F]+"
+                                },
+                                "key_length": {
+                                    "type": "integer"
+                                }
+                            }
+                        }
+                    },
+                    "user_data": {
+                        "type": "array",
+                        "additionalProperties": False,
+                        "items": {
+                            "type": "object",
+                            "additionalProperties": False,
+                            "properties": {
+                                "types": {
+                                    "type": "string",
+                                    "enum": [
+                                        "hex",
+                                        "dw_hex",
+                                        "bin"
+                                    ]
+                                },
+                                "file": {
+                                    "type": "string"
+                                },
+                                "offset": {
+                                    "type": "string",
+                                    "pattern": "0[xX][0-9a-fA-F]+"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "config_region": {
+            },
+            "otp_strap": {},
+        }
+    }
+    config_schema = {}
+    strap_schema = {}
+
+    config_info = []
+    strap_info = []
+    for otp_info in OTP_INFO:
+        with open(otp_info['config'], 'r') as config_info_fd:
+            config_info = config_info + jstyleson.load(config_info_fd)
+
+        with open(otp_info['strap'], 'r') as strap_info_fd:
+            strap_info = strap_info + jstyleson.load(strap_info_fd)
+    print(config_info)
+    for i in config_info:
+        if i['type'] == 'boolean':
+            config_schema[i['key']] = {
+                'type': 'boolean'
+            }
+        elif i['type'] == 'string':
+            config_schema[i['key']] = {
+                'type': 'string',
+                'enum': []
+            }
+            for j in i['value']:
+                config_schema[i['key']]['enum'].append(j['value'])
+        elif i['type'] == 'bit_shift':
+            config_schema[i['key']] = {
+                'type': 'integer',
+                'minimum': 0,
+                'maximum': i['bit_length'] - 1
+            }
+        elif i['type'] == 'hex':
+            config_schema[i['key']] = {
+                'type': 'string',
+                'pattern': '0[xX][0-9a-fA-F]+'
+            }
+        elif i['type'] == 'rev_id':
+            config_schema[i['key']] = {
+                'type': 'string',
+                'pattern': '0[xX][0-9a-fA-F]+'
+            }
+
+    for i in strap_info:
+        val = {}
+        if i['type'] == 'boolean':
+            val = {
+                'type': 'boolean'
+            }
+        elif i['type'] == 'string':
+            val = {
+                'type': 'string',
+                'enum': []
+            }
+            for j in i['value']:
+                val['enum'].append(j['value'])
+
+        strap_schema[i['key']] = {
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "value"
+            ],
+            "properties": {
+                "otp_protect": {
+                    "type": "boolean"
+                },
+                "reg_protect": {
+                    "type": "boolean"
+                },
+                "ignore": {
+                    "type": "boolean"
+                },
+                "value": val
+            }
+        }
+
+    schema['properties']['config_region'] = {
+        "type": "object",
+        "additionalProperties": False,
+        "properties": config_schema
+    }
+    schema['properties']['otp_strap'] = {
+        "type": "object",
+        "additionalProperties": False,
+        "properties": strap_schema
+    }
+    return schema
+
+schema = OTPValidate()
+
+with open(ROOT_DIR + 'otp_schema.json', 'w') as out_fd:
+    jstyleson.dump(schema, out_fd,indent=4, sort_keys=True)

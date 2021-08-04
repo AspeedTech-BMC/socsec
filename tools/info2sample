@@ -1,0 +1,157 @@
+#!/usr/bin/env python3
+
+# Copyright (c) 2020 ASPEED Technology Inc.
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+import argparse
+import jstyleson
+import sys
+import os
+
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))+'/'
+INFO_DIR = ROOT_DIR + '../socsec/otp_info/'
+OTP_INFO = [
+    {
+        'name': 'A1',
+        'config': INFO_DIR+'a1_config.json',
+        'strap': INFO_DIR+'a1_strap.json',
+    },
+    {
+        'name': 'A2',
+        'config': INFO_DIR+'a2_config.json',
+        'strap': INFO_DIR+'a2_strap.json',
+    },
+    {
+        'name': 'A3',
+        'config': INFO_DIR+'a3_config.json',
+        'strap': INFO_DIR+'a2_strap.json',
+    },
+]
+
+
+def conf2sample(config):
+    ret = []
+    for i in config:
+        if 'info' not in i:
+            continue
+        dw_offset = i['dw_offset']
+        bit_offset = i['bit_offset']
+        if i['type'] == 'boolean':
+            ret.append(
+                '        // OTPCFG{}[{}]\n'.format(dw_offset, bit_offset))
+            ret.append('        // false: {}\n'.format(i['info'][0]))
+            ret.append('        // true : {}\n'.format(i['info'][1]))
+            ret.append('        "{}": false,\n'.format(i['key']))
+        elif i['type'] == 'string':
+            length = i['bit_length']
+            if length == 1:
+                ret.append(
+                    '        // OTPCFG{}[{}]\n'.format(dw_offset, bit_offset))
+            else:
+                ret.append(
+                    '        // OTPCFG{}[{}-{}]\n'.format(dw_offset, bit_offset+length-1, bit_offset))
+            for v in i['value']:
+                bit = v['bit']
+                val = v['value']
+                ret.append('        // {}: "{}"\n'.format(bit, val))
+            ret.append('        "{}": "{}",\n'.format(
+                i['key'], i['value'][0]['value']))
+        elif i['type'] == 'hex':
+            length = i['bit_length']
+            if length == 1:
+                ret.append(
+                    '        // OTPCFG{}[{}]\n'.format(dw_offset, bit_offset))
+            else:
+                ret.append(
+                    '        // OTPCFG{}[{}-{}]\n'.format(dw_offset, bit_offset+length-1, bit_offset))
+            ret.append('        "{}": "0x0",\n'.format(i['key']))
+        elif i['type'] == 'bit_shift':
+            length = i['bit_length']
+            if length == 1:
+                ret.append(
+                    '        // OTPCFG{}[{}]\n'.format(dw_offset, bit_offset))
+            else:
+                ret.append(
+                    '        // OTPCFG{}[{}-{}]\n'.format(dw_offset, bit_offset+length-1, bit_offset))
+            ret.append('        "{}": 0,\n'.format(i['key']))
+    if ret.__len__() == 0:
+        return ''
+    ret[-1] = ret[-1][:-2] + '\n'
+    return ''.join(ret)
+
+
+def strap2sample(config):
+    ret = []
+    for i in config:
+        if 'info' not in i:
+            continue
+        bit_offset = i['bit_offset']
+        if i['type'] == 'boolean':
+            ret.append('        // OTPSTRAP[{}]\n'.format(bit_offset))
+            ret.append('        "{}": {{\n'.format(i['key']))
+            ret.append('            // false: {}\n'.format(i['info'][0]))
+            ret.append('            // true : {}\n'.format(i['info'][1]))
+            ret.append('            "value": false,\n')
+        elif i['type'] == 'string':
+            length = i['bit_length']
+            if length == 1:
+                ret.append(
+                    '        // OTPSTRAP[{}]\n'.format(bit_offset))
+            else:
+                ret.append(
+                    '        // OTPSTRAP[{}:{}]\n'.format(bit_offset+length-1, bit_offset))
+            ret.append('        "{}": {{\n'.format(i['key']))
+            vl=[]
+            for v in i['value']:
+                bit = v['bit']
+                val = v['value']
+                if val not in vl:
+                    vl.append(val)
+                    ret.append('            // {}: {}\n'.format(bit, val))
+
+            ret.append('            "value": "{}",\n'.format(i['value'][0]['value']))
+        ret.append('            "otp_protect": false,\n')
+        ret.append('            "ignore": true\n')
+        ret.append('        },\n')
+    if ret.__len__() == 0:
+        return ''
+    ret[-1] = ret[-1][:-2] + '\n'
+    return ''.join(ret)
+
+for i in OTP_INFO:
+    conf_path = i['config']
+    strap_path = i['strap']
+    with open(conf_path, 'r') as config_info_fd:
+        config_info = jstyleson.load(config_info_fd)
+    with open(strap_path, 'r') as strap_info_fd:
+        strap_info = jstyleson.load(strap_info_fd)
+    head_str = '{{\n    "name": "evb",\n    "version": "{}",\n'.format(
+        i['name'])
+    tail_str = '}'
+    conf_str = '    "config_region": {\n'
+    conf_str = conf_str + conf2sample(config_info)
+    conf_str = conf_str + '    },\n'
+    strap_str = '    "otp_strap": {\n'
+    strap_str = strap_str + strap2sample(strap_info)
+    strap_str = strap_str + '    }\n'
+    print(head_str+conf_str+strap_str)
+
+    with open(ROOT_DIR + 'sample_{}.json'.format(i['name']), 'w') as out_fd:
+        out_fd.write(head_str+conf_str+strap_str+tail_str)

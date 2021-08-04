@@ -84,7 +84,7 @@ render_v2() {
 	local slug=${soc}-${rev}_${mode}${rsa_padding}-rsa${rot_rsa}-sha${rot_sha}
 	local config=tests/otp/${slug}.json
 
-	local RSA_PADDING=$(echo $rev | tr '[a-z]' '[A-Z]')
+	local RSA_PADDING=$(echo $rsa_padding | tr '[a-z]' '[A-Z]')
 	local REV=$(echo $rev | tr '[a-z]' '[A-Z]')
 	if [ $soc = "1030" ]
 	then
@@ -145,7 +145,7 @@ do
 done
 
 # AST1030A1 has new signature schema, and key order only support big endian
-for mode in mode2v2 mode2v2aes1 mode2v2aes2
+for mode in mode2v2 mode2v2aes1 mode2v2aes2pub mode2v2aes2priv
 do
 	for rsa_padding in pss pkcs1
 	do

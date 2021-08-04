@@ -1,0 +1,43 @@
+{
+    "name": "1030-a1_modeecdsa",
+    "version": "1030A1",
+    "data_region": {
+        "ecc_region": true,
+        "key": [
+            {
+                "types": "ecdsa_pub",
+                "key_pem": "ecdsa.pub.pem",
+                "offset": "0x480",
+                "number_id": 1
+            },
+            {
+                "types": "ecdsa_parameters",
+                "offset": "0x4E0"
+            }
+        ]
+    },
+    "config_region": {
+        "Secure Boot Mode": "Normal",
+        "Signature Scheme": "ECDSA384",
+        "Enable image encryption": false
+    },
+    "otp_strap": {
+        "Enable secure boot": {
+            "value": true,
+            "otp_protect": false,
+            "ignore": false
+        },
+        "CPU frequency": {
+            "value": "1.2GHz",
+            "otp_protect": false,
+            "reg_protect": false,
+            "ignore": false
+        },
+        "Enable boot from uart5": {
+            "value": true,
+            "otp_protect": true,
+            "reg_protect": true,
+            "ignore": true
+        }
+    }
+}
