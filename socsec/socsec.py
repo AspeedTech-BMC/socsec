@@ -1928,7 +1928,7 @@ class secTool(object):
         64KB (including 512B signature)'''
         sub_parser.add_argument('--stack_intersects_verification_region',
                                 dest='stack_intersects_verification_region',
-                                choices=['true', 'false'], default=None,
+                                choices=['true', 'false'], default='false',
                                 help=stack_intersects_verification_region_help)
         sub_parser.add_argument('--header_offset',
                                 help='RoT header offset',
@@ -2090,10 +2090,6 @@ class secTool(object):
             parser.print_usage()
             sys.exit(1)
 
-        if (args.subparser_name == 'make_secure_bl1_image' and
-                args.stack_intersects_verification_region is None):
-            print('WARNING: --stack_intersects_verification_region={true|false} '
-                  'must be specified to ensure forwards compatibility.')
         args.func(args)
 
     def make_secure_bl1_image(self, args):
