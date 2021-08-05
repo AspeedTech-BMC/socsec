@@ -128,6 +128,7 @@ def strap2sample(config):
 
             ret.append('            "value": "{}",\n'.format(i['value'][0]['value']))
         ret.append('            "otp_protect": false,\n')
+        ret.append('            "reg_protect": false,\n')
         ret.append('            "ignore": true\n')
         ret.append('        },\n')
     if ret.__len__() == 0:
