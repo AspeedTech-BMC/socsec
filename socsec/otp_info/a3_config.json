@@ -345,7 +345,6 @@
         "type": "boolean",
         "dw_offset": 3,
         "bit_offset": 20,
-        "default": true,
         "info": [
             "Enable ROM code based programming control",
             "Disable ROM code based programming control"
