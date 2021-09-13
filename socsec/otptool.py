@@ -35,6 +35,9 @@ from socsec import rsa_key_to_bin
 from socsec import ecdsa_key_to_bin
 from socsec import hexdump
 from socsec import OTP_info
+from socsec import __version__
+from socsec import version2int
+from socsec import int2version
 from ecdsa import SigningKey, NIST384p
 
 
@@ -180,7 +183,7 @@ def writeDWHexFile(in_bin: bytearray, dst_path: str):
 
 class image_header(object):
     def __init__(self, header):
-        (self.magic, self.ver, self.image_info, self.data_info,
+        (self.magic, self.soc_ver, self.otptool_ver, self.image_info, self.data_info,
          self.config_info, self.strap_info,
          self.checksum_offset) = struct.unpack(OTP.otp_info.HEADER_FORMAT, header)
 
@@ -1017,22 +1020,22 @@ class OTP(object):
 
         if otp_config['version'] == 'A0':
             otp_info = self.otp_info.OTP_INFO['A0']
-            version = 'A0'
+            version = OTP_info.SOC_AST2600A0
             genKeyHeader = self.genKeyHeader_a0
             key_to_bytearray = self.key_to_bytearray_a0
         elif otp_config['version'] == 'A1':
             otp_info = self.otp_info.OTP_INFO['A1']
-            version = 'A1'
+            version = OTP_info.SOC_AST2600A1
             genKeyHeader = self.genKeyHeader_a1
             key_to_bytearray = self.key_to_bytearray_a1
         elif otp_config['version'] == 'A2':
             otp_info = self.otp_info.OTP_INFO['A2']
-            version = 'A2'
+            version = OTP_info.SOC_AST2600A2
             genKeyHeader = self.genKeyHeader_a1
             key_to_bytearray = self.key_to_bytearray_a1
         elif otp_config['version'] == 'A3':
             otp_info = self.otp_info.OTP_INFO['A3']
-            version = 'A3'
+            version = OTP_info.SOC_AST2600A3
             order = 'little'
             if 'data_region' in otp_config:
                 if 'rsa_key_order' in otp_config['data_region']:
@@ -1045,17 +1048,17 @@ class OTP(object):
                 genKeyHeader = self.genKeyHeader_a3_big
         elif otp_config['version'] == '1030A0':
             otp_info = self.otp_info.OTP_INFO['1030A0']
-            version = '1030A0'
+            version = OTP_info.SOC_AST1030A0
             genKeyHeader = self.genKeyHeader_a1
             key_to_bytearray = self.key_to_bytearray_a1
         elif otp_config['version'] == '1030A1':
             otp_config['data_region']['rsa_key_order'] = 'big'
             otp_info = self.otp_info.OTP_INFO['1030A1']
-            version = '1030A1'
+            version = OTP_info.SOC_AST1030A1
             genKeyHeader = self.genKeyHeader_1030a1_big
             key_to_bytearray = self.key_to_bytearray_1030a1_big
         else:
-            raise OtpError('version is invalid')
+            raise OtpError('SOC version is invalid')
 
         self.OTPValidate(otp_config, otp_info)
         os.system('mkdir -p '+output_folder)
@@ -1116,7 +1119,8 @@ class OTP(object):
             header = struct.pack(
                 self.otp_info.HEADER_FORMAT,
                 self.otp_info.MAGIC_WORD_OTP.encode(),
-                version.encode(),
+                version,
+                version2int(__version__),
                 image_info,
                 data_info,
                 0,
@@ -1154,7 +1158,8 @@ class OTP(object):
             header = struct.pack(
                 self.otp_info.HEADER_FORMAT,
                 self.otp_info.MAGIC_WORD_OTP.encode(),
-                version.encode(),
+                version,
+                version2int(__version__),
                 image_info,
                 0,
                 config_info,
@@ -1191,7 +1196,8 @@ class OTP(object):
             header = struct.pack(
                 self.otp_info.HEADER_FORMAT,
                 self.otp_info.MAGIC_WORD_OTP.encode(),
-                version.encode(),
+                version,
+                version2int(__version__),
                 image_info,
                 0,
                 0,
@@ -1223,7 +1229,8 @@ class OTP(object):
         header = struct.pack(
             self.otp_info.HEADER_FORMAT,
             self.otp_info.MAGIC_WORD_OTP.encode(),
-            version.encode(),
+            version,
+            version2int(__version__),
             image_info_all,
             data_info,
             config_info,
@@ -1238,7 +1245,7 @@ class OTP(object):
         writeBinFile(header+data_all+config_all +
                      otp_strap_all+checksum, all_image_output)
 
-    def otp_print_image_data(self, ver, key_type_list, data_region, config_region):
+    def otp_print_image_data(self, key_type_list, data_region, config_region):
         key_header = []
         find_last = 0
         for i in range(16):
@@ -1470,14 +1477,14 @@ class OTP(object):
             self.otp_print_revid(rid)
             print()
 
-    def otp_print_image_strap(self, ver, strap_info, strap, strap_pro, strap_reg_pro, strap_ignore):
+    def otp_print_image_strap(self, soc_ver, strap_info, strap, strap_pro, strap_reg_pro, strap_ignore):
         OTPSTRAP = struct.unpack('<Q', strap)[0]
         OTPSTRAP_PRO = struct.unpack('<Q', strap_pro)[0]
         OTPSTRAP_IGNORE = struct.unpack('<Q', strap_ignore)[0]
-        if ver != 'A0':
+        if soc_ver != OTP_info.SOC_AST2600A0:
             OTPSTRAP_REG_PRO = struct.unpack('<Q', strap_reg_pro)[0]
 
-        if ver == 'A0':
+        if soc_ver == OTP_info.SOC_AST2600A0:
             print("BIT(hex)   Value       Protect     Description")
         else:
             print("BIT(hex)   Value       Reg_Protect Protect     Description")
@@ -1497,7 +1504,7 @@ class OTP(object):
             otp_protect = (OTPSTRAP_PRO >> bit_offset) & mask
             otp_ignore = (OTPSTRAP_IGNORE >> bit_offset) & mask
 
-            if ver != 'A0':
+            if soc_ver != OTP_info.SOC_AST2600A0:
                 otp_reg_protect = (OTPSTRAP_REG_PRO >> bit_offset) & mask
             else:
                 otp_reg_protect = 0
@@ -1527,15 +1534,15 @@ class OTP(object):
                     print('0x{:<2X}:0x{:<4X}'.format(
                         bit_offset + bit_length - 1, bit_offset), end='')
                 print('0x{:<10X}'.format(otp_value), end='')
-                if ver != 'A0':
+                if soc_ver != OTP_info.SOC_AST2600A0:
                     print('0x{:<10X}'.format(otp_reg_protect), end='')
                 print('0x{:<10X}'.format(otp_protect), end='')
                 print('{}'.format(info))
 
-    def otp_strap_status(self, ver, strap_dw):
+    def otp_strap_status(self, soc_ver, strap_dw):
         ret = []
 
-        if ver == 'A0':
+        if soc_ver == OTP_info.SOC_AST2600A0:
             for i in range(64):
                 otpstrap = strap_sts()
                 otpstrap.value = 0
@@ -1575,7 +1582,7 @@ class OTP(object):
                 ret[j].value = ret[j].value ^ bit_value
                 ret[j].option_array[option] = bit_value
 
-        if ver != 'A0':
+        if soc_ver != OTP_info.SOC_AST2600A0:
             for j in range(32):
                 if ((strap_dw[12] >> j) & 0x1) == 1:
                     ret[j].reg_protected = 1
@@ -1591,10 +1598,10 @@ class OTP(object):
                 ret[j].protected = 1
         return ret
 
-    def otp_print_strap_info(self, ver, strap_info, strap_dw):
-        strap_status = self.otp_strap_status(ver, strap_dw)
+    def otp_print_strap_info(self, soc_ver, strap_info, strap_dw):
+        strap_status = self.otp_strap_status(soc_ver, strap_dw)
 
-        if ver == 'A0':
+        if soc_ver == OTP_info.SOC_AST2600A0:
             print("BIT(hex) Value  Remains  Protect   Description")
         else:
             print("BIT(hex) Value  Remains  Reg_Protect Protect   Description")
@@ -1636,7 +1643,7 @@ class OTP(object):
                     '0x{:<5X}'.format(strap_status[bit_offset + j].value), end='')
                 print(
                     '{:<9}'.format(strap_status[bit_offset + j].remain_times), end='')
-                if ver != 'A0':
+                if soc_ver != OTP_info.SOC_AST2600A0:
                     print(
                         '0x{:<10X}'.format(strap_status[bit_offset + j].reg_protected), end='')
                 print(
@@ -1668,45 +1675,53 @@ class OTP(object):
 
         return 0
 
-    def _print_otp_image(self, otp_image):
-        header = image_header(otp_image[0:self.otp_info.HEADER_SIZE])
-
-        ver_s = header.ver.decode()
-        if ver_s[:2] == 'A0':
-            ver = 'A0'
+    def _parse_image_soc_ver(self, soc_ver):
+        if soc_ver == OTP_info.SOC_AST2600A0:
+            ver = "AST2600A0"
             key_type_list = self.otp_info.a0_key_type
             otp_info = self.otp_info.OTP_INFO['A0']
-        elif ver_s[:2] == 'A1':
-            ver = 'A1'
+        elif soc_ver == OTP_info.SOC_AST2600A1:
+            ver = "AST2600A1"
             key_type_list = self.otp_info.a1_key_type
             otp_info = self.otp_info.OTP_INFO['A1']
-        elif ver_s[:2] == 'A2':
-            ver = 'A2'
+        elif soc_ver == OTP_info.SOC_AST2600A2:
+            ver = "AST2600A2"
             key_type_list = self.otp_info.a1_key_type
             otp_info = self.otp_info.OTP_INFO['A2']
-        elif ver_s[:2] == 'A3':
-            ver = 'A3'
+        elif soc_ver == OTP_info.SOC_AST2600A3:
+            ver = "AST2600A3"
             key_type_list = self.otp_info.a3_key_type
             otp_info = self.otp_info.OTP_INFO['A3']
-        elif ver_s[:6] == '1030A0':
-            ver = '1030A0'
+        elif soc_ver == OTP_info.SOC_AST1030A0:
+            ver = "AST1030A0"
             key_type_list = self.otp_info.a1_key_type
             otp_info = self.otp_info.OTP_INFO['1030A0']
-        elif ver_s[:6] == '1030A1':
-            ver = '1030A1'
+        elif soc_ver == OTP_info.SOC_AST1030A1:
+            ver = "AST1030A1"
             key_type_list = self.otp_info.ast1030a1_key_type
             otp_info = self.otp_info.OTP_INFO['1030A1']
         else:
-            print('OTP image version is invalid: {}'.format(ver_s))
+            print('SOC version is invalid: {:X}'.format(soc_ver))
+            return None, None
+
+        print('SOC version: {}'.format(ver))
+        return key_type_list, otp_info
+
+    def _print_otp_image(self, otp_image):
+        header = image_header(otp_image[0:self.otp_info.HEADER_SIZE])
+
+        key_type_list, otp_info = self._parse_image_soc_ver(header.soc_ver)
+
+        if key_type_list == None or otp_info == None:
             return False
+
+        print('otptool version: {}'.format(int2version(header.otptool_ver)))
 
         with open(otp_info['strap'], 'r') as strap_info_fd:
             strap_info = jstyleson.load(strap_info_fd)
 
         with open(otp_info['config'], 'r') as config_info_fd:
             config_info = jstyleson.load(config_info_fd)
-
-        print('OTP image version: {}'.format(ver))
 
         data_offset = header.data_info & 0xffff
         data_region = otp_image[data_offset:data_offset+8192]
@@ -1715,7 +1730,7 @@ class OTP(object):
         config_region = otp_image[conf_offset:conf_offset+64]
         config_region_ignore = otp_image[conf_offset+64:conf_offset+64*2]
         strap_offset = header.strap_info & 0xffff
-        if ver == 'A0':
+        if header.soc_ver == OTP_info.SOC_AST2600A0:
             strap_region = otp_image[strap_offset:strap_offset+8]
             strap_region_reg_pro = None
             strap_region_pro = otp_image[strap_offset+8:strap_offset+16]
@@ -1729,7 +1744,7 @@ class OTP(object):
         if header.image_info & self.otp_info.INC_DATA:
             print('OTP data region :')
             self.otp_print_image_data(
-                ver, key_type_list, data_region, config_region)
+                key_type_list, data_region, config_region)
 
         if header.image_info & self.otp_info.INC_CONF:
             print('OTP config region :')
@@ -1739,38 +1754,14 @@ class OTP(object):
         if header.image_info & self.otp_info.INC_STRAP:
             print('OTP strap :')
             self.otp_print_image_strap(
-                ver, strap_info, strap_region, strap_region_pro, strap_region_reg_pro, strap_region_ignore)
+                header.soc_ver, strap_info, strap_region, strap_region_pro, strap_region_reg_pro, strap_region_ignore)
 
     def _print_dump_image(self, otp_image):
         header = image_header(otp_image[0:self.otp_info.HEADER_SIZE])
 
-        ver_s = header.ver.decode()
-        if ver_s[:2] == 'A0':
-            ver = 'A0'
-            key_type_list = self.otp_info.a0_key_type
-            otp_info = self.otp_info.OTP_INFO['A0']
-        elif ver_s[:2] == 'A1':
-            ver = 'A1'
-            key_type_list = self.otp_info.a1_key_type
-            otp_info = self.otp_info.OTP_INFO['A1']
-        elif ver_s[:2] == 'A2':
-            ver = 'A2'
-            key_type_list = self.otp_info.a1_key_type
-            otp_info = self.otp_info.OTP_INFO['A2']
-        elif ver_s[:2] == 'A3':
-            ver = 'A3'
-            key_type_list = self.otp_info.a1_key_type
-            otp_info = self.otp_info.OTP_INFO['A3']
-        elif ver_s[:4] == '1030A0':
-            ver = '1030A0'
-            key_type_list = self.otp_info.a1_key_type
-            otp_info = self.otp_info.OTP_INFO['1030A0']
-        elif ver_s[:6] == '1030A1':
-            ver = '1030A1'
-            key_type_list = self.otp_info.ast1030a1_key_type
-            otp_info = self.otp_info.OTP_INFO['1030A1']
-        else:
-            print('OTP image version is invalid: {}'.format(ver_s))
+        key_type_list, otp_info = self._parse_image_soc_ver(header.soc_ver)
+
+        if key_type_list == None or otp_info == None:
             return False
 
         with open(otp_info['strap'], 'r') as strap_info_fd:
@@ -1778,8 +1769,6 @@ class OTP(object):
 
         with open(otp_info['config'], 'r') as config_info_fd:
             config_info = jstyleson.load(config_info_fd)
-
-        print('OTP dump image version: {}'.format(ver_s))
 
         data_offset = header.data_info & 0xffff
         data_region = otp_image[data_offset:data_offset+8192]
@@ -1790,7 +1779,7 @@ class OTP(object):
 
         print('OTP data region :')
         self.otp_print_image_data(
-            ver, key_type_list, data_region, config_region)
+            header.soc_ver, key_type_list, data_region, config_region)
 
         print('OTP config region :')
         self.otp_print_image_config(
@@ -1801,7 +1790,7 @@ class OTP(object):
         for i in range(0, 16):
             h = struct.unpack('<I', strap_region[(i*4):(i*4+4)])[0]
             strap_region_dw.append(h)
-        self.otp_print_strap_info(ver, strap_info, strap_region_dw)
+        self.otp_print_strap_info(header.soc_ver, strap_info, strap_region_dw)
 
     def print_otp_image(self, otp_image_fd):
         otp_image = bytearray(otp_image_fd.read())
@@ -1860,6 +1849,10 @@ class otpTool(object):
                                 type=argparse.FileType('rb'))
         sub_parser.set_defaults(func=self.print_otp_image)
 
+        sub_parser = subparsers.add_parser('version',
+                                           help='print otptool version.')
+        sub_parser.set_defaults(func=self.print_version)
+
         args = parser.parse_args(argv[1:])
 
         try:
@@ -1876,3 +1869,6 @@ class otpTool(object):
 
     def print_otp_image(self, args):
         self.otp.print_otp_image(args.otp_image)
+
+    def print_version(self, args):
+        print(__version__)

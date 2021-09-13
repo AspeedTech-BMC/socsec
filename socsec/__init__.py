@@ -26,6 +26,20 @@ import struct
 from Crypto.PublicKey import RSA
 import binascii
 
+__version__ = "1.0.0"
+
+
+def version2int(version):
+    major, minor, patch = [int(x, 10) for x in version.split('.')]
+    return (major << 24) + (minor << 12) + patch
+
+
+def int2version(ver_int):
+    major = (ver_int >> 24) & 0xff
+    minor = (ver_int >> 12) & 0xfff
+    patch = ver_int & 0xfff
+    return "{}.{}.{}".format(major, minor, patch)
+
 
 def parse_path(path):
     if path is None or path == '':
@@ -152,7 +166,7 @@ def ecdsa_key_to_bin(ecdsa_key_file):
 def chunks(seq, size):
     '''Generator that cuts sequence (bytes, memoryview, etc.)
        into chunks of given size. If `seq` length is not multiply
-       of `size`, the lengh of the last chunk returned will be
+       of `size`, the length of the last chunk returned will be
        less than requested.
 
        >>> list( chunks([1,2,3,4,5,6,7], 3) )
@@ -206,10 +220,60 @@ class key_type(object):
         self.need_id = need_id
         self.information = information
 
+# OTP image header
+#  0x0┌──────────────────────┐
+#     │                      │
+#     │       "SOCOTP"       │
+#     │                      │
+#  0x8├──────────────────────┤
+#     │                      │
+#     │     soc Version      │
+#     │                      │
+#  0xc├──────────────────────┤
+#     │                      │
+#     │   otptool Version    │
+#     │                      │                    
+# 0x10├──────────────────────┤
+#     │                      │
+#     │      Image Info      │
+#     │                      │
+# 0x14├──────────────────────┤
+#     │                      │
+#     │   Data Region Info   │
+#     │                      │
+# 0x18├──────────────────────┤
+#     │                      │
+#     │  Config Region Info  │
+#     │                      │
+# 0x1c├──────────────────────┤
+#     │                      │
+#     │  Strap Region Info   │
+#     │                      │
+# 0x20├──────────────────────┤
+#     │                      │
+#     │     Digest offset    │
+#     │                      │
+#     └──────────────────────┘
+
+# Image Info
+# 31 : include data region
+# 30 : include config region
+# 29 : include strap region
+# 28 : Data region ecc enable
+# 27 : dump image
+# 26 : RSA key order
+#      0: little endian
+#      1: big endian
+# 15:0 : image size
+
+# Region Info
+# 31:16 : region size
+# 15:0  : region offset
+
 
 class OTP_info(object):
     MAGIC_WORD_OTP = 'SOCOTP'
-    HEADER_FORMAT = '<8s8s5I'
+    HEADER_FORMAT = '<8s7I'
     HEADER_SIZE = struct.calcsize(HEADER_FORMAT)
     CHECKSUM_LEN = 32
     OTP_KEY_TYPE_RSA_PUB = 1
@@ -219,6 +283,12 @@ class OTP_info(object):
     OTP_KEY_TYPE_HMAC = 5
     OTP_KEY_ECDSA384 = 6
     OTP_KEY_ECDSA384P = 7
+    SOC_AST2600A0 = 0
+    SOC_AST2600A1 = 1
+    SOC_AST2600A2 = 2
+    SOC_AST2600A3 = 3
+    SOC_AST1030A0 = 4
+    SOC_AST1030A1 = 5
     INC_DATA = 1 << 31
     INC_CONF = 1 << 30
     INC_STRAP = 1 << 29
