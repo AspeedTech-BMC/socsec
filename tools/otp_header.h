@@ -6,7 +6,7 @@ struct otpstrap_info {
 	signed char bit_offset;
 	signed char length;
 	signed char value;
-	char *information;
+	const char *information;
 };
 
 struct otpconf_info {
@@ -14,6 +14,12 @@ struct otpconf_info {
 	signed char bit_offset;
 	signed char length;
 	signed char value;
-	char *information;
+	const char *information;
+};
+
+struct scu_info {
+	signed char bit_offset;
+	signed char length;
+	const char *information;
 };
 

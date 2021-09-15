@@ -251,6 +251,10 @@ class key_type(object):
 #     │                      │
 # 0x20├──────────────────────┤
 #     │                      │
+#     │  SCU protect Info    │
+#     │                      │
+# 0x24├──────────────────────┤
+#     │                      │
 #     │     Digest offset    │
 #     │                      │
 #     └──────────────────────┘
@@ -273,7 +277,7 @@ class key_type(object):
 
 class OTP_info(object):
     MAGIC_WORD_OTP = 'SOCOTP'
-    HEADER_FORMAT = '<8s7I'
+    HEADER_FORMAT = '<8s8I'
     HEADER_SIZE = struct.calcsize(HEADER_FORMAT)
     CHECKSUM_LEN = 32
     OTP_KEY_TYPE_RSA_PUB = 1
@@ -292,9 +296,10 @@ class OTP_info(object):
     INC_DATA = 1 << 31
     INC_CONF = 1 << 30
     INC_STRAP = 1 << 29
-    INC_ECC = 1 << 28
-    INC_DUMP = 1 << 27
-    INC_ORDER = 1 << 26
+    HEADER_ECC = 1 << 28
+    HEADER_DUMP = 1 << 27
+    HEADER_ORDER = 1 << 26
+    INC_SCU_PROTECT = 1 << 25
 
     OTP_INFO = {
         'A0': {
@@ -315,7 +320,7 @@ class OTP_info(object):
         },
         'A2': {
             'config': pkgdata('socsec', 'otp_info/a2_config.json'),
-            'strap': pkgdata('socsec', 'otp_info/a2_strap.json'),
+            'strap': pkgdata('socsec', 'otp_info/a1_strap.json'),
             'data_region_size': 8192,
             'ecc_region_offset': 7168,
             'config_region_size': 64,
@@ -323,7 +328,7 @@ class OTP_info(object):
         },
         'A3': {
             'config': pkgdata('socsec', 'otp_info/a3_config.json'),
-            'strap': pkgdata('socsec', 'otp_info/a2_strap.json'),
+            'strap': pkgdata('socsec', 'otp_info/a1_strap.json'),
             'data_region_size': 8192,
             'ecc_region_offset': 7168,
             'config_region_size': 64,

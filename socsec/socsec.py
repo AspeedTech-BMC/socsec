@@ -1324,7 +1324,7 @@ class SecureBootVerify(object):
         info_struct = {}
         header = otp_image[0:self.otp.HEADER_SIZE]
 
-        (magic_b, soc_ver, _, image_info, data_info, config_info, strap_info,
+        (magic_b, soc_ver, _, image_info, data_info, config_info, strap_info, _,
          checksum_offset) = struct.unpack(self.otp.HEADER_FORMAT, header)
 
         magic = magic_b[0:len(self.otp.MAGIC_WORD_OTP)].decode()
@@ -1339,7 +1339,7 @@ class SecureBootVerify(object):
             otp_info = self.otp.OTP_INFO['A2']
         elif soc_ver == OTP_info.SOC_AST2600A3:
             otp_info = self.otp.OTP_INFO['A3']
-            if image_info & self.otp.INC_ORDER:
+            if image_info & self.otp.HEADER_ORDER:
                 info_struct['rsa_key_order'] = 'big'
             else:
                 info_struct['rsa_key_order'] = 'little'
@@ -1347,7 +1347,7 @@ class SecureBootVerify(object):
             otp_info = self.otp.OTP_INFO['1030A0']
         elif soc_ver == OTP_info.SOC_AST1030A1:
             otp_info = self.otp.OTP_INFO['1030A1']
-            if image_info & self.otp.INC_ORDER:
+            if image_info & self.otp.HEADER_ORDER:
                 info_struct['rsa_key_order'] = 'big'
             else:
                 info_struct['rsa_key_order'] = 'little'
@@ -1367,7 +1367,7 @@ class SecureBootVerify(object):
         conf_offset = config_info & 0xffff
         conf_size = (config_info >> 16) & 0xffff
 
-        if image_info & self.otp.INC_DUMP:
+        if image_info & self.otp.HEADER_DUMP:
             data_region = otp_image[data_offset:data_offset+data_size]
             config_region = otp_image[conf_offset:conf_offset+conf_size]
         else:

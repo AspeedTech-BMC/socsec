@@ -184,7 +184,7 @@ def writeDWHexFile(in_bin: bytearray, dst_path: str):
 class image_header(object):
     def __init__(self, header):
         (self.magic, self.soc_ver, self.otptool_ver, self.image_info, self.data_info,
-         self.config_info, self.strap_info,
+         self.config_info, self.strap_info, self.scu_protect_info,
          self.checksum_offset) = struct.unpack(OTP.otp_info.HEADER_FORMAT, header)
 
 
@@ -332,10 +332,12 @@ class OTP(object):
                 "config_region": {
                 },
                 "otp_strap": {},
+                "scu_protect": {}
             }
         }
         config_schema = {}
         strap_schema = {}
+        scu_protect_schema = {}
 
         with open(otp_info['config'], 'r') as config_info_fd:
             config_info = jstyleson.load(config_info_fd)
@@ -396,13 +398,32 @@ class OTP(object):
                     "otp_protect": {
                         "type": "boolean"
                     },
-                    "reg_protect": {
-                        "type": "boolean"
-                    },
                     "ignore": {
                         "type": "boolean"
                     },
                     "value": val
+                }
+            }
+        
+        for i in strap_info:
+            val = {}
+            if 'scu_mapping' not in i:
+                continue
+
+            scu_protect_schema[i['key']] = {
+                "type": "object",
+                "additionalProperties": False,
+                "required": [
+                    "protect",
+                    "ignore"
+                ],
+                "properties": {
+                    "protect": {
+                        "type": "boolean"
+                    },
+                    "ignore": {
+                        "type": "boolean"
+                    }
                 }
             }
 
@@ -415,6 +436,11 @@ class OTP(object):
             "type": "object",
             "additionalProperties": False,
             "properties": strap_schema
+        }
+        schema['properties']['scu_protect'] = {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": scu_protect_schema
         }
         validate(otp_config, schema)
 
@@ -938,12 +964,10 @@ class OTP(object):
 
     def make_otp_strap(self, otp_strap_config, strap_info, otp_strap_bit_size):
         otp_strap = bitarray(otp_strap_bit_size, endian='little')
-        otp_strap_reg_protect = bitarray(otp_strap_bit_size, endian='little')
         otp_strap_protect = bitarray(otp_strap_bit_size, endian='little')
         otp_strap_ignore = bitarray(otp_strap_bit_size, endian='little')
 
         otp_strap.setall(False)
-        otp_strap_reg_protect.setall(False)
         otp_strap_protect.setall(False)
         otp_strap_ignore.setall(True)
 
@@ -953,7 +977,6 @@ class OTP(object):
                 bit_offset = i['bit_offset']
                 tmp = bitarray(bit_length)
                 tmp.setall(True)
-                otp_strap_reg_protect[bit_offset:bit_offset+bit_length] = tmp
                 otp_strap_protect[bit_offset:bit_offset+bit_length] = tmp
                 tmp.setall(False)
                 otp_strap_ignore[bit_offset:bit_offset+bit_length] = tmp
@@ -992,11 +1015,6 @@ class OTP(object):
             tmp = bitarray(bit_length)
             tmp.setall(False)
             otp_strap_ignore[bit_offset:bit_offset+bit_length] = tmp
-            if 'reg_protect' in otp_strap_config[config]:
-                if otp_strap_config[config]['reg_protect']:
-                    tmp.setall(True)
-                    otp_strap_reg_protect[bit_offset:bit_offset+bit_length] = \
-                        tmp
 
             if 'otp_protect' in otp_strap_config[config]:
                 if otp_strap_config[config]['otp_protect']:
@@ -1010,9 +1028,45 @@ class OTP(object):
                         tmp
 
         return bytearray(otp_strap.tobytes()), \
-            bytearray(otp_strap_reg_protect.tobytes()), \
             bytearray(otp_strap_protect.tobytes()), \
             bytearray(otp_strap_ignore.tobytes())
+
+    def make_scu_protect_image(self, scu_protect_config, strap_info):
+        scu_protect = bitarray(64, endian='little')
+        scu_ignore = bitarray(64, endian='little')
+        scu_protect.setall(False)
+        scu_ignore.setall(True)
+        for config in scu_protect_config:
+            info = None
+            key = config
+
+            for i in strap_info:
+                if key == i['key']:
+                    info = i
+                    break
+            sm = info['scu_mapping']
+            if sm['scu'] == '500':
+                bit_offset = sm['bit_offset']
+            else:
+                bit_offset = sm['bit_offset'] + 32
+            if 'bit_length' in info:
+                bit_length = info['bit_length']
+            else:
+                bit_length = 1
+            
+            tmp = bitarray(bit_length)
+            tmp.setall(False)
+            scu_ignore[bit_offset:bit_offset+bit_length] = tmp
+            if scu_protect_config[key]['protect']:
+                tmp.setall(True)
+                scu_protect[bit_offset:bit_offset+bit_length] = tmp
+
+            if scu_protect_config[key]['ignore']:
+                tmp.setall(True)
+                scu_ignore[bit_offset:bit_offset+bit_length] = tmp
+
+        return bytearray(scu_protect.tobytes()), \
+            bytearray(scu_ignore.tobytes())
 
     def make_otp_image(self, config_file, key_folder,
                        user_data_folder, output_folder):
@@ -1071,6 +1125,8 @@ class OTP(object):
         config_binary_output = output_folder + 'otp-conf.bin'
         strap_image_output = output_folder + 'otp-strap.image'
         strap_binary_output = output_folder + 'otp-strap.bin'
+        scu_protect_image_output = output_folder + 'otp-scu_protect.image'
+        scu_protect_binary_output = output_folder + 'otp-scu_protect.bin'
 
         data_region = bytearray()
         data_region_ignore = bytearray()
@@ -1079,15 +1135,18 @@ class OTP(object):
         config_region_ignore = bytearray()
         config_all = bytearray()
         otp_strap = bytearray()
-        otp_strap_reg_protect = bytearray()
         otp_strap_protect = bytearray()
         otp_strap_ignore = bytearray()
         otp_strap_all = bytearray()
+        scu_protect = bytearray()
+        scu_ignore = bytearray()
+        scu_protect_all = bytearray()
 
         image_info_all = 0
         data_size = 0
         config_size = 0
         strap_size = 0
+        scu_protect_size = 0
 
         if 'data_region' in otp_config:
             print("Generating Data Image ...")
@@ -1108,11 +1167,11 @@ class OTP(object):
             image_info = image_size | self.otp_info.INC_DATA
             image_info_all = image_info_all | self.otp_info.INC_DATA
             if rsa_key_order == 'big':
-                image_info = image_info | self.otp_info.INC_ORDER
-                image_info_all = image_info_all | self.otp_info.INC_ORDER
+                image_info = image_info | self.otp_info.HEADER_ORDER
+                image_info_all = image_info_all | self.otp_info.HEADER_ORDER
             if ecc_region:
-                image_info = image_info | self.otp_info.INC_ECC
-                image_info_all = image_info_all | self.otp_info.INC_ECC
+                image_info = image_info | self.otp_info.HEADER_ECC
+                image_info_all = image_info_all | self.otp_info.HEADER_ECC
             data_offset = self.otp_info.HEADER_SIZE
             data_info = data_offset | (data_size << 16)
             checksum_offset = data_offset + data_size
@@ -1123,6 +1182,7 @@ class OTP(object):
                 version2int(__version__),
                 image_info,
                 data_info,
+                0,
                 0,
                 0,
                 checksum_offset
@@ -1153,7 +1213,7 @@ class OTP(object):
             image_info = image_size | self.otp_info.INC_CONF
             image_info_all = image_info_all | self.otp_info.INC_CONF
             config_offset = self.otp_info.HEADER_SIZE
-            config_info = config_offset | (config_size << 16)
+            config_header = config_offset | (config_size << 16)
             checksum_offset = config_offset + config_size
             header = struct.pack(
                 self.otp_info.HEADER_FORMAT,
@@ -1162,7 +1222,8 @@ class OTP(object):
                 version2int(__version__),
                 image_info,
                 0,
-                config_info,
+                config_header,
+                0,
                 0,
                 checksum_offset
             )
@@ -1180,18 +1241,17 @@ class OTP(object):
             with open(otp_info['strap'], 'r') as strap_info_fd:
                 strap_info = jstyleson.load(strap_info_fd)
 
-            otp_strap, otp_strap_reg_protect, \
-                otp_strap_protect, otp_strap_ignore = self.make_otp_strap(
-                    otp_config['otp_strap'], strap_info,
-                    otp_info['otp_strap_bit_size'])
+            otp_strap, otp_strap_protect, otp_strap_ignore = self.make_otp_strap(
+                otp_config['otp_strap'], strap_info,
+                otp_info['otp_strap_bit_size'])
 
-            strap_size = len(otp_strap) + len(otp_strap_reg_protect) + \
-                len(otp_strap_protect) + len(otp_strap_ignore)
+            strap_size = len(otp_strap) + len(otp_strap_protect) + \
+                len(otp_strap_ignore)
             image_size = self.otp_info.HEADER_SIZE + strap_size
             image_info = image_size | self.otp_info.INC_STRAP
             image_info_all = image_info_all | self.otp_info.INC_STRAP
             strap_offset = self.otp_info.HEADER_SIZE
-            strap_info = strap_offset | (strap_size << 16)
+            strap_header = strap_offset | (strap_size << 16)
             checksum_offset = strap_offset + strap_size
             header = struct.pack(
                 self.otp_info.HEADER_FORMAT,
@@ -1201,18 +1261,55 @@ class OTP(object):
                 image_info,
                 0,
                 0,
-                strap_info,
+                strap_header,
+                0,
                 checksum_offset
             )
 
-            otp_strap_all = otp_strap + otp_strap_reg_protect + \
-                otp_strap_protect + otp_strap_ignore
+            otp_strap_all = otp_strap + otp_strap_protect + otp_strap_ignore
 
             sha = SHA256.new(header+otp_strap_all)
             checksum = sha.digest()
 
             writeBinFile(header+otp_strap_all+checksum, strap_image_output)
             writeBinFile(otp_strap, strap_binary_output)
+
+        if 'scu_protect' in otp_config:
+            print("Generating SCU Protect ...")
+            with open(otp_info['strap'], 'r') as strap_info_fd:
+                strap_info = jstyleson.load(strap_info_fd)
+            scu_protect, scu_ignore = self.make_scu_protect_image(
+                otp_config['scu_protect'], strap_info)
+
+            scu_protect_size = len(scu_protect) + len(scu_ignore)
+            image_size = self.otp_info.HEADER_SIZE + scu_protect_size
+            image_info = image_size | self.otp_info.INC_SCU_PROTECT
+            image_info_all = image_info_all | self.otp_info.INC_SCU_PROTECT
+
+            scu_protect_offset = self.otp_info.HEADER_SIZE
+            scu_protect_header = scu_protect_offset | (strap_size << 16)
+            checksum_offset = scu_protect_offset + strap_size
+            header = struct.pack(
+                self.otp_info.HEADER_FORMAT,
+                self.otp_info.MAGIC_WORD_OTP.encode(),
+                version,
+                version2int(__version__),
+                image_info,
+                0,
+                0,
+                0,
+                scu_protect_header,
+                checksum_offset
+            )
+
+            scu_protect_all = scu_protect + scu_ignore
+
+            sha = SHA256.new(header+scu_protect_all)
+            checksum = sha.digest()
+
+            writeBinFile(header+scu_protect_all+checksum,
+                         scu_protect_image_output)
+            writeBinFile(scu_protect, scu_protect_binary_output)
 
         print("Generating OTP-all Image ...")
         image_size_all = self.otp_info.HEADER_SIZE + \
@@ -1221,10 +1318,12 @@ class OTP(object):
         data_offset = self.otp_info.HEADER_SIZE
         config_offset = data_offset + data_size
         strap_offset = config_offset + config_size
-        checksum_offset = strap_offset + strap_size
-        data_info = data_offset | (data_size << 16)
-        config_info = config_offset | (config_size << 16)
-        strap_info = strap_offset | (strap_size << 16)
+        scu_protect_offset = strap_offset + strap_size
+        checksum_offset = scu_protect_offset + scu_protect_size
+        data_header = data_offset | (data_size << 16)
+        config_header = config_offset | (config_size << 16)
+        strap_header = strap_offset | (strap_size << 16)
+        scu_protect_header = scu_protect_offset | (scu_protect_size << 16)
 
         header = struct.pack(
             self.otp_info.HEADER_FORMAT,
@@ -1232,9 +1331,10 @@ class OTP(object):
             version,
             version2int(__version__),
             image_info_all,
-            data_info,
-            config_info,
-            strap_info,
+            data_header,
+            config_header,
+            strap_header,
+            scu_protect_header,
             checksum_offset
         )
 
@@ -1242,8 +1342,9 @@ class OTP(object):
                          otp_strap_all)
         checksum = sha.digest()
 
-        writeBinFile(header+data_all+config_all +
-                     otp_strap_all+checksum, all_image_output)
+        writeBinFile(header + data_all + config_all +
+                     otp_strap_all + scu_protect_all +
+                     checksum, all_image_output)
 
     def otp_print_image_data(self, key_type_list, data_region, config_region):
         key_header = []
@@ -1798,7 +1899,7 @@ class OTP(object):
 
         self.check_image(otp_image)
 
-        if header.image_info & self.otp_info.INC_DUMP:
+        if header.image_info & self.otp_info.HEADER_DUMP:
             self._print_dump_image(otp_image)
         else:
             self._print_otp_image(otp_image)

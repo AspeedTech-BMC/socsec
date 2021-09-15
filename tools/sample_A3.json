@@ -164,7 +164,6 @@
             // true : Enable Secure Boot
             "value": false,
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[1]
@@ -173,7 +172,6 @@
             // true : Enable boot from eMMC
             "value": false,
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[2]
@@ -182,7 +180,6 @@
             // true : Enable Boot from debug SPI
             "value": false,
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[3]
@@ -191,7 +188,6 @@
             // true : Disable ARM CM3
             "value": false,
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[4]
@@ -200,7 +196,6 @@
             // true : Enable dedicated VGA BIOS ROM
             "value": false,
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[5]
@@ -209,7 +204,6 @@
             // 1: RGMII
             "value": "RMII/NCSI",
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[6]
@@ -218,7 +212,6 @@
             // 1: RGMII
             "value": "RMII/NCSI",
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[9:7]
@@ -228,7 +221,6 @@
             // 4: 800MHz
             "value": "1.2GHz",
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[11:10]
@@ -239,7 +231,6 @@
             // 3: 4:1
             "value": "default",
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[13:12]
@@ -250,7 +241,6 @@
             // 3: 64MB
             "value": "8MB",
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[15]
@@ -259,7 +249,6 @@
             // 1: 1:1
             "value": "2:1",
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[16]
@@ -268,7 +257,6 @@
             // true : Disable ARM JTAG debug
             "value": false,
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[17]
@@ -277,7 +265,6 @@
             // 1: video_device
             "value": "vga_device",
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[18]
@@ -286,7 +273,6 @@
             // true : Disable debug interfaces 0
             "value": false,
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[19]
@@ -295,7 +281,6 @@
             // 1: high
             "value": "normal",
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[20]
@@ -304,7 +289,6 @@
             // true : Enable Pcie EHCI device
             "value": false,
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[21]
@@ -313,7 +297,6 @@
             // true : Disable ARM JTAG trust world debug
             "value": false,
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[22]
@@ -322,7 +305,6 @@
             // true : Disable dedicated BMC functions for non-BMC application
             "value": false,
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[23]
@@ -331,7 +313,6 @@
             // true : SSPRST# pin is for PCIE root complex dedicated reset pin
             "value": false,
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[24]
@@ -340,7 +321,6 @@
             // true : Disable watchdog to reset full chip
             "value": false,
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[26:25]
@@ -351,7 +331,6 @@
             // 3: 1/8x
             "value": "1x",
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[28:27]
@@ -361,7 +340,6 @@
             // 2: GPIO18B6
             "value": "GPIOY3",
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[29]
@@ -370,7 +348,6 @@
             // true : Disable RVAS function
             "value": false,
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[32]
@@ -379,7 +356,6 @@
             // 1: RGMII
             "value": "RMII/NCSI",
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[33]
@@ -388,7 +364,6 @@
             // 1: RGMII
             "value": "RMII/NCSI",
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[34]
@@ -397,7 +372,6 @@
             // 1: 0x4e
             "value": "0x2e",
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[35]
@@ -406,7 +380,6 @@
             // true : Disable LPC to decode SuperIO
             "value": false,
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[36]
@@ -415,7 +388,6 @@
             // true : Disable debug interfaces 1
             "value": false,
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[37]
@@ -424,7 +396,6 @@
             // true : Enable ACPI function
             "value": false,
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[38]
@@ -433,7 +404,6 @@
             // 1: LPC
             "value": "eSPI",
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[39]
@@ -442,7 +412,6 @@
             // true : Enable SAFS mode
             "value": false,
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[40]
@@ -451,7 +420,6 @@
             // true : Enable boot from uart5
             "value": false,
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[41]
@@ -460,7 +428,6 @@
             // true : Enable boot SPI 3B address mode auto-clear
             "value": false,
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[42]
@@ -469,7 +436,6 @@
             // true : Enable boot SPI 3B/4B address mode auto detection
             "value": false,
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[43]
@@ -478,7 +444,6 @@
             // true : Enable boot SPI or eMMC ABR
             "value": false,
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[44]
@@ -487,7 +452,6 @@
             // 1: single
             "value": "dual",
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[47:45]
@@ -502,7 +466,6 @@
             // 7: 128
             "value": "0",
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[48]
@@ -511,7 +474,6 @@
             // true : Enable host SPI ABR
             "value": false,
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[49]
@@ -520,7 +482,6 @@
             // true : Enable host SPI ABR mode select pin
             "value": false,
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[50]
@@ -529,7 +490,6 @@
             // 1: single
             "value": "dual",
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[53:51]
@@ -544,7 +504,6 @@
             // 7: 128
             "value": "0",
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[54]
@@ -553,7 +512,6 @@
             // true : Enable boot SPI auxiliary control pins
             "value": false,
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[56:55]
@@ -564,7 +522,6 @@
             // 3: 1024
             "value": "0",
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[58:57]
@@ -575,7 +532,6 @@
             // 3: 4096
             "value": "0",
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[59]
@@ -584,7 +540,6 @@
             // true : Enable host SPI auxiliary control pins
             "value": false,
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[60]
@@ -593,7 +548,6 @@
             // true : Enable GPIO pass through
             "value": false,
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
         },
         // OTPSTRAP[62]
@@ -602,8 +556,269 @@
             // true : Enable dedicate GPIO strap pins
             "value": false,
             "otp_protect": false,
-            "reg_protect": false,
             "ignore": true
+        }
+    },
+    "scu_protect": {
+        // SCU500[0]
+        "Disable ARM CA7 CPU boot (TXD5)": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU500[1]
+        "Reserved0": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU500[2]
+        "Enable boot from eMMC": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU500[3]
+        "Boot from debug SPI": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU500[4]
+        "Disable ARM CM3": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU500[5]
+        "Enable dedicated VGA BIOS ROM": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU500[6]
+        "MAC 1 RMII mode": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU500[7]
+        "MAC 2 RMII mode": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU500[10:8]
+        "CPU frequency": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU500[12:11]
+        "HCLK ratio": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU500[14:13]
+        "VGA memory size": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU500[15]
+        "OTPSTRAP[14] Reserved": {
+            "protect": true,
+            "ignore": false
+        },
+        // SCU500[16]
+        "CPU/AXI clock ratio": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU500[17]
+        "Disable ARM JTAG debug": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU500[18]
+        "VGA class code": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU500[19]
+        "Disable debug 0": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU500[20]
+        "Boot from eMMC speed mode": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU500[21]
+        "Enable PCIe EHCI": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU500[22]
+        "Disable ARM JTAG trust world debug": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU500[23]
+        "Disable dedicated BMC function": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU500[24]
+        "Enable dedicate PCIe RC reset": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU500[25]
+        "Disable watchdog to reset full chip": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU500[27:26]
+        "Internal bridge speed selection": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU500[29:28]
+        "Select Reset Source of eMMC part": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU500[30]
+        "Disable RVAS function": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU500[31]
+        "Enable boot SPI auxiliary control pins(mirror)": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU510[0]
+        "MAC 3 RMII mode": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU510[1]
+        "MAC 4 RMII mode": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU510[2]
+        "SuperIO configuration address selection": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU510[3]
+        "Disable LPC to decode SuperIO": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU510[4]
+        "Disable debug 1": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU510[5]
+        "Enable ACPI": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU510[6]
+        "Select LPC/eSPI": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU510[7]
+        "Enable SAFS": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU510[8]
+        "Enable boot from uart5": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU510[9]
+        "Enable boot SPI 3B address mode auto-clear": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU510[10]
+        "Enable SPI 3B/4B address mode auto detection": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU510[11]
+        "Enable boot SPI or eMMC ABR": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU510[12]
+        "Boot SPI ABR Mode": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU510[15:13]
+        "Boot SPI flash size": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU510[16]
+        "Enable host SPI ABR": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU510[17]
+        "Enable host SPI ABR mode select pin": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU510[18]
+        "Host SPI ABR Mode": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU510[21:19]
+        "Host SPI flash size": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU510[22]
+        "Enable boot SPI auxiliary control pins": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU510[24:23]
+        "Boot SPI CRTM size": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU510[26:25]
+        "Host SPI CRTM size": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU510[27]
+        "Enable host SPI auxiliary control pins": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU510[28]
+        "Enable GPIO Pass Through": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU510[29]
+        "OTPSTRAP[3D] Reserved": {
+            "protect": true,
+            "ignore": false
+        },
+        // SCU510[30]
+        "Enable Dedicate GPIO Strap Pins": {
+            "protect": false,
+            "ignore": true
+        },
+        // SCU510[31]
+        "OTPSTRAP[3F] Reserved": {
+            "protect": true,
+            "ignore": false
         }
     }
 }
