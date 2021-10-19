@@ -1843,12 +1843,7 @@ class SecureBootVerify(object):
 
         return dec_image
 
-    # def verify_cot_image(self, sec_image, header_offset):
-    #     rot_cot_header = sec_image[header_offset:header_offset+0x8]
-    #     (cot_info, data_offset) = struct.unpack(
-    #         self.sec.COT_INFO_FORMAT, rot_cot_header)
-
-    def verify_secure_image(self, sec_image_fd, output_fd, otp_image_fd, cot_offset):
+    def verify_secure_image(self, sec_image_fd, output_fd, otp_image_fd):
         otp_image = otp_image_fd.read()
         sec_image = sec_image_fd.read()
         info_struct, data_region, config_region = self.parse_otp(otp_image)
@@ -1882,11 +1877,6 @@ class SecureBootVerify(object):
             output_fd.write(bytes(dec_image + sec_image[sign_image_size:]))
             output_fd.flush()
             output_fd.close()
-
-        if cot_offset == None:
-            return
-
-        # offset_list = cot_offset.split(':')
 
 
 class secTool(object):
@@ -2072,7 +2062,7 @@ class secTool(object):
                                 metavar='IMAGE',
                                 required=True)
         sub_parser.add_argument('--output',
-                                help='Output non-secure image',
+                                help='Output decrypted image',
                                 type=argparse.FileType('w+b'),
                                 metavar='IMAGE',
                                 required=False)
@@ -2081,11 +2071,6 @@ class secTool(object):
                                 type=argparse.FileType('rb'),
                                 metavar='IMAGE',
                                 required=True)
-        sub_parser.add_argument('--cot_offset',
-                                help='Offset for every image, e.g. 0x10000:0x100000',
-                                metavar='IMAGE',
-                                default=None,
-                                required=False)
         sub_parser.set_defaults(func=self.verify_secure_image)
 
         sub_parser = subparsers.add_parser('version',
@@ -2137,8 +2122,7 @@ class secTool(object):
         """Implements the 'verify' sub-command."""
         self.verify.verify_secure_image(args.sec_image,
                                         args.output,
-                                        args.otp_image,
-                                        args.cot_offset)
+                                        args.otp_image)
 
     def print_version(self, args):
         print(__version__)
