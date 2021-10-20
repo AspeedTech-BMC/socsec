@@ -802,6 +802,8 @@ class OTP(object):
             key_header.append(genKeyHeader(conf, key_folder))
         if not no_last_bit:
             key_header[-1] |= 1 << 13
+        if len(key_config) % 2 != 0 and ecc_region_enable:
+            print("WARNING: ECC region is enable, but the key number is not 8 byte align")
         header_byteArray = bytearray(array.array('I', key_header).tobytes())
         insert_bytearray(header_byteArray, data_region, 0)
 
