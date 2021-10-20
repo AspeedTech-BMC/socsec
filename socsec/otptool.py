@@ -404,7 +404,7 @@ class OTP(object):
                     "value": val
                 }
             }
-        
+
         for i in strap_info:
             val = {}
             if 'scu_mapping' not in i:
@@ -794,12 +794,14 @@ class OTP(object):
                              offset, ecc_region_enable, data_region_size, ecc_region_offset)
 
     def genKeyRegion(self, key_config, key_folder, data_region, data_region_ignore,
-                     genKeyHeader, key_to_bytearray, ecc_region_enable, data_region_size, ecc_region_offset):
+                     genKeyHeader, key_to_bytearray, ecc_region_enable, data_region_size,
+                     ecc_region_offset, no_last_bit):
 
         key_header = []
         for conf in key_config:
             key_header.append(genKeyHeader(conf, key_folder))
-        key_header[-1] |= 1 << 13
+        if not no_last_bit:
+            key_header[-1] |= 1 << 13
         header_byteArray = bytearray(array.array('I', key_header).tobytes())
         insert_bytearray(header_byteArray, data_region, 0)
 
@@ -813,7 +815,8 @@ class OTP(object):
             self.genDataMask(data_region_ignore, key_bin,
                              offset, ecc_region_enable, data_region_size, ecc_region_offset)
 
-    def make_data_region(self, data_config, key_folder, user_data_folder, genKeyHeader, key_to_bytearray, data_region_size, ecc_region_offset):
+    def make_data_region(self, data_config, key_folder, user_data_folder, genKeyHeader,
+                         key_to_bytearray, data_region_size, ecc_region_offset, no_last_bit):
         patch_reserved_offset = 0x1B80
         patch_reserved_lne = 0x80
 
@@ -830,7 +833,8 @@ class OTP(object):
         if 'key' in data_config:
             self.genKeyRegion(data_config['key'], key_folder,
                               data_region, data_region_ignore,
-                              genKeyHeader, key_to_bytearray, ecc_region_enable, data_region_size, ecc_region_offset)
+                              genKeyHeader, key_to_bytearray, ecc_region_enable,
+                              data_region_size, ecc_region_offset, no_last_bit)
         if 'user_data' in data_config:
             self.genUserRegion(
                 data_config['user_data'], user_data_folder, data_region, data_region_ignore, ecc_region_enable, data_region_size, ecc_region_offset)
@@ -1053,7 +1057,7 @@ class OTP(object):
                 bit_length = info['bit_length']
             else:
                 bit_length = 1
-            
+
             tmp = bitarray(bit_length)
             tmp.setall(False)
             scu_ignore[bit_offset:bit_offset+bit_length] = tmp
@@ -1069,7 +1073,7 @@ class OTP(object):
             bytearray(scu_ignore.tobytes())
 
     def make_otp_image(self, config_file, key_folder,
-                       user_data_folder, output_folder):
+                       user_data_folder, output_folder, no_last_bit=False):
         otp_config = jstyleson.load(config_file)
 
         if otp_config['version'] == 'A0':
@@ -1154,7 +1158,7 @@ class OTP(object):
                 otp_config['data_region'], key_folder,
                 user_data_folder, genKeyHeader,
                 key_to_bytearray, otp_info['data_region_size'],
-                otp_info['ecc_region_offset'])
+                otp_info['ecc_region_offset'], no_last_bit)
 
             ecc_region = otp_config['data_region']['ecc_region']
             if 'rsa_key_order' in otp_config['data_region']:
@@ -1941,6 +1945,10 @@ class otpTool(object):
                                 help='output folder',
                                 type=parse_path,
                                 default='')
+        sub_parser.add_argument('--no_last_bit',
+                                help='(develop)remove last bit in OTP header',
+                                action='store_true',
+                                required=False)
         sub_parser.set_defaults(func=self.make_otp_image)
 
         sub_parser = subparsers.add_parser('print',
@@ -1966,7 +1974,8 @@ class otpTool(object):
         self.otp.make_otp_image(args.config,
                                 args.key_folder,
                                 args.user_data_folder,
-                                args.output_folder)
+                                args.output_folder,
+                                args.no_last_bit)
 
     def print_otp_image(self, args):
         self.otp.print_otp_image(args.otp_image)
