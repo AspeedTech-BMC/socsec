@@ -299,9 +299,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "enum": [
                                 "dual",
@@ -322,9 +319,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -349,9 +343,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -382,9 +373,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -401,9 +389,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -426,9 +411,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -459,9 +441,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "enum": [
                                 "2:1",
@@ -484,9 +463,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -503,9 +479,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -526,9 +499,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -545,9 +515,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -568,9 +535,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -587,9 +551,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -610,9 +571,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -629,9 +587,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -652,9 +607,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -671,9 +623,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -694,9 +643,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -713,9 +659,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -736,9 +679,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -755,9 +695,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -778,9 +715,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -797,9 +731,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -820,9 +751,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -839,9 +767,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -862,9 +787,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -881,9 +803,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -904,9 +823,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -923,9 +839,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -946,9 +859,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -965,9 +875,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -988,9 +895,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -1009,9 +913,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -1028,9 +929,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -1057,9 +955,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "enum": [
                                 "dual",
@@ -1080,9 +975,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -1107,9 +999,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -1140,9 +1029,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "enum": [
                                 "1x",
@@ -1167,9 +1053,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "enum": [
                                 "RMII/NCSI",
@@ -1190,9 +1073,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -1217,9 +1097,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "enum": [
                                 "RMII/NCSI",
@@ -1240,9 +1117,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -1267,9 +1141,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "enum": [
                                 "eSPI",
@@ -1290,9 +1161,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -1319,9 +1187,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "enum": [
                                 "0x2e",
@@ -1344,9 +1209,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "enum": [
                                 "vga_device",
@@ -1367,9 +1229,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {

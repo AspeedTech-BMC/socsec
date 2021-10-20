@@ -246,9 +246,6 @@ def OTPValidate():
                 "otp_protect": {
                     "type": "boolean"
                 },
-                "reg_protect": {
-                    "type": "boolean"
-                },
                 "ignore": {
                     "type": "boolean"
                 },

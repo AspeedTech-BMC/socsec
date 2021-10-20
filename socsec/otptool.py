@@ -194,7 +194,6 @@ class strap_sts(object):
         self.option_array = [0] * 7
         self.remain_times = 0
         self.writeable_option = -1
-        self.reg_protected = 0
         self.protected = 0
 
 
@@ -1584,21 +1583,18 @@ class OTP(object):
             self.otp_print_revid(rid)
             print()
 
-    def otp_print_image_strap(self, soc_ver, strap_info, strap, strap_pro, strap_reg_pro, strap_ignore):
+    def otp_print_image_strap(self, strap_info, strap, strap_pro, strap_ignore):
         OTPSTRAP = struct.unpack('<Q', strap)[0]
         OTPSTRAP_PRO = struct.unpack('<Q', strap_pro)[0]
         OTPSTRAP_IGNORE = struct.unpack('<Q', strap_ignore)[0]
-        if soc_ver != OTP_info.SOC_AST2600A0:
-            OTPSTRAP_REG_PRO = struct.unpack('<Q', strap_reg_pro)[0]
 
-        if soc_ver == OTP_info.SOC_AST2600A0:
-            print("BIT(hex)   Value       Protect     Description")
-        else:
-            print("BIT(hex)   Value       Reg_Protect Protect     Description")
+        print("BIT(hex)   Value       Protect     Description")
         print("__________________________________________________________________________________________")
 
         for si in strap_info:
             info_type = si['type']
+            if info_type == 'reg_protect':
+                continue
             if info_type == 'boolean':
                 bit_length = 1
             else:
@@ -1610,11 +1606,6 @@ class OTP(object):
             otp_value = (OTPSTRAP >> bit_offset) & mask
             otp_protect = (OTPSTRAP_PRO >> bit_offset) & mask
             otp_ignore = (OTPSTRAP_IGNORE >> bit_offset) & mask
-
-            if soc_ver != OTP_info.SOC_AST2600A0:
-                otp_reg_protect = (OTPSTRAP_REG_PRO >> bit_offset) & mask
-            else:
-                otp_reg_protect = 0
 
             if otp_ignore == mask:
                 continue
@@ -1641,8 +1632,6 @@ class OTP(object):
                     print('0x{:<2X}:0x{:<4X}'.format(
                         bit_offset + bit_length - 1, bit_offset), end='')
                 print('0x{:<10X}'.format(otp_value), end='')
-                if soc_ver != OTP_info.SOC_AST2600A0:
-                    print('0x{:<10X}'.format(otp_reg_protect), end='')
                 print('0x{:<10X}'.format(otp_protect), end='')
                 print('{}'.format(info))
 
@@ -1664,7 +1653,6 @@ class OTP(object):
                 otpstrap.value = 0
                 otpstrap.remain_times = 6
                 otpstrap.writeable_option = -1
-                otpstrap.reg_protected = 0
                 otpstrap.protected = 0
                 ret.append(otpstrap)
             strap_end = 12
@@ -1689,14 +1677,6 @@ class OTP(object):
                 ret[j].value = ret[j].value ^ bit_value
                 ret[j].option_array[option] = bit_value
 
-        if soc_ver != OTP_info.SOC_AST2600A0:
-            for j in range(32):
-                if ((strap_dw[12] >> j) & 0x1) == 1:
-                    ret[j].reg_protected = 1
-            for j in range(32, 64):
-                if ((strap_dw[13] >> (j - 32)) & 0x1) == 1:
-                    ret[j].reg_protected = 1
-
         for j in range(32):
             if ((strap_dw[14] >> j) & 0x1) == 1:
                 ret[j].protected = 1
@@ -1708,12 +1688,8 @@ class OTP(object):
     def otp_print_strap_info(self, soc_ver, strap_info, strap_dw):
         strap_status = self.otp_strap_status(soc_ver, strap_dw)
 
-        if soc_ver == OTP_info.SOC_AST2600A0:
-            print("BIT(hex) Value  Remains  Protect   Description")
-        else:
-            print("BIT(hex) Value  Remains  Reg_Protect Protect   Description")
-            print(
-                "___________________________________________________________________________________________________")
+        print("BIT(hex) Value  Remains  Protect   Description")
+        print("___________________________________________________________________________________________________")
 
         for si in strap_info:
             otp_value = 0
@@ -1750,9 +1726,6 @@ class OTP(object):
                     '0x{:<5X}'.format(strap_status[bit_offset + j].value), end='')
                 print(
                     '{:<9}'.format(strap_status[bit_offset + j].remain_times), end='')
-                if soc_ver != OTP_info.SOC_AST2600A0:
-                    print(
-                        '0x{:<10X}'.format(strap_status[bit_offset + j].reg_protected), end='')
                 print(
                     '0x{:<7X}'.format(strap_status[bit_offset + j].protected), end='')
                 if length == 1:
@@ -1837,16 +1810,9 @@ class OTP(object):
         config_region = otp_image[conf_offset:conf_offset+64]
         config_region_ignore = otp_image[conf_offset+64:conf_offset+64*2]
         strap_offset = header.strap_info & 0xffff
-        if header.soc_ver == OTP_info.SOC_AST2600A0:
-            strap_region = otp_image[strap_offset:strap_offset+8]
-            strap_region_reg_pro = None
-            strap_region_pro = otp_image[strap_offset+8:strap_offset+16]
-            strap_region_ignore = otp_image[strap_offset+16:strap_offset+24]
-        else:
-            strap_region = otp_image[strap_offset:strap_offset+8]
-            strap_region_reg_pro = otp_image[strap_offset+8:strap_offset+16]
-            strap_region_pro = otp_image[strap_offset+16:strap_offset+24]
-            strap_region_ignore = otp_image[strap_offset+24:strap_offset+32]
+        strap_region = otp_image[strap_offset:strap_offset+8]
+        strap_region_pro = otp_image[strap_offset+8:strap_offset+16]
+        strap_region_ignore = otp_image[strap_offset+16:strap_offset+24]
 
         if header.image_info & self.otp_info.INC_DATA:
             print('OTP data region :')
@@ -1861,7 +1827,7 @@ class OTP(object):
         if header.image_info & self.otp_info.INC_STRAP:
             print('OTP strap :')
             self.otp_print_image_strap(
-                header.soc_ver, strap_info, strap_region, strap_region_pro, strap_region_reg_pro, strap_region_ignore)
+                strap_info, strap_region, strap_region_pro, strap_region_ignore)
 
     def _print_dump_image(self, otp_image):
         header = image_header(otp_image[0:self.otp_info.HEADER_SIZE])
