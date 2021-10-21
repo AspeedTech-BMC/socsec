@@ -1132,6 +1132,78 @@
                     ],
                     "type": "object"
                 },
+                "OTPSTRAP[14] Reserved": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "OTPSTRAP[1E-1D] Reserved": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "OTPSTRAP[3D] Reserved": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
+                "OTPSTRAP[3F] Reserved": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "otp_protect": {
+                            "type": "boolean"
+                        },
+                        "value": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "value"
+                    ],
+                    "type": "object"
+                },
                 "Select LPC/eSPI": {
                     "additionalProperties": false,
                     "properties": {

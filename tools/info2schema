@@ -233,6 +233,10 @@ def OTPValidate():
             }
             for j in i['value']:
                 val['enum'].append(j['value'])
+        elif i['type'] == 'reserved':
+            val = {
+                'type': 'boolean'
+            }
         else:
             continue
 
