@@ -1635,6 +1635,47 @@ class OTP(object):
                 print('0x{:<10X}'.format(otp_protect), end='')
                 print('{}'.format(info))
 
+    def otp_print_image_scu(self, strap_info, scu_pro, scu_ignore):
+        OTPSCU_PRO = struct.unpack('<Q', scu_pro)[0]
+        OTPSCU_IGNORE = struct.unpack('<Q', scu_ignore)[0]
+
+        print('SCU     BIT          reg_protect     Description')
+        print('____________________________________________________________________')
+        for si in strap_info:
+            if 'scu_mapping' not in si:
+                continue
+            sm = si['scu_mapping']
+            if sm['scu'] == '500':
+                scu_offset = 0x500
+                bit_offset = sm['bit_offset']
+            else:
+                scu_offset = 0x510
+                bit_offset = sm['bit_offset'] + 32
+            if 'bit_length' in si:
+                bit_length = si['bit_length']
+            else:
+                bit_length = 1
+
+            mask = BIT(bit_length) - 1
+            scu_protect = (OTPSCU_PRO >> bit_offset) & mask
+            scu_ignore = (OTPSCU_IGNORE >> bit_offset) & mask
+
+            if scu_ignore == mask:
+                continue
+            elif scu_ignore != 0:
+                return False
+            if scu_protect != 0 and scu_protect != mask:
+                return False
+
+            print('0x{:<6X}'.format(scu_offset), end='')
+            if bit_length == 1:
+                print('0x{:<11X}'.format(sm['bit_offset']), end='')
+            else:
+                print('0x{:<2X}:0x{:<6X}'.format(
+                    sm['bit_offset'], sm['bit_offset'] + bit_length), end='')
+            print('0x{:<14X}'.format(scu_protect), end='')
+            print('{}'.format(si['key']))
+
     def otp_strap_status(self, soc_ver, strap_dw):
         ret = []
 
@@ -1813,6 +1854,9 @@ class OTP(object):
         strap_region = otp_image[strap_offset:strap_offset+8]
         strap_region_pro = otp_image[strap_offset+8:strap_offset+16]
         strap_region_ignore = otp_image[strap_offset+16:strap_offset+24]
+        scu_offset = header.scu_protect_info & 0xffff
+        scu_pro = otp_image[scu_offset:scu_offset+8]
+        scu_ignore = otp_image[scu_offset+8:scu_offset+16]
 
         if header.image_info & self.otp_info.INC_DATA:
             print('OTP data region :')
@@ -1828,6 +1872,10 @@ class OTP(object):
             print('OTP strap :')
             self.otp_print_image_strap(
                 strap_info, strap_region, strap_region_pro, strap_region_ignore)
+
+        if header.image_info & self.otp_info.INC_SCU_PROTECT:
+            print('OTP scu protect :')
+            self.otp_print_image_scu(strap_info, scu_pro, scu_ignore)
 
     def _print_dump_image(self, otp_image):
         header = image_header(otp_image[0:self.otp_info.HEADER_SIZE])
