@@ -100,7 +100,7 @@ def conf2sample(config):
 def strap2sample(config):
     ret = []
     for i in config:
-        if 'info' not in i:
+        if 'info' not in i and i['type'] != 'reserved':
             continue
         bit_offset = i['bit_offset']
         if i['type'] == 'boolean':
@@ -109,6 +109,9 @@ def strap2sample(config):
             ret.append('            // false: {}\n'.format(i['info'][0]))
             ret.append('            // true : {}\n'.format(i['info'][1]))
             ret.append('            "value": false,\n')
+            ret.append('            "otp_protect": false,\n')
+            ret.append('            "ignore": true\n')
+            ret.append('        },\n')
         elif i['type'] == 'string':
             length = i['bit_length']
             if length == 1:
@@ -128,9 +131,22 @@ def strap2sample(config):
 
             ret.append('            "value": "{}",\n'.format(
                 i['value'][0]['value']))
-        ret.append('            "otp_protect": false,\n')
-        ret.append('            "ignore": true\n')
-        ret.append('        },\n')
+            ret.append('            "otp_protect": false,\n')
+            ret.append('            "ignore": true\n')
+            ret.append('        },\n')
+        elif i['type'] == 'reserved':
+            length = i['bit_length']
+            if length == 1:
+                ret.append(
+                    '        // OTPSTRAP[{}]\n'.format(bit_offset))
+            else:
+                ret.append(
+                    '        // OTPSTRAP[{}:{}]\n'.format(bit_offset+length-1, bit_offset))
+            ret.append('        "{}": {{\n'.format(i['key']))
+            ret.append('            "value": false,\n')
+            ret.append('            "otp_protect": true,\n')
+            ret.append('            "ignore": false\n')
+            ret.append('        },\n')
     if ret.__len__() == 0:
         return ''
     ret[-1] = ret[-1][:-2] + '\n'
