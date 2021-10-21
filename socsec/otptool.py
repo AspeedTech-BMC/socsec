@@ -1016,6 +1016,14 @@ class OTP(object):
                 bit_value = bitarray(bin(bit)[2:][::-1])
                 otp_strap[bit_offset:bit_offset+bit_length] = tmp
                 otp_strap[bit_offset:bit_offset+len(bit_value)] = bit_value
+            elif info['type'] == 'reserved':
+                bit_length = info['bit_length']
+                tmp = bitarray(bit_length)
+                tmp.setall(False)
+                otp_strap[bit_offset:bit_offset+bit_length] = tmp
+                if value:
+                    tmp.setall(True)
+                    otp_strap[bit_offset:bit_offset+len(bit_value)] = bit_value
 
             tmp = bitarray(bit_length)
             tmp.setall(False)
@@ -1026,9 +1034,17 @@ class OTP(object):
                     tmp.setall(True)
                     otp_strap_protect[bit_offset:bit_offset+bit_length] = \
                         tmp
+                else:
+                    tmp.setall(False)
+                    otp_strap_protect[bit_offset:bit_offset+bit_length] = \
+                        tmp
             if 'ignore' in otp_strap_config[config]:
                 if otp_strap_config[config]['ignore']:
                     tmp.setall(True)
+                    otp_strap_ignore[bit_offset:bit_offset+bit_length] = \
+                        tmp
+                else:
+                    tmp.setall(False)
                     otp_strap_ignore[bit_offset:bit_offset+bit_length] = \
                         tmp
 
