@@ -36,12 +36,12 @@ OTP_INFO = [
     {
         'name': 'A2',
         'config': INFO_DIR+'a2_config.json',
-        'strap': INFO_DIR+'a2_strap.json',
+        'strap': INFO_DIR+'a1_strap.json',
     },
     {
         'name': 'A3',
         'config': INFO_DIR+'a3_config.json',
-        'strap': INFO_DIR+'a2_strap.json',
+        'strap': INFO_DIR+'a1_strap.json',
     },
 ]
 
@@ -100,7 +100,7 @@ def conf2sample(config):
 def strap2sample(config):
     ret = []
     for i in config:
-        if 'info' not in i:
+        if 'info' not in i and i['type'] != 'reserved':
             continue
         bit_offset = i['bit_offset']
         if i['type'] == 'boolean':
@@ -109,6 +109,9 @@ def strap2sample(config):
             ret.append('            // false: {}\n'.format(i['info'][0]))
             ret.append('            // true : {}\n'.format(i['info'][1]))
             ret.append('            "value": false,\n')
+            ret.append('            "otp_protect": false,\n')
+            ret.append('            "ignore": true\n')
+            ret.append('        },\n')
         elif i['type'] == 'string':
             length = i['bit_length']
             if length == 1:
@@ -118,7 +121,7 @@ def strap2sample(config):
                 ret.append(
                     '        // OTPSTRAP[{}:{}]\n'.format(bit_offset+length-1, bit_offset))
             ret.append('        "{}": {{\n'.format(i['key']))
-            vl=[]
+            vl = []
             for v in i['value']:
                 bit = v['bit']
                 val = v['value']
@@ -126,15 +129,56 @@ def strap2sample(config):
                     vl.append(val)
                     ret.append('            // {}: {}\n'.format(bit, val))
 
-            ret.append('            "value": "{}",\n'.format(i['value'][0]['value']))
-        ret.append('            "otp_protect": false,\n')
-        ret.append('            "reg_protect": false,\n')
-        ret.append('            "ignore": true\n')
-        ret.append('        },\n')
+            ret.append('            "value": "{}",\n'.format(
+                i['value'][0]['value']))
+            ret.append('            "otp_protect": false,\n')
+            ret.append('            "ignore": true\n')
+            ret.append('        },\n')
+        elif i['type'] == 'reserved':
+            length = i['bit_length']
+            if length == 1:
+                ret.append(
+                    '        // OTPSTRAP[{}]\n'.format(bit_offset))
+            else:
+                ret.append(
+                    '        // OTPSTRAP[{}:{}]\n'.format(bit_offset+length-1, bit_offset))
+            ret.append('        "{}": {{\n'.format(i['key']))
+            ret.append('            "value": false,\n')
+            ret.append('            "otp_protect": true,\n')
+            ret.append('            "ignore": false\n')
+            ret.append('        },\n')
     if ret.__len__() == 0:
         return ''
     ret[-1] = ret[-1][:-2] + '\n'
     return ''.join(ret)
+
+
+def scup2sample(config):
+    ret = []
+    for i in config:
+        if 'scu_mapping' not in i:
+            continue
+        sm = i['scu_mapping']
+        if 'bit_length' in sm:
+            ret.append(
+                '        // SCU{}[{}:{}]\n'.format(sm['scu'], sm['bit_offset']+sm['bit_length']-1, sm['bit_offset']))
+        else:
+            ret.append(
+                '        // SCU{}[{}]\n'.format(sm['scu'], sm['bit_offset']))
+        ret.append('        "{}": {{\n'.format(i['key']))
+        if i['type'] == 'reserved':
+            ret.append('            "protect": true,\n')
+            ret.append('            "ignore": false\n')
+        else:
+            ret.append('            "protect": false,\n')
+            ret.append('            "ignore": true\n')
+        ret.append('        },\n')
+
+    if ret.__len__() == 0:
+        return ''
+    ret[-1] = ret[-1][:-2] + '\n'
+    return ''.join(ret)
+
 
 for i in OTP_INFO:
     conf_path = i['config']
@@ -151,8 +195,11 @@ for i in OTP_INFO:
     conf_str = conf_str + '    },\n'
     strap_str = '    "otp_strap": {\n'
     strap_str = strap_str + strap2sample(strap_info)
-    strap_str = strap_str + '    }\n'
-    print(head_str+conf_str+strap_str)
+    strap_str = strap_str + '    },\n'
+    scup_str = '    "scu_protect": {\n'
+    scup_str = scup_str + scup2sample(strap_info)
+    scup_str = scup_str + '    }\n'
+    print(head_str+conf_str+strap_str+scup_str)
 
     with open(ROOT_DIR + 'sample_{}.json'.format(i['name']), 'w') as out_fd:
-        out_fd.write(head_str+conf_str+strap_str+tail_str)
+        out_fd.write(head_str+conf_str+strap_str+scup_str+tail_str)

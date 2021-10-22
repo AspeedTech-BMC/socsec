@@ -1,5 +1,21 @@
 [
     {
+        "key": "Disable ARM CA7 CPU boot (TXD5)",
+        "type": "reg_protect",
+        "scu_mapping": {
+            "scu": "500",
+            "bit_offset": 0
+        }
+    },
+    {
+        "key": "Reserved0",
+        "type": "reg_protect",
+        "scu_mapping": {
+            "scu": "500",
+            "bit_offset": 1
+        }
+    },
+    {
         "key": "Enable secure boot",
         "type": "boolean",
         "bit_offset": 0,
@@ -15,7 +31,11 @@
         "info": [
             "Disable boot from eMMC",
             "Enable boot from eMMC"
-        ]
+        ],
+        "scu_mapping": {
+            "scu": "500",
+            "bit_offset": 2
+        }
     },
     {
         "key": "Boot from debug SPI",
@@ -24,7 +44,11 @@
         "info": [
             "Disable Boot from debug SPI",
             "Enable Boot from debug SPI"
-        ]
+        ],
+        "scu_mapping": {
+            "scu": "500",
+            "bit_offset": 3
+        }
     },
     {
         "key": "Disable ARM CM3",
@@ -33,7 +57,11 @@
         "info": [
             "Enable ARM CM3",
             "Disable ARM CM3"
-        ]
+        ],
+        "scu_mapping": {
+            "scu": "500",
+            "bit_offset": 4
+        }
     },
     {
         "key": "Enable dedicated VGA BIOS ROM",
@@ -42,7 +70,11 @@
         "info": [
             "No VGA BIOS ROM, VGA BIOS is merged in the system BIOS",
             "Enable dedicated VGA BIOS ROM"
-        ]
+        ],
+        "scu_mapping": {
+            "scu": "500",
+            "bit_offset": 5
+        }
     },
     {
         "key": "MAC 1 RMII mode",
@@ -59,7 +91,11 @@
         ],
         "bit_offset": 5,
         "bit_length": 1,
-        "info": "MAC 1 : {}"
+        "info": "MAC 1 : {}",
+        "scu_mapping": {
+            "scu": "500",
+            "bit_offset": 6
+        }
     },
     {
         "key": "MAC 2 RMII mode",
@@ -76,7 +112,11 @@
         ],
         "bit_offset": 6,
         "bit_length": 1,
-        "info": "MAC 2 : {}"
+        "info": "MAC 2 : {}",
+        "scu_mapping": {
+            "scu": "500",
+            "bit_offset": 7
+        }
     },
     {
         "key": "CPU frequency",
@@ -117,7 +157,12 @@
         ],
         "bit_offset": 7,
         "bit_length": 3,
-        "info": "CPU Frequency : {}"
+        "info": "CPU Frequency : {}",
+        "scu_mapping": {
+            "scu": "500",
+            "bit_offset": 8,
+            "bit_length": 3
+        }
     },
     {
         "key": "HCLK ratio",
@@ -142,7 +187,12 @@
         ],
         "bit_offset": 10,
         "bit_length": 2,
-        "info": "HCLK ratio AXI:AHB = {}"
+        "info": "HCLK ratio AXI:AHB = {}",
+        "scu_mapping": {
+            "scu": "500",
+            "bit_offset": 11,
+            "bit_length": 2
+        }
     },
     {
         "key": "VGA memory size",
@@ -167,13 +217,22 @@
         ],
         "bit_offset": 12,
         "bit_length": 2,
-        "info": "VGA memory size : {}"
+        "info": "VGA memory size : {}",
+        "scu_mapping": {
+            "scu": "500",
+            "bit_offset": 13,
+            "bit_length": 2
+        }
     },
     {
         "key": "OTPSTRAP[14] Reserved",
         "type": "reserved",
         "bit_offset": 14,
-        "bit_length": 1
+        "bit_length": 1,
+        "scu_mapping": {
+            "scu": "500",
+            "bit_offset": 15
+        }
     },
     {
         "key": "CPU/AXI clock ratio",
@@ -190,7 +249,11 @@
         ],
         "bit_offset": 15,
         "bit_length": 1,
-        "info": "CPU/AXI clock ratio : {}"
+        "info": "CPU/AXI clock ratio : {}",
+        "scu_mapping": {
+            "scu": "500",
+            "bit_offset": 16
+        }
     },
     {
         "key": "Disable ARM JTAG debug",
@@ -199,7 +262,11 @@
         "info": [
             "Enable ARM JTAG debug",
             "Disable ARM JTAG debug"
-        ]
+        ],
+        "scu_mapping": {
+            "scu": "500",
+            "bit_offset": 17
+        }
     },
     {
         "key": "VGA class code",
@@ -216,7 +283,11 @@
         ],
         "bit_offset": 17,
         "bit_length": 1,
-        "info": "VGA class code : {}"
+        "info": "VGA class code : {}",
+        "scu_mapping": {
+            "scu": "500",
+            "bit_offset": 18
+        }
     },
     {
         "key": "Disable debug 0",
@@ -225,7 +296,11 @@
         "info": [
             "Enable debug interfaces 0",
             "Disable debug interfaces 0"
-        ]
+        ],
+        "scu_mapping": {
+            "scu": "500",
+            "bit_offset": 19
+        }
     },
     {
         "key": "Boot from eMMC speed mode",
@@ -242,7 +317,11 @@
         ],
         "bit_offset": 19,
         "bit_length": 1,
-        "info": "Boot from eMMC speed mode : {}"
+        "info": "Boot from eMMC speed mode : {}",
+        "scu_mapping": {
+            "scu": "500",
+            "bit_offset": 20
+        }
     },
     {
         "key": "Enable PCIe EHCI",
@@ -251,7 +330,11 @@
         "info": [
             "Disable Pcie EHCI device",
             "Enable Pcie EHCI device"
-        ]
+        ],
+        "scu_mapping": {
+            "scu": "500",
+            "bit_offset": 21
+        }
     },
     {
         "key": "Disable ARM JTAG trust world debug",
@@ -260,7 +343,11 @@
         "info": [
             "Enable ARM JTAG trust world debug",
             "Disable ARM JTAG trust world debug"
-        ]
+        ],
+        "scu_mapping": {
+            "scu": "500",
+            "bit_offset": 22
+        }
     },
     {
         "key": "Disable dedicated BMC function",
@@ -269,7 +356,11 @@
         "info": [
             "Normal BMC mode",
             "Disable dedicated BMC functions for non-BMC application"
-        ]
+        ],
+        "scu_mapping": {
+            "scu": "500",
+            "bit_offset": 23
+        }
     },
     {
         "key": "Enable dedicate PCIe RC reset",
@@ -278,7 +369,11 @@
         "info": [
             "SSPRST# pin is for secondary processor dedicated reset pin",
             "SSPRST# pin is for PCIE root complex dedicated reset pin"
-        ]
+        ],
+        "scu_mapping": {
+            "scu": "500",
+            "bit_offset": 24
+        }
     },
     {
         "key": "Disable watchdog to reset full chip",
@@ -287,7 +382,11 @@
         "info": [
             "Enable watchdog to reset full chip",
             "Disable watchdog to reset full chip"
-        ]
+        ],
+        "scu_mapping": {
+            "scu": "500",
+            "bit_offset": 25
+        }
     },
     {
         "key": "Internal bridge speed selection",
@@ -312,7 +411,12 @@
         ],
         "bit_offset": 25,
         "bit_length": 2,
-        "info": "Internal bridge speed selection : {}"
+        "info": "Internal bridge speed selection : {}",
+        "scu_mapping": {
+            "scu": "500",
+            "bit_offset": 26,
+            "bit_length": 2
+        }
     },
     {
         "key": "Select Reset Source of eMMC part",
@@ -337,7 +441,12 @@
         ],
         "bit_offset": 27,
         "bit_length": 2,
-        "info": "Reset Source of eMMC part : {}"
+        "info": "Reset Source of eMMC part : {}",
+        "scu_mapping": {
+            "scu": "500",
+            "bit_offset": 28,
+            "bit_length": 2
+        }
     },
     {
         "key": "Disable RVAS function",
@@ -346,7 +455,19 @@
         "info": [
             "Enable RVAS function",
             "Disable RVAS function"
-        ]
+        ],
+        "scu_mapping": {
+            "scu": "500",
+            "bit_offset": 30
+        }
+    },
+    {
+        "key": "Enable boot SPI auxiliary control pins(mirror)",
+        "type": "reg_protect",
+        "scu_mapping": {
+            "scu": "500",
+            "bit_offset": 31
+        }
     },
     {
         "key": "OTPSTRAP[1E-1D] Reserved",
@@ -369,7 +490,11 @@
         ],
         "bit_offset": 32,
         "bit_length": 1,
-        "info": "MAC 3 : {}"
+        "info": "MAC 3 : {}",
+        "scu_mapping": {
+            "scu": "510",
+            "bit_offset": 0
+        }
     },
     {
         "key": "MAC 4 RMII mode",
@@ -386,7 +511,11 @@
         ],
         "bit_offset": 33,
         "bit_length": 1,
-        "info": "MAC 4 : {}"
+        "info": "MAC 4 : {}",
+        "scu_mapping": {
+            "scu": "510",
+            "bit_offset": 1
+        }
     },
     {
         "key": "SuperIO configuration address selection",
@@ -403,7 +532,11 @@
         ],
         "bit_offset": 34,
         "bit_length": 1,
-        "info": "SuperIO configuration address : {}"
+        "info": "SuperIO configuration address : {}",
+        "scu_mapping": {
+            "scu": "510",
+            "bit_offset": 2
+        }
     },
     {
         "key": "Disable LPC to decode SuperIO",
@@ -412,7 +545,11 @@
         "info": [
             "Enable LPC to decode SuperIO",
             "Disable LPC to decode SuperIO"
-        ]
+        ],
+        "scu_mapping": {
+            "scu": "510",
+            "bit_offset": 3
+        }
     },
     {
         "key": "Disable debug 1",
@@ -421,7 +558,11 @@
         "info": [
             "Enable debug interfaces 1",
             "Disable debug interfaces 1"
-        ]
+        ],
+        "scu_mapping": {
+            "scu": "510",
+            "bit_offset": 4
+        }
     },
     {
         "key": "Enable ACPI",
@@ -430,7 +571,11 @@
         "info": [
             "Disable ACPI function",
             "Enable ACPI function"
-        ]
+        ],
+        "scu_mapping": {
+            "scu": "510",
+            "bit_offset": 5
+        }
     },
     {
         "key": "Select LPC/eSPI",
@@ -447,7 +592,11 @@
         ],
         "bit_offset": 38,
         "bit_length": 1,
-        "info": "Select LPC/eSPI : {}"
+        "info": "Select LPC/eSPI : {}",
+        "scu_mapping": {
+            "scu": "510",
+            "bit_offset": 6
+        }
     },
     {
         "key": "Enable SAFS",
@@ -456,7 +605,11 @@
         "info": [
             "Disable SAFS mode",
             "Enable SAFS mode"
-        ]
+        ],
+        "scu_mapping": {
+            "scu": "510",
+            "bit_offset": 7
+        }
     },
     {
         "key": "Enable boot from uart5",
@@ -465,7 +618,11 @@
         "info": [
             "Disable boot from uart5",
             "Enable boot from uart5"
-        ]
+        ],
+        "scu_mapping": {
+            "scu": "510",
+            "bit_offset": 8
+        }
     },
     {
         "key": "Enable boot SPI 3B address mode auto-clear",
@@ -474,7 +631,11 @@
         "info": [
             "Disable boot SPI 3B address mode auto-clear",
             "Enable boot SPI 3B address mode auto-clear"
-        ]
+        ],
+        "scu_mapping": {
+            "scu": "510",
+            "bit_offset": 9
+        }
     },
     {
         "key": "Enable SPI 3B/4B address mode auto detection",
@@ -483,7 +644,11 @@
         "info": [
             "Disable boot SPI 3B/4B address mode auto detection",
             "Enable boot SPI 3B/4B address mode auto detection"
-        ]
+        ],
+        "scu_mapping": {
+            "scu": "510",
+            "bit_offset": 10
+        }
     },
     {
         "key": "Enable boot SPI or eMMC ABR",
@@ -492,7 +657,11 @@
         "info": [
             "Disable boot SPI or eMMC ABR",
             "Enable boot SPI or eMMC ABR"
-        ]
+        ],
+        "scu_mapping": {
+            "scu": "510",
+            "bit_offset": 11
+        }
     },
     {
         "key": "Boot SPI ABR Mode",
@@ -509,7 +678,11 @@
         ],
         "bit_offset": 44,
         "bit_length": 1,
-        "info": "Boot SPI ABR Mode : {}"
+        "info": "Boot SPI ABR Mode : {}",
+        "scu_mapping": {
+            "scu": "510",
+            "bit_offset": 12
+        }
     },
     {
         "key": "Boot SPI flash size",
@@ -550,7 +723,12 @@
         ],
         "bit_offset": 45,
         "bit_length": 3,
-        "info": "Boot SPI flash size : {}MB"
+        "info": "Boot SPI flash size : {}MB",
+        "scu_mapping": {
+            "scu": "510",
+            "bit_offset": 13,
+            "bit_length": 3
+        }
     },
     {
         "key": "Enable host SPI ABR",
@@ -559,7 +737,11 @@
         "info": [
             "Disable host SPI ABR",
             "Enable host SPI ABR"
-        ]
+        ],
+        "scu_mapping": {
+            "scu": "510",
+            "bit_offset": 16
+        }
     },
     {
         "key": "Enable host SPI ABR mode select pin",
@@ -568,7 +750,11 @@
         "info": [
             "Disable host SPI ABR mode select pin",
             "Enable host SPI ABR mode select pin"
-        ]
+        ],
+        "scu_mapping": {
+            "scu": "510",
+            "bit_offset": 17
+        }
     },
     {
         "key": "Host SPI ABR Mode",
@@ -585,7 +771,11 @@
         ],
         "bit_offset": 50,
         "bit_length": 1,
-        "info": "Host SPI ABR mode : {}"
+        "info": "Host SPI ABR mode : {}",
+        "scu_mapping": {
+            "scu": "510",
+            "bit_offset": 18
+        }
     },
     {
         "key": "Host SPI flash size",
@@ -626,7 +816,12 @@
         ],
         "bit_offset": 51,
         "bit_length": 3,
-        "info": "Host SPI flash size : {}MB"
+        "info": "Host SPI flash size : {}MB",
+        "scu_mapping": {
+            "scu": "510",
+            "bit_offset": 19,
+            "bit_length": 3
+        }
     },
     {
         "key": "Enable boot SPI auxiliary control pins",
@@ -635,7 +830,11 @@
         "info": [
             "Disable boot SPI auxiliary control pins",
             "Enable boot SPI auxiliary control pins"
-        ]
+        ],
+        "scu_mapping": {
+            "scu": "510",
+            "bit_offset": 22
+        }
     },
     {
         "key": "Boot SPI CRTM size",
@@ -660,7 +859,12 @@
         ],
         "bit_offset": 55,
         "bit_length": 2,
-        "info": "Boot SPI CRTM size : {}KB"
+        "info": "Boot SPI CRTM size : {}KB",
+        "scu_mapping": {
+            "scu": "510",
+            "bit_offset": 23,
+            "bit_length": 2
+        }
     },
     {
         "key": "Host SPI CRTM size",
@@ -685,7 +889,12 @@
         ],
         "bit_offset": 57,
         "bit_length": 2,
-        "info": "Host SPI CRTM size : {}KB"
+        "info": "Host SPI CRTM size : {}KB",
+        "scu_mapping": {
+            "scu": "510",
+            "bit_offset": 25,
+            "bit_length": 2
+        }
     },
     {
         "key": "Enable host SPI auxiliary control pins",
@@ -694,7 +903,11 @@
         "info": [
             "Disable host SPI auxiliary control pins",
             "Enable host SPI auxiliary control pins"
-        ]
+        ],
+        "scu_mapping": {
+            "scu": "510",
+            "bit_offset": 27
+        }
     },
     {
         "key": "Enable GPIO Pass Through",
@@ -703,13 +916,21 @@
         "info": [
             "Disable GPIO pass through",
             "Enable GPIO pass through"
-        ]
+        ],
+        "scu_mapping": {
+            "scu": "510",
+            "bit_offset": 28
+        }
     },
     {
         "key": "OTPSTRAP[3D] Reserved",
         "type": "reserved",
         "bit_offset": 61,
-        "bit_length": 1
+        "bit_length": 1,
+        "scu_mapping": {
+            "scu": "510",
+            "bit_offset": 29
+        }
     },
     {
         "key": "Enable Dedicate GPIO Strap Pins",
@@ -718,12 +939,20 @@
         "info": [
             "Disable dedicate GPIO strap pins",
             "Enable dedicate GPIO strap pins"
-        ]
+        ],
+        "scu_mapping": {
+            "scu": "510",
+            "bit_offset": 30
+        }
     },
     {
         "key": "OTPSTRAP[3F] Reserved",
         "type": "reserved",
         "bit_offset": 63,
-        "bit_length": 1
+        "bit_length": 1,
+        "scu_mapping": {
+            "scu": "510",
+            "bit_offset": 31
+        }
     }
 ]

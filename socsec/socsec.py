@@ -45,6 +45,7 @@ from socsec import rsa_bit_length
 from socsec import rsa_key_to_bin
 from socsec import hexdump
 from socsec import OTP_info
+from socsec import __version__
 
 RSA_SHA = 1        # mode 2
 AES_RSA_SHA = 2    # mode 2 with aes encryption
@@ -109,8 +110,10 @@ class ChainPartitionDescriptor(object):
         self.verify_key_path = verify_key_path
         self.next_verify_key_path = next_verify_key_path
 
+
 def BIT(off):
     return 1 << off
+
 
 def parse_number(string):
     """Parse a string as a number.
@@ -1064,10 +1067,11 @@ class Sec(object):
         else:
             enc_offset = 0
             signature_offset = sign_image_size
-        
+
         if revision_id < 0 or revision_id > 64:
-            raise SecError( "revision_id is out of range. (0 <= revision_id <= 64)")
-        
+            raise SecError(
+                "revision_id is out of range. (0 <= revision_id <= 64)")
+
         for i in range(revision_id):
             if i < 32:
                 revision_low |= BIT(i)
@@ -1320,43 +1324,37 @@ class SecureBootVerify(object):
         info_struct = {}
         header = otp_image[0:self.otp.HEADER_SIZE]
 
-        (magic_b, ver_b, image_info, data_info, config_info, strap_info,
+        (magic_b, soc_ver, _, image_info, data_info, config_info, strap_info, _,
          checksum_offset) = struct.unpack(self.otp.HEADER_FORMAT, header)
 
         magic = magic_b[0:len(self.otp.MAGIC_WORD_OTP)].decode()
         if magic != self.otp.MAGIC_WORD_OTP:
             raise SecError('OTP image magic word is invalid')
-        ver = ver_b.decode()
         info_struct['rsa_key_order'] = 'little'
-        if ver[:2] == 'A0':
+        if soc_ver == OTP_info.SOC_AST2600A0:
             otp_info = self.otp.OTP_INFO['A0']
-            info_struct['version'] = 'A0'
-        elif ver[:2] == 'A1':
+        elif soc_ver == OTP_info.SOC_AST2600A1:
             otp_info = self.otp.OTP_INFO['A1']
-            info_struct['version'] = 'A1'
-        elif ver[:2] == 'A2':
+        elif soc_ver == OTP_info.SOC_AST2600A2:
             otp_info = self.otp.OTP_INFO['A2']
-            info_struct['version'] = 'A2'
-        elif ver[:2] == 'A3':
+        elif soc_ver == OTP_info.SOC_AST2600A3:
             otp_info = self.otp.OTP_INFO['A3']
-            info_struct['version'] = 'A3'
-            if image_info & self.otp.INC_ORDER:
+            if image_info & self.otp.HEADER_ORDER:
                 info_struct['rsa_key_order'] = 'big'
             else:
                 info_struct['rsa_key_order'] = 'little'
-        elif ver[:6] == '1030A0':
+        elif soc_ver == OTP_info.SOC_AST1030A0:
             otp_info = self.otp.OTP_INFO['1030A0']
-            info_struct['version'] = '1030A0'
-        elif ver[:6] == '1030A1':
+        elif soc_ver == OTP_info.SOC_AST1030A1:
             otp_info = self.otp.OTP_INFO['1030A1']
-            info_struct['version'] = '1030A1'
-            if image_info & self.otp.INC_ORDER:
+            if image_info & self.otp.HEADER_ORDER:
                 info_struct['rsa_key_order'] = 'big'
             else:
                 info_struct['rsa_key_order'] = 'little'
         else:
             raise SecError('OTP image version is invalid')
 
+        info_struct['version'] = soc_ver
         image_size = image_info & 0xffff
         sha = SHA256.new(otp_image[:image_size])
         digest = sha.digest()
@@ -1369,7 +1367,7 @@ class SecureBootVerify(object):
         conf_offset = config_info & 0xffff
         conf_size = (config_info >> 16) & 0xffff
 
-        if image_info & self.otp.INC_DUMP:
+        if image_info & self.otp.HEADER_DUMP:
             data_region = otp_image[data_offset:data_offset+data_size]
             config_region = otp_image[conf_offset:conf_offset+conf_size]
         else:
@@ -1401,9 +1399,10 @@ class SecureBootVerify(object):
         retire_list = [0]*7
 
         if header_offset == 0:
-            if soc_version in ['A0', 'A1', 'A2', 'A3']:
+            if soc_version in [OTP_info.SOC_AST2600A0, OTP_info.SOC_AST2600A1,
+                               OTP_info.SOC_AST2600A2, OTP_info.SOC_AST2600A3]:
                 header_offset = 0x20
-            elif soc_version in ['1030A0', '1030A1']:
+            elif soc_version in [OTP_info.SOC_AST1030A0, OTP_info.SOC_AST1030A1]:
                 header_offset = 0x400
 
         for i in range(7):
@@ -1411,7 +1410,8 @@ class SecureBootVerify(object):
             if bit == 1:
                 retire_list[i] = 1
 
-        if soc_version in ['A0', 'A1', 'A2', 'A3']:
+        if soc_version in [OTP_info.SOC_AST2600A0, OTP_info.SOC_AST2600A1,
+                           OTP_info.SOC_AST2600A2, OTP_info.SOC_AST2600A3]:
             if sb_mode == 0:
                 algorithm_type = AES_GCM
                 print('Algorithm: AES_GCM')
@@ -1422,7 +1422,7 @@ class SecureBootVerify(object):
                 else:
                     algorithm_type = RSA_SHA
                     print('Algorithm: RSA_SHA')
-        elif soc_version == '1030A0':
+        elif soc_version == OTP_info.SOC_AST1030A0:
             if sb_mode == 1:
                 raise SecError("PFR mode")
 
@@ -1432,7 +1432,7 @@ class SecureBootVerify(object):
             else:
                 algorithm_type = RSA_SHA
                 print('Algorithm: RSA_SHA')
-        elif soc_version == '1030A1':
+        elif soc_version == OTP_info.SOC_AST1030A1:
             if sb_mode == 1:
                 raise SecError("PFR mode")
             if sign_scheme in [0, 1, 2, 3]:
@@ -1454,7 +1454,9 @@ class SecureBootVerify(object):
                 else:
                     print('RSA padding: PKCS1')
 
-        if soc_version in ['A0', 'A1', 'A2', 'A3', '1030A0']:
+        if soc_version in [OTP_info.SOC_AST2600A0, OTP_info.SOC_AST2600A1,
+                           OTP_info.SOC_AST2600A2, OTP_info.SOC_AST2600A3,
+                           OTP_info.SOC_AST1030A0]:
             # 2600 and 1030A0 only support pkcs1 padding
             rsa_padding = 'pkcs1'
             rsa_len = (cfg0 >> 10) & 0x3
@@ -1530,19 +1532,21 @@ class SecureBootVerify(object):
             header_offset, retire_list
 
     def parse_data(self, info_struct, alg_data, data_region, retire_list):
-        if info_struct['version'] == 'A0':
+        if info_struct['version'] == OTP_info.SOC_AST2600A0:
             type_lookup = {0x0: AES_OEM,
                            0x1: AES_VAULT,
                            0x8: RSA_OEM,
                            0xa: RSA_SOC_PUB,
                            0xe: RSA_SOC_PRI}
-        elif info_struct['version'] in ['A1', 'A2', '1030A0']:
+        elif info_struct['version'] in [OTP_info.SOC_AST2600A1,
+                                        OTP_info.SOC_AST2600A2,
+                                        OTP_info.SOC_AST1030A0]:
             type_lookup = {0x1: AES_VAULT,
                            0x2: AES_OEM,
                            0x8: RSA_OEM,
                            0xa: RSA_SOC_PUB,
                            0xe: RSA_SOC_PRI}
-        elif info_struct['version'] == 'A3':
+        elif info_struct['version'] == OTP_info.SOC_AST2600A3:
             if info_struct['rsa_key_order'] == 'big':
                 type_lookup = {0x1: AES_VAULT,
                                0x2: AES_OEM,
@@ -1555,7 +1559,7 @@ class SecureBootVerify(object):
                                0x8: RSA_OEM,
                                0xa: RSA_SOC_PUB,
                                0xc: RSA_SOC_PRI}
-        elif info_struct['version'] == '1030A1':
+        elif info_struct['version'] == OTP_info.SOC_AST1030A1:
             type_lookup = {0x1: AES_VAULT,
                            0x2: AES_OEM,
                            0x9: RSA_OEM,
@@ -1839,12 +1843,7 @@ class SecureBootVerify(object):
 
         return dec_image
 
-    # def verify_cot_image(self, sec_image, header_offset):
-    #     rot_cot_header = sec_image[header_offset:header_offset+0x8]
-    #     (cot_info, data_offset) = struct.unpack(
-    #         self.sec.COT_INFO_FORMAT, rot_cot_header)
-
-    def verify_secure_image(self, sec_image_fd, output_fd, otp_image_fd, cot_offset):
+    def verify_secure_image(self, sec_image_fd, output_fd, otp_image_fd):
         otp_image = otp_image_fd.read()
         sec_image = sec_image_fd.read()
         info_struct, data_region, config_region = self.parse_otp(otp_image)
@@ -1878,11 +1877,6 @@ class SecureBootVerify(object):
             output_fd.write(bytes(dec_image + sec_image[sign_image_size:]))
             output_fd.flush()
             output_fd.close()
-
-        if cot_offset == None:
-            return
-
-        # offset_list = cot_offset.split(':')
 
 
 class secTool(object):
@@ -2068,7 +2062,7 @@ class secTool(object):
                                 metavar='IMAGE',
                                 required=True)
         sub_parser.add_argument('--output',
-                                help='Output non-secure image',
+                                help='Output decrypted image',
                                 type=argparse.FileType('w+b'),
                                 metavar='IMAGE',
                                 required=False)
@@ -2077,12 +2071,11 @@ class secTool(object):
                                 type=argparse.FileType('rb'),
                                 metavar='IMAGE',
                                 required=True)
-        sub_parser.add_argument('--cot_offset',
-                                help='Offset for every image, e.g. 0x10000:0x100000',
-                                metavar='IMAGE',
-                                default=None,
-                                required=False)
         sub_parser.set_defaults(func=self.verify_secure_image)
+
+        sub_parser = subparsers.add_parser('version',
+                                           help='print otptool version.')
+        sub_parser.set_defaults(func=self.print_version)
 
         args = parser.parse_args(argv[1:])
 
@@ -2129,5 +2122,7 @@ class secTool(object):
         """Implements the 'verify' sub-command."""
         self.verify.verify_secure_image(args.sec_image,
                                         args.output,
-                                        args.otp_image,
-                                        args.cot_offset)
+                                        args.otp_image)
+
+    def print_version(self, args):
+        print(__version__)

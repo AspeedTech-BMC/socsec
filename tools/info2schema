@@ -36,14 +36,15 @@ OTP_INFO = [
     {
         'name': 'A2',
         'config': INFO_DIR+'a2_config.json',
-        'strap': INFO_DIR+'a2_strap.json',
+        'strap': INFO_DIR+'a1_strap.json',
     },
     {
         'name': 'A3',
         'config': INFO_DIR+'a3_config.json',
-        'strap': INFO_DIR+'a2_strap.json',
+        'strap': INFO_DIR+'a1_strap.json',
     },
 ]
+
 
 def OTPValidate():
     schema = {
@@ -175,10 +176,12 @@ def OTPValidate():
             "config_region": {
             },
             "otp_strap": {},
+            "scu_protect": {}
         }
     }
     config_schema = {}
     strap_schema = {}
+    scup_schema = {}
 
     config_info = []
     strap_info = []
@@ -188,7 +191,6 @@ def OTPValidate():
 
         with open(otp_info['strap'], 'r') as strap_info_fd:
             strap_info = strap_info + jstyleson.load(strap_info_fd)
-    print(config_info)
     for i in config_info:
         if i['type'] == 'boolean':
             config_schema[i['key']] = {
@@ -231,6 +233,12 @@ def OTPValidate():
             }
             for j in i['value']:
                 val['enum'].append(j['value'])
+        elif i['type'] == 'reserved':
+            val = {
+                'type': 'boolean'
+            }
+        else:
+            continue
 
         strap_schema[i['key']] = {
             "type": "object",
@@ -242,13 +250,29 @@ def OTPValidate():
                 "otp_protect": {
                     "type": "boolean"
                 },
-                "reg_protect": {
-                    "type": "boolean"
-                },
                 "ignore": {
                     "type": "boolean"
                 },
                 "value": val
+            }
+        }
+    for i in strap_info:
+        if 'scu_mapping' not in i:
+            continue
+        scup_schema[i['key']] = {
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "protect",
+                "ignore"
+            ],
+            "properties": {
+                "protect": {
+                    "type": "boolean"
+                },
+                "ignore": {
+                    "type": "boolean"
+                }
             }
         }
 
@@ -262,9 +286,15 @@ def OTPValidate():
         "additionalProperties": False,
         "properties": strap_schema
     }
+    schema['properties']['scu_protect'] = {
+        "type": "object",
+        "additionalProperties": False,
+        "properties": scup_schema
+    }
     return schema
+
 
 schema = OTPValidate()
 
 with open(ROOT_DIR + 'otp_schema.json', 'w') as out_fd:
-    jstyleson.dump(schema, out_fd,indent=4, sort_keys=True)
+    jstyleson.dump(schema, out_fd, indent=4, sort_keys=True)

@@ -1,130 +1,6 @@
 {
-    "type": "object",
-    "required": [
-        "name",
-        "version"
-    ],
     "additionalProperties": false,
     "properties": {
-        "name": {
-            "type": "string"
-        },
-        "version": {
-            "type": "string",
-            "enum": [
-                "A0",
-                "A1",
-                "A2",
-                "A3",
-                "1030A0",
-                "1030A1"
-            ]
-        },
-        "data_region": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-                "ecc_region"
-            ],
-            "properties": {
-                "patch": {
-                    "type": "boolean"
-                },
-                "ecc_region": {
-                    "type": "boolean"
-                },
-                "rsa_key_order": {
-                    "type": "string",
-                    "enum": [
-                        "little",
-                        "big"
-                    ]
-                },
-                "key": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "additionalProperties": false,
-                        "properties": {
-                            "types": {
-                                "type": "string",
-                                "enum": [
-                                    "aes_oem",
-                                    "aes_vault",
-                                    "rsa_pub_oem",
-                                    "rsa_pub_aes",
-                                    "rsa_priv_aes",
-                                    "ecdsa_pub",
-                                    "ecdsa_parameters"
-                                ]
-                            },
-                            "key_bin": {
-                                "type": "string"
-                            },
-                            "key_bin2": {
-                                "type": "string"
-                            },
-                            "iv_bin": {
-                                "type": "string"
-                            },
-                            "key_pem": {
-                                "type": "string"
-                            },
-                            "rsa_pem": {
-                                "type": "string"
-                            },
-                            "number_id": {
-                                "type": "integer",
-                                "minimum": 0,
-                                "maximum": 7
-                            },
-                            "sha_mode": {
-                                "type": "string",
-                                "enum": [
-                                    "SHA224",
-                                    "SHA256",
-                                    "SHA384",
-                                    "SHA512"
-                                ]
-                            },
-                            "offset": {
-                                "type": "string",
-                                "pattern": "0[xX][0-9a-fA-F]+"
-                            },
-                            "key_length": {
-                                "type": "integer"
-                            }
-                        }
-                    }
-                },
-                "user_data": {
-                    "additionalProperties": false,
-                    "items": {
-                        "additionalProperties": false,
-                        "properties": {
-                            "file": {
-                                "type": "string"
-                            },
-                            "offset": {
-                                "pattern": "0[xX][0-9a-fA-F]+",
-                                "type": "string"
-                            },
-                            "types": {
-                                "enum": [
-                                    "hex",
-                                    "dw_hex",
-                                    "bin"
-                                ],
-                                "type": "string"
-                            }
-                        },
-                        "type": "object"
-                    },
-                    "type": "array"
-                }
-            }
-            
-        },
         "config_region": {
             "additionalProperties": false,
             "properties": {
@@ -304,6 +180,113 @@
             },
             "type": "object"
         },
+        "data_region": {
+            "additionalProperties": false,
+            "properties": {
+                "ecc_region": {
+                    "type": "boolean"
+                },
+                "key": {
+                    "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                            "iv_bin": {
+                                "type": "string"
+                            },
+                            "key_bin": {
+                                "type": "string"
+                            },
+                            "key_bin2": {
+                                "type": "string"
+                            },
+                            "key_length": {
+                                "type": "integer"
+                            },
+                            "key_pem": {
+                                "type": "string"
+                            },
+                            "number_id": {
+                                "maximum": 7,
+                                "minimum": 0,
+                                "type": "integer"
+                            },
+                            "offset": {
+                                "pattern": "0[xX][0-9a-fA-F]+",
+                                "type": "string"
+                            },
+                            "rsa_pem": {
+                                "type": "string"
+                            },
+                            "sha_mode": {
+                                "enum": [
+                                    "SHA224",
+                                    "SHA256",
+                                    "SHA384",
+                                    "SHA512"
+                                ],
+                                "type": "string"
+                            },
+                            "types": {
+                                "enum": [
+                                    "aes_oem",
+                                    "aes_vault",
+                                    "rsa_pub_oem",
+                                    "rsa_pub_aes",
+                                    "rsa_priv_aes",
+                                    "ecdsa_pub",
+                                    "ecdsa_parameters"
+                                ],
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "type": "array"
+                },
+                "patch": {
+                    "type": "boolean"
+                },
+                "rsa_key_order": {
+                    "enum": [
+                        "little",
+                        "big"
+                    ],
+                    "type": "string"
+                },
+                "user_data": {
+                    "additionalProperties": false,
+                    "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                            "file": {
+                                "type": "string"
+                            },
+                            "offset": {
+                                "pattern": "0[xX][0-9a-fA-F]+",
+                                "type": "string"
+                            },
+                            "types": {
+                                "enum": [
+                                    "hex",
+                                    "dw_hex",
+                                    "bin"
+                                ],
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "type": "array"
+                }
+            },
+            "required": [
+                "ecc_region"
+            ],
+            "type": "object"
+        },
+        "name": {
+            "type": "string"
+        },
         "otp_strap": {
             "additionalProperties": false,
             "properties": {
@@ -314,9 +297,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -341,9 +321,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "enum": [
                                 "0",
@@ -366,9 +343,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -399,9 +373,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -418,9 +389,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -443,9 +411,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -476,9 +441,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "enum": [
                                 "2:1",
@@ -501,9 +463,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -520,9 +479,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -543,9 +499,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -562,9 +515,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -585,9 +535,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -604,9 +551,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -627,9 +571,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -646,9 +587,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -669,9 +607,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -688,9 +623,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -711,9 +643,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -730,9 +659,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -753,9 +679,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -772,9 +695,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -795,9 +715,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -814,9 +731,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -837,9 +751,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -856,9 +767,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -879,9 +787,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -898,9 +803,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -921,9 +823,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -940,9 +839,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -963,9 +859,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -982,9 +875,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -1005,9 +895,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -1026,9 +913,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "type": "boolean"
                         }
@@ -1045,9 +929,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -1074,9 +955,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "enum": [
                                 "dual",
@@ -1097,9 +975,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -1124,9 +999,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -1157,9 +1029,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "enum": [
                                 "1x",
@@ -1184,9 +1053,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "enum": [
                                 "RMII/NCSI",
@@ -1207,9 +1073,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -1234,9 +1097,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "enum": [
                                 "RMII/NCSI",
@@ -1257,9 +1117,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -1284,10 +1141,9 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
+                        "value": {
                             "type": "boolean"
-                        },
-                        "value": {}
+                        }
                     },
                     "required": [
                         "value"
@@ -1303,10 +1159,9 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
+                        "value": {
                             "type": "boolean"
-                        },
-                        "value": {}
+                        }
                     },
                     "required": [
                         "value"
@@ -1322,10 +1177,9 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
+                        "value": {
                             "type": "boolean"
-                        },
-                        "value": {}
+                        }
                     },
                     "required": [
                         "value"
@@ -1341,10 +1195,9 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
+                        "value": {
                             "type": "boolean"
-                        },
-                        "value": {}
+                        }
                     },
                     "required": [
                         "value"
@@ -1358,9 +1211,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -1383,9 +1233,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -1412,9 +1259,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "enum": [
                                 "0x2e",
@@ -1435,9 +1279,6 @@
                             "type": "boolean"
                         },
                         "otp_protect": {
-                            "type": "boolean"
-                        },
-                        "reg_protect": {
                             "type": "boolean"
                         },
                         "value": {
@@ -1462,9 +1303,6 @@
                         "otp_protect": {
                             "type": "boolean"
                         },
-                        "reg_protect": {
-                            "type": "boolean"
-                        },
                         "value": {
                             "enum": [
                                 "8MB",
@@ -1482,6 +1320,860 @@
                 }
             },
             "type": "object"
+        },
+        "scu_protect": {
+            "additionalProperties": false,
+            "properties": {
+                "Boot SPI ABR Mode": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Boot SPI CRTM size": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Boot SPI flash size": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Boot from debug SPI": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Boot from eMMC speed mode": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "CPU frequency": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "CPU/AXI clock ratio": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Disable ARM CA7 CPU boot (TXD5)": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Disable ARM CM3": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Disable ARM JTAG debug": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Disable ARM JTAG trust world debug": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Disable LPC to decode SuperIO": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Disable RVAS function": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Disable debug 0": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Disable debug 1": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Disable dedicated BMC function": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Disable watchdog to reset full chip": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Enable ACPI": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Enable Dedicate GPIO Strap Pins": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Enable GPIO Pass Through": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Enable PCIe EHCI": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Enable SAFS": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Enable SPI 3B/4B address mode auto detection": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Enable boot SPI 3B address mode auto-clear": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Enable boot SPI auxiliary control pins": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Enable boot SPI auxiliary control pins(mirror)": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Enable boot SPI or eMMC ABR": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Enable boot from eMMC": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Enable boot from uart5": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Enable dedicate PCIe RC reset": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Enable dedicated VGA BIOS ROM": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Enable host SPI ABR": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Enable host SPI ABR mode select pin": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Enable host SPI auxiliary control pins": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "HCLK ratio": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Host SPI ABR Mode": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Host SPI CRTM size": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Host SPI flash size": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Internal bridge speed selection": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "MAC 1 RMII mode": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "MAC 2 RMII mode": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "MAC 3 RMII mode": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "MAC 4 RMII mode": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "OTPSTRAP[14] Reserved": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "OTPSTRAP[3D] Reserved": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "OTPSTRAP[3F] Reserved": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Reserved0": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Select LPC/eSPI": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "Select Reset Source of eMMC part": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "SuperIO configuration address selection": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "VGA class code": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                },
+                "VGA memory size": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "ignore": {
+                            "type": "boolean"
+                        },
+                        "protect": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "protect",
+                        "ignore"
+                    ],
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
+        "version": {
+            "enum": [
+                "A0",
+                "A1",
+                "A2",
+                "A3",
+                "1030A0",
+                "1030A1"
+            ],
+            "type": "string"
         }
-    }
+    },
+    "required": [
+        "name",
+        "version"
+    ],
+    "type": "object"
 }
