@@ -1584,7 +1584,7 @@ class SecureBootVerify(object):
                 break
 
         if find_last == 0:
-            raise SecError("Can not find Last List in OTP data region")
+            print("Can not find Last List bit in OTP key header.")
 
         for kl in key_list:
             if kl['TYPE'] in [RSA_OEM, RSA_SOC_PUB, RSA_SOC_PRI]:
