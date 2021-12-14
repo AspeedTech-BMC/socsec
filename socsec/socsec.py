@@ -1573,10 +1573,14 @@ class SecureBootVerify(object):
         for i in range(16):
             h = struct.unpack('<I', data_region[(i*4):(i*4+4)])[0]
             kl = {}
+            t = (h >> 14) & 0xf
+            if t in type_lookup:
+                kl['TYPE'] = type_lookup[t]
+            else:
+                continue
             kl['ID'] = h & 0x7
             kl['RETIRE'] = retire_list[kl['ID']]
             kl['OFFSET'] = ((h >> 3) & 0x3ff) << 3
-            kl['TYPE'] = type_lookup[(h >> 14) & 0xf]
             kl['PAR'] = (h >> 18) & 0x3
             key_list.append(kl)
             if h & (1 << 13):
