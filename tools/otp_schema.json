@@ -230,6 +230,7 @@
                                 "enum": [
                                     "aes_oem",
                                     "aes_vault",
+                                    "aes_vault_header",
                                     "rsa_pub_oem",
                                     "rsa_pub_aes",
                                     "rsa_priv_aes",

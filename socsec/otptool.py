@@ -255,6 +255,7 @@ class OTP(object):
                                         "enum": [
                                             "aes_oem",
                                             "aes_vault",
+                                            "aes_vault_header",
                                             "rsa_pub_oem",
                                             "rsa_pub_aes",
                                             "rsa_priv_aes",
@@ -451,7 +452,7 @@ class OTP(object):
 
         if types == 'aes_oem':
             header |= 0
-        elif types == 'aes_vault':
+        elif types in ['aes_vault', 'aes_vault_header']:
             header |= 1 << 14
         elif types == 'rsa_pub_oem':
             header |= 8 << 14
@@ -491,7 +492,7 @@ class OTP(object):
         header = 0
         header |= offset
 
-        if types == 'aes_vault':
+        if types in ['aes_vault', 'aes_vault_header']:
             header |= 1 << 14
         elif types == 'aes_oem':
             header |= 2 << 14
@@ -533,7 +534,7 @@ class OTP(object):
         header = 0
         header |= offset
 
-        if types == 'aes_vault':
+        if types in ['aes_vault', 'aes_vault_header']:
             header |= 1 << 14
         elif types == 'aes_oem':
             header |= 2 << 14
@@ -575,7 +576,7 @@ class OTP(object):
         header = 0
         header |= offset
 
-        if types == 'aes_vault':
+        if types in ['aes_vault', 'aes_vault_header']:
             header |= 1 << 14
         elif types == 'aes_oem':
             header |= 2 << 14
@@ -617,7 +618,7 @@ class OTP(object):
         header = 0
         header |= offset
 
-        if types == 'aes_vault':
+        if types in ['aes_vault', 'aes_vault_header']:
             header |= 1 << 14
         elif types == 'aes_oem':
             header |= 2 << 14
@@ -666,11 +667,13 @@ class OTP(object):
                 insert_key_bin = rsa_key_to_bin(rsa_key_file, 'public')
             else:
                 insert_key_bin = rsa_key_to_bin(rsa_key_file, 'private')
-        else:
+        elif types in ['aes_vault', 'aes_oem']:
             aes_key_bin = load_file(key_folder + key_config['key_bin'])
             aes_iv_bin = load_file(key_folder + key_config['iv_bin'])
             insert_key_bin = bytearray(aes_key_bin)
             insert_bytearray(bytearray(aes_iv_bin), insert_key_bin, 0x20)
+        else:
+            return None
 
         return insert_key_bin
 
@@ -688,8 +691,10 @@ class OTP(object):
             aes_key_bin2 = load_file(key_folder + key_config['key_bin2'])
             insert_key_bin = bytearray(aes_key_bin)
             insert_bytearray(bytearray(aes_key_bin2), insert_key_bin, 0x20)
-        else:
+        elif types == 'aes_oem':
             insert_key_bin = load_file(key_folder + key_config['key_bin'])
+        else:
+            return None
 
         return insert_key_bin
 
@@ -709,8 +714,10 @@ class OTP(object):
             aes_key_bin2 = load_file(key_folder + key_config['key_bin2'])
             insert_key_bin = bytearray(aes_key_bin)
             insert_bytearray(bytearray(aes_key_bin2), insert_key_bin, 0x20)
-        else:
+        elif types == 'aes_oem':
             insert_key_bin = load_file(key_folder + key_config['key_bin'])
+        else:
+            return None
 
         return insert_key_bin
 
@@ -743,8 +750,10 @@ class OTP(object):
             insert_bytearray(bytearray(gy), insert_key_bin, 0x30)
             insert_bytearray(bytearray(p), insert_key_bin, 0x60)
             insert_bytearray(bytearray(n), insert_key_bin, 0x90)
-        else:
+        elif types == 'aes_oem':
             insert_key_bin = load_file(key_folder + key_config['key_bin'])
+        else:
+            return None
 
         return insert_key_bin
 
@@ -812,9 +821,10 @@ class OTP(object):
         for conf in key_config:
             offset = int(conf['offset'], 16)
             key_bin = key_to_bytearray(conf, key_folder)
-            insert_bytearray(key_bin, data_region, offset)
-            self.genDataMask(data_region_ignore, key_bin,
-                             offset, ecc_region_enable, data_region_size, ecc_region_offset)
+            if key_bin:
+                insert_bytearray(key_bin, data_region, offset)
+                self.genDataMask(data_region_ignore, key_bin,
+                                offset, ecc_region_enable, data_region_size, ecc_region_offset)
 
     def make_data_region(self, data_config, key_folder, user_data_folder, genKeyHeader,
                          key_to_bytearray, data_region_size, ecc_region_offset, no_last_bit):
@@ -1379,7 +1389,6 @@ class OTP(object):
 
         if find_last == 0:
             print("Can not find Last Key List in OTP data region")
-            return False
         i = 0
         for h in key_header:
             key_id = h & 0x7
