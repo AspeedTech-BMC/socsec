@@ -344,7 +344,7 @@ class OTP_info(object):
         },
         '1030A1': {
             'config': pkgdata('socsec', 'otp_info/1030a1_config.json'),
-            'strap': pkgdata('socsec', 'otp_info/1030a1_strap.json'),
+            'strap': pkgdata('socsec', 'otp_info/1030a0_strap.json'),
             'data_region_size': 8192,
             'ecc_region_offset': 7168,
             'config_region_size': 64,
