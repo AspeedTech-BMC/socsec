@@ -342,7 +342,7 @@ def rsa_raw_ver(alg_data, rsa_key_file, signature, order='little'):
         if rsa_key.d:
             cmd = "openssl rsautl -verify -raw -inkey " + rsa_key_file
     except (AttributeError):
-        cmd = "openssl rsautl -verify -raw --pubin -inkey " + rsa_key_file
+        cmd = "openssl rsautl -verify -raw -pubin -inkey " + rsa_key_file
 
     p = subprocess.Popen(
         cmd,
