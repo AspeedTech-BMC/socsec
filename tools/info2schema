@@ -100,12 +100,12 @@ def OTPValidate():
                                     "enum": [
                                         "aes_oem",
                                         "aes_vault",
-                                        "aes_vault_header",
                                         "rsa_pub_oem",
                                         "rsa_pub_aes",
                                         "rsa_priv_aes",
                                         "ecdsa_pub",
-                                        "ecdsa_parameters"
+                                        "ecdsa_parameters",
+                                        "reserved"
                                     ]
                                 },
                                 "key_bin": {

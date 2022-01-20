@@ -255,12 +255,12 @@ class OTP(object):
                                         "enum": [
                                             "aes_oem",
                                             "aes_vault",
-                                            "aes_vault_header",
                                             "rsa_pub_oem",
                                             "rsa_pub_aes",
                                             "rsa_priv_aes",
                                             "ecdsa_pub",
-                                            "ecdsa_parameters"
+                                            "ecdsa_parameters",
+                                            "reserved"
                                         ]
                                     },
                                     "key_bin": {
@@ -446,13 +446,17 @@ class OTP(object):
 
     def genKeyHeader_a0(self, key_config, key_folder):
         types = key_config['types']
-        offset = int(key_config['offset'], 16)
         header = 0
+
+        if types == 'reserved':
+            return header
+
+        offset = int(key_config['offset'], 16)
         header |= offset
 
         if types == 'aes_oem':
             header |= 0
-        elif types in ['aes_vault', 'aes_vault_header']:
+        elif types == 'aes_vault':
             header |= 1 << 14
         elif types == 'rsa_pub_oem':
             header |= 8 << 14
@@ -488,11 +492,15 @@ class OTP(object):
 
     def genKeyHeader_a1(self, key_config, key_folder):
         types = key_config['types']
-        offset = int(key_config['offset'], 16)
         header = 0
+
+        if types == 'reserved':
+            return header
+
+        offset = int(key_config['offset'], 16)
         header |= offset
 
-        if types in ['aes_vault', 'aes_vault_header']:
+        if types == 'aes_vault':
             header |= 1 << 14
         elif types == 'aes_oem':
             header |= 2 << 14
@@ -530,11 +538,15 @@ class OTP(object):
 
     def genKeyHeader_a3_big(self, key_config, key_folder):
         types = key_config['types']
-        offset = int(key_config['offset'], 16)
         header = 0
+
+        if types == 'reserved':
+            return header
+
+        offset = int(key_config['offset'], 16)
         header |= offset
 
-        if types in ['aes_vault', 'aes_vault_header']:
+        if types == 'aes_vault':
             header |= 1 << 14
         elif types == 'aes_oem':
             header |= 2 << 14
@@ -572,11 +584,15 @@ class OTP(object):
 
     def genKeyHeader_a3_little(self, key_config, key_folder):
         types = key_config['types']
-        offset = int(key_config['offset'], 16)
         header = 0
+
+        if types == 'reserved':
+            return header
+
+        offset = int(key_config['offset'], 16)
         header |= offset
 
-        if types in ['aes_vault', 'aes_vault_header']:
+        if types == 'aes_vault':
             header |= 1 << 14
         elif types == 'aes_oem':
             header |= 2 << 14
@@ -614,11 +630,15 @@ class OTP(object):
 
     def genKeyHeader_1030a1_big(self, key_config, key_folder):
         types = key_config['types']
-        offset = int(key_config['offset'], 16)
         header = 0
+
+        if types == 'reserved':
+            return header
+
+        offset = int(key_config['offset'], 16)
         header |= offset
 
-        if types in ['aes_vault', 'aes_vault_header']:
+        if types == 'aes_vault':
             header |= 1 << 14
         elif types == 'aes_oem':
             header |= 2 << 14
@@ -809,22 +829,43 @@ class OTP(object):
         for conf in key_config:
             key_header.append(genKeyHeader(conf, key_folder))
         if not no_last_bit:
-            key_header[-1] |= 1 << 13
+            if key_header[-1] != 0:
+                key_header[-1] |= 1 << 13
         if len(key_config) % 2 != 0 and ecc_region_enable:
-            print("WARNING: ECC region is enable, but the key number is not 8 byte align")
+            print("WARNING: ECC region is enable, but the key header is not 8 byte align")
+            key_header.append(0xffffffff)
         header_byteArray = bytearray(array.array('I', key_header).tobytes())
         insert_bytearray(header_byteArray, data_region, 0)
 
-        self.genDataMask(data_region_ignore, header_byteArray, 0,
-                         ecc_region_enable, data_region_size, ecc_region_offset)
-
+        header_ignore = []
+        header_ecc_ignore = bytearray(8)
+        for i in range(8):
+            header_ecc_ignore[i] = 0xff
+        header_offset = -1
+        c = 0
         for conf in key_config:
+            header_offset = header_offset + 1
+            key_type = conf['types']
+            if key_type == 'reserved':
+                header_ignore.append(0xffffffff)
+                c = 0
+                continue
+            c = c + 1
+            if c == 2 or (c == 1 and header_offset % 2 == 0):
+                header_ecc_ignore[int(header_offset / 2)] = 0
+                c = 0
+            header_ignore.append(0)
+            header_ignore_byteArray = bytearray(
+                array.array('I', header_ignore).tobytes())
+            insert_bytearray(header_ignore_byteArray, data_region_ignore, 0)
+            insert_bytearray(header_ecc_ignore,
+                             data_region_ignore, ecc_region_offset)
+
             offset = int(conf['offset'], 16)
             key_bin = key_to_bytearray(conf, key_folder)
-            if key_bin:
-                insert_bytearray(key_bin, data_region, offset)
-                self.genDataMask(data_region_ignore, key_bin,
-                                offset, ecc_region_enable, data_region_size, ecc_region_offset)
+            insert_bytearray(key_bin, data_region, offset)
+            self.genDataMask(data_region_ignore, key_bin,
+                             offset, ecc_region_enable, data_region_size, ecc_region_offset)
 
     def make_data_region(self, data_config, key_folder, user_data_folder, genKeyHeader,
                          key_to_bytearray, data_region_size, ecc_region_offset, no_last_bit):
@@ -858,6 +899,8 @@ class OTP(object):
         if ecc_region_enable:
             ecc_byteArray = ECC().do_ecc(data_region)
             insert_bytearray(ecc_byteArray, data_region, ecc_region_offset)
+
+        hexdump(ecc_byteArray)
 
         return data_region, data_region_ignore
 
@@ -1408,7 +1451,7 @@ class OTP(object):
 
             if key_type == None:
                 print('key type cannot recognize')
-                return False
+                continue
 
             if kt.information == '':
                 continue
@@ -1478,6 +1521,8 @@ class OTP(object):
             print('')
             i = i + 1
 
+        if config_region == None:
+            return True
         conf = []
         for i in range(16):
             h = struct.unpack('<I', config_region[(i*4):(i*4+4)])[0]
@@ -1885,8 +1930,12 @@ class OTP(object):
 
         if header.image_info & self.otp_info.INC_DATA:
             print('OTP data region :')
-            self.otp_print_image_data(
-                key_type_list, data_region, config_region)
+            if header.image_info & self.otp_info.INC_CONF:
+                self.otp_print_image_data(
+                    key_type_list, data_region, config_region)
+            else:
+                self.otp_print_image_data(
+                    key_type_list, data_region, None)
 
         if header.image_info & self.otp_info.INC_CONF:
             print('OTP config region :')
