@@ -900,8 +900,6 @@ class OTP(object):
             ecc_byteArray = ECC().do_ecc(data_region)
             insert_bytearray(ecc_byteArray, data_region, ecc_region_offset)
 
-        hexdump(ecc_byteArray)
-
         return data_region, data_region_ignore
 
     def make_config_region(self, config_region_config, config_info, config_region_size):
