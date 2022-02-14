@@ -1141,8 +1141,17 @@ class OTP(object):
             bytearray(scu_ignore.tobytes())
 
     def make_otp_image(self, config_file, key_folder,
-                       user_data_folder, output_folder, no_last_bit=False):
+                       user_data_folder, output_folder,
+                       no_last_bit=False, no_pre_production=False):
         otp_config = jstyleson.load(config_file)
+
+        if no_pre_production:
+            if otp_config['version'] in ['A0',
+                                         'A1',
+                                         'A2',
+                                         '1030A0',
+                                         '1030A1']:
+                raise OtpError('SOC version is incorrect in OTP config')
 
         if otp_config['version'] == 'A0':
             otp_info = self.otp_info.OTP_INFO['A0']
@@ -2037,6 +2046,10 @@ class otpTool(object):
                                 help='(develop)remove last bit in OTP header',
                                 action='store_true',
                                 required=False)
+        sub_parser.add_argument('--no_pre_production',
+                                help='check no pre production version',
+                                action='store_true',
+                                required=False)
         sub_parser.set_defaults(func=self.make_otp_image)
 
         sub_parser = subparsers.add_parser('print',
@@ -2063,7 +2076,8 @@ class otpTool(object):
                                 args.key_folder,
                                 args.user_data_folder,
                                 args.output_folder,
-                                args.no_last_bit)
+                                args.no_last_bit,
+                                args.no_pre_production)
 
     def print_otp_image(self, args):
         self.otp.print_otp_image(args.otp_image)
