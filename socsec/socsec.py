@@ -948,7 +948,7 @@ class Sec(object):
         """Implements the 'make_secure_bl1_image' command.
 
         Arguments:
-            soc_version: SOC version, e.g. '2600', '2605', '1030'
+            soc_version: SOC version, e.g. '2600', '2605', '1030', '1060'
             bl1_image_fd: Bootloader 1 image fd.
             rsa_sign_key_path: Path to rsa signing key to use or None.
             ecdsa_sign_key_path: Path to ecdsa signing key to use or None.
@@ -996,7 +996,7 @@ class Sec(object):
                 flash_patch_offset = 0x50
             else:
                 flash_patch_offset = 0
-        elif soc_version == '1030':
+        elif soc_version in ['1030', '1060']:
             if header_offset == None:
                 header_offset = 0x400
             if enc_offset == None:
@@ -1345,7 +1345,7 @@ class SecureBootVerify(object):
                 info_struct['rsa_key_order'] = 'little'
         elif soc_ver == OTP_info.SOC_AST1030A0:
             otp_info = self.otp.OTP_INFO['1030A0']
-        elif soc_ver == OTP_info.SOC_AST1030A1:
+        elif soc_ver in [OTP_info.SOC_AST1030A1, OTP_info.SOC_AST1060A1]:
             otp_info = self.otp.OTP_INFO['1030A1']
             if image_info & self.otp.HEADER_ORDER:
                 info_struct['rsa_key_order'] = 'big'
@@ -1402,7 +1402,7 @@ class SecureBootVerify(object):
             if soc_version in [OTP_info.SOC_AST2600A0, OTP_info.SOC_AST2600A1,
                                OTP_info.SOC_AST2600A2, OTP_info.SOC_AST2600A3]:
                 header_offset = 0x20
-            elif soc_version in [OTP_info.SOC_AST1030A0, OTP_info.SOC_AST1030A1]:
+            elif soc_version in [OTP_info.SOC_AST1030A0, OTP_info.SOC_AST1030A1, OTP_info.SOC_AST1060A1]:
                 header_offset = 0x400
 
         for i in range(7):
@@ -1432,7 +1432,7 @@ class SecureBootVerify(object):
             else:
                 algorithm_type = RSA_SHA
                 print('Algorithm: RSA_SHA')
-        elif soc_version == OTP_info.SOC_AST1030A1:
+        elif soc_version in [OTP_info.SOC_AST1030A1, OTP_info.SOC_AST1060A1]:
             if sb_mode == 1:
                 raise SecError("PFR mode")
             if sign_scheme in [0, 1, 2, 3]:
@@ -1559,7 +1559,8 @@ class SecureBootVerify(object):
                                0x8: RSA_OEM,
                                0xa: RSA_SOC_PUB,
                                0xc: RSA_SOC_PRI}
-        elif info_struct['version'] == OTP_info.SOC_AST1030A1:
+        elif info_struct['version'] in [OTP_info.SOC_AST1030A1,
+                                        OTP_info.SOC_AST1060A1]:
             type_lookup = {0x1: AES_VAULT,
                            0x2: AES_OEM,
                            0x9: RSA_OEM,
@@ -1904,7 +1905,7 @@ class secTool(object):
         sub_parser = subparsers.add_parser('make_secure_bl1_image',
                                            help='Makes a signed bl1 image.')
         sub_parser.add_argument('--soc',
-                                help='soc id (e.g. 2600, 1030)',
+                                help='soc id (e.g. 2600, 1030, 1060)',
                                 metavar='SOC',
                                 default='2600')
         sub_parser.add_argument('--bl1_image',
