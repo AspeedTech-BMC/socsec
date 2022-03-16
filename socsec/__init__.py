@@ -26,7 +26,7 @@ import struct
 from Crypto.PublicKey import RSA
 import binascii
 
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 
 
 def version2int(version):
@@ -232,7 +232,7 @@ class key_type(object):
 #  0xc├──────────────────────┤
 #     │                      │
 #     │   otptool Version    │
-#     │                      │                    
+#     │                      │
 # 0x10├──────────────────────┤
 #     │                      │
 #     │      Image Info      │
@@ -293,6 +293,7 @@ class OTP_info(object):
     SOC_AST2600A3 = 3
     SOC_AST1030A0 = 4
     SOC_AST1030A1 = 5
+    SOC_AST1060A1 = 6
     INC_DATA = 1 << 31
     INC_CONF = 1 << 30
     INC_STRAP = 1 << 29

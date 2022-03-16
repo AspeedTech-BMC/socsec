@@ -221,7 +221,8 @@ class OTP(object):
                         "A2",
                         "A3",
                         "1030A0",
-                        "1030A1"
+                        "1030A1",
+                        "1060A1",
                     ]
                 },
                 "data_region": {
@@ -1141,8 +1142,18 @@ class OTP(object):
             bytearray(scu_ignore.tobytes())
 
     def make_otp_image(self, config_file, key_folder,
-                       user_data_folder, output_folder, no_last_bit=False):
+                       user_data_folder, output_folder,
+                       no_last_bit=False, no_pre_production=False):
         otp_config = jstyleson.load(config_file)
+
+        if no_pre_production:
+            if otp_config['version'] in ['A0',
+                                         'A1',
+                                         'A2',
+                                         '1030A0',
+                                         '1030A1',
+                                         '1060A1']:
+                raise OtpError('SOC version is incorrect in OTP config')
 
         if otp_config['version'] == 'A0':
             otp_info = self.otp_info.OTP_INFO['A0']
@@ -1181,6 +1192,12 @@ class OTP(object):
             otp_config['data_region']['rsa_key_order'] = 'big'
             otp_info = self.otp_info.OTP_INFO['1030A1']
             version = OTP_info.SOC_AST1030A1
+            genKeyHeader = self.genKeyHeader_1030a1_big
+            key_to_bytearray = self.key_to_bytearray_1030a1_big
+        elif otp_config['version'] == '1060A1':
+            otp_config['data_region']['rsa_key_order'] = 'big'
+            otp_info = self.otp_info.OTP_INFO['1030A1']
+            version = OTP_info.SOC_AST1060A1
             genKeyHeader = self.genKeyHeader_1030a1_big
             key_to_bytearray = self.key_to_bytearray_1030a1_big
         else:
@@ -1889,6 +1906,10 @@ class OTP(object):
             ver = "AST1030A1"
             key_type_list = self.otp_info.ast1030a1_key_type
             otp_info = self.otp_info.OTP_INFO['1030A1']
+        elif soc_ver == OTP_info.SOC_AST1060A1:
+            ver = "AST1060A1"
+            key_type_list = self.otp_info.ast1030a1_key_type
+            otp_info = self.otp_info.OTP_INFO['1030A1']
         else:
             print('SOC version is invalid: {:X}'.format(soc_ver))
             return None, None
@@ -2037,6 +2058,10 @@ class otpTool(object):
                                 help='(develop)remove last bit in OTP header',
                                 action='store_true',
                                 required=False)
+        sub_parser.add_argument('--no_pre_production',
+                                help='check no pre production version',
+                                action='store_true',
+                                required=False)
         sub_parser.set_defaults(func=self.make_otp_image)
 
         sub_parser = subparsers.add_parser('print',
@@ -2063,7 +2088,8 @@ class otpTool(object):
                                 args.key_folder,
                                 args.user_data_folder,
                                 args.output_folder,
-                                args.no_last_bit)
+                                args.no_last_bit,
+                                args.no_pre_production)
 
     def print_otp_image(self, args):
         self.otp.print_otp_image(args.otp_image)
