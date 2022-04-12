@@ -1150,9 +1150,7 @@ class OTP(object):
             if otp_config['version'] in ['A0',
                                          'A1',
                                          'A2',
-                                         '1030A0',
-                                         '1030A1',
-                                         '1060A1']:
+                                         '1030A0']:
                 raise OtpError('SOC version is incorrect in OTP config')
 
         if otp_config['version'] == 'A0':
