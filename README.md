@@ -34,6 +34,18 @@ openssl genrsa -out rsa_key.pem 4096
 openssl rsa -in rsa_key.pem -pubout -out rsa_key-public.pem
 ```
 
+* ECDSA private key
+
+```bash
+openssl ecparam -name secp384r1 -genkey -out ecdsa_key.pem
+```
+
+* ECDSA public key
+
+```bash
+openssl ec -in ecdsa_key.pem -pubout -out ecdsa_key-public.pem
+```
+
 * AES key
 
 ```bash
@@ -241,8 +253,6 @@ introduce in next chapter.
 
 `--output` is an option which can output the unsigned an unencrypted image.
 
-`--cot_offset` is not available now.
-
 ## OTP Tool
 
 AST2600 built-in 64Kbit one time programmable (OTP) memory for configuration, strap, key storage, patch and user data. Each memory bit cell inside the OTP memory is capable to be programmed once. Typically, the data stored the OTP memory are non-volatile and can preserve permanently, but to improve the FIT (failure in time) of the OTP memory, ECC is recommended to enable.
@@ -255,6 +265,7 @@ Using this tool to generate the otp image, and using OTP Utility to program that
 usage: otptool make_otp_image [-h] [--key_folder KEY_FOLDER]
                               [--user_data_folder USER_DATA_FOLDER]
                               [--output_folder OUTPUT_FOLDER]
+                              [--no_last_bit] [--no_pre_production]
                               config
 
 positional arguments:
@@ -268,6 +279,8 @@ optional arguments:
                         user data folder
   --output_folder OUTPUT_FOLDER
                         output folder
+  --no_last_bit         (develop)remove last bit in OTP header
+  --no_pre_production   check no pre production version
 ```
 #### Argument
 
@@ -284,7 +297,10 @@ optional arguments:
 * `*.image`: a programmable image, use u-boot otp utility to program this image
 configs/ast2600/security/otp/sample.json is an example for all otp config and otp strap.
 
+* `otp-data.bin`: raw data of otp data region.
+
 `data_region` object is to describe the otp data region, which contain key, user data, otp patch, and ecc code. The figure below is data region layout. When `ecc_region` enable, otp tool will generate the ECC code. The otp patch should put inside user data region (non-secure region).
+![Data region](picture/data_region.png)
 
 ### Print OTP image
 ```bash
