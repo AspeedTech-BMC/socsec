@@ -1396,7 +1396,7 @@ class SecureBootVerify(object):
         enc_mode = (cfg0 >> 27) & 0x1
         header_offset = cfg3 & 0xffff
         key_retire = (cfg4 & 0x7f) | ((cfg4 >> 16) & 0x7f)
-        retire_list = [0]*7
+        retire_list = [0]*8
 
         if header_offset == 0:
             if soc_version in [OTP_info.SOC_AST2600A0, OTP_info.SOC_AST2600A1,
