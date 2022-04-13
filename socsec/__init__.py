@@ -26,7 +26,7 @@ import struct
 from Crypto.PublicKey import RSA
 import binascii
 
-__version__ = "1.0.2"
+__version__ = "1.0.3"
 
 
 def version2int(version):

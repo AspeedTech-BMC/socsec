@@ -43,6 +43,16 @@ OTP_INFO = [
         'config': INFO_DIR+'a3_config.json',
         'strap': INFO_DIR+'a1_strap.json',
     },
+    {
+        'name': '1030_A1',
+        'config': INFO_DIR+'1030a1_config.json',
+        'strap': INFO_DIR+'1030a0_strap.json',
+    },
+    {
+        'name': '1060_A1',
+        'config': INFO_DIR+'1030a1_config.json',
+        'strap': INFO_DIR+'1030a0_strap.json',
+    }
 ]
 
 
