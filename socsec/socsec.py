@@ -1320,7 +1320,7 @@ class SecureBootVerify(object):
     otp = OTP_info
     sec = Sec()
 
-    def parse_otp(self, otp_image):
+    def parse_otp(self, otp_image, no_default_data):
         info_struct = {}
         header = otp_image[0:self.otp.HEADER_SIZE]
 
@@ -1379,8 +1379,15 @@ class SecureBootVerify(object):
             img_dmask = otp_image[data_offset+d_size:data_offset+d_size*2]
             img_conf = otp_image[conf_offset:conf_offset+c_size]
             img_cmask = otp_image[conf_offset+c_size:conf_offset+c_size*2]
+
             for i in range(d_size):
                 data_region[i] = img_data[i] & ~img_dmask[i]
+                if not no_default_data:
+                    if int(i/4) % 2 == 0:
+                        data_default = 0
+                    else:
+                        data_default = 0xffffffff
+                    data_region[i] = data_region[i] | (data_default & img_dmask[i])
             for i in range(c_size):
                 config_region[i] = img_conf[i] & ~img_cmask[i]
 
@@ -1577,13 +1584,11 @@ class SecureBootVerify(object):
             t = (h >> 14) & 0xf
             if t in type_lookup:
                 kl['TYPE'] = type_lookup[t]
-            else:
-                continue
-            kl['ID'] = h & 0x7
-            kl['RETIRE'] = retire_list[kl['ID']]
-            kl['OFFSET'] = ((h >> 3) & 0x3ff) << 3
-            kl['PAR'] = (h >> 18) & 0x3
-            key_list.append(kl)
+                kl['ID'] = h & 0x7
+                kl['RETIRE'] = retire_list[kl['ID']]
+                kl['OFFSET'] = ((h >> 3) & 0x3ff) << 3
+                kl['PAR'] = (h >> 18) & 0x3
+                key_list.append(kl)
             if h & (1 << 13):
                 find_last = 1
                 break
@@ -1848,10 +1853,10 @@ class SecureBootVerify(object):
 
         return dec_image
 
-    def verify_secure_image(self, sec_image_fd, output_fd, otp_image_fd):
+    def verify_secure_image(self, sec_image_fd, output_fd, otp_image_fd, no_default_data):
         otp_image = otp_image_fd.read()
         sec_image = sec_image_fd.read()
-        info_struct, data_region, config_region = self.parse_otp(otp_image)
+        info_struct, data_region, config_region = self.parse_otp(otp_image, no_default_data)
 
         alg_data, header_offset, retire_list = self.parse_config(info_struct['version'],
                                                                  config_region)
@@ -2076,6 +2081,10 @@ class secTool(object):
                                 type=argparse.FileType('rb'),
                                 metavar='IMAGE',
                                 required=True)
+        sub_parser.add_argument('--no_default_data',
+                                help='Do not add OTP default value into data region',
+                                action='store_true',
+                                required=False)
         sub_parser.set_defaults(func=self.verify_secure_image)
 
         sub_parser = subparsers.add_parser('version',
@@ -2127,7 +2136,8 @@ class secTool(object):
         """Implements the 'verify' sub-command."""
         self.verify.verify_secure_image(args.sec_image,
                                         args.output,
-                                        args.otp_image)
+                                        args.otp_image,
+                                        args.no_default_data)
 
     def print_version(self, args):
         print(__version__)
