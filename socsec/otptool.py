@@ -827,46 +827,77 @@ class OTP(object):
                      ecc_region_offset, no_last_bit):
 
         key_header = []
+        header_ignore = []
+        header_ecc_ignore = bytearray(8)
+
         for conf in key_config:
-            key_header.append(genKeyHeader(conf, key_folder))
+            key_type = conf['types']
+            if key_type == 'reserved' and ecc_region_enable:
+                print(
+                    "WARNING: Key type include 'reserved' type, use default value to calculate the ecc")
+                break
+
+        header_offset = -1
+        for conf in key_config:
+            header_offset = header_offset + 1
+            key_type = conf['types']
+            kh = 0
+            if key_type == 'reserved':
+                if header_offset % 2 == 0:
+                    kh = 0
+                else:
+                    # remove last header bit(BIT 13) to prevent secure boot fail
+                    kh = 0xffffdfff
+            else:
+                kh = genKeyHeader(conf, key_folder)
+            key_header.append(kh)
+
         if not no_last_bit:
             if key_header[-1] != 0:
                 key_header[-1] |= 1 << 13
+
         if len(key_config) % 2 != 0 and ecc_region_enable:
-            print("WARNING: ECC region is enable, but the key header is not 8 byte align")
+            print("WARNING: ECC region is enable, but the key header is not 8 byte align, append 0xffffffff default value to calculate the ecc")
             key_header.append(0xffffffff)
+
         header_byteArray = bytearray(array.array('I', key_header).tobytes())
         insert_bytearray(header_byteArray, data_region, 0)
 
-        header_ignore = []
-        header_ecc_ignore = bytearray(8)
-        for i in range(8):
-            header_ecc_ignore[i] = 0xff
         header_offset = -1
-        c = 0
         for conf in key_config:
             header_offset = header_offset + 1
             key_type = conf['types']
             if key_type == 'reserved':
-                header_ignore.append(0xffffffff)
-                c = 0
-                continue
-            c = c + 1
-            if c == 2 or (c == 1 and header_offset % 2 == 0):
-                header_ecc_ignore[int(header_offset / 2)] = 0
-                c = 0
-            header_ignore.append(0)
-            header_ignore_byteArray = bytearray(
-                array.array('I', header_ignore).tobytes())
-            insert_bytearray(header_ignore_byteArray, data_region_ignore, 0)
+                if ecc_region_enable:
+                    # if ecc_region enable, otptool will use default otp value to generate the image
+                    header_ignore.append(0)
+                else:
+                    # if ecc_region disable, otptool will set mask to ignore the setting
+                    if header_offset % 2 == 0:
+                        header_ignore.append(0xffffffff)
+                    else:
+                        # still need to program last header bit(BIT 13) to 0 to prevent secure boot fail
+                        header_ignore.append(0xffffdfff)
+            else:
+                header_ignore.append(0)
+
+                offset = int(conf['offset'], 16)
+                key_bin = key_to_bytearray(conf, key_folder)
+                insert_bytearray(key_bin, data_region, offset)
+                self.genDataMask(data_region_ignore, key_bin,
+                                offset, ecc_region_enable, data_region_size, ecc_region_offset)
+
+        header_ignore_byteArray = bytearray(
+            array.array('I', header_ignore).tobytes())
+        insert_bytearray(header_ignore_byteArray, data_region_ignore, 0)
+
+        if ecc_region_enable:
+            for i in range(8):
+                header_ecc_ignore[i] = 0xff
+            for i in range(int((len(key_config)+1)/2)):
+                header_ecc_ignore[i] = 0
             insert_bytearray(header_ecc_ignore,
                              data_region_ignore, ecc_region_offset)
-
-            offset = int(conf['offset'], 16)
-            key_bin = key_to_bytearray(conf, key_folder)
-            insert_bytearray(key_bin, data_region, offset)
-            self.genDataMask(data_region_ignore, key_bin,
-                             offset, ecc_region_enable, data_region_size, ecc_region_offset)
 
     def make_data_region(self, data_config, key_folder, user_data_folder, genKeyHeader,
                          key_to_bytearray, data_region_size, ecc_region_offset, no_last_bit):
