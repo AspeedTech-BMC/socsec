@@ -35,11 +35,6 @@
             "otp_protect": false,
             "ignore": false
         },
-        "CPU frequency": {
-            "value": "1.2GHz",
-            "otp_protect": false,
-            "ignore": false
-        },
         "Enable boot from uart5": {
             "value": true,
             "otp_protect": true,
