@@ -797,12 +797,42 @@ class Sec(object):
     def make_bl1_mode_ecdsa_image(self, image, ecdsa_sign_key, sign_image_size,
                                   signature_offset, signing_helper,
                                   signing_helper_with_files):
-        # sign the image
-        sha = SHA384.new(image[0:sign_image_size])
-        digest = sha.digest()
+        src_bin = image[0:sign_image_size]
 
-        signature = ecdsa_sign(ecdsa_sign_key, digest,
-                               signing_helper, signing_helper_with_files)
+        if signing_helper_with_files is not None:
+            signing_file = tempfile.NamedTemporaryFile()
+            signing_file.write(src_bin)
+            signing_file.flush()
+            p = subprocess.Popen([
+                signing_helper_with_files, ecdsa_sign_key, signing_file.name])
+            retcode = p.wait()
+            if retcode != 0:
+                raise ValueError('Error signing')
+            signing_file.seek(0)
+            read_f = signing_file.read()
+
+            # signature = bytearray(read_f)[4:52]+bytearray(read_f)[-48:]
+            signature = bytearray(read_f)
+        else:
+            if signing_helper is not None:
+                p = subprocess.Popen(
+                    [signing_helper, ecdsa_sign_key],
+                    stdin=subprocess.PIPE,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE)
+                (pout, perr) = p.communicate(input=src_bin)
+                retcode = p.wait()
+                if retcode != 0:
+                    raise ValueError('Error signing: {}'.format(perr))
+
+                signature = bytearray(pout)
+            else:
+                # sign the image
+                sha = SHA384.new(src_bin)
+                digest = sha.digest()
+
+                signature = ecdsa_sign(ecdsa_sign_key, digest,
+                                    signing_helper, signing_helper_with_files)
         insert_bytearray(signature, image, signature_offset)
 
     def make_bl1_mode_ecdsa_enc_image(self, image, alg_data, ecdsa_sign_key,
