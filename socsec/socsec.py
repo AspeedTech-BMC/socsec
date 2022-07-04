@@ -1386,10 +1386,10 @@ class SecureBootVerify(object):
 
         info_struct['version'] = soc_ver
         image_size = image_info & 0xffff
-        sha = SHA256.new(otp_image[:image_size])
+        sha = SHA384.new(otp_image[:image_size])
         digest = sha.digest()
 
-        if digest != otp_image[checksum_offset:checksum_offset+32]:
+        if digest != otp_image[checksum_offset:checksum_offset+48]:
             raise SecError('OTP image checksum is invalid')
 
         data_offset = data_info & 0xffff

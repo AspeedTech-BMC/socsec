@@ -27,7 +27,7 @@ import os
 import math
 from bitarray import bitarray
 from jsonschema import validate
-from Crypto.Hash import SHA256
+from Crypto.Hash import SHA384
 from socsec import parse_path
 from socsec import insert_bytearray
 from socsec import rsa_bit_length
@@ -1308,7 +1308,7 @@ class OTP(object):
 
             data_all = data_region + data_region_ignore
 
-            sha = SHA256.new(header+data_all)
+            sha = SHA384.new(header+data_all)
             checksum = sha.digest()
 
             writeBinFile(header+data_all+checksum, data_image_output)
@@ -1348,7 +1348,7 @@ class OTP(object):
 
             config_all = config_region + config_region_ignore
 
-            sha = SHA256.new(header+config_all)
+            sha = SHA384.new(header+config_all)
             checksum = sha.digest()
 
             writeBinFile(header+config_all+checksum, config_image_output)
@@ -1386,7 +1386,7 @@ class OTP(object):
 
             otp_strap_all = otp_strap + otp_strap_protect + otp_strap_ignore
 
-            sha = SHA256.new(header+otp_strap_all)
+            sha = SHA384.new(header+otp_strap_all)
             checksum = sha.digest()
 
             writeBinFile(header+otp_strap_all+checksum, strap_image_output)
@@ -1422,7 +1422,7 @@ class OTP(object):
 
             scu_protect_all = scu_protect + scu_ignore
 
-            sha = SHA256.new(header+scu_protect_all)
+            sha = SHA384.new(header+scu_protect_all)
             checksum = sha.digest()
 
             writeBinFile(header+scu_protect_all+checksum,
@@ -1456,7 +1456,7 @@ class OTP(object):
             checksum_offset
         )
 
-        sha = SHA256.new(header+data_all+config_all +
+        sha = SHA384.new(header+data_all+config_all +
                          otp_strap_all)
         checksum = sha.digest()
 
@@ -1902,7 +1902,7 @@ class OTP(object):
             raise OtpError('OTP image magic word is invalid')
 
         image_size = header.image_info & 0xffff
-        sha = SHA256.new(otp_image[:image_size])
+        sha = SHA384.new(otp_image[:image_size])
         digest = sha.digest()
         co = header.checksum_offset
         if digest != otp_image[co:co+32]:
@@ -2106,11 +2106,11 @@ class otpTool(object):
 
         args = parser.parse_args(argv[1:])
 
-        try:
-            args.func(args)
-        except AttributeError as ex:
-            print(ex)
+        if(len(argv) == 1):
+            parser.print_usage()
             sys.exit(1)
+
+        args.func(args)
 
     def make_otp_image(self, args):
         self.otp.make_otp_image(args.config,
