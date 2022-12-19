@@ -294,6 +294,7 @@ class OTP_info(object):
     SOC_AST1030A0 = 4
     SOC_AST1030A1 = 5
     SOC_AST1060A1 = 6
+    SOC_AST1060A2 = 7
     INC_DATA = 1 << 31
     INC_CONF = 1 << 30
     INC_STRAP = 1 << 29
