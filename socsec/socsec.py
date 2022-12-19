@@ -656,11 +656,11 @@ class Sec(object):
         if alg_data.algorithm_type in [RSA_SHA, AES_RSA_SHA]:
             self.verify_bl1_mode_2_image(sec_image, rsa_vk_path, alg_data,
                                          sign_image_size, signature_offset, rsa_key_order)
-            print("check integrity PASS")
+            print("check integrity PASS - rsa")
         elif alg_data.algorithm_type in [ECDSA_P384, AES_ECDSA_P384]:
             self.verify_bl1_mode_ecdsa_image(sec_image, ecdsa_vk_path,
                                              sign_image_size, signature_offset)
-            print("check integrity PASS")
+            print("check integrity PASS - ecdsa")
 
         if alg_data.algorithm_type == AES_RSA_SHA and key_in_otp:
             self.decode_bl1_mode_2_enc_image(image, sec_image, header_offset,
@@ -1375,7 +1375,7 @@ class SecureBootVerify(object):
                 info_struct['rsa_key_order'] = 'little'
         elif soc_ver == OTP_info.SOC_AST1030A0:
             otp_info = self.otp.OTP_INFO['1030A0']
-        elif soc_ver in [OTP_info.SOC_AST1030A1, OTP_info.SOC_AST1060A1]:
+        elif soc_ver in [OTP_info.SOC_AST1030A1, OTP_info.SOC_AST1060A1, OTP_info.SOC_AST1060A2]:
             otp_info = self.otp.OTP_INFO['1030A1']
             if image_info & self.otp.HEADER_ORDER:
                 info_struct['rsa_key_order'] = 'big'
@@ -1439,7 +1439,7 @@ class SecureBootVerify(object):
             if soc_version in [OTP_info.SOC_AST2600A0, OTP_info.SOC_AST2600A1,
                                OTP_info.SOC_AST2600A2, OTP_info.SOC_AST2600A3]:
                 header_offset = 0x20
-            elif soc_version in [OTP_info.SOC_AST1030A0, OTP_info.SOC_AST1030A1, OTP_info.SOC_AST1060A1]:
+            elif soc_version in [OTP_info.SOC_AST1030A0, OTP_info.SOC_AST1030A1, OTP_info.SOC_AST1060A1, OTP_info.SOC_AST1060A2]:
                 header_offset = 0x400
 
         for i in range(7):
@@ -1469,7 +1469,7 @@ class SecureBootVerify(object):
             else:
                 algorithm_type = RSA_SHA
                 print('Algorithm: RSA_SHA')
-        elif soc_version in [OTP_info.SOC_AST1030A1, OTP_info.SOC_AST1060A1]:
+        elif soc_version in [OTP_info.SOC_AST1030A1, OTP_info.SOC_AST1060A1, OTP_info.SOC_AST1060A2]:
             if sb_mode == 1:
                 raise SecError("PFR mode")
             if sign_scheme in [0, 1, 2, 3]:
@@ -1597,7 +1597,8 @@ class SecureBootVerify(object):
                                0xa: RSA_SOC_PUB,
                                0xc: RSA_SOC_PRI}
         elif info_struct['version'] in [OTP_info.SOC_AST1030A1,
-                                        OTP_info.SOC_AST1060A1]:
+                                        OTP_info.SOC_AST1060A1,
+                                        OTP_info.SOC_AST1060A2]:
             type_lookup = {0x1: AES_VAULT,
                            0x2: AES_OEM,
                            0x9: RSA_OEM,

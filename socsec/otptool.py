@@ -223,6 +223,7 @@ class OTP(object):
                         "1030A0",
                         "1030A1",
                         "1060A1",
+                        "1060A2",
                     ]
                 },
                 "data_region": {
@@ -1229,6 +1230,12 @@ class OTP(object):
             version = OTP_info.SOC_AST1060A1
             genKeyHeader = self.genKeyHeader_1030a1_big
             key_to_bytearray = self.key_to_bytearray_1030a1_big
+        elif otp_config['version'] == '1060A2':
+            otp_config['data_region']['rsa_key_order'] = 'big'
+            otp_info = self.otp_info.OTP_INFO['1030A1']
+            version = OTP_info.SOC_AST1060A2
+            genKeyHeader = self.genKeyHeader_1030a1_big
+            key_to_bytearray = self.key_to_bytearray_1030a1_big
         else:
             raise OtpError('SOC version is invalid')
 
@@ -1937,6 +1944,10 @@ class OTP(object):
             otp_info = self.otp_info.OTP_INFO['1030A1']
         elif soc_ver == OTP_info.SOC_AST1060A1:
             ver = "AST1060A1"
+            key_type_list = self.otp_info.ast1030a1_key_type
+            otp_info = self.otp_info.OTP_INFO['1030A1']
+        elif soc_ver == OTP_info.SOC_AST1060A2:
+            ver = "AST1060A2"
             key_type_list = self.otp_info.ast1030a1_key_type
             otp_info = self.otp_info.OTP_INFO['1030A1']
         else:
