@@ -858,8 +858,8 @@ class OTP(object):
                 key_header[-1] |= 1 << 13
 
         if len(key_config) % 2 != 0 and ecc_region_enable:
-            print("WARNING: ECC region is enable, but the key header is not 8 byte align, append 0xffffffff default value to calculate the ecc")
-            key_header.append(0xffffffff)
+            print("WARNING: ECC region is enable, but the key header is not 8 byte align, append 0xffffdfff to calculate the ecc")
+            key_header.append(0xffffdfff)
 
         header_byteArray = bytearray(array.array('I', key_header).tobytes())
         insert_bytearray(header_byteArray, data_region, 0)
@@ -887,6 +887,9 @@ class OTP(object):
                 insert_bytearray(key_bin, data_region, offset)
                 self.genDataMask(data_region_ignore, key_bin,
                                 offset, ecc_region_enable, data_region_size, ecc_region_offset)
+
+        if len(key_config) % 2 != 0 and ecc_region_enable:
+                header_ignore.append(0)
 
         header_ignore_byteArray = bytearray(
             array.array('I', header_ignore).tobytes())
