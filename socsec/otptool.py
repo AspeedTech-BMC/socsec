@@ -1039,6 +1039,7 @@ class OTP(object):
                 bit_offset = info['bit_offset']
                 offset = dw_offset*32 + bit_offset
                 bit_length = info['bit_length']
+                value_start = info['value_start']
                 offset_value = int(value, 16) - value_start
 
                 if offset_value < 0 or offset_value > bit_length:
