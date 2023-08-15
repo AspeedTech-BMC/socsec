@@ -1425,8 +1425,8 @@ class SecureBootVerify(object):
 
     def parse_config(self, soc_version, config_region):
         cfg0 = struct.unpack('<I', config_region[0:4])[0]
-        cfg3 = struct.unpack('<I', config_region[8:12])[0]
-        cfg4 = struct.unpack('<I', config_region[12:16])[0]
+        cfg3 = struct.unpack('<I', config_region[12:16])[0]
+        cfg4 = struct.unpack('<I', config_region[16:20])[0]
 
         sign_scheme = (cfg0 >> 10) & 0xf
         sb_mode = (cfg0 >> 7) & 0x1
