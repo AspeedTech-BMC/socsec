@@ -421,6 +421,6 @@ class OTP_info(object):
                  'RSA-private as AES key decryption key(big endian)'),
         key_type(5, OTP_KEY_ECDSA384P, 0,
                  'ECDSA384 cure parameter'),
-        key_type(7, OTP_KEY_ECDSA384, 0,
+        key_type(7, OTP_KEY_ECDSA384, 1,
                  'ECDSA-public as OEM DSS public keys'),
     ]
