@@ -1416,8 +1416,8 @@ class OTP(object):
             image_info_all = image_info_all | self.otp_info.INC_SCU_PROTECT
 
             scu_protect_offset = self.otp_info.HEADER_SIZE
-            scu_protect_header = scu_protect_offset | (strap_size << 16)
-            checksum_offset = scu_protect_offset + strap_size
+            scu_protect_header = scu_protect_offset | (scu_protect_size << 16)
+            checksum_offset = scu_protect_offset + scu_protect_size
             header = struct.pack(
                 self.otp_info.HEADER_FORMAT,
                 self.otp_info.MAGIC_WORD_OTP.encode(),
@@ -1442,7 +1442,7 @@ class OTP(object):
 
         print("Generating OTP-all Image ...")
         image_size_all = self.otp_info.HEADER_SIZE + \
-            data_size + config_size + strap_size
+            data_size + config_size + strap_size + scu_protect_size
         image_info_all = image_info_all | image_size_all
         data_offset = self.otp_info.HEADER_SIZE
         config_offset = data_offset + data_size
@@ -1467,8 +1467,8 @@ class OTP(object):
             checksum_offset
         )
 
-        sha = SHA384.new(header+data_all+config_all +
-                         otp_strap_all)
+        sha = SHA384.new(header + data_all + config_all +
+                         otp_strap_all + scu_protect_all)
         checksum = sha.digest()
 
         writeBinFile(header + data_all + config_all +
