@@ -2743,10 +2743,6 @@ class otpTool(object):
                                 help='(develop)remove last bit in OTP header',
                                 action='store_true',
                                 required=False)
-        sub_parser.add_argument('--no_pre_production',
-                                help='check no pre production version',
-                                action='store_true',
-                                required=False)
         sub_parser.set_defaults(func=self.make_otp_image)
 
         sub_parser = subparsers.add_parser('print',
@@ -2773,8 +2769,7 @@ class otpTool(object):
                                 args.key_folder,
                                 args.user_data_folder,
                                 args.output_folder,
-                                args.no_last_bit,
-                                args.no_pre_production)
+                                args.no_last_bit)
 
     def print_otp_image(self, args):
         self.otp.print_otp_image(args.otp_image)

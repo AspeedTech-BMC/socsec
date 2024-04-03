@@ -265,7 +265,7 @@ Using this tool to generate the otp image, and using OTP Utility to program that
 usage: otptool make_otp_image [-h] [--key_folder KEY_FOLDER]
                               [--user_data_folder USER_DATA_FOLDER]
                               [--output_folder OUTPUT_FOLDER]
-                              [--no_last_bit] [--no_pre_production]
+                              [--no_last_bit]
                               config
 
 positional arguments:
@@ -280,7 +280,6 @@ optional arguments:
   --output_folder OUTPUT_FOLDER
                         output folder
   --no_last_bit         (develop)remove last bit in OTP header
-  --no_pre_production   check no pre production version
 ```
 #### Argument
 
