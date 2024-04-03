@@ -129,9 +129,13 @@ def BIT(off):
 
 
 def load_file(file_path: str):
-    with open(file_path, 'rb') as f:
-        file_bin = f.read()
-        f.close()
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as f:
+            file_bin = f.read()
+            f.close()
+    else:
+        raise ValueError("File is not exists", file_path)
+
     return file_bin
 
 
@@ -680,6 +684,40 @@ class OTP(object):
             header |= exp_length << 20
         return header
 
+    def genKeyHeader_2700a1(self, key_config, key_folder):
+        type = key_config['type']
+        header = 0
+
+        if type == 'reserved':
+            return header
+
+        w_offset = int(key_config['w_offset'], 16)
+        header |= w_offset << 16
+
+        #print(self.otp_info.OTP_KEY_TYPE_2700.OTP_KEY_TYPE_SOC_ECDSA_PUB.value)
+
+        if type == 'soc_ecdsa_pub':
+            header |= self.otp_info.OTP_KEY_TYPE_2700.OTP_KEY_TYPE_SOC_ECDSA_PUB.value << 4
+        elif type == 'soc_lms_pub':
+            header |= self.otp_info.OTP_KEY_TYPE_2700.OTP_KEY_TYPE_SOC_LMS_PUB.value << 4
+        elif type == 'cal_manu_pub_hash':
+            header |= self.otp_info.OTP_KEY_TYPE_2700.OTP_KEY_TYPE_CAL_MANU_PUB_HASH.value << 4
+        elif type == 'cal_own_pub_hash':
+            header |= self.otp_info.OTP_KEY_TYPE_2700.OTP_KEY_TYPE_CAL_OWN_PUB_HASH.value << 4
+        elif type == 'soc_vault':
+            header |= self.otp_info.OTP_KEY_TYPE_2700.OTP_KEY_TYPE_SOC_VAULT.value << 4
+        elif type == 'soc_vault_seed':
+            header |= self.otp_info.OTP_KEY_TYPE_2700.OTP_KEY_TYPE_SOC_VAULT_SEED.value << 4
+
+        if 'number_id' in key_config:
+            number_id = key_config['number_id']
+            if number_id >= 0 and number_id <= 15:
+                header |= number_id
+            else:
+                raise ValueError("number_id is not supported, should be 0~15.")
+
+        return header
+
     def key_to_bytearray_a0(self, key_config, key_folder):
         types = key_config['types']
 
@@ -776,6 +814,23 @@ class OTP(object):
             insert_key_bin = load_file(key_folder + key_config['key_bin'])
         else:
             return None
+
+        return insert_key_bin
+
+    def key_to_bytearray_2700a1(self, key_config, key_folder):
+        type = key_config['type']
+
+        if type == 'soc_ecdsa_pub':
+            ecdsa_key_bin = ecdsa_key_to_bin(
+                key_folder + key_config['key_file'])
+            insert_key_bin = bytearray(ecdsa_key_bin)
+        elif type == 'soc_lms_pub':
+            raise ValueError("soc_lms_pub key type is not supported yet.")
+        elif type in ['cal_manu_pub_hash', 'cal_own_pub_hash', 'soc_vault', 'soc_vault_seed']:
+            key_bin = load_file(key_folder + key_config['key_file'])
+            insert_key_bin = bytearray(key_bin)
+        else:
+            raise ValueError("key type %s is not supported." % (type))
 
         return insert_key_bin
 
@@ -886,10 +941,10 @@ class OTP(object):
                 key_bin = key_to_bytearray(conf, key_folder)
                 insert_bytearray(key_bin, data_region, offset)
                 self.genDataMask(data_region_ignore, key_bin,
-                                offset, ecc_region_enable, data_region_size, ecc_region_offset)
+                                 offset, ecc_region_enable, data_region_size, ecc_region_offset)
 
         if len(key_config) % 2 != 0 and ecc_region_enable:
-                header_ignore.append(0)
+            header_ignore.append(0)
 
         header_ignore_byteArray = bytearray(
             array.array('I', header_ignore).tobytes())
@@ -1055,6 +1110,53 @@ class OTP(object):
         return bytearray(config_region.tobytes()), \
             bytearray(config_region_ignore.tobytes())
 
+    def make_config_region_v2(self, config_region_config, config_info, config_region_size):
+        config_region = bitarray(config_region_size * 8, endian='little')
+        config_region.setall(False)
+
+        for config in config_region_config:
+            info = None
+            key = config
+            value = config_region_config[config]
+            for i in config_info:
+                if key.strip() == i['key'].strip():
+                    info = i
+                    break
+            if not info:
+                raise OtpError('"{}" config is not supported'.format(key))
+
+            if info['type'] == 'boolean':
+                w_offset = info['w_offset']
+                bit_offset = info['bit_offset']
+                offset = w_offset * 16 + bit_offset
+                if value:
+                    print("key {} set value".format(key))
+                    print("offset", offset)
+                    in_val = 1
+                else:
+                    #print("key %s no value".format(key))
+                    in_val = 0
+
+                config_region[offset] = in_val
+
+            elif info['type'] == 'string':
+                w_offset = info['w_offset']
+                bit_offset = info['bit_offset']
+                bit_length = info['bit_length']
+                offset = w_offset * 16 + bit_offset
+
+                hex_value = int(value, 16)
+                bit_value = bitarray(bin(hex_value)[2:][::-1])
+                if hex_value.bit_length() > bit_length:
+                    raise ValueError("Input value is out of range.", value)
+
+                if hex_value != 0:
+                    print("key {} set value {}".format(key, hex_value))
+                    print("offset len", offset, bit_length)
+                config_region[offset:offset+len(bit_value)] = bit_value
+
+        return bytearray(config_region.tobytes())
+
     def make_otp_strap(self, otp_strap_config, strap_info, otp_strap_bit_size):
         otp_strap = bitarray(otp_strap_bit_size, endian='little')
         otp_strap_protect = bitarray(otp_strap_bit_size, endian='little')
@@ -1140,6 +1242,116 @@ class OTP(object):
             bytearray(otp_strap_protect.tobytes()), \
             bytearray(otp_strap_ignore.tobytes())
 
+    def make_strap_region(self, otp_strap_config, strap_info, strap_bit_size):
+        strap_region = bitarray(strap_bit_size * 2, endian='little')
+        strap_region.setall(False)
+
+        for config in otp_strap_config:
+            info = None
+            key = config
+            value = otp_strap_config[config]['value']
+            prot = otp_strap_config[config]['protect']
+
+            for i in strap_info:
+                if key == i['key']:
+                    info = i
+                    break
+            if not info:
+                raise OtpError('"{}" strap is not supported'.format(key))
+
+            if info['key_type'] != "strap":
+                continue
+
+            bit_offset = info['bit_offset']
+            if info['type'] == 'boolean':
+                bit_length = 1
+                if value:
+                    print("key {} set value".format(key))
+                    strap_region[bit_offset] = 1
+
+                if prot:
+                    print("key {} set protect".format(key))
+                    strap_region[bit_offset + strap_bit_size] = 1
+
+            elif info['type'] == 'string':
+                w_offset = info['w_offset']
+                bit_offset = info['bit_offset']
+                bit_length = info['bit_length']
+                offset = w_offset * 16 + bit_offset
+
+                hex_value = int(value, 16)
+                bit_value = bitarray(bin(hex_value)[2:][::-1])
+                prot_value = bitarray(bit_length)
+                prot_value.setall(True)
+                if hex_value.bit_length() > bit_length:
+                    raise ValueError("Input value is out of range.", value)
+
+                if hex_value != 0:
+                    print("key {} set value {}".format(key, hex_value))
+                    print("offset len", offset, bit_length)
+
+                strap_region[offset:offset+len(bit_value)] = bit_value
+                if prot:
+                    print("key {} set protect".format(key))
+                    strap_region[offset + strap_bit_size:offset + strap_bit_size + bit_length] = prot_value
+
+        return bytearray(strap_region.tobytes())
+
+    def make_strap_ext_region(self, otp_strap_config, strap_info, strap_bit_size):
+        strap_ext_region = bitarray(strap_bit_size * 2, endian='little')
+        strap_ext_region.setall(False)
+
+        for config in otp_strap_config:
+            info = None
+            key = config
+            value = otp_strap_config[config]['value']
+            vld = otp_strap_config[config]['valid']
+
+            for i in strap_info:
+                if key == i['key']:
+                    info = i
+                    break
+            if not info:
+                raise OtpError('"{}" strap is not supported'.format(key))
+
+            if info['key_type'] != "strap_ext":
+                continue
+
+            bit_offset = info['bit_offset']
+            if info['type'] == 'boolean':
+                bit_length = 1
+                if value:
+                    print("key {} set value".format(key))
+                    strap_ext_region[bit_offset] = 1
+
+                if vld:
+                    print("key {} set valid".format(key))
+                    strap_ext_region[bit_offset + strap_bit_size] = 1
+
+            elif info['type'] == 'string':
+                w_offset = info['w_offset']
+                bit_offset = info['bit_offset']
+                bit_length = info['bit_length']
+                offset = w_offset * 16 + bit_offset
+
+                hex_value = int(value, 16)
+                bit_value = bitarray(bin(hex_value)[2:][::-1])
+                vld_value = bitarray(bit_length)
+                vld_value.setall(True)
+                if hex_value.bit_length() > bit_length:
+                    raise ValueError("Input value is out of range.", value)
+
+                if hex_value != 0:
+                    print("key {} set value {}".format(key, hex_value))
+                    print("offset len", offset, bit_length)
+
+                strap_ext_region[offset:offset+len(bit_value)] = bit_value
+                if vld:
+                    print("key {} set valid".format(key))
+                    strap_ext_region[offset + strap_bit_size:offset + strap_bit_size + bit_length] = vld_value
+
+        return bytearray(strap_ext_region.tobytes())
+
     def make_scu_protect_image(self, scu_protect_config, strap_info):
         scu_protect = bitarray(64, endian='little')
         scu_ignore = bitarray(64, endian='little')
@@ -1177,17 +1389,56 @@ class OTP(object):
         return bytearray(scu_protect.tobytes()), \
             bytearray(scu_ignore.tobytes())
 
-    def make_otp_image(self, config_file, key_folder,
-                       user_data_folder, output_folder,
-                       no_last_bit=False, no_pre_production=False):
-        otp_config = jstyleson.load(config_file)
+    def make_caliptra_region(self, caliptra_region_config, caliptra_info, caliptra_region_size):
+        caliptra_region = bitarray(caliptra_region_size * 8, endian='little')
+        caliptra_region.setall(False)
 
-        if no_pre_production:
-            if otp_config['version'] in ['A0',
-                                         'A1',
-                                         'A2',
-                                         '1030A0']:
-                raise OtpError('SOC version is incorrect in OTP config')
+        for config in caliptra_region_config:
+            info = None
+            key = config
+            value = caliptra_region_config[config]
+            for i in caliptra_info:
+                if key == i['key']:
+                    info = i
+                    break
+            if not info:
+                raise OtpError('"{}" config is not supported'.format(key))
+
+            if info['type'] == 'boolean':
+                w_offset = info['w_offset']
+                bit_offset = info['bit_offset']
+                offset = w_offset * 16 + bit_offset
+                if value:
+                    print("key {} set value".format(key))
+                    print("offset", offset)
+                    in_val = 1
+                else:
+                    in_val = 0
+
+                caliptra_region[offset] = in_val
+
+            elif info['type'] == 'string':
+                w_offset = info['w_offset']
+                bit_offset = info['bit_offset']
+                bit_length = info['bit_length']
+                offset = w_offset * 16 + bit_offset
+
+                hex_value = int(value, 16)
+                bit_value = bitarray(bin(hex_value)[2:][::-1])
+                if hex_value.bit_length() > bit_length:
+                    print("bit_length", bit_length)
+                    raise ValueError("key %s Input value %s is out of range." % (key, value))
+
+                if hex_value != 0:
+                    print("key {} set value {}".format(key, hex_value))
+                    print("offset len", offset, bit_length)
+                caliptra_region[offset:offset+len(bit_value)] = bit_value
+
+        return bytearray(caliptra_region.tobytes())
+
+    def make_otp_image_v1(self, otp_config, key_folder,
+                          user_data_folder, output_folder,
+                          no_last_bit=False):
 
         if otp_config['version'] == 'A0':
             otp_info = self.otp_info.OTP_INFO['A0']
@@ -1474,6 +1725,394 @@ class OTP(object):
         writeBinFile(header + data_all + config_all +
                      otp_strap_all + scu_protect_all +
                      checksum, all_image_output)
+
+    def genKeyRegion_v2(self, key_config, key_folder, data_region,
+                     genKeyHeader, key_to_bytearray, data_region_size,
+                     no_last_bit):
+
+        key_header = []
+
+        # 1. Handle Key Header
+        print("1. Handle Key Header...")
+        header_offset = -1
+        for conf in key_config:
+            header_offset = header_offset + 1
+            key_type = conf['type']
+
+            if key_type == 'reserved':
+                kh = 0
+            else:
+                kh = genKeyHeader(conf, key_folder)
+
+            key_header.append(kh)
+
+        header_byteArray = bytearray(array.array('I', key_header).tobytes())
+        insert_bytearray(header_byteArray, data_region, 0)
+
+        # 2. Handle Key Body
+        print("2. Handle Key Body...")
+        header_offset = -1
+        for conf in key_config:
+            print("key:", conf['type'], conf['key_file'], conf['w_offset'], conf['number_id'])
+            header_offset = header_offset + 1
+            key_type = conf['type']
+            if key_type == 'reserved':
+                continue
+            else:
+                # offset: word -> byte
+                offset = int(conf['w_offset'], 16) * 2
+                key_bin = key_to_bytearray(conf, key_folder)
+                insert_bytearray(key_bin, data_region, offset)
+
+    def make_secure_region(self, data_config, key_folder, genKeyHeader,
+                         key_to_bytearray, data_region_size, no_last_bit):
+
+        data_region = bytearray(data_region_size)
+
+        if 'keys' in data_config:
+            self.genKeyRegion_v2(data_config['keys'], key_folder,
+                              data_region,
+                              genKeyHeader, key_to_bytearray,
+                              data_region_size, no_last_bit)
+
+        return data_region
+
+    def make_otp_image_v2(self, otp_config, key_folder,
+                          output_folder, no_last_bit=False):
+        print(self.make_otp_image_v2.__name__)
+
+        if otp_config['version'] == '2700A1':
+            otp_info = self.otp_info.OTP_INFO['2700A1']
+            version = OTP_info.SOC_AST2700A1
+            genKeyHeader = self.genKeyHeader_2700a1
+            key_to_bytearray = self.key_to_bytearray_2700a1
+        else:
+            raise OtpError('SOC version is invalid')
+
+        #self.OTPValidate(otp_config, otp_info)
+        os.system('mkdir -p '+output_folder)
+
+        all_image_output = output_folder + 'otp-all.image'
+
+        rom_image_output = output_folder + 'otp-rom.image'
+        rom_binary_output = output_folder + 'otp-rom.bin'
+        config_image_output = output_folder + 'otp-conf.image'
+        config_binary_output = output_folder + 'otp-conf.bin'
+        strap_image_output = output_folder + 'otp-strap.image'
+        strap_binary_output = output_folder + 'otp-strap.bin'
+        strap_ext_image_output = output_folder + 'otp-strap-ext.image'
+        strap_ext_binary_output = output_folder + 'otp-strap-ext.bin'
+        secure_image_output = output_folder + 'otp-secure.image'
+        secure_binary_output = output_folder + 'otp-secure.bin'
+        caliptra_image_output = output_folder + 'otp-caliptra.image'
+        caliptra_binary_output = output_folder + 'otp-caliptra.bin'
+
+        image_info_all = 0
+        rom_size = 0
+        config_size = 0
+        strap_size = 0
+        strap_ext_size = 0
+        secure_size = 0
+        caliptra_size = 0
+
+        if 'rom_region' in otp_config:
+            print("Generating Rom Image ...")
+            if otp_config['rom_region'].get('file_name') is None:
+                raise ValueError("No file_name found.")
+
+            # Open a file
+            rom_region = bytearray(otp_info['rom_region_size'])
+            rom_bin = load_file(otp_config['rom_region']['file_name'])
+            insert_rom_bin = bytearray(rom_bin)
+            insert_bytearray(insert_rom_bin, rom_region, int(otp_config['rom_region']['w_offset'], 16) * 2)
+
+            rom_size = len(rom_region)
+            image_size = self.otp_info.HEADER_SIZE_2700 + rom_size
+            image_info = image_size | self.otp_info.INC_ROM
+            image_info_all = image_info_all | self.otp_info.INC_ROM
+
+            rom_offset = self.otp_info.HEADER_SIZE_2700
+            rom_info = rom_offset | (rom_size << 16)
+            checksum_offset = rom_offset + rom_size
+            header = struct.pack(
+                self.otp_info.HEADER_FORMAT_2700,
+                self.otp_info.MAGIC_WORD_OTP.encode(),
+                version,
+                version2int(__version__),
+                image_info,
+                rom_info,
+                0,
+                0,
+                0,
+                0,
+                0,
+                checksum_offset
+            )
+
+            rom_all = rom_region
+            sha = SHA384.new(header + rom_all)
+            checksum = sha.digest()
+
+            writeBinFile(header + rom_all + checksum, rom_image_output)
+            writeBinFile(rom_region, rom_binary_output)
+
+        if 'secure_region' in otp_config:
+            print("Generating Secure Image ...")
+            secure_region = self.make_secure_region(
+                otp_config['secure_region'], key_folder,
+                genKeyHeader, key_to_bytearray,
+                otp_info['secure_region_size'],
+                no_last_bit)
+
+            secure_size = len(secure_region)
+            image_size = self.otp_info.HEADER_SIZE_2700 + secure_size
+            image_info = image_size | self.otp_info.INC_SECURE
+            image_info_all = image_info_all | self.otp_info.INC_SECURE
+
+            secure_offset = self.otp_info.HEADER_SIZE_2700
+            secure_info = secure_offset | (secure_size << 16)
+            checksum_offset = secure_offset + secure_size
+            header = struct.pack(
+                self.otp_info.HEADER_FORMAT_2700,
+                self.otp_info.MAGIC_WORD_OTP.encode(),
+                version,
+                version2int(__version__),
+                image_info,
+                0,
+                0,
+                0,
+                0,
+                secure_info,
+                0,
+                checksum_offset
+            )
+
+            secure_all = secure_region
+            sha = SHA384.new(header + secure_all)
+            checksum = sha.digest()
+
+            writeBinFile(header + secure_all + checksum, secure_image_output)
+            writeBinFile(secure_region, secure_binary_output)
+
+        if 'config_region' in otp_config:
+            print("Generating Config Image ...")
+            with open(otp_info['config'], 'r') as config_info_fd:
+                config_info = jstyleson.load(config_info_fd)
+
+            config_region = self.make_config_region_v2(
+                otp_config['config_region'], config_info,
+                otp_info['config_region_size'])
+
+            config_size = len(config_region)
+            print("config_size", config_size)
+            image_size = self.otp_info.HEADER_SIZE_2700 + config_size
+            image_info = image_size | self.otp_info.INC_CONF
+            image_info_all = image_info_all | self.otp_info.INC_CONF
+            config_offset = self.otp_info.HEADER_SIZE_2700
+            config_header = config_offset | (config_size << 16)
+            checksum_offset = config_offset + config_size
+            header = struct.pack(
+                self.otp_info.HEADER_FORMAT_2700,
+                self.otp_info.MAGIC_WORD_OTP.encode(),
+                version,
+                version2int(__version__),
+                image_info,
+                0,
+                config_header,
+                0,
+                0,
+                0,
+                0,
+                checksum_offset
+            )
+
+            config_all = config_region
+
+            sha = SHA384.new(header + config_all)
+            checksum = sha.digest()
+
+            writeBinFile(header + config_all + checksum, config_image_output)
+            writeBinFile(config_region, config_binary_output)
+
+        if 'strap_region' in otp_config:
+            print("Generating Strap Image ...")
+            with open(otp_info['strap'], 'r') as strap_info_fd:
+                strap_info = jstyleson.load(strap_info_fd)
+
+            strap_region = self.make_strap_region(
+                otp_config['strap_region'], strap_info,
+                otp_info['strap_bit_size'])
+
+            strap_size = len(strap_region)
+            image_size = self.otp_info.HEADER_SIZE_2700 + strap_size
+            image_info = image_size | self.otp_info.INC_STRAP
+            image_info_all = image_info_all | self.otp_info.INC_STRAP
+            strap_offset = self.otp_info.HEADER_SIZE_2700
+            strap_header = strap_offset | (strap_size << 16)
+            checksum_offset = strap_offset + strap_size
+            header = struct.pack(
+                self.otp_info.HEADER_FORMAT_2700,
+                self.otp_info.MAGIC_WORD_OTP.encode(),
+                version,
+                version2int(__version__),
+                image_info,
+                0,
+                0,
+                strap_header,
+                0,
+                0,
+                0,
+                checksum_offset
+            )
+
+            strap_all = strap_region
+
+            sha = SHA384.new(header + strap_all)
+            checksum = sha.digest()
+
+            writeBinFile(header + strap_all + checksum, strap_image_output)
+            writeBinFile(strap_region, strap_binary_output)
+
+        if 'strap_ext_region' in otp_config:
+            print("Generating Strap Extension Image ...")
+            with open(otp_info['strap'], 'r') as strap_info_fd:
+                strap_info = jstyleson.load(strap_info_fd)
+
+            strap_ext_region = self.make_strap_ext_region(
+                otp_config['strap_ext_region'], strap_info,
+                otp_info['strap_ext_bit_size'])
+
+            strap_size = len(strap_ext_region)
+            image_size = self.otp_info.HEADER_SIZE_2700 + strap_size
+            image_info = image_size | self.otp_info.INC_STRAPEXT
+            image_info_all = image_info_all | self.otp_info.INC_STRAPEXT
+            strap_offset = self.otp_info.HEADER_SIZE_2700
+            strap_header = strap_offset | (strap_size << 16)
+            checksum_offset = strap_offset + strap_size
+            header = struct.pack(
+                self.otp_info.HEADER_FORMAT_2700,
+                self.otp_info.MAGIC_WORD_OTP.encode(),
+                version,
+                version2int(__version__),
+                image_info,
+                0,
+                0,
+                0,
+                strap_header,
+                0,
+                0,
+                checksum_offset
+            )
+
+            strap_ext_all = strap_ext_region
+
+            sha = SHA384.new(header + strap_ext_all)
+            checksum = sha.digest()
+
+            writeBinFile(header + strap_ext_all + checksum, strap_ext_image_output)
+            writeBinFile(strap_ext_region, strap_ext_binary_output)
+
+        if 'caliptra_region' in otp_config:
+            print("Generating Caliptra Image ...")
+            with open(otp_info['caliptra'], 'r') as caliptra_info_fd:
+                caliptra_info = jstyleson.load(caliptra_info_fd)
+
+            caliptra_region = self.make_caliptra_region(
+                otp_config['caliptra_region'], caliptra_info,
+                otp_info['caliptra_region_size'])
+
+            caliptra_size = len(caliptra_region)
+            print("caliptra_size", caliptra_size)
+            image_size = self.otp_info.HEADER_SIZE_2700 + caliptra_size
+            image_info = image_size | self.otp_info.INC_CONF
+            image_info_all = image_info_all | self.otp_info.INC_CONF
+            caliptra_offset = self.otp_info.HEADER_SIZE_2700
+            caliptra_header = caliptra_offset | (caliptra_size << 16)
+            checksum_offset = caliptra_offset + caliptra_size
+            header = struct.pack(
+                self.otp_info.HEADER_FORMAT_2700,
+                self.otp_info.MAGIC_WORD_OTP.encode(),
+                version,
+                version2int(__version__),
+                image_info,
+                0,
+                0,
+                0,
+                0,
+                0,
+                caliptra_header,
+                checksum_offset
+            )
+
+            caliptra_all = caliptra_region
+
+            sha = SHA384.new(header + caliptra_all)
+            checksum = sha.digest()
+
+            writeBinFile(header + caliptra_all + checksum, caliptra_image_output)
+            writeBinFile(caliptra_region, caliptra_binary_output)
+
+        print("Generating OTP-all Image ...")
+        image_size_all = self.otp_info.HEADER_SIZE_2700 + \
+            rom_size + config_size + strap_size + \
+            strap_ext_size + secure_size + caliptra_size
+        image_info_all = image_info_all | image_size_all
+
+        rom_offset= self.otp_info.HEADER_SIZE_2700
+        config_offset = rom_offset + rom_size
+        strap_offset = config_offset + config_size
+        strap_ext_offset = strap_offset + strap_size
+        secure_offset = strap_ext_offset + strap_ext_size
+        caliptra_offset = secure_offset + secure_size
+        checksum_offset = caliptra_offset + caliptra_size
+
+        rom_header = rom_offset | (rom_size << 16)
+        config_header = config_offset | (config_size << 16)
+        strap_header = strap_offset | (strap_size << 16)
+        strap_ext_header = strap_ext_offset | (strap_ext_size << 16)
+        secure_header = secure_offset | (secure_size << 16)
+        caliptra_header = caliptra_offset | (caliptra_size << 16)
+
+        header = struct.pack(
+            self.otp_info.HEADER_FORMAT_2700,
+            self.otp_info.MAGIC_WORD_OTP.encode(),
+            version,
+            version2int(__version__),
+            image_info_all,
+            rom_header,
+            config_header,
+            strap_header,
+            strap_ext_header,
+            secure_header,
+            caliptra_header,
+            checksum_offset
+        )
+
+        sha = SHA384.new(header + rom_all + config_all +
+                         strap_all + strap_ext_all +
+                         secure_all + caliptra_all)
+        checksum = sha.digest()
+
+        writeBinFile(header + rom_all + config_all +
+                     strap_all + strap_ext_all +
+                     secure_all + caliptra_all +
+                     checksum, all_image_output)
+
+    def make_otp_image(self, config_file, key_folder,
+                       user_data_folder, output_folder,
+                       no_last_bit=False):
+
+        otp_config = jstyleson.load(config_file)
+        if otp_config['version'] in ['A0', 'A1', 'A2', 'A3', '1030A0', '1030A1']:
+            self.make_otp_image_v1(otp_config, key_folder, user_data_folder,
+                                   output_folder, no_last_bit)
+
+        elif otp_config['version'] in ['2700A0', '2700A1']:
+            self.make_otp_image_v2(otp_config, key_folder,
+                                   output_folder, no_last_bit)
+
+        else:
+            print("Unknown version", otp_config['version'])
 
     def otp_print_image_data(self, key_type_list, data_region, config_region):
         key_header = []
@@ -2123,7 +2762,7 @@ class otpTool(object):
 
         args = parser.parse_args(argv[1:])
 
-        if(len(argv) == 1):
+        if (len(argv) == 1):
             parser.print_usage()
             sys.exit(1)
 

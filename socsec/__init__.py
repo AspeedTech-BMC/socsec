@@ -25,8 +25,9 @@ from pkg_resources import resource_filename as pkgdata
 import struct
 from Crypto.PublicKey import RSA
 import binascii
+from enum import Enum
 
-__version__ = "2.0.0"
+__version__ = "2.1.0"
 
 
 def version2int(version):
@@ -134,7 +135,6 @@ def rsa_key_to_bin(rsa_key_file, types, order='little'):
         raise ValueError("types error")
 
     return key_bin
-
 
 def ecdsa_key_to_bin(ecdsa_key_file):
     with open(ecdsa_key_file, 'r') as f:
@@ -279,6 +279,8 @@ class OTP_info(object):
     MAGIC_WORD_OTP = 'SOCOTP'
     HEADER_FORMAT = '<8s8I'
     HEADER_SIZE = struct.calcsize(HEADER_FORMAT)
+    HEADER_FORMAT_2700 = '<8s10I'
+    HEADER_SIZE_2700 = struct.calcsize(HEADER_FORMAT_2700)
     CHECKSUM_LEN = 32
     OTP_KEY_TYPE_RSA_PUB = 1
     OTP_KEY_TYPE_RSA_PRIV = 2
@@ -295,6 +297,8 @@ class OTP_info(object):
     SOC_AST1030A1 = 5
     SOC_AST1060A1 = 6
     SOC_AST1060A2 = 7
+    SOC_AST2700A0 = 8
+    SOC_AST2700A1 = 9
     INC_DATA = 1 << 31
     INC_CONF = 1 << 30
     INC_STRAP = 1 << 29
@@ -302,6 +306,31 @@ class OTP_info(object):
     HEADER_DUMP = 1 << 27
     HEADER_ORDER = 1 << 26
     INC_SCU_PROTECT = 1 << 25
+
+    # For AST2700
+    INC_ROM = 1 << 31
+    INC_CONF = 1 << 30
+    INC_STRAP = 1 << 29
+    INC_STRAPEXT = 1 << 28
+    INC_SECURE = 1 << 27
+    INC_CALIPTRA = 1 << 26
+
+    class OTP_KEY_TYPE_2700(Enum):
+        OTP_KEY_TYPE_SOC_ECDSA_PUB = 1
+        OTP_KEY_TYPE_SOC_LMS_PUB = 2
+        OTP_KEY_TYPE_CAL_MANU_PUB_HASH = 3
+        OTP_KEY_TYPE_CAL_OWN_PUB_HASH = 4
+        OTP_KEY_TYPE_SOC_VAULT = 5
+        OTP_KEY_TYPE_SOC_VAULT_SEED = 6
+
+    OTP_KEY_TYPE_NAME_2700 = [
+        "soc_ecdsa_pub",
+        "soc_lms_pub",
+        "cal_manu_pub_hash",
+        "cal_own_pub_hash",
+        "soc_vault",
+        "soc_vault_seed",
+    ]
 
     OTP_INFO = {
         'A0': {
@@ -351,6 +380,17 @@ class OTP_info(object):
             'ecc_region_offset': 7168,
             'config_region_size': 64,
             'otp_strap_bit_size': 64,
+        },
+        '2700A1': {
+            'config': pkgdata('socsec', 'otp_info/2700a1_config.json'),
+            'strap': pkgdata('socsec', 'otp_info/2700a1_strap.json'),
+            'caliptra': pkgdata('socsec', 'otp_info/2700a1_caliptra.json'),
+            'rom_region_size': 2048,
+            'config_region_size': 64,
+            'strap_bit_size': 32,
+            'strap_ext_bit_size': 128,
+            'secure_region_size': 6144,
+            'caliptra_region_size': 1792,
         }
     }
 
@@ -423,4 +463,18 @@ class OTP_info(object):
                  'ECDSA384 cure parameter'),
         key_type(7, OTP_KEY_ECDSA384, 1,
                  'ECDSA-public as OEM DSS public keys'),
+    ]
+    ast2700a1_key_type = [
+        key_type(1, OTP_KEY_TYPE_2700.OTP_KEY_TYPE_SOC_ECDSA_PUB.value, 1,
+                 'ECDSA384 as SoC OEM DSS public keys'),
+        key_type(2, OTP_KEY_TYPE_2700.OTP_KEY_TYPE_SOC_LMS_PUB.value, 1,
+                 'LMS as SoC OEM DSS public keys'),
+        key_type(3, OTP_KEY_TYPE_2700.OTP_KEY_TYPE_CAL_MANU_PUB_HASH.value, 1,
+                 'Digest as Caliptra Manufacture public key hash'),
+        key_type(4, OTP_KEY_TYPE_2700.OTP_KEY_TYPE_CAL_OWN_PUB_HASH.value, 1,
+                 'Digest as Caliptra Owner public key hash'),
+        key_type(5, OTP_KEY_TYPE_2700.OTP_KEY_TYPE_SOC_VAULT.value, 1,
+                 'AES-256 as secret vault key'),
+        key_type(6, OTP_KEY_TYPE_2700.OTP_KEY_TYPE_SOC_VAULT_SEED.value, 1,
+                 'AES-256 as secret vault key seed'),
     ]
