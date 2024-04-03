@@ -1,0 +1,681 @@
+[
+    {
+        "key": "otp_mem_lock_enable",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 15,
+        "info": [
+            "OTP memory lock disable",
+            "OTP memory lock enable"
+        ]
+    },
+    {
+        "key": "otp_mem_ecc_enable",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 14,
+        "info": [
+            "User Area ECC disable",
+            "User Area ECC enable"
+        ]
+    },
+    {
+        "key": "dis_otp_bist",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 13,
+        "info": [
+            "Disable OTP Memory Factory Test Mode",
+            "Enable OTP Memory Factory Test Mode"
+        ]
+    },
+    {
+        "key": "wr_protect_caliptra",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 12,
+        "info": [
+            "Enable write protect of caliptra region",
+            "Disable write protect of caliptra region"
+        ]
+    },
+    {
+        "key": "rd_protect_caliptra",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 11,
+        "info": [
+            "Enable read protect of caliptra region",
+            "Disable read protect of caliptra region"
+        ]
+    },
+    {
+        "key": "wr_protect_hw_rid",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 10,
+        "info": [
+            "Enable Write Protect of OTP Hardware Revision ID bits",
+            "Disable Write Protect of OTP Hardware Revision ID bits"
+        ]
+    },
+    {
+        "key": "wr_protect_otpkey_retire_bit",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 9,
+        "info": [
+            "Enable Write Protect of OTP key retire bits",
+            "Disable Write Protect of OTP key retire bits"
+        ]
+    },
+    {
+        "key": "retire_mechanism_option",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 8,
+        "info": [
+            "key retirement mechanism option disable",
+            "key retirement mechanism option enable"
+        ]
+    },
+    {
+        "key": "wr_protect_otp_strap",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 7,
+        "info": [
+            "Enable Write Protectof OTP strap region",
+            "Disable Write Protectof OTP strap region"
+        ]
+    },
+    {
+        "key": "wr_protect_otp_cfg",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 6,
+        "info": [
+            "Enable Write Protect of Configure region",
+            "Disable Write Protect of Configure region"
+        ]
+    },
+    {
+        "key": "wr_protect_rom",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 5,
+        "info": [
+            "Enable write protect of rom region",
+            "Disable write protect of rom region"
+        ]
+    },
+    {
+        "key": "wr_protect_otp_flash_strap",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 4,
+        "info": [
+            "Enable Write Protect of strap ext region",
+            "Disable Write Protect of strap ext region"
+        ]
+    },
+    {
+        "key": "rd_protect_otp_strap",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 3,
+        "info": [
+            "Enable read protect of strap region",
+            "Disable read protect of strap region"
+        ]
+    },
+    {
+        "key": "rd_protect_otp_cfg",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 2,
+        "info": [
+            "Enable read protect of configure region",
+            "Disable read protect of configure region"
+        ]
+    },
+    {
+        "key": "rd_protect_rom",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 1,
+        "info": [
+            "Enable read protect of rom region",
+            "Disable read protect of rom region"
+        ]
+    },
+    {
+        "key": "rd_protect_otp_flash_strap",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 0,
+        "info": [
+            "Enable read protect of strap ext region",
+            "Disable read protect of strap ext region"
+        ]
+    },
+    {
+        "key": "enable_secure_boot",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 15,
+        "info": [
+            "Enable Secure Boot",
+            "Disable Secure Boot"
+        ]
+    },
+    {
+        "key": "ignore_secure_boot_hw_strap",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 14,
+        "info": [
+            "Ignore Secure Boot hardware strap disable",
+            "Ignore Secure Boot hardware strap enable"
+        ]
+    },
+    {
+        "key": "dis_low_secure_key0",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 13,
+        "info": [
+            "Disable low security key #0",
+            "Enable low security key #0"
+        ]
+    },
+    {
+        "key": "dis_caliptra_verify",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 12,
+        "info": [
+            "Disable Caliptra cryptographic verfication",
+            "Enable Caliptra cryptographic verfication"
+        ]
+    },
+    {
+        "key": "hw_puf_program_done",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 11,
+        "info": [
+            "Enable HW PUF program done",
+            "Disable HW PUF program done"
+        ]
+    },
+    {
+        "key": "dev_life_cycle_state",
+        "type": "string",
+        "w_offset": 2,
+        "bit_offset": 9,
+        "bit_length": 2,
+        "info": [
+            "The Device Life Cycle State. It's the source of Security State. = {}"
+        ]
+    },
+    {
+        "key": "en_boot_msg_usb_uart_x",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 8,
+        "info": [
+            "Enable Boot ROM Message output through USB-Uart port x",
+            "Disable Boot ROM Message output through USB-Uart port x"
+        ]
+    },
+    {
+        "key": "en_boot_msg_usb_uart_x",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 7,
+        "info": [
+            "Enable Boot ROM Message output through USB-Uart port x",
+            "Disable Boot ROM Message output through USB-Uart port x"
+        ]
+    },
+    {
+        "key": "en_emmc_sw_reset",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 6,
+        "info": [
+            "Enable eMMC software reset",
+            "Disable eMMC software reset"
+        ]
+    },
+    {
+        "key": "dis_boot_msg",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 5,
+        "info": [
+            "Disable Uart Message of Boot ROM",
+            "Enable Uart Message of Boot ROM"
+        ]
+    },
+    {
+        "key": "dis_flash_strap",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 4,
+        "info": [
+            "Disable Flash Strap",
+            "Enable Flash Strap"
+        ]
+    },
+    {
+        "key": "dis_recovery_mode",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 3,
+        "info": [
+            "Disable Boot from Uart/USB",
+            "Enable Boot from Uart/USB"
+        ]
+    },
+    {
+        "key": "dis_post_rom_patch",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 2,
+        "info": [
+            "Disable Post ROM Patch code",
+            "Enable Post ROM Patch code"
+        ]
+    },
+    {
+        "key": "dis_pre_rom_patch",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 1,
+        "info": [
+            "Disable Pre ROM Patch code",
+            "Enable Pre ROM Patch code"
+        ]
+    },
+    {
+        "key": "Boot_From_UART_Port_Selection",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 0,
+        "info": [
+            "Boot From UART Port Selection"
+        ]
+    },
+    {
+        "key": "Pre_OTP_Patch_Code_location",
+        "type": "string",
+        "w_offset": 4,
+        "bit_offset": 1,
+        "bit_length": 10,
+        "info": [
+            "The Pre OTP patch code location in OTP ROM Region = {}"
+        ]
+    },
+    {
+        "key": "pre_otp_patch_vld",
+        "type": "boolean",
+        "w_offset": 4,
+        "bit_offset": 0,
+        "info": [
+            "Enable pre otp patch",
+            "Disable pre otp patch"
+        ]
+    },
+    {
+        "key": "Pre_OTP_Patch_Size",
+        "type": "string",
+        "w_offset": 5,
+        "bit_offset": 0,
+        "bit_length": 10,
+        "info": [
+            "Pre OTP Patch code size = {}"
+        ]
+    },
+    {
+        "key": "Post_OTP_Patch_Code_location",
+        "type": "string",
+        "w_offset": 6,
+        "bit_offset": 1,
+        "bit_length": 10,
+        "info": [
+            "The Post OTP patch code location in OTP ROM Region = {}"
+        ]
+    },
+    {
+        "key": "post_otp_patch_vld",
+        "type": "boolean",
+        "w_offset": 6,
+        "bit_offset": 0,
+        "info": [
+            "Enable post otp patch",
+            "Disable post otp patch"
+        ]
+    },
+    {
+        "key": "Post_OTP_Patch_Size",
+        "type": "string",
+        "w_offset": 7,
+        "bit_offset": 0,
+        "bit_length": 10,
+        "info": [
+            "Post OTP Patch code size = {}"
+        ]
+    },
+    {
+        "key": "SoC_Key_Retire_bits",
+        "type": "string",
+        "w_offset": 8,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "SoC Key Retire bits = {}"
+        ]
+    },
+    {
+        "key": "en_auto_load",
+        "type": "boolean",
+        "w_offset": 9,
+        "bit_offset": 15,
+        "info": [
+            "Enable auto load debug control SCU0C8 setting",
+            "Disable auto load debug control SCU0C8 setting"
+        ]
+    },
+    {
+        "key": "CPU_SCU0C8_auto_val",
+        "type": "string",
+        "w_offset": 9,
+        "bit_offset": 0,
+        "bit_length": 15,
+        "info": [
+            "CPU_SCU0C8[14 :0] auto setting value = {}"
+        ]
+    },
+    {
+        "key": "IO_SCU0C8_auto_val",
+        "type": "string",
+        "w_offset": 10,
+        "bit_offset": 0,
+        "bit_length": 8,
+        "info": [
+            "IO_SCU0C8[7 :0] auto setting value = {}"
+        ]
+    },
+    {
+        "key": "en_auto_load_usr0",
+        "type": "boolean",
+        "w_offset": 11,
+        "bit_offset": 15,
+        "info": [
+            "Enable auto load OTP region user 0 ctrl setting",
+            "Disable auto load OTP region user 0 ctrl setting"
+        ]
+    },
+    {
+        "key": "rd_protect_otp_usr0",
+        "type": "boolean",
+        "w_offset": 11,
+        "bit_offset": 14,
+        "info": [
+            "Enable Read protect for OTP region user 0",
+            "Disable Read protect for OTP region user 0"
+        ]
+    },
+    {
+        "key": "wr_protect_otp_usr0",
+        "type": "boolean",
+        "w_offset": 11,
+        "bit_offset": 13,
+        "info": [
+            "Enable Write protect for OTP region user 0",
+            "Disable Write protect for OTP region user 0"
+        ]
+    },
+    {
+        "key": "usr0_region_start_offset",
+        "type": "string",
+        "w_offset": 11,
+        "bit_offset": 0,
+        "bit_length": 12,
+        "info": [
+            "User 0 region start offset = {}"
+        ]
+    },
+    {
+        "key": "usr0_region_size",
+        "type": "string",
+        "w_offset": 12,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "User 0 region size = {}"
+        ]
+    },
+    {
+        "key": "en_auto_load_secure0",
+        "type": "boolean",
+        "w_offset": 13,
+        "bit_offset": 15,
+        "info": [
+            "Enable auto load OTP region secure 0 ctrl setting",
+            "Disable auto load OTP region secure 0 ctrl setting"
+        ]
+    },
+    {
+        "key": "rd_protect_otp_secure0",
+        "type": "boolean",
+        "w_offset": 13,
+        "bit_offset": 14,
+        "info": [
+            "Enable Read protect for OTP region secure 0",
+            "Disable Read protect for OTP region secure 0"
+        ]
+    },
+    {
+        "key": "wr_protect_otp_secure0",
+        "type": "boolean",
+        "w_offset": 13,
+        "bit_offset": 13,
+        "info": [
+            "Enable Write protect for OTP region secure 0",
+            "Disable Write protect for OTP region secure 0"
+        ]
+    },
+    {
+        "key": "secure0_region_start_offset",
+        "type": "string",
+        "w_offset": 13,
+        "bit_offset": 0,
+        "bit_length": 12,
+        "info": [
+            "Secure 0 region start offset = {}"
+        ]
+    },
+    {
+        "key": "secure0_region_size",
+        "type": "string",
+        "w_offset": 14,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Secure 0 region size = {}"
+        ]
+    },
+    {
+        "key": "Secure_Boot_Header_Offset",
+        "type": "string",
+        "w_offset": 15,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Secure Boot Header Offset = {}"
+        ]
+    },
+    {
+        "key": "User_defined_data0",
+        "type": "string",
+        "w_offset": 16,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "This will be source of DICE generation. = {}"
+        ]
+    },
+    {
+        "key": "User_defined_data1",
+        "type": "string",
+        "w_offset": 17,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "This will be source of DICE generation. = {}"
+        ]
+    },
+    {
+        "key": "User_defined_data2",
+        "type": "string",
+        "w_offset": 18,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "This will be source of DICE generation. = {}"
+        ]
+    },
+    {
+        "key": "User_defined_data3",
+        "type": "string",
+        "w_offset": 19,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "This will be source of DICE generation. = {}"
+        ]
+    },
+    {
+        "key": "Hardware_revision_ID0",
+        "type": "string",
+        "w_offset": 20,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Hardware revision ID[15:0] (prevent rollback) = {}"
+        ]
+    },
+    {
+        "key": "Hardware_revision_ID1",
+        "type": "string",
+        "w_offset": 21,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Hardware revision ID[31:16] (prevent rollback) = {}"
+        ]
+    },
+    {
+        "key": "Hardware_revision_ID2",
+        "type": "string",
+        "w_offset": 22,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Hardware revision ID[47:32] (prevent rollback) = {}"
+        ]
+    },
+    {
+        "key": "Hardware_revision_ID3",
+        "type": "string",
+        "w_offset": 23,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Hardware revision ID[63:48] (prevent rollback) = {}"
+        ]
+    },
+    {
+        "key": "Internal_bus_timing_setting0",
+        "type": "string",
+        "w_offset": 24,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            " = {}"
+        ]
+    },
+    {
+        "key": "Internal_bus_timing_setting1",
+        "type": "string",
+        "w_offset": 25,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            " = {}"
+        ]
+    },
+    {
+        "key": "Internal_bus_timing_setting2",
+        "type": "string",
+        "w_offset": 26,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            " = {}"
+        ]
+    },
+    {
+        "key": "Internal_bus_timing_setting3",
+        "type": "string",
+        "w_offset": 27,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            " = {}"
+        ]
+    },
+    {
+        "key": "Internal_bus_timing_setting4",
+        "type": "string",
+        "w_offset": 28,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            " = {}"
+        ]
+    },
+    {
+        "key": "Internal_bus_timing_setting5",
+        "type": "string",
+        "w_offset": 29,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            " = {}"
+        ]
+    },
+    {
+        "key": "Internal_bus_timing_setting6",
+        "type": "string",
+        "w_offset": 30,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            " = {}"
+        ]
+    },
+    {
+        "key": "Internal_bus_timing_setting7",
+        "type": "string",
+        "w_offset": 31,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            " = {}"
+        ]
+    }
+]
