@@ -328,6 +328,11 @@ def otpsec_handler(sheet, data):
                                 keys["key_file"] = OTP_KEY_FILE_NAME[i]
                                 keys["w_offset"] = hex(int(str(row_values[1])[:4], 16) - 4096)
                                 keys["number_id"] = int(re.findall(r'\d+', str(row_values[6]))[0])
+
+                                if OTP_KEY_TYPE_NAME[i] == "cal_manu_pub_hash":
+                                        keys["ecc_key_mask"] = "0x0"
+                                        keys["lms_key_mask"] = "0x0"
+
                                 key_list.append(keys)
 
         sec_region["keys"] = key_list

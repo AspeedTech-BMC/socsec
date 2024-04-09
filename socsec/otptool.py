@@ -39,7 +39,7 @@ from socsec import __version__
 from socsec import version2int
 from socsec import int2version
 from ecdsa import SigningKey, NIST384p
-
+import binascii
 
 class OtpError(Exception):
     """Application-specific errors.
@@ -826,7 +826,19 @@ class OTP(object):
             insert_key_bin = bytearray(ecdsa_key_bin)
         elif type == 'soc_lms_pub':
             raise ValueError("soc_lms_pub key type is not supported yet.")
-        elif type in ['cal_manu_pub_hash', 'cal_own_pub_hash', 'soc_vault', 'soc_vault_seed']:
+        elif type == 'cal_manu_pub_hash':
+            key_bin = load_file(key_folder + key_config['key_file'])
+            ecc_key_mask = int(key_config['ecc_key_mask'], 16)
+            lms_key_mask = int(key_config['lms_key_mask'], 16)
+            if ecc_key_mask != 0 or lms_key_mask != 0:
+                print("key_mask", ecc_key_mask, lms_key_mask)
+            insert_key_bin = bytearray(key_bin)
+            insert_key_mask_bin = ecc_key_mask.to_bytes(2, 'little') + lms_key_mask.to_bytes(4, 'little')
+            #print(binascii.hexlify(insert_key_bin))
+            #print(binascii.hexlify(insert_key_mask_bin))
+            insert_key_bin += insert_key_mask_bin
+
+        elif type in ['cal_own_pub_hash', 'soc_vault', 'soc_vault_seed']:
             key_bin = load_file(key_folder + key_config['key_file'])
             insert_key_bin = bytearray(key_bin)
         else:
@@ -1808,11 +1820,17 @@ class OTP(object):
         caliptra_binary_output = output_folder + 'otp-caliptra.bin'
 
         image_info_all = 0
+        rom_all = bytes(0)
         rom_size = 0
+        config_all = bytes(0)
         config_size = 0
+        strap_all = bytes(0)
         strap_size = 0
+        strap_ext_all = bytes(0)
         strap_ext_size = 0
+        secure_all = bytes(0)
         secure_size = 0
+        caliptra_all = bytes(0)
         caliptra_size = 0
 
         if 'rom_region' in otp_config:
@@ -1827,6 +1845,7 @@ class OTP(object):
             insert_bytearray(insert_rom_bin, rom_region, int(otp_config['rom_region']['w_offset'], 16) * 2)
 
             rom_size = len(rom_region)
+            print("rom_size", rom_size)
             image_size = self.otp_info.HEADER_SIZE_2700 + rom_size
             image_info = image_size | self.otp_info.INC_ROM
             image_info_all = image_info_all | self.otp_info.INC_ROM
@@ -1865,6 +1884,7 @@ class OTP(object):
                 no_last_bit)
 
             secure_size = len(secure_region)
+            print("secure_size", secure_size)
             image_size = self.otp_info.HEADER_SIZE_2700 + secure_size
             image_info = image_size | self.otp_info.INC_SECURE
             image_info_all = image_info_all | self.otp_info.INC_SECURE
@@ -1944,6 +1964,7 @@ class OTP(object):
                 otp_info['strap_bit_size'])
 
             strap_size = len(strap_region)
+            print("strap_size", strap_size)
             image_size = self.otp_info.HEADER_SIZE_2700 + strap_size
             image_info = image_size | self.otp_info.INC_STRAP
             image_info_all = image_info_all | self.otp_info.INC_STRAP
@@ -1982,13 +2003,14 @@ class OTP(object):
                 otp_config['strap_ext_region'], strap_info,
                 otp_info['strap_ext_bit_size'])
 
-            strap_size = len(strap_ext_region)
-            image_size = self.otp_info.HEADER_SIZE_2700 + strap_size
+            strap_ext_size = len(strap_ext_region)
+            print("strap_ext_size", strap_ext_size)
+            image_size = self.otp_info.HEADER_SIZE_2700 + strap_ext_size
             image_info = image_size | self.otp_info.INC_STRAPEXT
             image_info_all = image_info_all | self.otp_info.INC_STRAPEXT
             strap_offset = self.otp_info.HEADER_SIZE_2700
-            strap_header = strap_offset | (strap_size << 16)
-            checksum_offset = strap_offset + strap_size
+            strap_header = strap_offset | (strap_ext_size << 16)
+            checksum_offset = strap_offset + strap_ext_size
             header = struct.pack(
                 self.otp_info.HEADER_FORMAT_2700,
                 self.otp_info.MAGIC_WORD_OTP.encode(),
@@ -2024,8 +2046,8 @@ class OTP(object):
             caliptra_size = len(caliptra_region)
             print("caliptra_size", caliptra_size)
             image_size = self.otp_info.HEADER_SIZE_2700 + caliptra_size
-            image_info = image_size | self.otp_info.INC_CONF
-            image_info_all = image_info_all | self.otp_info.INC_CONF
+            image_info = image_size | self.otp_info.INC_CALIPTRA
+            image_info_all = image_info_all | self.otp_info.INC_CALIPTRA
             caliptra_offset = self.otp_info.HEADER_SIZE_2700
             caliptra_header = caliptra_offset | (caliptra_size << 16)
             checksum_offset = caliptra_offset + caliptra_size
