@@ -1274,22 +1274,22 @@ class OTP(object):
             if info['key_type'] != "strap":
                 continue
 
+            w_offset = info['w_offset']
             bit_offset = info['bit_offset']
+            offset = w_offset * 16 + bit_offset
+
             if info['type'] == 'boolean':
                 bit_length = 1
                 if value:
                     print("key {} set value".format(key))
-                    strap_region[bit_offset] = 1
+                    strap_region[offset] = 1
 
                 if prot:
                     print("key {} set protect".format(key))
-                    strap_region[bit_offset + strap_bit_size] = 1
+                    strap_region[offset + strap_bit_size] = 1
 
             elif info['type'] == 'string':
-                w_offset = info['w_offset']
-                bit_offset = info['bit_offset']
                 bit_length = info['bit_length']
-                offset = w_offset * 16 + bit_offset
 
                 hex_value = int(value, 16)
                 bit_value = bitarray(bin(hex_value)[2:][::-1])
@@ -1329,22 +1329,22 @@ class OTP(object):
             if info['key_type'] != "strap_ext":
                 continue
 
+            w_offset = info['w_offset']
             bit_offset = info['bit_offset']
+            offset = w_offset * 16 + bit_offset
+
             if info['type'] == 'boolean':
                 bit_length = 1
                 if value:
                     print("key {} set value".format(key))
-                    strap_ext_region[bit_offset] = 1
+                    strap_ext_region[offset] = 1
 
                 if vld:
                     print("key {} set valid".format(key))
-                    strap_ext_region[bit_offset + strap_bit_size] = 1
+                    strap_ext_region[offset + strap_bit_size] = 1
 
             elif info['type'] == 'string':
-                w_offset = info['w_offset']
-                bit_offset = info['bit_offset']
                 bit_length = info['bit_length']
-                offset = w_offset * 16 + bit_offset
 
                 hex_value = int(value, 16)
                 bit_value = bitarray(bin(hex_value)[2:][::-1])
