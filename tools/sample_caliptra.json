@@ -1,0 +1,128 @@
+{
+    "vendor": {
+        "ecc_keys": [
+            {
+                "key_file": "vnd-pub-key-0.pem"
+            },
+            {
+                "key_file": "vnd-pub-key-1.pem"
+            },
+            {
+                "key_file": "vnd-pub-key-2.pem"
+            },
+            {
+                "key_file": "vnd-pub-key-3.pem"
+            }
+        ],
+        "lms_keys": [
+            {
+                "key_file": "vnd-lms-pub-key-0.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-1.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-2.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-3.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-4.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-5.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-6.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-7.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-8.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-9.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-10.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-11.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-12.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-13.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-14.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-15.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-16.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-17.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-18.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-19.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-20.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-21.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-22.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-23.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-24.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-25.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-26.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-27.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-28.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-29.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-30.pem"
+            },
+            {
+                "key_file": "vnd-lms-pub-key-31.pem"
+            }
+        ]
+    },
+    "owner": {
+        "ecc_keys": [
+            {
+                "key_file": "own-pub-key.pem"
+            }
+        ],
+        "lms_keys": [
+            {
+                "key_file": "own-lms-pub-key.pem"
+            }
+        ]
+    }
+}
