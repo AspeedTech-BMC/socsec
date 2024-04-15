@@ -1,3 +1,23 @@
+# Copyright (c) 2024 ASPEED Technology Inc.
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 from enum import Enum
 import xlrd
 from collections import OrderedDict
@@ -120,7 +140,7 @@ def otpcfg_handler_info(sheet, list):
 
 def otpcfg_handler(sheet, data):
         sh = sheet
-        
+
         conf_region = OrderedDict()
         for rownum in range(0, sh.nrows):
                 if rownum < 4:
@@ -246,7 +266,7 @@ def otpstrap_handler_info(sheet, list):
                         strap_list.append(strap)
                 elif is_strapext:
                         strap_ext_list.append(strap)
-        
+
         for x in strap_list:
                 list.append(x)
         for x in strap_ext_list:
@@ -300,7 +320,7 @@ def otpstrap_handler(sheet, data):
                 elif is_strapext:
                         strap_details["valid"] = False
                         strap_ext_region[row_values[1].strip()] = strap_details
-        
+
         data["strap_region"] = strap_region
         data["strap_ext_region"] = strap_ext_region
 
@@ -350,10 +370,10 @@ def otpcal_handler_info(sheet, list):
                 #print(row_values)
 
                 # reserved skip
-                if row_values[1] == "reserved" or row_values[1] == "Reserved":
+                if row_values[2] == "reserved" or row_values[2] == "Reserved":
                         continue
 
-                if row_values[1] == "Sum":
+                if row_values[2] == "Sum":
                         break
 
                 name = row_values[1].replace(' ', '_')
@@ -364,13 +384,13 @@ def otpcal_handler_info(sheet, list):
                 else:
                         cal['type'] = "boolean"
 
-                offset = int(row_values[2], 16) - 0x1c00
+                offset = int(row_values[1], 16) - 0x1c00
                 #print("offset", offset)
                 cal['w_offset'] = offset
                 cal['bit_offset'] = 0
                 if int(row_values[3]) > 1:
                         cal['bit_length'] = int(row_values[3])
-        
+
                 idx = row_values[7].find('\n')
                 if idx != -1:
                         desc = str(row_values[7])[:idx]
@@ -405,13 +425,13 @@ def otpcal_handler(sheet, data):
                         continue
 
                 row_values = sh.row_values(rownum)
-                #print(row_values)
+                # print(row_values)
 
                 # reserved skip
-                if row_values[1] == "reserved" or row_values[1] == "Reserved":
+                if row_values[2] == "reserved" or row_values[2] == "Reserved":
                         continue
 
-                if row_values[1] == "Sum":
+                if row_values[2] == "Sum":
                         break
 
                 name = row_values[1].strip().replace(" ", "_")
@@ -423,7 +443,7 @@ def otpcal_handler(sheet, data):
                         cal_region[name] = "0x0"
                 else:
                         break
-        
+
         data["caliptra_region"] = cal_region
 
 if __name__ == '__main__':
