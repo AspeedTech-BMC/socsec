@@ -1,12 +1,12 @@
-# AST2600 Secure Boot
+# ASPEED Secure Boot
 
-AST2600 support root of trust (RoT) measurement. The following chapter will 
-introduce the secure image generation tool `socsec` and otp image generation 
+ASPEED BMC support root of trust (RoT) measurement. The following chapters will
+introduce the secure image generation tool `socsec` and otp image generation
 tool `otptool`.
 
 ## SOCSEC
 
-This tool is used to generate ast2600 secure boot image.
+This tool is used to generate RoT image.
 
 ### Usage
 
@@ -79,7 +79,7 @@ usage: socsec make_secure_bl1_image [-h] [--soc SOC] [--bl1_image BL1_IMAGE]
 
 optional arguments:
   -h, --help            show this help message and exit
-  --soc SOC             soc id (e.g. 2600, 1030)
+  --soc SOC             soc id (e.g. 2600, 1030, 1060)
   --bl1_image BL1_IMAGE
                         Bootloader 1 Image (e.g. u-boot-spl.bin), which will
                         be verified by soc
@@ -142,49 +142,8 @@ enc_group:
   --rsa_aes [RSA_AES]   Path to RSA public key file, which is used to encrypt
                         aes key
 
-cot_group:
-  (deprecated)Chain of trust argument
-
-  --cot_algorithm [ALGORITHM]
-                        Algorithm to use (default: NONE e.g. RSA2048_SHA256),
-                        RSA algo support RSA1024, RSA2048, RSA3072 and
-                        RSA4096, HASH algo support SHA224, SHA256, SHA384 and
-                        SHA512
-  --cot_verify_key [COT_VERIFY_KEY]
-                        Path to RSA public key file, which will use to verify
-                        next chain image (BL2)
-  --cot_digest COT_DIGEST
-                        Path to digest result of next chain image
 ```
 
-* (DEPRECATED) CoT image generating command
-
-```bash
-usage: socsec make_sv_chain_image [-h] [--algorithm ALGORITHM]
-                                  [--rsa_key_order ORDER]
-                                  [--cot_part BL2_IMAGE:BL2_OUT:BL2_SIGN_KEY:BL2_VERIFY_KEY BL3_IMAGE:BL3_OUT:BL3_SIGN_KEY:BL3_VERIFY_KEY [BL2_IMAGE:BL2_OUT:BL2_SIGN_KEY:BL2_VERIFY_KEY BL3_IMAGE:BL3_OUT:BL3_SIGN_KEY:BL3_VERIFY_KEY ...]]
-                                  [--image_relative_path IMAGE_RELATIVE_PATH]
-                                  [--signing_helper [APP]]
-                                  [--signing_helper_with_files [APP]]
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --algorithm ALGORITHM
-                        Algorithm to use (default: NONE e.g. RSA2048_SHA256,
-                        RSA3072_SHA384, ...), RSA algo support RSA1024,
-                        RSA2048, RSA3072 and RSA4096, HASH algo support
-                        SHA224, SHA256, SHA384 and SHA512
-  --rsa_key_order ORDER
-                        This value the OTP setting(e.g. little, big), default
-                        value is "little"
-  --cot_part BL2_IMAGE:BL2_OUT:BL2_SIGN_KEY:BL2_VERIFY_KEY BL3_IMAGE:BL3_OUT:BL3_SIGN_KEY:BL3_VERIFY_KEY [BL2_IMAGE:BL2_OUT:BL2_SIGN_KEY:BL2_VERIFY_KEY BL3_IMAGE:BL3_OUT:BL3_SIGN_KEY:BL3_VERIFY_KEY ...]
-  --image_relative_path IMAGE_RELATIVE_PATH
-                        Image relative path
-  --signing_helper [APP]
-                        Path to helper used for signing
-  --signing_helper_with_files [APP]
-                        Path to helper used for signing using files
-```
 
 * Verify command
 The verify tool can check the validity of the combination of OTP image and RoT secure image.
@@ -200,8 +159,7 @@ optional arguments:
   --cot_offset IMAGE  Offset for every image, e.g. 0x10000:0x100000
 ```
 
-Here is an example.
-There are two stages to make the whole secure image, make RoT image and make CoT image.
+Here is an example to make RoT image.
 
 * RoT secure image with mode 2 RSA4096_SHA512
 
@@ -211,23 +169,10 @@ socsec make_secure_bl1_image \
     --bl1_image path/to/u-boot-spl.bin \
     --output path/to/s_u-boot-spl.bin \
     --rsa_sign_key path/to/test_oem_dss_private_key_4096_1.pem \
-    --cot_algorithm RSA4096_SHA512 \
-    --cot_verify_key path/to/test_bl2_public_4096.pem \
+    --rsa_key_order big
 ```
 
-* (DEPRECATED) CoT secure image
-
-```bash
-socsec make_sv_chain_image \
---algorithm RSA4096_SHA512 \
---image_relative_path path/to/all_image/ \
---cot_part u-boot.bin:s_u-boot.bin:test_bl2_private_4096.pem:test_bl2_public_4096.pem \
-ast2600-ramfs.itb:s_ast2600-ramfs.itb: test_bl3_private_4096.pem: test_bl3_public_4096.pem \
-```
-
-The format of `--cot_part` option is `image_input:secure_image_output:sign_key:verification_key`
-
-The `--signing_helper` option can be used to specify any external program for signing hashes. The data to sign (including padding e.g. PKCS1-v1.5) is fed via `STDIN` and the signed data is returned via STDOUT. Arguments for a signing helper is `--rsa_sign_key` in `make_secure_bl1_image` or `sign_key` in `make_sv_chain_image --cot_part`. If the signing helper exits with a non-zero exit code, it means failure.
+The `--signing_helper` option can be used to specify any external program for signing hashes. The data to sign (including padding e.g. PKCS1-v1.5) is fed via `STDIN` and the signed data is returned via STDOUT. Arguments for a signing helper is `--rsa_sign_key` in `make_secure_bl1_image`. If the signing helper exits with a non-zero exit code, it means failure.
 Here's an example invocation:
 
 ```bash
