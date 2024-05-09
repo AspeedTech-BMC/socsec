@@ -22,4 +22,12 @@
 
 set -eu
 
-exec openssl dgst -sha384 -sign $1 | openssl asn1parse -inform der |tail -n 2| cut -d : -f 4 | xxd -r -p
+SIGNING_KEY="tests/keys/ecdsa.pem"
+if [ "$1" = "" ]
+then
+	KEY=$SIGNING_KEY
+else
+	KEY=$1
+fi
+
+exec openssl dgst -sha384 -sign $KEY | openssl asn1parse -inform der |tail -n 2| cut -d : -f 4 | xxd -r -p

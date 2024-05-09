@@ -216,7 +216,7 @@ def rsa_pkcs15_sign(alg_data, rsa_key_file, src_bin,
         signing_file.write(src_bin)
         signing_file.flush()
         p = subprocess.Popen([
-            signing_helper_with_files, rsa_key_file, signing_file.name])
+            signing_helper_with_files, rsa_key_file if rsa_key_file is not None else "", signing_file.name])
         retcode = p.wait()
         if retcode != 0:
             raise ValueError('Error signing')
@@ -229,7 +229,7 @@ def rsa_pkcs15_sign(alg_data, rsa_key_file, src_bin,
     else:
         if signing_helper is not None:
             p = subprocess.Popen(
-                [signing_helper, rsa_key_file],
+                [signing_helper, rsa_key_file if rsa_key_file is not None else ""],
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE)
@@ -422,7 +422,12 @@ def rsa_pss_verify(alg_data, rsa_key_file, signature, mHash):
     return rsa_pss_em_ver(alg_data, EM, mHash)
 
 
-def rsa_verify(alg_data, rsa_key_file, signature, digest, order='little'):
+def rsa_verify(alg_data, rsa_sk_file, rsa_pk_file, signature, digest, order='little'):
+    if rsa_sk_file is None:
+        rsa_key_file = rsa_pk_file
+    else:
+        rsa_key_file = rsa_sk_file
+
     if alg_data.rsa_padding == 'pkcs1':
         return rsa_pkcs15_verify(alg_data, rsa_key_file, signature, digest, order)
     else:
@@ -463,11 +468,16 @@ def ecdsa_sign(ecdsa_sign_key_path, src_bin,
     return ecdsa_key.sign_digest_deterministic(src_bin)
 
 
-def ecdsa_verify(ecdsa_key_path, src_bin, digest):
-    with open(ecdsa_key_path, 'r') as f:
-        key_file_str = f.read()
-    sk = SigningKey.from_pem(key_file_str)
-    vk = sk.verifying_key
+def ecdsa_verify(ecdsa_key_path, ecdsa_verify_key_path, src_bin, digest):
+    if ecdsa_verify_key_path is None:
+        with open(ecdsa_key_path, 'r') as f:
+            key_file_str = f.read()
+        sk = SigningKey.from_pem(key_file_str)
+        vk = sk.verifying_key
+    else:
+        with open(ecdsa_verify_key_path, 'r') as f:
+            key_file_str = f.read()
+        vk = VerifyingKey.from_pem(key_file_str)
     return vk.verify_digest(src_bin, digest)
 
 
@@ -578,23 +588,23 @@ class Sec(object):
         return Algorithm(algorithm_type, hash_alg, hash_num_bytes,
                          rsa_num_bytes, public_key_num_bytes, rsa_padding=rsa_padding)
 
-    def verify_bl1_mode_2_image(self, sec_image, verify_key_path, alg_data,
+    def verify_bl1_mode_2_image(self, sec_image, sign_key_path, verify_key_path, alg_data,
                                 sign_image_size, signature_offset, rsa_key_order):
         sha = alg_data.hash_alg.new(sec_image[0:sign_image_size])
         digest = sha.digest()
         image_signature = sec_image[signature_offset:
                                     (signature_offset+alg_data.rsa_num_bytes)]
-        if not rsa_verify(alg_data, verify_key_path,
+        if not rsa_verify(alg_data, sign_key_path, verify_key_path,
                           image_signature, digest, order=rsa_key_order):
             raise SecError("signature verify failed")
 
-    def verify_bl1_mode_ecdsa_image(self, sec_image, verify_key_path,
+    def verify_bl1_mode_ecdsa_image(self, sec_image, sign_key_path, verify_key_path,
                                     sign_image_size, signature_offset):
         sha = SHA384.new(sec_image[0:sign_image_size])
         digest = sha.digest()
         image_signature = sec_image[signature_offset:
                                     (signature_offset+96)]
-        if not ecdsa_verify(verify_key_path,
+        if not ecdsa_verify(sign_key_path, verify_key_path,
                             image_signature, digest):
             raise SecError("signature verify failed")
 
@@ -636,8 +646,8 @@ class Sec(object):
         if image[enc_offset:] != plaintext:
             raise SecError("image decrypt failed")
 
-    def verify_bl1_image(self, image, sec_image, header_offset, rsa_vk_path,
-                         ecdsa_vk_path, gcm_aes_key, aes_key, rsa_aes_key_path,
+    def verify_bl1_image(self, image, sec_image, header_offset, rsa_sk_path, rsa_vk_path,
+                         ecdsa_sk_path, ecdsa_vk_path, gcm_aes_key, aes_key, rsa_aes_key_path,
                          alg_data, key_in_otp, rsa_key_order):
         header = sec_image[header_offset:header_offset+self.ROT_HEADER_SIZE]
         (aes_data_offset, enc_offset, sign_image_size,
@@ -654,11 +664,11 @@ class Sec(object):
         print("check header PASS")
 
         if alg_data.algorithm_type in [RSA_SHA, AES_RSA_SHA]:
-            self.verify_bl1_mode_2_image(sec_image, rsa_vk_path, alg_data,
+            self.verify_bl1_mode_2_image(sec_image, rsa_sk_path, rsa_vk_path, alg_data,
                                          sign_image_size, signature_offset, rsa_key_order)
             print("check integrity PASS - rsa")
         elif alg_data.algorithm_type in [ECDSA_P384, AES_ECDSA_P384]:
-            self.verify_bl1_mode_ecdsa_image(sec_image, ecdsa_vk_path,
+            self.verify_bl1_mode_ecdsa_image(sec_image, ecdsa_sk_path, ecdsa_vk_path,
                                              sign_image_size, signature_offset)
             print("check integrity PASS - ecdsa")
 
@@ -804,7 +814,7 @@ class Sec(object):
             signing_file.write(src_bin)
             signing_file.flush()
             p = subprocess.Popen([
-                signing_helper_with_files, ecdsa_sign_key, signing_file.name])
+                signing_helper_with_files, ecdsa_sign_key if ecdsa_sign_key is not None else "", signing_file.name])
             retcode = p.wait()
             if retcode != 0:
                 raise ValueError('Error signing')
@@ -816,7 +826,7 @@ class Sec(object):
         else:
             if signing_helper is not None:
                 p = subprocess.Popen(
-                    [signing_helper, ecdsa_sign_key],
+                    [signing_helper, ecdsa_sign_key if ecdsa_sign_key is not None else ""],
                     stdin=subprocess.PIPE,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE)
@@ -961,8 +971,9 @@ class Sec(object):
 
         insert_bytearray(cot_data, image, cot_data_offset)
 
-    def make_secure_bl1_image(self, soc_version, bl1_image_fd, rsa_sign_key_path,
-                              ecdsa_sign_key_path, gcm_aes_key_fd, output_fd,
+    def make_secure_bl1_image(self, soc_version, bl1_image_fd, rsa_sign_key_path, rsa_verify_key_path,
+                              ecdsa_sign_key_path, ecdsa_verify_key_path,
+                              gcm_aes_key_fd, output_fd,
                               algorithm_name, rsa_padding, header_offset, revision_id,
                               enc_offset, aes_key_fd, rsa_aes_key_path,
                               key_in_otp,
@@ -1140,7 +1151,7 @@ class Sec(object):
 
         sign_key_path = ''
         if alg_data.algorithm_type == RSA_SHA:
-            if not rsa_sign_key_path:
+            if not rsa_sign_key_path and signing_helper is None and signing_helper_with_files is None:
                 raise SecError("Missing sign key")
             self.make_bl1_mode_2_image(output_image, alg_data, rsa_sign_key_path,
                                        header_offset,
@@ -1148,7 +1159,7 @@ class Sec(object):
                                        rsa_key_order,
                                        signing_helper, signing_helper_with_files, deterministic)
         elif alg_data.algorithm_type == AES_RSA_SHA:
-            if not rsa_sign_key_path:
+            if not rsa_sign_key_path and signing_helper is None and signing_helper_with_files is None:
                 raise SecError("Missing sign key")
             if deterministic:
                 aes_iv_path = '/dev/zero'
@@ -1195,7 +1206,7 @@ class Sec(object):
                                          aes_data_offset,
                                          signing_helper, signing_helper_with_files)
         elif alg_data.algorithm_type == ECDSA_P384:
-            if not ecdsa_sign_key_path:
+            if not ecdsa_sign_key_path and signing_helper is None and signing_helper_with_files is None:
                 raise SecError("Missing sign key")
             self.make_bl1_mode_ecdsa_image(output_image, ecdsa_sign_key_path,
                                            sign_image_size,
@@ -1237,7 +1248,9 @@ class Sec(object):
             raise SecError("Algorithm not supported")
 
         self.verify_bl1_image(plain_image, output_image, header_offset,
-                              rsa_sign_key_path, ecdsa_sign_key_path, gcm_aes_key,
+                              rsa_sign_key_path, rsa_verify_key_path,
+                              ecdsa_sign_key_path, ecdsa_verify_key_path,
+                              gcm_aes_key,
                               aes_key, rsa_aes_key_path,
                               alg_data, key_in_otp, rsa_key_order)
 
@@ -1971,8 +1984,12 @@ class secTool(object):
                                 default=None)
         sub_parser.add_argument('--rsa_sign_key',
                                 help='Path to RSA private key file, which will use to sign BL1_IMAGE')
+        sub_parser.add_argument('--rsa_verify_key',
+                                help='Path to RSA public key file, which will use to verify signed BL1_IMAGE')
         sub_parser.add_argument('--ecdsa_sign_key',
                                 help='Path to ECDSA private key file, which will use to sign BL1_IMAGE')
+        sub_parser.add_argument('--ecdsa_verify_key',
+                                help='Path to ECDSA public key file, which will use to verify signed BL1_IMAGE')
         sub_parser.add_argument('--rsa_key_order',
                                 help='This value the OTP setting(e.g. little, big), default value is "little". \
                                       If RSA padding mode is PSS, rsa_key_order will be big endian',
@@ -2134,7 +2151,9 @@ class secTool(object):
         """Implements the 'make_secure_bl1_image' sub-command."""
         self.sec.make_secure_bl1_image(args.soc,
                                        args.bl1_image, args.rsa_sign_key,
+                                       args.rsa_verify_key,
                                        args.ecdsa_sign_key,
+                                       args.ecdsa_verify_key,
                                        args.gcm_aes_key,
                                        args.output, args.algorithm,
                                        args.rsa_padding,
