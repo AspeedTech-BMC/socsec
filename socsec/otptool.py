@@ -2125,16 +2125,12 @@ class OTP(object):
                        no_last_bit=False):
 
         otp_config = jstyleson.load(config_file)
-        if otp_config['version'] in ['A0', 'A1', 'A2', 'A3', '1030A0', '1030A1']:
-            self.make_otp_image_v1(otp_config, key_folder, user_data_folder,
-                                   output_folder, no_last_bit)
-
-        elif otp_config['version'] in ['2700A0', '2700A1']:
+        if otp_config['version'] in ['2700A0', '2700A1']:
             self.make_otp_image_v2(otp_config, key_folder,
                                    output_folder, no_last_bit)
-
         else:
-            print("Unknown version", otp_config['version'])
+            self.make_otp_image_v1(otp_config, key_folder, user_data_folder,
+                                   output_folder, no_last_bit)
 
     def otp_print_image_data(self, key_type_list, data_region, config_region):
         key_header = []
