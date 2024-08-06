@@ -24,12 +24,15 @@ from collections import OrderedDict
 import json
 import re
 import os
+import argparse
+import sys
 
-Input_file = './otp_memory_map_A1.xlsx'
+# Input_file = './otp_memory_map_A1.xlsx'
+OTPRBP_SHEET_NAME = 'OTPRBP'
 OTPCFG_SHEET_NAME = 'OTPCFG'
-OTPSTRAP_SHEET_NAME = 'OTPSTRAP-OTPFLASHSTRAP'
+OTPSTRAP_SHEET_NAME = 'OTPSTRAP-STRAPEXT'
 SECURE_SHEET_NAME = 'SECURE'
-CALIPTRA_SHEET_NAME = 'CALIPTRA'
+CALIPTRA_SHEET_NAME = 'OTPCAL'
 AST_CHIP_NAME = 'AST'
 AST_CHIP_VER = '2700a1'
 
@@ -51,8 +54,8 @@ OTP_KEY_TYPE_NAME = [
 ]
 
 OTP_KEY_NAME = [
-        "ECDSA OEM DSS Key",
-        "LMS OEM DSS Key",
+        "OEM DSS ECDSA Key",
+        "OEM DSS LMS Key",
         "Manufacture Key Hash",
         "Owner Key Hash",
         "Vault Key",
@@ -68,6 +71,91 @@ OTP_KEY_FILE_NAME = [
         "test_vault_key_seed.bin"
 ]
 
+def otprbp_handler_info(sheet, list):
+        sh = sheet
+
+        for rownum in range(0, sh.nrows):
+                if rownum < 1:
+                        continue
+
+                row_values = sh.row_values(rownum)
+                #print(row_values)
+
+                # reserved skip
+                if row_values[2] == "reserved" or row_values[2] == "Reserved":
+                        continue
+
+                if row_values[2] == "Sum":
+                        break
+
+                name = row_values[2].replace(' ', '_')
+                bit_length = int(row_values[3])
+                offset = int(row_values[1], 16) - 0x3e0
+
+                idx = row_values[6].find('\n')
+                if idx != -1:
+                        desc = str(row_values[6])[:idx]
+                else:
+                        desc = str(row_values[6])
+
+                if bit_length > 32:
+                        for i in range (0, int(bit_length / 32)):
+                                rbp = OrderedDict()
+                                # print(i)
+                                rbp['type'] = "string"
+                                rbp['key'] = name + "_" + str(i)
+                                rbp['w_offset'] = offset + i * 2
+                                rbp['bit_offset'] = 0
+                                rbp['bit_length'] = 32
+                                rbp['info'] = "[" + str((i + 1) * 32 - 1) + ":" + str(i * 32) + "] " + desc
+                                # print(rbp['key'])
+                                list.append(rbp)
+                else:
+                        rbp = OrderedDict()
+                        rbp['type'] = "string"
+                        rbp['key'] = name
+                        rbp['w_offset'] = offset
+                        rbp['bit_offset'] = 0
+                        rbp['bit_length'] = bit_length
+                        rbp['info'] = desc
+                        list.append(rbp)
+
+def otprbp_handler(sheet, data):
+        sh = sheet
+
+        rbp_region = OrderedDict()
+        for rownum in range(0, sh.nrows):
+                if rownum < 1:
+                        continue
+
+                row_values = sh.row_values(rownum)
+                # print(row_values)
+
+                otp_addr = int(row_values[0])
+                otp_name = row_values[2]
+                otp_bit_size = int(row_values[3])
+
+                # reserved skip
+                if otp_name == "reserved" or otp_name == "Reserved":
+                        continue
+
+                if otp_addr == 32:
+                        break
+
+                desc = "// " + "OTPRBP" + str(otp_addr) + " - " +str(otp_bit_size) + " bits"
+
+                rbp_region[desc] = ""
+                keys = otp_name.replace(" ", "_")
+                if otp_bit_size <= 32:
+                        rbp_region[keys] = "0x0"
+                else:
+                        for i in range(0, int(otp_bit_size / 32)):
+                          keys_num = keys + "_"+ str(i)
+                          rbp_region[keys_num] = "0x0"
+
+                data["rbp_region"] = rbp_region
+        return
+
 def otpcfg_handler_info(sheet, list):
         sh = sheet
 
@@ -75,38 +163,47 @@ def otpcfg_handler_info(sheet, list):
                 conf = OrderedDict()
                 bit_length = 0
 
+                row_values = sh.row_values(rownum)
+                # print(row_values)
+
+                otp_addr = row_values[0]
+                otp_num = row_values[2]
+                otp_bit_msb = row_values[3]
+                otp_bit_lsb = row_values[4]
+                otp_bit_name = row_values[5]
+                otp_bit_desc = row_values[6]
+
                 if rownum < 4:
                         continue
 
-                row_values = sh.row_values(rownum)
-                #print(row_values)
-
-                # OTPCFG1 & OTPCFG3 skip
-                if row_values[0] == "401" or row_values[0] == "403":
-                        continue
-                otpcfg_addr = row_values[0]
-
-                if row_values[2] != "":
-                        otpcfg_num = row_values[2]
-                # reserved skip
-                if row_values[7] == "reserved":
-                        continue
-                if row_values[3] == "" and row_values[4] == "":
+                if otp_bit_msb == "" and otp_bit_lsb == "":
                         break
 
-                if row_values[3] != row_values[4]:
+                # OTPCFG1 & OTPCFG3 skip
+                if otp_addr == "401" or otp_addr == "403":
+                        continue
+
+                if otp_num != "":
+                        otpcfg_num = otp_num.split("/")[0]
+
+                # reserved skip
+                if otp_bit_name == "reserved" or otp_bit_name == "Reserved":
+                        continue
+
+                if otp_bit_msb != otp_bit_lsb:
                         multi_value = True
-                        bit_length =  int(row_values[3]) - int(row_values[4]) + 1
+                        bit_length =  int(otp_bit_msb) - int(otp_bit_lsb) + 1
                 else:
                         multi_value = False
 
-                idx = row_values[8].find('\n')
+                idx = otp_bit_desc.find('\n')
                 if idx != -1:
-                        desc = str(row_values[8])[:idx]
+                        desc = str(otp_bit_desc)[:idx]
                 else:
-                        desc = str(row_values[8])
+                        desc = str(otp_bit_desc)
 
-                name = row_values[7].replace(' ', '_')
+                name = otp_bit_name.replace(' ', '_')
+
                 conf['key'] = name
                 if multi_value:
                         conf['type'] = "string"
@@ -114,7 +211,7 @@ def otpcfg_handler_info(sheet, list):
                         conf['type'] = "boolean"
 
                 conf['w_offset'] = int(re.findall(r'-?\d+', otpcfg_num)[0])
-                conf['bit_offset'] = int(row_values[4])
+                conf['bit_offset'] = int(otp_bit_lsb)
                 if bit_length != 0:
                         conf['bit_length'] = bit_length
                         desc += " = {}"
@@ -149,31 +246,34 @@ def otpcfg_handler(sheet, data):
                 row_values = sh.row_values(rownum)
                 #print(row_values)
 
-                # OTPCFG1 & OTPCFG3 skip
-                if row_values[0] == "401" or row_values[0] == "403":
-                        continue
-                otpcfg_addr = row_values[0]
+                otp_addr = row_values[0]
+                otp_num = row_values[2]
+                otp_bit_msb = row_values[3]
+                otp_bit_lsb = row_values[4]
+                otp_bit_name = row_values[5]
 
-                if row_values[2] != "":
-                        otpcfg_num = row_values[2]
-                # reserved skip
-                if row_values[7] == "reserved":
+                # OTPCFG1 & OTPCFG3 skip
+                if otp_addr == "401" or otp_addr == "403":
                         continue
-                if row_values[3] == "" and row_values[4] == "":
+
+                if otp_num != "":
+                        otpcfg_num = otp_num.split("/")[0]
+
+                # reserved skip
+                if otp_bit_name == "reserved" or otp_bit_name == "Reserved":
+                        continue
+                if otp_bit_msb == "" and otp_bit_lsb == "":
                         break
 
-                if row_values[2] != "":
-                        otpcfg_num = row_values[2]
-
-                if row_values[3] != row_values[4]:
-                        desc = "// " + otpcfg_num + "[" + str(int(row_values[3])) + ":" + str(int(row_values[4])) + "]"
+                if otp_bit_msb != otp_bit_lsb:
+                        desc = "// " + otpcfg_num + "[" + str(int(otp_bit_msb)) + ":" + str(int(otp_bit_lsb)) + "]"
                         multi_value = True
                 else:
-                        desc = "// " + otpcfg_num + "[" + str(int(row_values[4])) + "]"
+                        desc = "// " + otpcfg_num + "[" + str(int(otp_bit_lsb)) + "]"
                         multi_value = False
 
                 conf_region[desc] = ""
-                keys = row_values[7].replace(" ", "_")
+                keys = otp_bit_name.replace(" ", "_")
                 if multi_value:
                         conf_region[keys] = "0x0"
                 else:
@@ -195,7 +295,7 @@ def otpstrap_handler_info(sheet, list):
                         continue
 
                 row_values = sh.row_values(rownum)
-                #print(row_values)
+                # print(row_values)
 
                 is_strapext = False
                 is_strap = False
@@ -278,11 +378,11 @@ def otpstrap_handler(sheet, data):
         strap_region = OrderedDict()
         strap_ext_region = OrderedDict()
         for rownum in range(0, sh.nrows):
-                if rownum < 5:
+                if rownum < 25:
                         continue
 
                 row_values = sh.row_values(rownum)
-                #print(row_values)
+                # print(row_values)
 
                 is_strapext = False
                 is_strap = False
@@ -305,6 +405,7 @@ def otpstrap_handler(sheet, data):
                 elif is_strapext:
                         strap_ext_region["// " + row_values[7]] = ""
 
+                # if isinstance(row_values[0], int) and int(row_values[0]) == 1:
                 if int(row_values[0]) == 1:
                         strap_details["value"] = False
                 else:
@@ -329,7 +430,7 @@ def otpsec_handler(sheet, data):
         key_list = []
         sec_region = OrderedDict()
         for rownum in range(0, sh.nrows):
-                if rownum < 55:
+                if rownum < 70:
                         continue
 
                 keys = OrderedDict()
@@ -376,7 +477,7 @@ def otpcal_handler_info(sheet, list):
                 if row_values[2] == "Sum":
                         break
 
-                name = row_values[1].replace(' ', '_')
+                name = row_values[2].replace(' ', '_')
                 cal['key'] = name
                 bit_length = int(row_values[3])
                 if bit_length > 1:
@@ -434,9 +535,9 @@ def otpcal_handler(sheet, data):
                 if row_values[2] == "Sum":
                         break
 
-                name = row_values[1].strip().replace(" ", "_")
+                name = row_values[2].strip().replace(" ", "_")
 
-                cal_region["// " + row_values[0]] = ""
+                cal_region["// OTPCAL" + str(int(row_values[0]))] = ""
                 if int(row_values[3]) == 1:
                         cal_region[name] = False
                 elif int(row_values[3]) > 1:
@@ -447,29 +548,50 @@ def otpcal_handler(sheet, data):
         data["caliptra_region"] = cal_region
 
 if __name__ == '__main__':
-        wb = xlrd.open_workbook(Input_file)
+        parser = argparse.ArgumentParser()
+        parser.add_argument('--input',
+                            help='input file',
+                            type=argparse.FileType('r'),
+                            default='')
+
+        parser.add_argument('--strap',
+                            help='input strap file',
+                            type=argparse.FileType('r'),
+                            default='')
+
+        args = parser.parse_args(sys.argv[1:])
+        # print("args", args)
+
+        if (len(sys.argv) == 1):
+            parser.print_usage()
+            sys.exit(1)
+
+        # print(args.input)
+        wb = xlrd.open_workbook(args.input.name)
+        wb_strap = xlrd.open_workbook(args.strap.name)
 
         data = OrderedDict()
-        data["name"] = AST_CHIP_NAME
+        data["name"] = "2700-a1_sample-full"
         data["version"] = AST_CHIP_VER.upper()
 
         # OTP ROM
         rom = dict()
-        rom["file_name"] = "FILE"
-        rom["w_offset"] = "0x0"
+        # rom["file_name"] = "FILE"
+        # rom["w_offset"] = "0x0"
         data["rom_region"] = rom
 
         for sheetnum in range(0, wb.nsheets):
                 sh = wb.sheet_by_index(sheetnum)
-                print("sheet %d name: %s" % (sheetnum, sh.name))
+                # print("sheet %d name: %s" % (sheetnum, sh.name))
+
+                # OTPRBP
+                if sh.name == OTPRBP_SHEET_NAME:
+                        otprbp_handler(sh, data)
+                        continue
 
                 # OTPCFG
                 if sh.name == OTPCFG_SHEET_NAME:
                         otpcfg_handler(sh, data)
-                        continue
-                # OTPSTRAP & OTPSTRAPEXT
-                elif sh.name == OTPSTRAP_SHEET_NAME:
-                        otpstrap_handler(sh, data)
                         continue
                 # OTPSEC
                 elif sh.name == SECURE_SHEET_NAME:
@@ -480,6 +602,15 @@ if __name__ == '__main__':
                         otpcal_handler(sh, data)
                         continue
                 else:
+                        continue
+
+        for sheetnum in range(0, wb_strap.nsheets):
+                sh = wb_strap.sheet_by_index(sheetnum)
+                # print("sheet %d name: %s" % (sheetnum, sh.name))
+
+                # OTPSTRAP & OTPSTRAPEXT
+                if sh.name == "OTP":
+                        otpstrap_handler(sh, data)
                         continue
 
         filename = AST_CHIP_NAME + AST_CHIP_VER + "_tmp.json"
@@ -506,6 +637,7 @@ if __name__ == '__main__':
         sampleJsonfile.close()
 
         # For config info
+        print("config info")
         conf_list = []
         for sheetnum in range(0, wb.nsheets):
                 sh = wb.sheet_by_index(sheetnum)
@@ -521,13 +653,14 @@ if __name__ == '__main__':
                 json.dump(conf_list, writeJsonfile, indent=4, default=str)
 
         # For strap info
+        print("strap info")
         strap_list = []
-        for sheetnum in range(0, wb.nsheets):
-                sh = wb.sheet_by_index(sheetnum)
+        for sheetnum in range(0, wb_strap.nsheets):
+                sh = wb_strap.sheet_by_index(sheetnum)
                 print("sheet %d name: %s" % (sheetnum, sh.name))
 
                 # OTPCFG
-                if sh.name == OTPSTRAP_SHEET_NAME:
+                if sh.name == "OTP":
                         otpstrap_handler_info(sh, strap_list)
                 else:
                         continue
@@ -536,6 +669,7 @@ if __name__ == '__main__':
                 json.dump(strap_list, writeJsonfile, indent=4, default=str)
 
         # For caliptra info
+        print("caliptra info")
         caliptra_list = []
         for sheetnum in range(0, wb.nsheets):
                 sh = wb.sheet_by_index(sheetnum)
@@ -549,3 +683,19 @@ if __name__ == '__main__':
 
         with open(AST_CHIP_VER + "_caliptra.json", "w", encoding="utf-8") as writeJsonfile:
                 json.dump(caliptra_list, writeJsonfile, indent=4, default=str)
+
+        # For rbp info
+        print("rbp info")
+        rbp_list = []
+        for sheetnum in range(0, wb.nsheets):
+                sh = wb.sheet_by_index(sheetnum)
+                print("sheet %d name: %s" % (sheetnum, sh.name))
+
+                # OTPCFG
+                if sh.name == OTPRBP_SHEET_NAME:
+                        otprbp_handler_info(sh, rbp_list)
+                else:
+                        continue
+
+        with open(AST_CHIP_VER + "_rbp.json", "w", encoding="utf-8") as writeJsonfile:
+                json.dump(rbp_list, writeJsonfile, indent=4, default=str)

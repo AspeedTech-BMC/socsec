@@ -10,13 +10,13 @@
         ]
     },
     {
-        "key": "otp_mem_ecc_enable",
+        "key": "wr_protect_puf",
         "type": "boolean",
         "w_offset": 0,
         "bit_offset": 14,
         "info": [
-            "User Area ECC disable",
-            "User Area ECC enable"
+            "Enable PUF program done",
+            "Disable PUF program done"
         ]
     },
     {
@@ -50,23 +50,23 @@
         ]
     },
     {
-        "key": "wr_protect_hw_rid",
+        "key": "wr_protect_otp_rbp",
         "type": "boolean",
         "w_offset": 0,
         "bit_offset": 10,
         "info": [
-            "Enable Write Protect of OTP Hardware Revision ID bits",
-            "Disable Write Protect of OTP Hardware Revision ID bits"
+            "Enable Write Protect of rbp region",
+            "Disable Write Protect of rbp region"
         ]
     },
     {
-        "key": "wr_protect_otpkey_retire_bit",
+        "key": "enable_secure_boot",
         "type": "boolean",
         "w_offset": 0,
         "bit_offset": 9,
         "info": [
-            "Enable Write Protect of OTP key retire bits",
-            "Disable Write Protect of OTP key retire bits"
+            "Enable Secure Boot",
+            "Disable Secure Boot"
         ]
     },
     {
@@ -110,7 +110,7 @@
         ]
     },
     {
-        "key": "wr_protect_otp_flash_strap",
+        "key": "wr_protect_otp_strap_ext",
         "type": "boolean",
         "w_offset": 0,
         "bit_offset": 4,
@@ -150,7 +150,7 @@
         ]
     },
     {
-        "key": "rd_protect_otp_flash_strap",
+        "key": "rd_protect_otp_strap_ext",
         "type": "boolean",
         "w_offset": 0,
         "bit_offset": 0,
@@ -160,20 +160,19 @@
         ]
     },
     {
-        "key": "enable_secure_boot",
+        "key": "en_irot",
         "type": "boolean",
         "w_offset": 2,
-        "bit_offset": 15,
+        "bit_offset": 13,
         "info": [
-            "Enable Secure Boot",
-            "Disable Secure Boot"
+            "reserved"
         ]
     },
     {
         "key": "ignore_secure_boot_hw_strap",
         "type": "boolean",
         "w_offset": 2,
-        "bit_offset": 14,
+        "bit_offset": 12,
         "info": [
             "Ignore Secure Boot hardware strap disable",
             "Ignore Secure Boot hardware strap enable"
@@ -183,54 +182,34 @@
         "key": "dis_low_secure_key0",
         "type": "boolean",
         "w_offset": 2,
-        "bit_offset": 13,
+        "bit_offset": 11,
         "info": [
             "Disable low security key #0",
             "Enable low security key #0"
         ]
     },
     {
-        "key": "dis_caliptra_verify",
+        "key": "en_lms_verify",
         "type": "boolean",
         "w_offset": 2,
-        "bit_offset": 12,
+        "bit_offset": 10,
         "info": [
-            "Disable Caliptra cryptographic verfication",
-            "Enable Caliptra cryptographic verfication"
-        ]
-    },
-    {
-        "key": "hw_puf_program_done",
-        "type": "boolean",
-        "w_offset": 2,
-        "bit_offset": 11,
-        "info": [
-            "Enable HW PUF program done",
-            "Disable HW PUF program done"
+            "Enable SoC FMC verification with ECDSA and LMS",
+            "Disable SoC FMC verification with ECDSA and LMS"
         ]
     },
     {
         "key": "dev_life_cycle_state",
         "type": "string",
         "w_offset": 2,
-        "bit_offset": 9,
+        "bit_offset": 8,
         "bit_length": 2,
         "info": [
             "The Device Life Cycle State. It's the source of Security State. = {}"
         ]
     },
     {
-        "key": "en_boot_msg_usb_uart_x",
-        "type": "boolean",
-        "w_offset": 2,
-        "bit_offset": 8,
-        "info": [
-            "Enable Boot ROM Message output through USB-Uart port x",
-            "Disable Boot ROM Message output through USB-Uart port x"
-        ]
-    },
-    {
-        "key": "en_boot_msg_usb_uart_x",
+        "key": "en_boot_msg_usb_uart_a",
         "type": "boolean",
         "w_offset": 2,
         "bit_offset": 7,
@@ -240,10 +219,20 @@
         ]
     },
     {
-        "key": "en_emmc_sw_reset",
+        "key": "en_boot_msg_usb_uart_b",
         "type": "boolean",
         "w_offset": 2,
         "bit_offset": 6,
+        "info": [
+            "Enable Boot ROM Message output through USB-Uart port x",
+            "Disable Boot ROM Message output through USB-Uart port x"
+        ]
+    },
+    {
+        "key": "en_emmc_sw_reset",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 5,
         "info": [
             "Enable eMMC software reset",
             "Disable eMMC software reset"
@@ -253,20 +242,10 @@
         "key": "dis_boot_msg",
         "type": "boolean",
         "w_offset": 2,
-        "bit_offset": 5,
+        "bit_offset": 4,
         "info": [
             "Disable Uart Message of Boot ROM",
             "Enable Uart Message of Boot ROM"
-        ]
-    },
-    {
-        "key": "dis_flash_strap",
-        "type": "boolean",
-        "w_offset": 2,
-        "bit_offset": 4,
-        "info": [
-            "Disable Flash Strap",
-            "Enable Flash Strap"
         ]
     },
     {
@@ -335,7 +314,7 @@
         "bit_offset": 0,
         "bit_length": 10,
         "info": [
-            "Pre OTP Patch code size = {}"
+            "Pre OTP Patch code size (unit: word) = {}"
         ]
     },
     {
@@ -366,16 +345,6 @@
         "bit_length": 10,
         "info": [
             "Post OTP Patch code size = {}"
-        ]
-    },
-    {
-        "key": "SoC_Key_Retire_bits",
-        "type": "string",
-        "w_offset": 8,
-        "bit_offset": 0,
-        "bit_length": 16,
-        "info": [
-            "SoC Key Retire bits = {}"
         ]
     },
     {
@@ -509,173 +478,254 @@
         ]
     },
     {
-        "key": "Secure_Boot_Header_Offset",
+        "key": "recovery_mode_cfg_a",
         "type": "string",
         "w_offset": 15,
         "bit_offset": 0,
         "bit_length": 16,
         "info": [
-            "Secure Boot Header Offset = {}"
+            "reserved = {}"
         ]
     },
     {
-        "key": "User_defined_data0",
+        "key": "recovery_mode_cfg_b",
         "type": "string",
         "w_offset": 16,
         "bit_offset": 0,
         "bit_length": 16,
         "info": [
-            "This will be source of DICE generation. = {}"
+            "reserved = {}"
         ]
     },
     {
-        "key": "User_defined_data1",
+        "key": "IO_SLI_TX_clock_select",
         "type": "string",
-        "w_offset": 17,
-        "bit_offset": 0,
-        "bit_length": 16,
+        "w_offset": 24,
+        "bit_offset": 12,
+        "bit_length": 4,
         "info": [
-            "This will be source of DICE generation. = {}"
+            "IOD TX (US) clock speed = {}"
         ]
     },
     {
-        "key": "User_defined_data2",
+        "key": "IO_SLI_TX_clock_inverse",
+        "type": "boolean",
+        "w_offset": 24,
+        "bit_offset": 11,
+        "info": [
+            "IOD SLIH TXCLK delay[5]"
+        ]
+    },
+    {
+        "key": "IO_SLI_TX_clock_delay",
         "type": "string",
-        "w_offset": 18,
-        "bit_offset": 0,
-        "bit_length": 16,
+        "w_offset": 24,
+        "bit_offset": 6,
+        "bit_length": 5,
         "info": [
-            "This will be source of DICE generation. = {}"
+            "IOD SLIH TXCLK delay[4:0] = {}"
         ]
     },
     {
-        "key": "User_defined_data3",
-        "type": "string",
-        "w_offset": 19,
-        "bit_offset": 0,
-        "bit_length": 16,
+        "key": "IO_SLI_RX_clock_inverse",
+        "type": "boolean",
+        "w_offset": 24,
+        "bit_offset": 5,
         "info": [
-            "This will be source of DICE generation. = {}"
+            "IOD SLIH RXCLK delay[5]"
         ]
     },
     {
-        "key": "Hardware_revision_ID0",
-        "type": "string",
-        "w_offset": 20,
-        "bit_offset": 0,
-        "bit_length": 16,
-        "info": [
-            "Hardware revision ID[15:0] (prevent rollback) = {}"
-        ]
-    },
-    {
-        "key": "Hardware_revision_ID1",
-        "type": "string",
-        "w_offset": 21,
-        "bit_offset": 0,
-        "bit_length": 16,
-        "info": [
-            "Hardware revision ID[31:16] (prevent rollback) = {}"
-        ]
-    },
-    {
-        "key": "Hardware_revision_ID2",
-        "type": "string",
-        "w_offset": 22,
-        "bit_offset": 0,
-        "bit_length": 16,
-        "info": [
-            "Hardware revision ID[47:32] (prevent rollback) = {}"
-        ]
-    },
-    {
-        "key": "Hardware_revision_ID3",
-        "type": "string",
-        "w_offset": 23,
-        "bit_offset": 0,
-        "bit_length": 16,
-        "info": [
-            "Hardware revision ID[63:48] (prevent rollback) = {}"
-        ]
-    },
-    {
-        "key": "Internal_bus_timing_setting0",
+        "key": "IO_SLI_RX_clock_delay",
         "type": "string",
         "w_offset": 24,
         "bit_offset": 0,
-        "bit_length": 16,
+        "bit_length": 5,
         "info": [
-            " = {}"
+            "IOD SLIH RXCLK delay[4:0] = {}"
         ]
     },
     {
-        "key": "Internal_bus_timing_setting1",
+        "key": "CPU_SLI_TX_clock_select",
+        "type": "string",
+        "w_offset": 25,
+        "bit_offset": 12,
+        "bit_length": 4,
+        "info": [
+            "CPU TX (DS) clock speed = {}"
+        ]
+    },
+    {
+        "key": "CPU_SLI_TX_clock_inverse",
+        "type": "boolean",
+        "w_offset": 25,
+        "bit_offset": 11,
+        "info": [
+            "CPU SLIH TXCLK delay[5]"
+        ]
+    },
+    {
+        "key": "CPU_SLI_RX_clock_inverse",
+        "type": "boolean",
+        "w_offset": 25,
+        "bit_offset": 10,
+        "info": [
+            "CPU SLIH RXCLK delay[5]"
+        ]
+    },
+    {
+        "key": "LTPI0_PHY_RX_clock_inverse",
+        "type": "boolean",
+        "w_offset": 25,
+        "bit_offset": 9,
+        "info": [
+            ""
+        ]
+    },
+    {
+        "key": "LTPI0_PHY_TX_clock_inverse",
+        "type": "boolean",
+        "w_offset": 25,
+        "bit_offset": 8,
+        "info": [
+            ""
+        ]
+    },
+    {
+        "key": "LTPI1_PHY_RX_clock_inverse",
+        "type": "boolean",
+        "w_offset": 25,
+        "bit_offset": 7,
+        "info": [
+            ""
+        ]
+    },
+    {
+        "key": "LTPI1_PHY_TX_clock_inverse",
+        "type": "boolean",
+        "w_offset": 25,
+        "bit_offset": 6,
+        "info": [
+            ""
+        ]
+    },
+    {
+        "key": "SLI_data_latch_control",
         "type": "string",
         "w_offset": 25,
         "bit_offset": 0,
-        "bit_length": 16,
+        "bit_length": 6,
         "info": [
-            " = {}"
+            "bit[5] - CPU SLIV RX latch data P/N swap = {}"
         ]
     },
     {
-        "key": "Internal_bus_timing_setting2",
+        "key": "SLI-H_pad_delay",
         "type": "string",
         "w_offset": 26,
         "bit_offset": 0,
         "bit_length": 16,
         "info": [
-            " = {}"
+            "bit[15:12] - CPU SLIH RXD1[3:0] = {}"
         ]
     },
     {
-        "key": "Internal_bus_timing_setting3",
+        "key": "SLI-M_pad_delay_-_CPU_die",
         "type": "string",
         "w_offset": 27,
         "bit_offset": 0,
         "bit_length": 16,
         "info": [
-            " = {}"
+            "bit[15:12] - CPU SLIM RXD3[3:0] = {}"
         ]
     },
     {
-        "key": "Internal_bus_timing_setting4",
+        "key": "SLI-M_pad_delay_-_IO_die",
         "type": "string",
         "w_offset": 28,
         "bit_offset": 0,
         "bit_length": 16,
         "info": [
-            " = {}"
+            "bit[15:12] - IOD SLIM RXD3[3:0] = {}"
         ]
     },
     {
-        "key": "Internal_bus_timing_setting5",
+        "key": "SLI-V_pad_delay",
         "type": "string",
         "w_offset": 29,
         "bit_offset": 0,
         "bit_length": 16,
         "info": [
-            " = {}"
+            "bit[15:12] - CPU SLIV RXD1[3:0] = {}"
         ]
     },
     {
-        "key": "Internal_bus_timing_setting6",
+        "key": "LTPI0_DDR_mode_disable",
+        "type": "boolean",
+        "w_offset": 30,
+        "bit_offset": 15,
+        "info": [
+            "Set 1 to enable LTPI0 DDR mode",
+            "Set 1 to disable LTPI0 DDR mode"
+        ]
+    },
+    {
+        "key": "LTPI_Runtime_firmware_enable",
+        "type": "boolean",
+        "w_offset": 30,
+        "bit_offset": 14,
+        "info": [
+            "Set 1 to disable AST1700 runtime firmware",
+            "Set 1 to enable AST1700 runtime firmware"
+        ]
+    },
+    {
+        "key": "LTPI_CRC_format",
+        "type": "boolean",
+        "w_offset": 30,
+        "bit_offset": 13,
+        "info": [
+            "LTPI0 & LTPI1 CRC format"
+        ]
+    },
+    {
+        "key": "LTPI0_speed_capability_disabling",
         "type": "string",
         "w_offset": 30,
         "bit_offset": 0,
-        "bit_length": 16,
+        "bit_length": 13,
         "info": [
-            " = {}"
+            "bit[12] - 500M = {}"
         ]
     },
     {
-        "key": "Internal_bus_timing_setting7",
+        "key": "LTPI1_DDR_mode_disable",
+        "type": "boolean",
+        "w_offset": 31,
+        "bit_offset": 15,
+        "info": [
+            "Set 1 to enable LTPI1 DDR mode",
+            "Set 1 to disable LTPI1 DDR mode"
+        ]
+    },
+    {
+        "key": "LTPI1_driving_strength",
+        "type": "string",
+        "w_offset": 31,
+        "bit_offset": 13,
+        "bit_length": 2,
+        "info": [
+            "4 levels = {}"
+        ]
+    },
+    {
+        "key": "LTPI1_speed_capability_disabling",
         "type": "string",
         "w_offset": 31,
         "bit_offset": 0,
-        "bit_length": 16,
+        "bit_length": 13,
         "info": [
-            " = {}"
+            "bit[12] - 500M = {}"
         ]
     }
 ]

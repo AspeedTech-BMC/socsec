@@ -1,0 +1,106 @@
+[
+    {
+        "type": "string",
+        "key": "SoC_FMC_ECC_Key_Retire_bits",
+        "w_offset": 0,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": "SoC FMC ECC Key retire bits"
+    },
+    {
+        "type": "string",
+        "key": "SoC_FMC_LMS_Key_Retire_bits",
+        "w_offset": 1,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": "SoC FMC LMS Key retire bits"
+    },
+    {
+        "type": "string",
+        "key": "Caliptra_Manufacture_pk_key_hash_retire",
+        "w_offset": 2,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": "Caliptra Manufacture public key hash retire bits"
+    },
+    {
+        "type": "string",
+        "key": "Caliptra_Owner_pk_key_hash_retire",
+        "w_offset": 3,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": "Caliptra Owner public key hash retire bits"
+    },
+    {
+        "type": "string",
+        "key": "SoC_FMC_Hardware_SVN_0",
+        "w_offset": 4,
+        "bit_offset": 0,
+        "bit_length": 32,
+        "info": "[31:0] Hardware revision ID[63:0] (prevent rollback)"
+    },
+    {
+        "type": "string",
+        "key": "SoC_FMC_Hardware_SVN_1",
+        "w_offset": 6,
+        "bit_offset": 0,
+        "bit_length": 32,
+        "info": "[63:32] Hardware revision ID[63:0] (prevent rollback)"
+    },
+    {
+        "type": "string",
+        "key": "Caliptra_FMC_Hardware_SVN",
+        "w_offset": 8,
+        "bit_offset": 0,
+        "bit_length": 32,
+        "info": "Caliptra FMC security version number"
+    },
+    {
+        "type": "string",
+        "key": "Caliptra_Runtime_Hardware_SVN_0",
+        "w_offset": 10,
+        "bit_offset": 0,
+        "bit_length": 32,
+        "info": "[31:0] Caliptra Runtime firmware security version number"
+    },
+    {
+        "type": "string",
+        "key": "Caliptra_Runtime_Hardware_SVN_1",
+        "w_offset": 12,
+        "bit_offset": 0,
+        "bit_length": 32,
+        "info": "[63:32] Caliptra Runtime firmware security version number"
+    },
+    {
+        "type": "string",
+        "key": "Caliptra_Runtime_Hardware_SVN_2",
+        "w_offset": 14,
+        "bit_offset": 0,
+        "bit_length": 32,
+        "info": "[95:64] Caliptra Runtime firmware security version number"
+    },
+    {
+        "type": "string",
+        "key": "Caliptra_Runtime_Hardware_SVN_3",
+        "w_offset": 16,
+        "bit_offset": 0,
+        "bit_length": 32,
+        "info": "[127:96] Caliptra Runtime firmware security version number"
+    },
+    {
+        "type": "string",
+        "key": "Caliptra_Manufacture_ECC_key_mask",
+        "w_offset": 18,
+        "bit_offset": 0,
+        "bit_length": 4,
+        "info": "Caliptra fuse: KEY MANIFEST PK HASH MASK"
+    },
+    {
+        "type": "string",
+        "key": "Caliptra_Manufacture_LMS_key_mask",
+        "w_offset": 19,
+        "bit_offset": 0,
+        "bit_length": 32,
+        "info": "Caliptra fuse: LMS REVOCATION"
+    }
+]

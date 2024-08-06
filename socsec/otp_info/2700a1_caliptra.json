@@ -1,57 +1,17 @@
 [
     {
-        "key": "Manufacture_pk_key_hash_retire",
-        "type": "string",
-        "w_offset": 0,
-        "bit_offset": 0,
-        "bit_length": 16,
-        "info": [
-            "Manufacture public key hash retirement."
-        ]
-    },
-    {
-        "key": "Owner_pk_key_hash_retire",
-        "type": "string",
-        "w_offset": 1,
-        "bit_offset": 0,
-        "bit_length": 16,
-        "info": [
-            "Owner public key hash retirement."
-        ]
-    },
-    {
-        "key": "LMS_verify",
+        "key": "Enable_LMS_verify",
         "type": "boolean",
-        "w_offset": 2,
+        "w_offset": 0,
         "bit_offset": 0,
         "info": [
             "Verify Caliptra firmware images with both ECDSA and LMS"
         ]
     },
     {
-        "key": "FMC_SVN",
-        "type": "string",
-        "w_offset": 3,
-        "bit_offset": 0,
-        "bit_length": 32,
-        "info": [
-            "FMC security version number"
-        ]
-    },
-    {
-        "key": "Runtime_SVN",
-        "type": "string",
-        "w_offset": 5,
-        "bit_offset": 0,
-        "bit_length": 128,
-        "info": [
-            "Runtime firmware security version number"
-        ]
-    },
-    {
         "key": "Anti-rollback_disable",
         "type": "boolean",
-        "w_offset": 13,
+        "w_offset": 1,
         "bit_offset": 0,
         "info": [
             "Disable anti-rollback support from Caliptra",
@@ -61,7 +21,7 @@
     {
         "key": "Field_Entropy",
         "type": "string",
-        "w_offset": 14,
+        "w_offset": 2,
         "bit_offset": 0,
         "bit_length": 256,
         "info": [
@@ -69,9 +29,19 @@
         ]
     },
     {
+        "key": "Manufacture_Key_Hash",
+        "type": "string",
+        "w_offset": 18,
+        "bit_offset": 0,
+        "bit_length": 384,
+        "info": [
+            "Manufacture/Vendor key hash"
+        ]
+    },
+    {
         "key": "IDEVID_Cert_attr",
         "type": "string",
-        "w_offset": 30,
+        "w_offset": 42,
         "bit_offset": 0,
         "bit_length": 768,
         "info": [
@@ -81,7 +51,7 @@
     {
         "key": "IDEVID_manuf_HSM_identifier",
         "type": "string",
-        "w_offset": 78,
+        "w_offset": 90,
         "bit_offset": 0,
         "bit_length": 128,
         "info": [
@@ -91,7 +61,7 @@
     {
         "key": "IDEVID_TBS",
         "type": "string",
-        "w_offset": 96,
+        "w_offset": 98,
         "bit_offset": 0,
         "bit_length": 8192,
         "info": [
@@ -101,7 +71,7 @@
     {
         "key": "IDEVID_Cert_Signature",
         "type": "string",
-        "w_offset": 608,
+        "w_offset": 610,
         "bit_offset": 0,
         "bit_length": 768,
         "info": [

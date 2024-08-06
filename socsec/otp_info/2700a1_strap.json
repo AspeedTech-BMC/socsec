@@ -73,11 +73,31 @@
         ]
     },
     {
-        "key": "DisSSP",
+        "key": "VGALinearSize[0]",
         "key_type": "strap",
         "type": "boolean",
         "w_offset": 0,
         "bit_offset": 10,
+        "info": [
+            "VGA linear memory size"
+        ]
+    },
+    {
+        "key": "VGALinearSize[1]",
+        "key_type": "strap",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 11,
+        "info": [
+            "VGA linear memory size"
+        ]
+    },
+    {
+        "key": "DisSSP",
+        "key_type": "strap",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 12,
         "info": [
             "Disable SSP running.\u00a0",
             "Enable SSP running.\u00a0"
@@ -88,30 +108,21 @@
         "key_type": "strap",
         "type": "boolean",
         "w_offset": 0,
-        "bit_offset": 11,
+        "bit_offset": 13,
         "info": [
             "Disable TSP running.\u00a0",
             "Enable TSP running.\u00a0"
         ]
     },
     {
-        "key": "VGALinearSize[0]",
+        "key": "En_UFS_Secure",
         "key_type": "strap",
         "type": "boolean",
         "w_offset": 0,
-        "bit_offset": 12,
+        "bit_offset": 14,
         "info": [
-            "VGA linear memory size"
-        ]
-    },
-    {
-        "key": "VGALinearSize[1]",
-        "key_type": "strap",
-        "type": "boolean",
-        "w_offset": 0,
-        "bit_offset": 13,
-        "info": [
-            "VGA linear memory size"
+            "Enable UFS secure mode",
+            "Disable UFS secure mode"
         ]
     },
     {
@@ -186,10 +197,8 @@
         "w_offset": 1,
         "bit_offset": 6,
         "info": [
-            "Disable SoC FMC hash verify when secure boot is enabled",
-            "Enable SoC FMC hash verify when secure boot is disabled",
-            "Disable SoC FMC hash verify when secure boot is enabled",
-            "Enable SoC FMC hash verify when secure boot is disabled"
+            "Disable SoC FMC hash verify",
+            "Enable SoC FMC hash verify"
         ]
     },
     {
@@ -236,9 +245,10 @@
     {
         "key": "Recovery_mode_selection",
         "key_type": "strap",
-        "type": "boolean",
+        "type": "string",
         "w_offset": 1,
         "bit_offset": 11,
+        "bit_length": 2,
         "info": [
             "Recovery from Uart or USB selection"
         ]
@@ -248,10 +258,21 @@
         "key_type": "strap",
         "type": "string",
         "w_offset": 1,
-        "bit_offset": 12,
+        "bit_offset": 13,
         "bit_length": 2,
         "info": [
             "Boot from USB port selection"
+        ]
+    },
+    {
+        "key": "Dis_Cptra",
+        "key_type": "strap",
+        "type": "boolean",
+        "w_offset": 1,
+        "bit_offset": 15,
+        "info": [
+            "Disable Caliptra booting",
+            "Enable Caliptra booting"
         ]
     },
     {
@@ -273,6 +294,16 @@
         "bit_offset": 2,
         "info": [
             "VGA0/1 Class Code\u00a0"
+        ]
+    },
+    {
+        "key": "ufs_clk_sel",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 1,
+        "bit_offset": 3,
+        "info": [
+            "UFS reference clock selection"
         ]
     },
     {
@@ -316,6 +347,17 @@
         "info": [
             "Disable WDT reset full\u00a0",
             "Enable WDT reset full\u00a0"
+        ]
+    },
+    {
+        "key": "udbg_to_sel",
+        "key_type": "strap_ext",
+        "type": "string",
+        "w_offset": 1,
+        "bit_offset": 10,
+        "bit_length": 2,
+        "info": [
+            "Uart Debug timeout selection"
         ]
     },
     {
@@ -480,6 +522,39 @@
         ]
     },
     {
+        "key": "udbg_to_sel",
+        "key_type": "strap_ext",
+        "type": "string",
+        "w_offset": 2,
+        "bit_offset": 7,
+        "bit_length": 2,
+        "info": [
+            "Uart Debug timeout selection"
+        ]
+    },
+    {
+        "key": "En_Cptra_debug",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 11,
+        "info": [
+            "Enable Caliptra debug state",
+            "Disable Caliptra debug state"
+        ]
+    },
+    {
+        "key": "En_ROM_WDT",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 12,
+        "info": [
+            "Enable ROM WDT",
+            "Disable ROM WDT"
+        ]
+    },
+    {
         "key": "FWSPISize",
         "key_type": "strap_ext",
         "type": "string",
@@ -510,27 +585,6 @@
         "bit_length": 2,
         "info": [
             "Size of FWSPI CRTM\u00a0"
-        ]
-    },
-    {
-        "key": "LTPI_Max",
-        "key_type": "strap_ext",
-        "type": "string",
-        "w_offset": 3,
-        "bit_offset": 3,
-        "bit_length": 3,
-        "info": [
-            "LTPI Max frequency\u00a0"
-        ]
-    },
-    {
-        "key": "LTPI_IO_Type",
-        "key_type": "strap_ext",
-        "type": "boolean",
-        "w_offset": 3,
-        "bit_offset": 6,
-        "info": [
-            "LTPI IO Type"
         ]
     },
     {

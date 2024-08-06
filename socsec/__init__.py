@@ -279,7 +279,7 @@ class OTP_info(object):
     MAGIC_WORD_OTP = 'SOCOTP'
     HEADER_FORMAT = '<8s8I'
     HEADER_SIZE = struct.calcsize(HEADER_FORMAT)
-    HEADER_FORMAT_2700 = '<8s10I'
+    HEADER_FORMAT_2700 = '<8s11I'
     HEADER_SIZE_2700 = struct.calcsize(HEADER_FORMAT_2700)
     CHECKSUM_LEN = 32
     OTP_KEY_TYPE_RSA_PUB = 1
@@ -309,11 +309,12 @@ class OTP_info(object):
 
     # For AST2700
     INC_ROM = 1 << 31
-    INC_CONF = 1 << 30
-    INC_STRAP = 1 << 29
-    INC_STRAPEXT = 1 << 28
-    INC_SECURE = 1 << 27
-    INC_CALIPTRA = 1 << 26
+    INC_RBP = 1 << 30
+    INC_CONF = 1 << 29
+    INC_STRAP = 1 << 28
+    INC_STRAPEXT = 1 << 27
+    INC_SECURE = 1 << 26
+    INC_CALIPTRA = 1 << 25
 
     class OTP_KEY_TYPE_2700(Enum):
         OTP_KEY_TYPE_SOC_ECDSA_PUB = 1
@@ -382,10 +383,12 @@ class OTP_info(object):
             'otp_strap_bit_size': 64,
         },
         '2700A1': {
+            'rbp': pkgdata('socsec', 'otp_info/2700a1_rbp.json'),
             'config': pkgdata('socsec', 'otp_info/2700a1_config.json'),
             'strap': pkgdata('socsec', 'otp_info/2700a1_strap.json'),
             'caliptra': pkgdata('socsec', 'otp_info/2700a1_caliptra.json'),
-            'rom_region_size': 2048,
+            'rom_region_size': 1984,
+            'rbp_region_size': 64,
             'config_region_size': 64,
             'strap_bit_size': 32,
             'strap_ext_bit_size': 128,
