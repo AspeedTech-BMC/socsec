@@ -93,13 +93,14 @@ def conf_handler(worksheet, output_file):
         if i < 4:
             continue
 
+        # print(worksheet.cell_value(i, 1))
         if worksheet.cell_value(i, 1) == "OTP001" or worksheet.cell_value(i, 1) == "OTP003":
             continue
 
         if worksheet.cell_value(i, 2) != "":
             conf_val = worksheet.cell_value(i, 2)
 
-        if worksheet.cell_value(i, 7) == "reserved" or worksheet.cell_value(i, 7) == "Reserved":
+        if worksheet.cell_value(i, 5) == "reserved" or worksheet.cell_value(i, 5) == "Reserved":
             continue
 
         msb = int(worksheet.cell_value(i, 3))
@@ -109,11 +110,11 @@ def conf_handler(worksheet, output_file):
         w_offset = int(re.findall(r'-?\d+', conf_val)[0])
         width = msb - lsb + 1
         bit_offset = lsb
-        idx = worksheet.cell_value(i, 8).find('\n')
+        idx = worksheet.cell_value(i, 6).find('\n')
         if idx != -1:
-            otp_desc = worksheet.cell_value(i, 8)[:idx]
+            otp_desc = worksheet.cell_value(i, 6)[:idx]
         else:
-            otp_desc = worksheet.cell_value(i, 8)
+            otp_desc = worksheet.cell_value(i, 6)
 
         if int(width) == 1:
             line_str = gen_line_info(w_offset, bit_offset, width, 1, otp_desc)
@@ -135,7 +136,7 @@ def conf_handler(worksheet, output_file):
             line_str = gen_line_info(w_offset, bit_offset, width, "OTP_REG_VALUE", otp_desc + ": 0x%x")
             output_file.writelines(line_str)
 
-        if worksheet.cell_value(i, 1) == "OTP031":
+        if worksheet.cell_value(i, 1) == "OTP031" or worksheet.cell_value(i + 1, 5) == "":
             return
 
 def caliptra_handler(worksheet, output_file):
@@ -145,17 +146,21 @@ def caliptra_handler(worksheet, output_file):
         if i < 1:
             continue
 
-        if worksheet.cell_value(i, 1) == "reserved" or worksheet.cell_value(i, 1) == "Reserved":
+        if worksheet.cell_value(i, 2) == "reserved" or worksheet.cell_value(i, 2) == "Reserved":
             continue
+
+        if worksheet.cell_value(i, 2) == "Sum":
+            break
 
         print(worksheet.cell_value(i, 0))
         if worksheet.cell_value(i, 0) != "":
             cal_val = worksheet.cell_value(i, 0)
         width = int(worksheet.cell_value(i, 3))
 
-        w_offset = int(re.findall(r'-?\d+', cal_val)[0])
+        # w_offset = int(re.findall(r'-?\d+', cal_val)[0])
+        w_offset = int(cal_val)
         bit_offset = 0
-        otp_desc = worksheet.cell_value(i, 1)
+        otp_desc = worksheet.cell_value(i, 2)
 
         if int(width) == 1:
             line_str = gen_line_info(w_offset, bit_offset, width, 1, otp_desc)
