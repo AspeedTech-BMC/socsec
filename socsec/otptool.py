@@ -1886,6 +1886,8 @@ class OTP(object):
         strap_ext_size = 0
         secure_all = bytes(0)
         secure_size = 0
+        caliptra_all = bytes(0)
+        caliptra_size = 0
 
         if 'rom_region' in otp_config:
 
