@@ -1405,9 +1405,8 @@ class OTP(object):
         return bytearray(scu_protect.tobytes()), \
             bytearray(scu_ignore.tobytes())
 
-    def make_caliptra_region(self, caliptra_region_config, caliptra_info, caliptra_region_size):
-        caliptra_region = bitarray(caliptra_region_size * 8, endian='little')
-        caliptra_region.setall(False)
+    def make_caliptra_region(self, caliptra_region_config, caliptra_info, caliptra_region_size, key_folder):
+        caliptra_region = bytearray(caliptra_region_size)
 
         for config in caliptra_region_config:
             info = None
@@ -1422,35 +1421,23 @@ class OTP(object):
 
             if info['type'] == 'boolean':
                 w_offset = info['w_offset']
-                bit_offset = info['bit_offset']
-                offset = w_offset * 16 + bit_offset
                 if value:
-                    print("key {} set value".format(key))
-                    print("offset", offset)
                     in_val = 1
                 else:
                     in_val = 0
 
-                caliptra_region[offset] = in_val
+                caliptra_region[w_offset * 2] = in_val
 
             elif info['type'] == 'string':
+                if value == "":
+                    continue
+
                 w_offset = info['w_offset']
-                bit_offset = info['bit_offset']
-                bit_length = info['bit_length']
-                offset = w_offset * 16 + bit_offset
+                data_bin = load_file(key_folder + value)
+                insert_data_bin = bytearray(data_bin)
+                insert_bytearray(insert_data_bin, caliptra_region, w_offset * 2)
 
-                hex_value = int(value, 16)
-                bit_value = bitarray(bin(hex_value)[2:][::-1])
-                if hex_value.bit_length() > bit_length:
-                    print("bit_length", bit_length)
-                    raise ValueError("key %s Input value %s is out of range." % (key, value))
-
-                if hex_value != 0:
-                    print("key {} set value {}".format(key, hex_value))
-                    print("offset len", offset, bit_length)
-                caliptra_region[offset:offset+len(bit_value)] = bit_value
-
-        return bytearray(caliptra_region.tobytes())
+        return caliptra_region
 
     def make_rbp_region(self, rbp_region_config, rbp_info, rbp_region_size):
         rbp_region = bitarray(rbp_region_size * 8, endian='little')
@@ -1901,7 +1888,7 @@ class OTP(object):
                 insert_bytearray(insert_rom_bin, rom_region, int(otp_config['rom_region']['w_offset'], 16) * 2)
 
                 rom_size = len(rom_region)
-                print("rom_size", rom_size)
+                # print("rom_size", rom_size)
                 image_size = self.otp_info.HEADER_SIZE_2700 + rom_size
                 image_info = image_size | self.otp_info.INC_ROM
                 image_info_all = image_info_all | self.otp_info.INC_ROM
@@ -1941,7 +1928,7 @@ class OTP(object):
                 no_last_bit)
 
             secure_size = len(secure_region)
-            print("secure_size", secure_size)
+            # print("secure_size", secure_size)
             image_size = self.otp_info.HEADER_SIZE_2700 + secure_size
             image_info = image_size | self.otp_info.INC_SECURE
             image_info_all = image_info_all | self.otp_info.INC_SECURE
@@ -1982,7 +1969,7 @@ class OTP(object):
                 otp_info['config_region_size'])
 
             config_size = len(config_region)
-            print("config_size", config_size)
+            # print("config_size", config_size)
             image_size = self.otp_info.HEADER_SIZE_2700 + config_size
             image_info = image_size | self.otp_info.INC_CONF
             image_info_all = image_info_all | self.otp_info.INC_CONF
@@ -2023,7 +2010,7 @@ class OTP(object):
                 otp_info['strap_bit_size'])
 
             strap_size = len(strap_region)
-            print("strap_size", strap_size)
+            # print("strap_size", strap_size)
             image_size = self.otp_info.HEADER_SIZE_2700 + strap_size
             image_info = image_size | self.otp_info.INC_STRAP
             image_info_all = image_info_all | self.otp_info.INC_STRAP
@@ -2064,7 +2051,7 @@ class OTP(object):
                 otp_info['strap_ext_bit_size'])
 
             strap_ext_size = len(strap_ext_region)
-            print("strap_ext_size", strap_ext_size)
+            # print("strap_ext_size", strap_ext_size)
             image_size = self.otp_info.HEADER_SIZE_2700 + strap_ext_size
             image_info = image_size | self.otp_info.INC_STRAPEXT
             image_info_all = image_info_all | self.otp_info.INC_STRAPEXT
@@ -2102,10 +2089,10 @@ class OTP(object):
 
             caliptra_region = self.make_caliptra_region(
                 otp_config['caliptra_region'], caliptra_info,
-                otp_info['caliptra_region_size'])
+                otp_info['caliptra_region_size'], key_folder)
 
             caliptra_size = len(caliptra_region)
-            print("caliptra_size", caliptra_size)
+            # print("caliptra_size", caliptra_size)
             image_size = self.otp_info.HEADER_SIZE_2700 + caliptra_size
             image_info = image_size | self.otp_info.INC_CALIPTRA
             image_info_all = image_info_all | self.otp_info.INC_CALIPTRA
@@ -2146,7 +2133,7 @@ class OTP(object):
                 otp_info['rbp_region_size'])
 
             rbp_size = len(rbp_region)
-            print("rbp_size", rbp_size)
+            # print("rbp_size", rbp_size)
             image_size = self.otp_info.HEADER_SIZE_2700 + rbp_size
             image_info = image_size | self.otp_info.INC_RBP
             image_info_all = image_info_all | self.otp_info.INC_RBP
