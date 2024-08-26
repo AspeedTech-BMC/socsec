@@ -1803,7 +1803,6 @@ class OTP(object):
         print("2. Handle Key Body...")
         header_offset = -1
         for conf in key_config:
-            print("key:", conf['type'], conf['key_file'], conf['w_offset'], conf['number_id'])
             header_offset = header_offset + 1
             key_type = conf['type']
             if key_type == 'reserved':
