@@ -469,26 +469,22 @@
             {
                 "type": "soc_vault",
                 "key_file": "test_vault_key.bin",
-                "w_offset": "0x6a0",
-                "number_id": 0
+                "w_offset": "0x6a0"
             },
             {
                 "type": "soc_vault",
                 "key_file": "test_vault_key.bin",
-                "w_offset": "0x6b0",
-                "number_id": 1
+                "w_offset": "0x6b0"
             },
             {
                 "type": "soc_vault",
                 "key_file": "test_vault_key.bin",
-                "w_offset": "0x6c0",
-                "number_id": 2
+                "w_offset": "0x6c0"
             },
             {
                 "type": "soc_vault",
                 "key_file": "test_vault_key.bin",
-                "w_offset": "0x6d0",
-                "number_id": 3
+                "w_offset": "0x6d0"
             }
         ]
     },
