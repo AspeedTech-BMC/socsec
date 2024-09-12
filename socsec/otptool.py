@@ -829,6 +829,7 @@ class OTP(object):
         elif type == 'soc_lms_pub':
             key_bin = load_file(key_folder + key_config['key_file'])
             insert_key_bin = bytearray(key_bin)
+            insert_key_bin = insert_key_bin[4:]
             # raise ValueError("soc_lms_pub key type is not supported yet.")
         elif type == 'cal_manu_pub_hash':
             key_bin = load_file(key_folder + key_config['key_file'])
