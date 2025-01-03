@@ -308,13 +308,14 @@ class OTP_info(object):
     INC_SCU_PROTECT = 1 << 25
 
     # For AST2700
-    INC_ROM = 1 << 31
-    INC_RBP = 1 << 30
-    INC_CONF = 1 << 29
-    INC_STRAP = 1 << 28
-    INC_STRAPEXT = 1 << 27
-    INC_SECURE = 1 << 26
-    INC_CALIPTRA = 1 << 25
+    class OTP_INFO_INC_2700:
+        INC_ROM = 1 << 31
+        INC_RBP = 1 << 30
+        INC_CONF = 1 << 29
+        INC_STRAP = 1 << 28
+        INC_STRAPEXT = 1 << 27
+        INC_SECURE = 1 << 26
+        INC_CALIPTRA = 1 << 25
 
     class OTP_KEY_TYPE_2700(Enum):
         OTP_KEY_TYPE_SOC_ECDSA_PUB = 1

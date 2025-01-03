@@ -1836,6 +1836,7 @@ class OTP(object):
             version = OTP_info.SOC_AST2700A1
             genKeyHeader = self.genKeyHeader_2700a1
             key_to_bytearray = self.key_to_bytearray_2700a1
+            otp_info_inc = self.otp_info.OTP_INFO_INC_2700()
         else:
             raise OtpError('SOC version is invalid')
 
@@ -1890,8 +1891,8 @@ class OTP(object):
                 rom_size = len(rom_region)
                 # print("rom_size", rom_size)
                 image_size = self.otp_info.HEADER_SIZE_2700 + rom_size
-                image_info = image_size | self.otp_info.INC_ROM
-                image_info_all = image_info_all | self.otp_info.INC_ROM
+                image_info = image_size | otp_info_inc.INC_ROM
+                image_info_all = image_info_all | otp_info_inc.INC_ROM
 
                 rom_offset = self.otp_info.HEADER_SIZE_2700
                 rom_info = rom_offset | (rom_size << 16)
@@ -1930,8 +1931,8 @@ class OTP(object):
             secure_size = len(secure_region)
             # print("secure_size", secure_size)
             image_size = self.otp_info.HEADER_SIZE_2700 + secure_size
-            image_info = image_size | self.otp_info.INC_SECURE
-            image_info_all = image_info_all | self.otp_info.INC_SECURE
+            image_info = image_size | otp_info_inc.INC_SECURE
+            image_info_all = image_info_all | otp_info_inc.INC_SECURE
 
             secure_offset = self.otp_info.HEADER_SIZE_2700
             secure_info = secure_offset | (secure_size << 16)
@@ -1971,8 +1972,8 @@ class OTP(object):
             config_size = len(config_region)
             # print("config_size", config_size)
             image_size = self.otp_info.HEADER_SIZE_2700 + config_size
-            image_info = image_size | self.otp_info.INC_CONF
-            image_info_all = image_info_all | self.otp_info.INC_CONF
+            image_info = image_size | otp_info_inc.INC_CONF
+            image_info_all = image_info_all | otp_info_inc.INC_CONF
             config_offset = self.otp_info.HEADER_SIZE_2700
             config_header = config_offset | (config_size << 16)
             checksum_offset = config_offset + config_size
@@ -2012,8 +2013,8 @@ class OTP(object):
             strap_size = len(strap_region)
             # print("strap_size", strap_size)
             image_size = self.otp_info.HEADER_SIZE_2700 + strap_size
-            image_info = image_size | self.otp_info.INC_STRAP
-            image_info_all = image_info_all | self.otp_info.INC_STRAP
+            image_info = image_size | otp_info_inc.INC_STRAP
+            image_info_all = image_info_all | otp_info_inc.INC_STRAP
             strap_offset = self.otp_info.HEADER_SIZE_2700
             strap_header = strap_offset | (strap_size << 16)
             checksum_offset = strap_offset + strap_size
@@ -2053,8 +2054,8 @@ class OTP(object):
             strap_ext_size = len(strap_ext_region)
             # print("strap_ext_size", strap_ext_size)
             image_size = self.otp_info.HEADER_SIZE_2700 + strap_ext_size
-            image_info = image_size | self.otp_info.INC_STRAPEXT
-            image_info_all = image_info_all | self.otp_info.INC_STRAPEXT
+            image_info = image_size | otp_info_inc.INC_STRAPEXT
+            image_info_all = image_info_all | otp_info_inc.INC_STRAPEXT
             strap_offset = self.otp_info.HEADER_SIZE_2700
             strap_header = strap_offset | (strap_ext_size << 16)
             checksum_offset = strap_offset + strap_ext_size
@@ -2094,8 +2095,8 @@ class OTP(object):
             caliptra_size = len(caliptra_region)
             # print("caliptra_size", caliptra_size)
             image_size = self.otp_info.HEADER_SIZE_2700 + caliptra_size
-            image_info = image_size | self.otp_info.INC_CALIPTRA
-            image_info_all = image_info_all | self.otp_info.INC_CALIPTRA
+            image_info = image_size | otp_info_inc.INC_CALIPTRA
+            image_info_all = image_info_all | otp_info_inc.INC_CALIPTRA
             caliptra_offset = self.otp_info.HEADER_SIZE_2700
             caliptra_header = caliptra_offset | (caliptra_size << 16)
             checksum_offset = caliptra_offset + caliptra_size
@@ -2135,8 +2136,8 @@ class OTP(object):
             rbp_size = len(rbp_region)
             # print("rbp_size", rbp_size)
             image_size = self.otp_info.HEADER_SIZE_2700 + rbp_size
-            image_info = image_size | self.otp_info.INC_RBP
-            image_info_all = image_info_all | self.otp_info.INC_RBP
+            image_info = image_size | otp_info_inc.INC_RBP
+            image_info_all = image_info_all | otp_info_inc.INC_RBP
             rbp_offset = self.otp_info.HEADER_SIZE_2700
             rbp_header = rbp_offset | (rbp_size << 16)
             checksum_offset = rbp_offset + rbp_size
