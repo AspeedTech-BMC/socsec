@@ -63,8 +63,8 @@ OTP_KEY_NAME = [
 ]
 
 OTP_KEY_FILE_NAME = [
-        "test_oem_dss_public_key_ecdsa384.pem",
-        "test_oem_dss_public_key_lms.pem",
+        "test_oem_dss_public_key_ecdsa384_",
+        "test_oem_dss_lms_key_",
         "test_manu_key_hash.bin",
         "test_owner_key_hash.bin",
         "test_vault_key.bin",
@@ -445,8 +445,18 @@ def otpsec_handler(sheet, data):
                 for i in range (len(OTP_KEY_NAME)):
                         if str(row_values[6]).startswith(OTP_KEY_NAME[i]):
                                 print("Found key", row_values[6])
+                                if i == 0:
+                                        number = re.search(r'\d+', row_values[6]).group()
+                                        key_file = OTP_KEY_FILE_NAME[i] + number + ".pem"
+                                        keys["key_file"] = key_file
+                                elif i == 1:
+                                        number = re.search(r'\d+', row_values[6]).group()
+                                        key_file = OTP_KEY_FILE_NAME[i] + number + ".pub"
+                                        keys["key_file"] = key_file
+                                else:
+                                        keys["key_file"] = OTP_KEY_FILE_NAME[i]
+
                                 keys["type"] = OTP_KEY_TYPE_NAME[i]
-                                keys["key_file"] = OTP_KEY_FILE_NAME[i]
                                 keys["w_offset"] = hex(int(str(row_values[1])[:4], 16) - 4096)
                                 keys["number_id"] = int(re.findall(r'\d+', str(row_values[6]))[0])
 
