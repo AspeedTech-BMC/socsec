@@ -188,7 +188,7 @@ def caliptra_handler(worksheet, output_file):
 if __name__ == '__main__':
 
     print("Generate OTPSTRAP/OTPSTRAP_EXT info...")
-    print("Usage:\n\tpython3 otpstrap_info_gen.py {workbook} {sheet} {output} {type: conf/strap/strap_ext/caliptra}")
+    print("Usage:\n\tpython3 otp_info_gen.py {workbook} {sheet} {output} {type: conf/strap/strap_ext/caliptra}")
 
     # Open the workbook
     workbook = xlrd.open_workbook(sys.argv[1])

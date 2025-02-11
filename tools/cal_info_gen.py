@@ -207,6 +207,7 @@ class genTool(object):
         owner_binary_outout = output_folder + 'owner_key.bin'
         owner_kh_binary_outout = output_folder + 'owner_key_hash.bin'
 
+        print("Generating vendor key hash binary files")
         key_bin = bytearray(VEN_ECC_KEY_SIZE + VEN_LMS_KEY_SIZE)
         print("size of key_bin", len(key_bin))
 
@@ -233,13 +234,18 @@ class genTool(object):
         writeBinFile(key_bin, vendor_binary_outout)
         writeBinFile(digest_bin, vendor_kh_binary_outout)
 
+        if "owner" not in config:
+            return
+
+        print("Generating owner key hash binary files")
         key_bin = bytearray(OWN_ECC_KEY_SIZE + OWN_LMS_KEY_SIZE)
         print("size of key_bin", len(key_bin))
 
-        owner_ecc_keys = config["owner"]["ecc_keys"]
-        ecdsa_key_bin = ecdsa_key_to_bin(key_folder + owner_ecc_keys[0]["key_file"], "big")
-        insert_key_bin = bytearray(ecdsa_key_bin)
-        insert_bytearray(insert_key_bin, key_bin, 0)
+        if "ecc_keys" in config["owner"]:
+            owner_ecc_keys = config["owner"]["ecc_keys"]
+            ecdsa_key_bin = ecdsa_key_to_bin(key_folder + owner_ecc_keys[0]["key_file"], "big")
+            insert_key_bin = bytearray(ecdsa_key_bin)
+            insert_bytearray(insert_key_bin, key_bin, 0)
 
         if "lms_keys" in config["owner"]:
                 owner_lms_keys = config["owner"]["lms_keys"]
