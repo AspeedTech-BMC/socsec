@@ -66,7 +66,7 @@
     {
         "key": "Disable ARM JTAG debug",
         "type": "boolean",
-        "bit_offset": 16,
+        "bit_offset": 17,
         "info": [
             "Enable ARM JTAG debug",
             "Disable ARM JTAG debug"

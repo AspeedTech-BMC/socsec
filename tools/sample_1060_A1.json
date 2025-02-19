@@ -126,7 +126,7 @@
             "otp_protect": true,
             "ignore": false
         },
-        // OTPSTRAP[16]
+        // OTPSTRAP[17]
         "Disable ARM JTAG debug": {
             // false: Enable ARM JTAG debug
             // true : Disable ARM JTAG debug
