@@ -196,11 +196,8 @@ def otpcfg_handler_info(sheet, list):
                 else:
                         multi_value = False
 
-                idx = otp_bit_desc.find('\n')
-                if idx != -1:
-                        desc = str(otp_bit_desc)[:idx]
-                else:
-                        desc = str(otp_bit_desc)
+                descs = otp_bit_desc.split('\n')
+                desc = descs[0]
 
                 name = otp_bit_name.replace(' ', '_')
 
@@ -214,19 +211,27 @@ def otpcfg_handler_info(sheet, list):
                 conf['bit_offset'] = int(otp_bit_lsb)
                 if bit_length != 0:
                         conf['bit_length'] = bit_length
-                        desc += " = {}"
 
                 desc_list = []
                 matches_a = ["enable", "Enable"]
                 matches_b = ["disable", "Disable"]
                 for x in matches_a:
                         if x in desc:
-                                desc_list.append(desc.replace("enable", "disable"))
-                                desc_list.append(desc.replace("Enable", "Disable"))
+                                desc_list.append(desc.replace(x, matches_b[matches_a.index(x)]))
+                                desc_list.append(desc)
                 for x in matches_b:
                         if x in desc:
-                                desc_list.append(desc.replace("disable", "enable"))
-                                desc_list.append(desc.replace("Disable", "Enable"))
+                                desc_list.append(desc.replace(x, matches_a[matches_b.index(x)]))
+                                desc_list.append(desc)
+
+                if bit_length != 0:
+                        for i in range(0, 2 ** bit_length):
+                                if i + 1 >= len(descs):
+                                        break
+                                desc_val = descs[i + 1].split(':')
+                                if len(desc_val) < 2:
+                                        break
+                                desc_list.append(desc + " = " + descs[i + 1].split(':')[1].strip())
 
                 if desc_list == []:
                         desc_list.append(desc)
@@ -300,11 +305,11 @@ def otpstrap_handler_info(sheet, list):
                 is_strapext = False
                 is_strap = False
 
-                # OTPSTRAP & OTPFLASHSTRAP only
-                if str(row_values[7]).startswith("OTPSTRAP"):
-                        is_strap = True
-                elif str(row_values[7]).startswith("OTPFLASHSTRAP"):
+                # OTPSTRAP & OTPSTRAP_EXT only
+                if str(row_values[7]).startswith("OTPSTRAP_EXT"):
                         is_strapext = True
+                elif str(row_values[7]).startswith("OTPSTRAP"):
+                        is_strap = True
                 else:
                         continue
 
@@ -319,7 +324,8 @@ def otpstrap_handler_info(sheet, list):
                 elif is_strapext:
                         strap['key_type'] = "strap_ext"
 
-                if int(row_values[0]) == 1:
+                bit_length = int(row_values[0])
+                if bit_length == 1:
                         strap['type'] = "boolean"
                         strap_num = int(re.findall(r'-?\d+', row_values[7])[0])
                 else:
@@ -329,8 +335,8 @@ def otpstrap_handler_info(sheet, list):
                 strap['w_offset'] = strap_num // 16
                 strap['bit_offset'] = strap_num % 16
 
-                if int(row_values[0]) > 1:
-                        strap['bit_length'] = int(row_values[0])
+                if bit_length > 1:
+                        strap['bit_length'] = bit_length
 
                 idx = row_values[2].find('\n')
                 if idx != -1:
@@ -343,12 +349,24 @@ def otpstrap_handler_info(sheet, list):
                 matches_b = ["disable", "Disable"]
                 for x in matches_a:
                         if x in desc:
-                                desc_list.append(desc.replace("enable", "disable"))
-                                desc_list.append(desc.replace("Enable", "Disable"))
+                                desc_list.append(desc.replace(x, matches_b[matches_a.index(x)]))
+                                desc_list.append(desc)
                 for x in matches_b:
                         if x in desc:
-                                desc_list.append(desc.replace("disable", "enable"))
-                                desc_list.append(desc.replace("Disable", "Enable"))
+                                desc_list.append(desc.replace(x, matches_a[matches_b.index(x)]))
+                                desc_list.append(desc)
+
+                descs = re.split(r'\n|, ', row_values[3])
+                if bit_length != 0 and desc_list == []:
+                        for i in range(0, 2 ** bit_length):
+                                if i < len(descs):
+                                        desc_val = descs[i].split(':')
+                                        if len(desc_val) < 2:
+                                                desc_list.append(desc)
+                                        else:
+                                                desc_list.append(desc + " = " + desc_val[1].strip())
+                                else:
+                                        desc_list.append(desc)
 
                 if desc_list == []:
                         desc_list.append(desc)
@@ -387,11 +405,11 @@ def otpstrap_handler(sheet, data):
                 is_strapext = False
                 is_strap = False
 
-                # OTPSTRAP & OTPFLASHSTRAP only
-                if str(row_values[7]).startswith("OTPSTRAP"):
-                        is_strap = True
-                elif str(row_values[7]).startswith("OTPFLASHSTRAP"):
+                # OTPSTRAP & OTPSTRAP_EXT only
+                if str(row_values[7]).startswith("OTPSTRAP_EXT"):
                         is_strapext = True
+                elif str(row_values[7]).startswith("OTPSTRAP"):
+                        is_strap = True
                 else:
                         continue
 
@@ -496,29 +514,33 @@ def otpcal_handler_info(sheet, list):
                         cal['type'] = "boolean"
 
                 offset = int(row_values[1], 16) - 0x1c00
-                #print("offset", offset)
                 cal['w_offset'] = offset
                 cal['bit_offset'] = 0
                 if int(row_values[3]) > 1:
                         cal['bit_length'] = int(row_values[3])
 
-                idx = row_values[7].find('\n')
-                if idx != -1:
-                        desc = str(row_values[7])[:idx]
-                else:
-                        desc = str(row_values[7])
+                descs = row_values[2].split('\n')
+                desc = descs[0]
 
                 desc_list = []
                 matches_a = ["enable", "Enable"]
                 matches_b = ["disable", "Disable"]
                 for x in matches_a:
                         if x in desc:
-                                desc_list.append(desc.replace("enable", "disable"))
-                                desc_list.append(desc.replace("Enable", "Disable"))
+                                desc_list.append(desc.replace(x, matches_b[matches_a.index(x)]))
+                                desc_list.append(desc)
                 for x in matches_b:
                         if x in desc:
-                                desc_list.append(desc.replace("disable", "enable"))
-                                desc_list.append(desc.replace("Disable", "Enable"))
+                                desc_list.append(desc.replace(x, matches_a[matches_b.index(x)]))
+                                desc_list.append(desc)
+
+                if bit_length == 1 and desc_list == []:
+                        for i in range(0, 2 ** bit_length):
+                                if i < len(descs):
+                                        desc_val = descs[i].split(':')
+                                        desc_list.append(desc_val[1].strip())
+                                else:
+                                        desc_list.append(desc)
 
                 if desc_list == []:
                         desc_list.append(desc)
@@ -551,7 +573,7 @@ def otpcal_handler(sheet, data):
                 if int(row_values[3]) == 1:
                         cal_region[name] = False
                 elif int(row_values[3]) > 1:
-                        cal_region[name] = "0x0"
+                        cal_region[name] = ""
                 else:
                         break
 
