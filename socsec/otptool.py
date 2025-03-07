@@ -2347,6 +2347,80 @@ class OTP(object):
         print('OTP Patch:')
         hexdump(data_region[patch_offset:patch_offset+patch_size])
 
+    def otp_print_image_secure(self, key_type_list, secure_region):
+        key_header = []
+        find_last = 0
+        for i in range(80):
+            h = struct.unpack('<I', secure_region[(i * 4):(i * 4 + 4)])[0]
+            key_header.append(h)
+
+        i = 0
+        for h in key_header:
+            key_id = h & 0xf
+            key_type_h = (h >> 4) & 0x7
+            key_offset = ((h >> 16) & 0xfff) * 2
+            key_type = None
+            info = None
+            need_id = None
+
+            for kt in key_type_list:
+                if key_type_h == kt.value:
+                    key_type = kt.key_type
+                    info = kt.information
+                    need_id = kt.need_id
+
+            if key_type == None:
+                continue
+
+            if kt.information == '':
+                continue
+
+            print('key[{}]:'.format(i))
+            print("Key Type: {}".format(info))
+
+            if key_type == self.otp_info.OTP_KEY_TYPE_2700.OTP_KEY_TYPE_SOC_ECDSA_PUB.value:
+                print('ASN1 OID: secp384r1')
+                print('NIST CURVE: P-384')
+                if need_id == 1:
+                    print('Key Number ID: {}'.format(key_id))
+                print('Qx:')
+                hexdump(secure_region[key_offset:key_offset + 0x30])
+                print('Qy:')
+                hexdump(secure_region[key_offset + 0x30:key_offset + 0x60])
+
+            elif key_type == self.otp_info.OTP_KEY_TYPE_2700.OTP_KEY_TYPE_SOC_LMS_PUB.value:
+                print("LMS algorithm type: LMS_SHA256_N24_H15")
+                print("LM-OTS algorithm type: LMOTS_SHA256_N24_W4")
+                offset = 0
+                print("pub_key_tree_type:")
+                hexdump(secure_region[key_offset:key_offset + 0x4])
+                offset += 0x4
+                print("pub_key_ots_type:")
+                hexdump(secure_region[key_offset + offset:key_offset + offset + 0x4])
+                offset += 0x4
+                print("pub_key_id:")
+                hexdump(secure_region[key_offset + offset:key_offset + offset + 0x10])
+                offset += 0x10
+                print("pub_key_digest:")
+                hexdump(secure_region[key_offset + offset:key_offset + offset + 0x18])
+
+            elif key_type == self.otp_info.OTP_KEY_TYPE_2700.OTP_KEY_TYPE_CAL_OWN_PUB_HASH.value:
+                print("Caliptra Owner public key hash:")
+                hexdump(secure_region[key_offset:key_offset + 0x30])
+
+            elif key_type == self.otp_info.OTP_KEY_TYPE_2700.OTP_KEY_TYPE_SOC_VAULT.value:
+                print('Vault Key Value:')
+                print('AES Key:')
+                hexdump(secure_region[key_offset: key_offset + 0x20])
+
+            elif key_type == self.otp_info.OTP_KEY_TYPE_2700.OTP_KEY_TYPE_SOC_VAULT_SEED.value:
+                print('Vault Key Seed Value:')
+                print('AES Key:')
+                hexdump(secure_region[key_offset: key_offset + 0x20])
+
+            print('')
+            i = i + 1
+
     def otp_print_revid(self, rid):
         print("     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f")
         print("___________________________________________________")
@@ -2362,6 +2436,83 @@ class OTP(object):
             print("{}  ".format((rid[j] >> bit_offset) & 0x1), end='')
             if (i + 1) % 16 == 0:
                 print("\n", end='')
+
+    def otp_print_image_rbp(self, rbp_info, rbp_region):
+        print("W    BIT        Value       Description")
+        print("__________________________________________________________________________")
+        OTPRBP = []
+        for i in range(32):
+            h = struct.unpack('<H', rbp_region[(i * 2):(i * 2 + 2)])[0]
+            OTPRBP.append(h)
+
+        for ri in rbp_info:
+            w_offset = ri['w_offset']
+            bit_offset = ri['bit_offset']
+            bit_length = ri['bit_length']
+            w_length = math.ceil(bit_length / 16)
+            mask = (1 << bit_length) - 1
+            ov = 0
+            i = 0
+            for o in range(w_offset, w_offset + w_length):
+                ov = ov | (OTPRBP[o] << (16 * i))
+                i = i + 1
+            otp_value = (ov >> bit_offset) & mask
+
+            if otp_value == 0:
+                continue
+
+            info = ri['info']
+            if info != '':
+                print('0x{:<4X}'.format(w_offset), end='')
+                if bit_length == 1:
+                    print('0x{:<9X}'.format(bit_offset), end='')
+                else:
+                    print('0x{:<2X}:0x{:<4X}'.format(
+                        bit_offset + bit_length - 1, bit_offset), end='')
+                print('0x{:<10X}'.format(otp_value), end='')
+                print('{}'.format(info))
+        print()
+
+    def otp_print_image_config_v2(self, config_info, config_region):
+        print("W    BIT        Value       Description")
+        print("__________________________________________________________________________")
+        OTPCFG = []
+        for i in range(32):
+            h = struct.unpack('<H', config_region[(i*2):(i*2 + 2)])[0]
+            OTPCFG.append(h)
+
+        for ci in config_info:
+            w_offset = ci['w_offset']
+            bit_offset = ci['bit_offset']
+            info_type = ci['type']
+            if info_type == 'boolean':
+                bit_length = 1
+                w_length = 1
+            else:
+                bit_length = ci['bit_length']
+                w_length = math.ceil(bit_length / 16)
+            mask = (1 << bit_length) - 1
+            ov = 0
+            i = 0
+            for o in range(w_offset, w_offset + w_length):
+                ov = ov | (OTPCFG[o] << (16 * i))
+                i = i + 1
+            otp_value = (ov >> bit_offset) & mask
+
+            if otp_value == 0:
+                continue
+
+            info = ci['info'][otp_value]
+            if info != '':
+                print('0x{:<4X}'.format(w_offset), end='')
+                if bit_length == 1:
+                    print('0x{:<9X}'.format(bit_offset), end='')
+                else:
+                    print('0x{:<2X}:0x{:<4X}'.format(
+                        bit_offset + bit_length - 1, bit_offset), end='')
+                print('0x{:<10X}'.format(otp_value), end='')
+                print('{}'.format(info))
+        print()
 
     def otp_print_image_config(self, config_info, config_region, config_ignore):
         print("DW    BIT        Value       Description")
@@ -2465,14 +2616,21 @@ class OTP(object):
             print()
 
     def otp_print_image_strap(self, strap_info, strap, strap_pro, strap_ignore):
-        OTPSTRAP = struct.unpack('<Q', strap)[0]
-        OTPSTRAP_PRO = struct.unpack('<Q', strap_pro)[0]
-        OTPSTRAP_IGNORE = struct.unpack('<Q', strap_ignore)[0]
+        if len(strap) == 8:
+            OTPSTRAP = struct.unpack('<Q', strap)[0]
+            OTPSTRAP_PRO = struct.unpack('<Q', strap_pro)[0]
+            OTPSTRAP_IGNORE = struct.unpack('<Q', strap_ignore)[0]
+        elif len(strap) == 4:
+            OTPSTRAP = struct.unpack('<I', strap)[0]
+            OTPSTRAP_PRO = struct.unpack('<I', strap_pro)[0]
+            OTPSTRAP_IGNORE = 0
 
         print("BIT(hex)   Value       Protect     Description")
         print("__________________________________________________________________________________________")
 
         for si in strap_info:
+            if 'key_type' in si and si['key_type'] == 'strap_ext':
+                continue
             info_type = si['type']
             if info_type == 'reg_protect':
                 continue
@@ -2482,6 +2640,8 @@ class OTP(object):
                 bit_length = si['bit_length']
 
             bit_offset = si['bit_offset']
+            if 'w_offset' in si:
+                bit_offset = int(si['w_offset']) * 16 + bit_offset
 
             mask = BIT(bit_length) - 1
             otp_value = (OTPSTRAP >> bit_offset) & mask
@@ -2499,10 +2659,13 @@ class OTP(object):
                 else:
                     info = si['info'][1]
             elif info_type == 'string':
-                vl = si['value']
-                for v in vl:
-                    if otp_value == v['bit']:
-                        info = si['info'].format(v['value'])
+                if 'value' in si:
+                    vl = si['value']
+                    for v in vl:
+                        if otp_value == v['bit']:
+                            info = si['info'].format(v['value'])
+                else:
+                    info = si['info'][otp_value]
             elif info_type == 'reserved':
                 info = 'Reserved'
 
@@ -2515,6 +2678,48 @@ class OTP(object):
                 print('0x{:<10X}'.format(otp_value), end='')
                 print('0x{:<10X}'.format(otp_protect), end='')
                 print('{}'.format(info))
+        print()
+
+    def otp_print_image_strap_ext(self, strap_info, strap_ext_val, strap_ext_vld):
+        OTPSTRAP_EXT_VAL = struct.unpack('<4I', strap_ext_val)[0]
+        OTPSTRAP_EXT_VLD = struct.unpack('<4I', strap_ext_vld)[0]
+
+        print("BIT(hex)   Value       Valid     Description")
+        print("__________________________________________________________________________________________")
+
+        for si in strap_info:
+            if 'key_type' in si and si['key_type'] == 'strap':
+                continue
+            info_type = si['type']
+            if info_type == 'boolean':
+                bit_length = 1
+            else:
+                bit_length = si['bit_length']
+
+            bit_offset = si['bit_offset']
+            if 'w_offset' in si:
+                bit_offset = int(si['w_offset']) * 16 + bit_offset
+
+            mask = BIT(bit_length) - 1
+            otp_value = (OTPSTRAP_EXT_VAL >> bit_offset) & mask
+            otp_valid = (OTPSTRAP_EXT_VLD >> bit_offset) & mask
+
+            info = ''
+            if info_type == 'reserved':
+                info = 'Reserved'
+            else:
+                info = si['info'][otp_value]
+
+            if info != '':
+                if bit_length == 1:
+                    print('0x{:<9X}'.format(bit_offset), end='')
+                else:
+                    print('0x{:<2X}:0x{:<4X}'.format(
+                        bit_offset + bit_length - 1, bit_offset), end='')
+                print('0x{:<10X}'.format(otp_value), end='')
+                print('0x{:<10X}'.format(otp_valid), end='')
+                print('{}'.format(info))
+        print()
 
     def otp_print_image_scu(self, strap_info, scu_pro, scu_ignore):
         OTPSCU_PRO = struct.unpack('<Q', scu_pro)[0]
@@ -2556,6 +2761,59 @@ class OTP(object):
                     sm['bit_offset'], sm['bit_offset'] + bit_length), end='')
             print('0x{:<14X}'.format(scu_protect), end='')
             print('{}'.format(si['key']))
+
+    def otp_print_image_caliptra(self, caliptra_info, caliptra_region):
+        print("W    BIT        Value       Description")
+        print("__________________________________________________________________________")
+        OTPCAL = []
+        for i in range(896):
+            h = struct.unpack('<H', caliptra_region[(i * 2):(i * 2 + 2)])[0]
+            OTPCAL.append(h)
+
+        for ci in caliptra_info:
+            w_offset = ci['w_offset']
+            bit_offset = ci['bit_offset']
+            if ci['type'] == 'boolean':
+                bit_length = 1
+            else:
+                bit_length = ci['bit_length']
+            w_length = math.ceil(bit_length / 16)
+            mask = (1 << bit_length) - 1
+            ov = 0
+            i = 0
+            for o in range(w_offset, w_offset + w_length):
+                ov = ov | (OTPCAL[o] << (16 * i))
+                i = i + 1
+            otp_value = (ov >> bit_offset) & mask
+
+            if otp_value == 0:
+                continue
+
+            if ci['type'] == 'boolean':
+                info = ci['info'][otp_value]
+            else:
+                info = ci['info'][0]
+
+            if info != '':
+                print('0x{:<4X}'.format(w_offset), end='')
+                if bit_length == 1:
+                    print('0x{:<9X}'.format(bit_offset), end='')
+                    print('0x{:<9X}'.format(otp_value), end='')
+                else:
+                    print('0x{:<3X}:0x{:<4X}'.format(
+                        bit_offset + bit_length - 1, bit_offset), end='')
+                    print('{:<10s}'.format('↓'), end='')
+
+                # if bit_length == 1:
+                #     print('0x{:<10X}'.format(otp_value), end='')
+                # else:
+                #     print('{:<10s}'.format('↓'), end='')
+                print('{}'.format(info))
+                if bit_length > 1:
+                    hexdump(caliptra_region[(w_offset * 2):((w_offset + w_length) * 2)])
+                    print()
+
+        print()
 
     def otp_strap_status(self, soc_ver, strap_dw):
         ret = []
