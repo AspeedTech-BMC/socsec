@@ -253,11 +253,12 @@ configs/ast2600/security/otp/sample.json is an example for all otp config and ot
 
 ### Print OTP image
 ```bash
-usage: otptool print [-h] otp_image
+usage: otptool print [-h] [--soc SOC] otp_image
 
 positional arguments:
   otp_image   OTP image
 
 optional arguments:
   -h, --help  show this help message and exit
+  --soc SOC   soc id (e.g. 2600, 1030, 1060, 2700)
 ```
