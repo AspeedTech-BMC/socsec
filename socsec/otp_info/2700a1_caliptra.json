@@ -5,7 +5,8 @@
         "w_offset": 0,
         "bit_offset": 0,
         "info": [
-            "Verify Caliptra firmware images with both ECDSA and LMS"
+            "Disable LMS verify",
+            "Enable LMS verify"
         ]
     },
     {
@@ -14,8 +15,8 @@
         "w_offset": 1,
         "bit_offset": 0,
         "info": [
-            "Disable anti-rollback support from Caliptra",
-            "Enable anti-rollback support from Caliptra"
+            "Anti-rollback enable",
+            "Anti-rollback disable"
         ]
     },
     {
@@ -25,7 +26,7 @@
         "bit_offset": 0,
         "bit_length": 256,
         "info": [
-            "Owner secret to hedge against UDS disclosure in the supply chain"
+            "Field Entropy"
         ]
     },
     {
@@ -35,7 +36,7 @@
         "bit_offset": 0,
         "bit_length": 384,
         "info": [
-            "Manufacture/Vendor key hash"
+            "Manufacture Key Hash"
         ]
     },
     {
@@ -45,7 +46,7 @@
         "bit_offset": 0,
         "bit_length": 768,
         "info": [
-            "The information for generating IDEVID CSR"
+            "IDEVID Cert attr"
         ]
     },
     {
@@ -55,7 +56,7 @@
         "bit_offset": 0,
         "bit_length": 128,
         "info": [
-            "Vendor IDevID provisioner CA identifiers"
+            "IDEVID manuf HSM identifier"
         ]
     },
     {
@@ -65,7 +66,7 @@
         "bit_offset": 0,
         "bit_length": 8192,
         "info": [
-            "to-be-signed (TBS) payload."
+            "IDEVID TBS"
         ]
     },
     {
@@ -75,7 +76,7 @@
         "bit_offset": 0,
         "bit_length": 768,
         "info": [
-            "IDEVID Certificate Signature R & S"
+            "IDEVID Cert Signature"
         ]
     }
 ]

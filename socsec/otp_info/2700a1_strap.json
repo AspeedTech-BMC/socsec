@@ -6,7 +6,8 @@
         "w_offset": 0,
         "bit_offset": 1,
         "info": [
-            "Boot from CPU die SPI"
+            "Disable Boot from CPU die SPI",
+            "Enable Boot from CPU die SPI"
         ]
     },
     {
@@ -17,7 +18,10 @@
         "bit_offset": 2,
         "bit_length": 2,
         "info": [
-            "HPLL default frequency"
+            "HPLL default frequency selection = 2.0GHz",
+            "HPLL default frequency selection = 1.9GHz",
+            "HPLL default frequency selection = 1.8GHz",
+            "HPLL default frequency selection = 1.7GHz"
         ]
     },
     {
@@ -27,7 +31,8 @@
         "w_offset": 0,
         "bit_offset": 4,
         "info": [
-            "CPU clock PLL"
+            "CPU clock PLL selection = MPLL",
+            "CPU clock PLL selection = HPLL"
         ]
     },
     {
@@ -38,7 +43,10 @@
         "bit_offset": 5,
         "bit_length": 2,
         "info": [
-            "AXI/AHB clock selection"
+            "AXI/AHB clock selection = 400MHz",
+            "AXI/AHB clock selection = 400MHz",
+            "AXI/AHB clock selection = 266MHz",
+            "AXI/AHB clock selection = 200MHz when HCLKPLL=0"
         ]
     },
     {
@@ -48,7 +56,8 @@
         "w_offset": 0,
         "bit_offset": 7,
         "info": [
-            "AXI/AHB clock PLL"
+            "AXI/AHB clock PLL selection = MPLL",
+            "AXI/AHB clock PLL selection = HPLL"
         ]
     },
     {
@@ -58,8 +67,8 @@
         "w_offset": 0,
         "bit_offset": 8,
         "info": [
-            "Disable Debug Interfaces for CPU die\u00a0",
-            "Enable Debug Interfaces for CPU die\u00a0"
+            "Enable Debug Interfaces for CPU die",
+            "Disable Debug Interfaces for CPU die"
         ]
     },
     {
@@ -69,7 +78,8 @@
         "w_offset": 0,
         "bit_offset": 9,
         "info": [
-            "TSP reset pin selection"
+            "TSP reset pin selection = SSPRSTN",
+            "TSP reset pin selection = GPIO18E0"
         ]
     },
     {
@@ -79,6 +89,7 @@
         "w_offset": 0,
         "bit_offset": 10,
         "info": [
+            "VGA linear memory size",
             "VGA linear memory size"
         ]
     },
@@ -89,6 +100,7 @@
         "w_offset": 0,
         "bit_offset": 11,
         "info": [
+            "VGA linear memory size",
             "VGA linear memory size"
         ]
     },
@@ -99,8 +111,8 @@
         "w_offset": 0,
         "bit_offset": 12,
         "info": [
-            "Disable SSP running.\u00a0",
-            "Enable SSP running.\u00a0"
+            "Enable SSP running",
+            "Disable SSP running"
         ]
     },
     {
@@ -110,8 +122,8 @@
         "w_offset": 0,
         "bit_offset": 13,
         "info": [
-            "Disable TSP running.\u00a0",
-            "Enable TSP running.\u00a0"
+            "Enable TSP running",
+            "Disable TSP running"
         ]
     },
     {
@@ -121,8 +133,8 @@
         "w_offset": 0,
         "bit_offset": 14,
         "info": [
-            "Enable UFS secure mode",
-            "Disable UFS secure mode"
+            "Disable UFS secure mode",
+            "Enable UFS secure mode"
         ]
     },
     {
@@ -132,8 +144,8 @@
         "w_offset": 1,
         "bit_offset": 0,
         "info": [
-            "Enable Secure Boot ",
-            "Disable Secure Boot "
+            "Disable Secure Boot",
+            "Enable Secure Boot"
         ]
     },
     {
@@ -143,8 +155,8 @@
         "w_offset": 1,
         "bit_offset": 1,
         "info": [
-            "Disable Debug Interfaces for IO die\u00a0",
-            "Enable Debug Interfaces for IO die\u00a0"
+            "Enable Debug Interfaces for IO die",
+            "Disable Debug Interfaces for IO die"
         ]
     },
     {
@@ -154,8 +166,8 @@
         "w_offset": 1,
         "bit_offset": 2,
         "info": [
-            "Disable WDT reset full\u00a0",
-            "Enable WDT reset full\u00a0"
+            "Enable WDT reset full",
+            "Disable WDT reset full"
         ]
     },
     {
@@ -165,8 +177,8 @@
         "w_offset": 1,
         "bit_offset": 3,
         "info": [
-            "Disable Uart Debug\u00a0",
-            "Enable Uart Debug\u00a0"
+            "Enable Uart Debug",
+            "Disable Uart Debug"
         ]
     },
     {
@@ -176,7 +188,8 @@
         "w_offset": 1,
         "bit_offset": 4,
         "info": [
-            "Selection of IO for Uart Debug\u00a0"
+            "Selection of IO for Uart Debug = IO12",
+            "Selection of IO for Uart Debug = IO0"
         ]
     },
     {
@@ -186,19 +199,19 @@
         "w_offset": 1,
         "bit_offset": 5,
         "info": [
-            "Disable JTAG of Caliptra permanently\u00a0",
-            "Enable JTAG of Caliptra permanently\u00a0"
+            "Enable JTAG of Caliptra permanently",
+            "Disable JTAG of Caliptra permanently"
         ]
     },
     {
-        "key": "Dis_hash_verify",
+        "key": "En_ROM_Intr",
         "key_type": "strap",
         "type": "boolean",
         "w_offset": 1,
         "bit_offset": 6,
         "info": [
-            "Disable SoC FMC hash verify",
-            "Enable SoC FMC hash verify"
+            "Disable ROM interrupt",
+            "Enable ROM interrupt"
         ]
     },
     {
@@ -208,8 +221,8 @@
         "w_offset": 1,
         "bit_offset": 7,
         "info": [
-            "Disable BootMCU ROM & jump to I_FMC",
-            "Enable BootMCU ROM & jump to I_FMC"
+            "Enable BootMCU ROM & jump to I_FMC",
+            "Disable BootMCU ROM & jump to I_FMC"
         ]
     },
     {
@@ -219,7 +232,8 @@
         "w_offset": 1,
         "bit_offset": 8,
         "info": [
-            "Boot from eMMC or UFS selection"
+            "Boot from eMMC or UFS selection = eMMC",
+            "Boot from eMMC or UFS selection = UFS"
         ]
     },
     {
@@ -229,7 +243,8 @@
         "w_offset": 1,
         "bit_offset": 9,
         "info": [
-            "Allow BROM to wait SPI flash ready bit."
+            "Allow BROM to wait SPI flash ready bit = disable",
+            "Allow BROM to wait SPI flash ready bit = enable"
         ]
     },
     {
@@ -239,7 +254,8 @@
         "w_offset": 1,
         "bit_offset": 10,
         "info": [
-            "Use 4-byte command to read flash."
+            "Use 4-byte command to read flash = disable",
+            "Use 4-byte command to read flash = enable"
         ]
     },
     {
@@ -250,7 +266,10 @@
         "bit_offset": 11,
         "bit_length": 2,
         "info": [
-            "Recovery from Uart or USB selection"
+            "Recovery from Uart or USB selection = Uart",
+            "Recovery from Uart or USB selection = USB",
+            "Recovery from Uart or USB selection = I2C",
+            "Recovery from Uart or USB selection = I3C"
         ]
     },
     {
@@ -261,7 +280,10 @@
         "bit_offset": 13,
         "bit_length": 2,
         "info": [
-            "Boot from USB port selection"
+            "Boot from USB port selection = port A",
+            "Boot from USB port selection = port B",
+            "Boot from USB port selection = port C",
+            "Boot from USB port selection = port D"
         ]
     },
     {
@@ -271,8 +293,8 @@
         "w_offset": 1,
         "bit_offset": 15,
         "info": [
-            "Disable Caliptra booting",
-            "Enable Caliptra booting"
+            "Enable Caliptra booting",
+            "Disable Caliptra booting"
         ]
     },
     {
@@ -282,8 +304,8 @@
         "w_offset": 1,
         "bit_offset": 0,
         "info": [
-            "Disable ARM ICE\u00a0",
-            "Enable ARM ICE\u00a0"
+            "Enable ARM ICE",
+            "Disable ARM ICE"
         ]
     },
     {
@@ -293,7 +315,8 @@
         "w_offset": 1,
         "bit_offset": 2,
         "info": [
-            "VGA0/1 Class Code\u00a0"
+            "VGA0/1 Class Code selection = Class Code of VGA device",
+            "VGA0/1 Class Code selection = Class code for video device"
         ]
     },
     {
@@ -303,7 +326,8 @@
         "w_offset": 1,
         "bit_offset": 3,
         "info": [
-            "UFS reference clock selection"
+            "UFS reference clock selection = Internal clk",
+            "UFS reference clock selection = External clk (OSC)"
         ]
     },
     {
@@ -313,7 +337,8 @@
         "w_offset": 1,
         "bit_offset": 4,
         "info": [
-            "eMMC Boot Speed"
+            "eMMC Boot Speed = low speed(25Mhz)",
+            "eMMC Boot Speed = 50Mhz"
         ]
     },
     {
@@ -323,8 +348,8 @@
         "w_offset": 1,
         "bit_offset": 5,
         "info": [
-            "Disable XHCI0/1",
-            "Enable XHCI0/1"
+            "Enable XHCI0/1",
+            "Disable XHCI0/1"
         ]
     },
     {
@@ -334,8 +359,8 @@
         "w_offset": 1,
         "bit_offset": 6,
         "info": [
-            "Disable ARM ICE in Trust World\u00a0",
-            "Enable ARM ICE in Trust World\u00a0"
+            "Enable ARM ICE in Trust World",
+            "Disable ARM ICE in Trust World"
         ]
     },
     {
@@ -345,8 +370,8 @@
         "w_offset": 1,
         "bit_offset": 9,
         "info": [
-            "Disable WDT reset full\u00a0",
-            "Enable WDT reset full\u00a0"
+            "Enable WDT reset full",
+            "Disable WDT reset full"
         ]
     },
     {
@@ -357,6 +382,9 @@
         "bit_offset": 10,
         "bit_length": 2,
         "info": [
+            "Uart Debug timeout selection = unlimited",
+            "Uart Debug timeout selection",
+            "Uart Debug timeout selection",
             "Uart Debug timeout selection"
         ]
     },
@@ -367,7 +395,8 @@
         "w_offset": 1,
         "bit_offset": 12,
         "info": [
-            "DAC's source selection"
+            "DAC's source selection = PCIE VGA0",
+            "DAC's source selection = PCIE VGA1"
         ]
     },
     {
@@ -377,7 +406,8 @@
         "w_offset": 1,
         "bit_offset": 13,
         "info": [
-            "DisplayPort's source selection"
+            "DisplayPort's source selection = PCIE VGA0",
+            "DisplayPort's source selection = PCIE VGA1"
         ]
     },
     {
@@ -387,8 +417,8 @@
         "w_offset": 1,
         "bit_offset": 14,
         "info": [
-            "Disable RVAS0/1",
-            "Enable RVAS0/1"
+            "Enable RVAS0/1",
+            "Disable RVAS0/1"
         ]
     },
     {
@@ -398,7 +428,8 @@
         "w_offset": 6,
         "bit_offset": 4,
         "info": [
-            "Node0 : Size of VGA RAM\u00a0"
+            "Node0 : Size of VGA RAM = 32MB",
+            "Node0 : Size of VGA RAM = 64MB (DRAMC100[0])"
         ]
     },
     {
@@ -408,8 +439,8 @@
         "w_offset": 6,
         "bit_offset": 7,
         "info": [
-            "Enable PCIe VGA0 ",
-            "Disable PCIe VGA0 "
+            "Disable PCIe VGA0",
+            "Enable PCIe VGA0"
         ]
     },
     {
@@ -419,8 +450,8 @@
         "w_offset": 6,
         "bit_offset": 8,
         "info": [
-            "Enable PCIe IPMI0 ",
-            "Disable PCIe IPMI0 "
+            "Disable PCIe IPMI0",
+            "Enable PCIe IPMI0"
         ]
     },
     {
@@ -430,8 +461,8 @@
         "w_offset": 6,
         "bit_offset": 9,
         "info": [
-            "Enable PCIe EHCI0",
-            "Disable PCIe EHCI0"
+            "Disable PCIe EHCI0",
+            "Enable PCIe EHCI0"
         ]
     },
     {
@@ -441,8 +472,8 @@
         "w_offset": 6,
         "bit_offset": 10,
         "info": [
-            "Enable PCIe XHCI0",
-            "Disable PCIe XHCI0"
+            "Disable PCIe XHCI0",
+            "Enable PCIe XHCI0"
         ]
     },
     {
@@ -452,8 +483,8 @@
         "w_offset": 6,
         "bit_offset": 11,
         "info": [
-            "Enable PCIe VGA1",
-            "Disable PCIe VGA1"
+            "Disable PCIe VGA1",
+            "Enable PCIe VGA1"
         ]
     },
     {
@@ -463,8 +494,8 @@
         "w_offset": 6,
         "bit_offset": 12,
         "info": [
-            "Enable PCIe IPMI1",
-            "Disable PCIe IPMI1"
+            "Disable PCIe IPMI1",
+            "Enable PCIe IPMI1"
         ]
     },
     {
@@ -474,8 +505,8 @@
         "w_offset": 6,
         "bit_offset": 13,
         "info": [
-            "Enable PCIe EHCI1",
-            "Disable PCIe EHCI1"
+            "Disable PCIe EHCI1",
+            "Enable PCIe EHCI1"
         ]
     },
     {
@@ -485,8 +516,8 @@
         "w_offset": 6,
         "bit_offset": 14,
         "info": [
-            "Enable PCIe XHCI1",
-            "Disable PCIe XHCI1"
+            "Disable PCIe XHCI1",
+            "Enable PCIe XHCI1"
         ]
     },
     {
@@ -507,18 +538,8 @@
         "w_offset": 2,
         "bit_offset": 1,
         "info": [
-            "ROM clear SRAM"
-        ]
-    },
-    {
-        "key": "TPM_PCR_INDEX",
-        "key_type": "strap_ext",
-        "type": "string",
-        "w_offset": 2,
-        "bit_offset": 2,
-        "bit_length": 5,
-        "info": [
-            "TPM PCR index selection"
+            "ROM clear SRAM",
+            "ROM clear SRAM = disable"
         ]
     },
     {
@@ -529,6 +550,9 @@
         "bit_offset": 7,
         "bit_length": 2,
         "info": [
+            "Uart Debug timeout selection = unlimited",
+            "Uart Debug timeout selection",
+            "Uart Debug timeout selection",
             "Uart Debug timeout selection"
         ]
     },
@@ -539,8 +563,8 @@
         "w_offset": 2,
         "bit_offset": 11,
         "info": [
-            "Enable Caliptra debug state",
-            "Disable Caliptra debug state"
+            "Disable Caliptra debug state",
+            "Enable Caliptra debug state"
         ]
     },
     {
@@ -550,8 +574,8 @@
         "w_offset": 2,
         "bit_offset": 12,
         "info": [
-            "Enable ROM WDT",
-            "Disable ROM WDT"
+            "Disable ROM WDT",
+            "Enable ROM WDT"
         ]
     },
     {
@@ -562,7 +586,14 @@
         "bit_offset": 13,
         "bit_length": 3,
         "info": [
-            "Size of FW SPI Flash\u00a0"
+            "Size of FW SPI Flash = disable",
+            "Size of FW SPI Flash = 8MB",
+            "Size of FW SPI Flash = 16MB",
+            "Size of FW SPI Flash = 32MB",
+            "Size of FW SPI Flash = 64MB",
+            "Size of FW SPI Flash = 128MB",
+            "Size of FW SPI Flash = 256MB",
+            "Size of FW SPI Flash = 512MB"
         ]
     },
     {
@@ -572,8 +603,8 @@
         "w_offset": 3,
         "bit_offset": 0,
         "info": [
-            "Enable FWSPI auxiliary pins\u00a0",
-            "Disable FWSPI auxiliary pins\u00a0"
+            "Disable FWSPI auxiliary pins",
+            "Enable FWSPI auxiliary pins"
         ]
     },
     {
@@ -584,7 +615,10 @@
         "bit_offset": 1,
         "bit_length": 2,
         "info": [
-            "Size of FWSPI CRTM\u00a0"
+            "Size of FWSPI CRTM",
+            "Size of FWSPI CRTM",
+            "Size of FWSPI CRTM",
+            "Size of FWSPI CRTM"
         ]
     },
     {
@@ -595,29 +629,32 @@
         "bit_offset": 7,
         "bit_length": 2,
         "info": [
-            "Boot SPI Frequency Selection"
+            "Boot SPI Frequency Selection = 12.5MHz (by default)",
+            "Boot SPI Frequency Selection = 25MHz",
+            "Boot SPI Frequency Selection = 40MHz",
+            "Boot SPI Frequency Selection = 50MHz"
         ]
     },
     {
-        "key": "SPI_TPM_HASH_Algo",
+        "key": "Check_Flash_Access",
         "key_type": "strap_ext",
-        "type": "string",
+        "type": "boolean",
         "w_offset": 3,
         "bit_offset": 9,
-        "bit_length": 2,
         "info": [
-            "SPI TPM HASH Algorithm"
+            "check flash is ready for accessing = disable",
+            "check flash is ready for accessing = enable"
         ]
     },
     {
-        "key": "SPI_TPM_PCR_EXT_EN",
+        "key": "ABR_RECOVERY_DIS",
         "key_type": "strap_ext",
         "type": "boolean",
         "w_offset": 3,
         "bit_offset": 11,
         "info": [
-            "Enable TPM PCR extension",
-            "Disable TPM PCR extension"
+            "enable recovery mode after ABR",
+            "disable recovery mode after ABR"
         ]
     },
     {
@@ -627,8 +664,8 @@
         "w_offset": 3,
         "bit_offset": 12,
         "info": [
-            "Disable CS swap after dual flash ABR is triggerred.",
-            "Enable CS swap after dual flash ABR is triggerred."
+            "Enable CS swap after dual flash ABR is triggerred",
+            "Disable CS swap after dual flash ABR is triggerred"
         ]
     },
     {
@@ -638,7 +675,8 @@
         "w_offset": 3,
         "bit_offset": 13,
         "info": [
-            "FMC abr mode"
+            "FMC abr mode = dual flash ABR",
+            "FMC abr mode = single flash ABR"
         ]
     },
     {
@@ -649,7 +687,14 @@
         "bit_offset": 0,
         "bit_length": 3,
         "info": [
-            "Size of Host SPI Flash 0\u00a0"
+            "Size of Host SPI Flash 0 = disable",
+            "Size of Host SPI Flash 0 = 8MB",
+            "Size of Host SPI Flash 0 = 16MB",
+            "Size of Host SPI Flash 0 = 32MB",
+            "Size of Host SPI Flash 0 = 64MB",
+            "Size of Host SPI Flash 0 = 128MB",
+            "Size of Host SPI Flash 0 = 256MB",
+            "Size of Host SPI Flash 0 = 512MB"
         ]
     },
     {
@@ -659,8 +704,8 @@
         "w_offset": 4,
         "bit_offset": 3,
         "info": [
-            "Enable Host SPI auxiliary pins\u00a0",
-            "Disable Host SPI auxiliary pins\u00a0"
+            "Disable Host SPI auxiliary pins",
+            "Enable Host SPI auxiliary pins"
         ]
     },
     {
@@ -671,7 +716,10 @@
         "bit_offset": 4,
         "bit_length": 2,
         "info": [
-            "Size of Host SPI0 CRTM\u00a0"
+            "Size of Host SPI0 CRTM",
+            "Size of Host SPI0 CRTM",
+            "Size of Host SPI0 CRTM",
+            "Size of Host SPI0 CRTM"
         ]
     },
     {
@@ -681,7 +729,8 @@
         "w_offset": 4,
         "bit_offset": 6,
         "info": [
-            "Selection of SIO decode address\u00a0"
+            "Selection of SIO decode address = 0x2E",
+            "Selection of SIO decode address = 0x4E"
         ]
     },
     {
@@ -691,8 +740,8 @@
         "w_offset": 4,
         "bit_offset": 7,
         "info": [
-            "Disable SIO Decoding\u00a0",
-            "Enable SIO Decoding\u00a0"
+            "Enable SIO Decoding",
+            "Disable SIO Decoding"
         ]
     },
     {
@@ -702,8 +751,8 @@
         "w_offset": 4,
         "bit_offset": 8,
         "info": [
-            "Enable ACPI\u00a0",
-            "Disable ACPI\u00a0"
+            "Disable ACPI",
+            "Enable ACPI"
         ]
     },
     {
@@ -713,8 +762,8 @@
         "w_offset": 4,
         "bit_offset": 9,
         "info": [
-            "Enable LPC\u00a0",
-            "Disable LPC\u00a0"
+            "Disable LPC",
+            "Enable LPC"
         ]
     },
     {
@@ -724,8 +773,8 @@
         "w_offset": 4,
         "bit_offset": 10,
         "info": [
-            "Enable eDAF\u00a0",
-            "Disable eDAF\u00a0"
+            "Disable eDAF",
+            "Enable eDAF"
         ]
     },
     {
@@ -735,8 +784,8 @@
         "w_offset": 4,
         "bit_offset": 11,
         "info": [
-            "Enable eSPI RTC\u00a0",
-            "Disable eSPI RTC\u00a0"
+            "Disable eSPI RTC",
+            "Enable eSPI RTC"
         ]
     },
     {
@@ -747,7 +796,14 @@
         "bit_offset": 0,
         "bit_length": 3,
         "info": [
-            "Size of Host SPI Flash 1\u00a0"
+            "Size of Host SPI Flash 1 = disable",
+            "Size of Host SPI Flash 1 = 8MB",
+            "Size of Host SPI Flash 1 = 16MB",
+            "Size of Host SPI Flash 1 = 32MB",
+            "Size of Host SPI Flash 1 = 64MB",
+            "Size of Host SPI Flash 1 = 128MB",
+            "Size of Host SPI Flash 1 = 256MB",
+            "Size of Host SPI Flash 1 = 512MB"
         ]
     },
     {
@@ -757,8 +813,8 @@
         "w_offset": 5,
         "bit_offset": 3,
         "info": [
-            "Enable Host SPI auxiliary pins\u00a0",
-            "Disable Host SPI auxiliary pins\u00a0"
+            "Disable Host SPI auxiliary pins",
+            "Enable Host SPI auxiliary pins"
         ]
     },
     {
@@ -769,7 +825,10 @@
         "bit_offset": 4,
         "bit_length": 2,
         "info": [
-            "Size of Host SPI1 CRTM\u00a0"
+            "Size of Host SPI1 CRTM",
+            "Size of Host SPI1 CRTM",
+            "Size of Host SPI1 CRTM",
+            "Size of Host SPI1 CRTM"
         ]
     },
     {
@@ -779,7 +838,8 @@
         "w_offset": 5,
         "bit_offset": 6,
         "info": [
-            "Selection of SIO decode address\u00a0"
+            "Selection of SIO decode address = 0x2E",
+            "Selection of SIO decode address = 0x4E"
         ]
     },
     {
@@ -789,8 +849,8 @@
         "w_offset": 5,
         "bit_offset": 7,
         "info": [
-            "Disable SIO Decoding\u00a0",
-            "Enable SIO Decoding\u00a0"
+            "Enable SIO Decoding",
+            "Disable SIO Decoding"
         ]
     },
     {
@@ -800,8 +860,8 @@
         "w_offset": 5,
         "bit_offset": 8,
         "info": [
-            "Enable ACPI\u00a0",
-            "Disable ACPI\u00a0"
+            "Disable ACPI",
+            "Enable ACPI"
         ]
     },
     {
@@ -811,8 +871,8 @@
         "w_offset": 5,
         "bit_offset": 9,
         "info": [
-            "Enable LPC\u00a0",
-            "Disable LPC\u00a0"
+            "Disable LPC",
+            "Enable LPC"
         ]
     },
     {
@@ -822,8 +882,8 @@
         "w_offset": 5,
         "bit_offset": 10,
         "info": [
-            "Enable eDAF\u00a0",
-            "Disable eDAF\u00a0"
+            "Disable eDAF",
+            "Enable eDAF"
         ]
     },
     {
@@ -833,8 +893,8 @@
         "w_offset": 5,
         "bit_offset": 11,
         "info": [
-            "Enable eSPI RTC\u00a0",
-            "Disable eSPI RTC\u00a0"
+            "Disable eSPI RTC",
+            "Enable eSPI RTC"
         ]
     }
 ]
