@@ -282,22 +282,44 @@ def rsa_pss_sign(alg_data, rsa_key_file, mHash,
         maskedDB[0] = maskedDB[0] & 0xFF >> (8 - MSBits)
 
     EM = maskedDB+H+b'\xbc'
-    p = subprocess.Popen(
-        ['openssl', 'rsautl', '-sign', '-raw', '-inkey', rsa_key_file],
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE)
-    (pout, perr) = p.communicate(input=EM)
-    retcode = p.wait()
-    if retcode != 0:
-        raise ValueError('Error signing: {}'.format(perr))
 
-    sign = bytearray(pout)
-    if len(sign) < 512:
-        sign = sign + bytearray(512 - len(sign))
+    if signing_helper_with_files is not None:
+        signing_file = tempfile.NamedTemporaryFile()
+        signing_file.write(EM)
+        signing_file.flush()
+        p = subprocess.Popen([
+            signing_helper_with_files, rsa_key_file if rsa_key_file is not None else "", signing_file.name])
+        retcode = p.wait()
+        if retcode != 0:
+            raise ValueError('Error signing')
+        signing_file.seek(0)
+        read_f = signing_file.read()
+        signature = bytearray(read_f)
+    else:
+        if signing_helper is not None:
+            p = subprocess.Popen(
+                [signing_helper, rsa_key_file if rsa_key_file is not None else ""],
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE)
+        else:
+            p = subprocess.Popen(
+                ['openssl', 'rsautl', '-sign', '-raw', '-inkey', rsa_key_file],
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE)
+        (pout, perr) = p.communicate(input=EM)
+        retcode = p.wait()
+        if retcode != 0:
+            raise ValueError('Error signing: {}'.format(perr))
 
-    print("rsa key")
-    print_rsa_key(rsa_key_file)
+        signature = bytearray(pout)
+
+    if len(signature) < 512:
+        signature = signature + bytearray(512 - len(signature))
+
+    # print("rsa key")
+    # print_rsa_key(rsa_key_file)
     print('mHash')
     hexdump(mHash)
     print('salt')
@@ -313,9 +335,9 @@ def rsa_pss_sign(alg_data, rsa_key_file, mHash,
     print('EM')
     hexdump(EM)
     print('signature')
-    hexdump(sign[:emLen])
+    hexdump(signature[:emLen])
 
-    return sign[:emLen]
+    return signature[:emLen]
 
 
 def rsa_sign(alg_data, rsa_key_file, src_bin,
