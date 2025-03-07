@@ -186,10 +186,15 @@ def writeDWHexFile(in_bin: bytearray, dst_path: str):
 
 
 class image_header(object):
-    def __init__(self, header):
-        (self.magic, self.soc_ver, self.otptool_ver, self.image_info, self.data_info,
-         self.config_info, self.strap_info, self.scu_protect_info,
-         self.checksum_offset) = struct.unpack(OTP.otp_info.HEADER_FORMAT, header)
+    def __init__(self, header, format):
+        if format == OTP.otp_info.HEADER_FORMAT:
+            (self.magic, self.soc_ver, self.otptool_ver, self.image_info, self.data_info,
+            self.config_info, self.strap_info, self.scu_protect_info,
+            self.checksum_offset) = struct.unpack(format, header)
+        elif format == OTP.otp_info.HEADER_FORMAT_2700:
+            (self.magic, self.soc_ver, self.otptool_ver, self.image_info, self.rom_info,
+            self.rbp_info, self.config_info, self.strap_info, self.strap_ext_info, self.secure_info,
+            self.caliptra_info, self.checksum_offset) = struct.unpack(format, header)
 
 
 class strap_sts(object):
@@ -700,8 +705,6 @@ class OTP(object):
             header |= self.otp_info.OTP_KEY_TYPE_2700.OTP_KEY_TYPE_SOC_ECDSA_PUB.value << 4
         elif type == 'soc_lms_pub':
             header |= self.otp_info.OTP_KEY_TYPE_2700.OTP_KEY_TYPE_SOC_LMS_PUB.value << 4
-        # elif type == 'cal_manu_pub_hash':
-        #     header |= self.otp_info.OTP_KEY_TYPE_2700.OTP_KEY_TYPE_CAL_MANU_PUB_HASH.value << 4
         elif type == 'cal_own_pub_hash':
             header |= self.otp_info.OTP_KEY_TYPE_2700.OTP_KEY_TYPE_CAL_OWN_PUB_HASH.value << 4
         elif type == 'soc_vault':
