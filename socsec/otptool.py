@@ -2919,8 +2919,15 @@ class OTP(object):
                 else:
                     print('| \"')
 
-    def check_image(self, otp_image):
-        header = image_header(otp_image[0:self.otp_info.HEADER_SIZE])
+    def check_image(self, soc_version, otp_image):
+        if soc_version in ['2600', '1030', '1060']:
+            header_size = self.otp_info.HEADER_SIZE
+            header_format = self.otp_info.HEADER_FORMAT
+        elif soc_version in ['2700']:
+            header_size = self.otp_info.HEADER_SIZE_2700
+            header_format = self.otp_info.HEADER_FORMAT_2700
+
+        header = image_header(otp_image[0:header_size], header_format)
 
         magic = header.magic[0:len(self.otp_info.MAGIC_WORD_OTP)].decode()
         if magic != self.otp_info.MAGIC_WORD_OTP:
@@ -2968,6 +2975,10 @@ class OTP(object):
             ver = "AST1060A2"
             key_type_list = self.otp_info.ast1030a1_key_type
             otp_info = self.otp_info.OTP_INFO['1030A1']
+        elif soc_ver == OTP_info.SOC_AST2700A1:
+            ver = "AST2700A1"
+            key_type_list = self.otp_info.ast2700a1_key_type
+            otp_info = self.otp_info.OTP_INFO['2700A1']
         else:
             print('SOC version is invalid: {:X}'.format(soc_ver))
             return None, None
@@ -2975,9 +2986,70 @@ class OTP(object):
         print('SOC version: {}'.format(ver))
         return key_type_list, otp_info
 
-    def _print_otp_image(self, otp_image):
-        header = image_header(otp_image[0:self.otp_info.HEADER_SIZE])
+    def _print_otp_image_v2(self, header, otp_image):
+        key_type_list, otp_info = self._parse_image_soc_ver(header.soc_ver)
 
+        if key_type_list == None or otp_info == None:
+            return False
+
+        print('otptool version: {}'.format(int2version(header.otptool_ver)))
+
+        with open(otp_info['rbp'], 'r') as rbp_info_fd:
+            rbp_info = jstyleson.load(rbp_info_fd)
+
+        with open(otp_info['config'], 'r') as config_info_fd:
+            config_info = jstyleson.load(config_info_fd)
+
+        with open(otp_info['strap'], 'r') as strap_info_fd:
+            strap_info = jstyleson.load(strap_info_fd)
+
+        with open(otp_info['caliptra'], 'r') as caliptra_info_fd:
+            caliptra_info = jstyleson.load(caliptra_info_fd)
+
+        rom_offset = header.rom_info & 0xffff
+        rom_region = otp_image[rom_offset:rom_offset+1984]
+        rbp_offset = header.rbp_info & 0xffff
+        rbp_region = otp_image[rbp_offset:rbp_offset+64]
+        conf_offset = header.config_info & 0xffff
+        config_region = otp_image[conf_offset:conf_offset+64]
+        strap_offset = header.strap_info & 0xffff
+        strap_region = otp_image[strap_offset:strap_offset+4]
+        strap_region_pro = otp_image[strap_offset+4:strap_offset+8]
+        strap_ext_offset = header.strap_ext_info & 0xffff
+        strap_ext_val = otp_image[strap_ext_offset:strap_ext_offset+16]
+        strap_ext_vld = otp_image[strap_ext_offset+16:strap_ext_offset+32]
+        secure_offset = header.secure_info & 0xffff
+        secure_region = otp_image[secure_offset:secure_offset+6144]
+        caliptra_offset = header.caliptra_info & 0xffff
+        caliptra_region = otp_image[caliptra_offset:caliptra_offset+1792]
+
+        otp_info_inc = self.otp_info.OTP_INFO_INC_2700()
+
+        if header.image_info & otp_info_inc.INC_RBP:
+            print('OTP RBP region:')
+            self.otp_print_image_rbp(rbp_info, rbp_region)
+
+        if header.image_info & otp_info_inc.INC_CONF:
+            print('OTP CONF region:')
+            self.otp_print_image_config_v2(config_info, config_region)
+
+        if header.image_info & otp_info_inc.INC_STRAP:
+            print('OTP STRAP:')
+            self.otp_print_image_strap(strap_info, strap_region, strap_region_pro, None)
+
+        if header.image_info & otp_info_inc.INC_STRAPEXT:
+            print('OTP STRAP_EXT:')
+            self.otp_print_image_strap_ext(strap_info, strap_ext_val, strap_ext_vld)
+
+        if header.image_info & otp_info_inc.INC_SECURE:
+            print('OTP Secure region:')
+            self.otp_print_image_secure(key_type_list, secure_region)
+
+        if header.image_info & otp_info_inc.INC_CALIPTRA:
+            print("OTP Caliptra region:")
+            self.otp_print_image_caliptra(caliptra_info, caliptra_region)
+
+    def _print_otp_image(self, header, otp_image):
         key_type_list, otp_info = self._parse_image_soc_ver(header.soc_ver)
 
         if key_type_list == None or otp_info == None:
@@ -3064,16 +3136,26 @@ class OTP(object):
             strap_region_dw.append(h)
         self.otp_print_strap_info(header.soc_ver, strap_info, strap_region_dw)
 
-    def print_otp_image(self, otp_image_fd):
+    def print_otp_image(self, soc_version, otp_image_fd):
         otp_image = bytearray(otp_image_fd.read())
-        header = image_header(otp_image[0:self.otp_info.HEADER_SIZE])
 
-        self.check_image(otp_image)
+        self.check_image(soc_version, otp_image)
 
-        if header.image_info & self.otp_info.HEADER_DUMP:
-            self._print_dump_image(otp_image)
-        else:
-            self._print_otp_image(otp_image)
+        if soc_version in ['2600', '1030', '1060']:
+            header_size = self.otp_info.HEADER_SIZE
+            header_format = self.otp_info.HEADER_FORMAT
+            header = image_header(otp_image[0:header_size], header_format)
+            if header.image_info & self.otp_info.HEADER_DUMP:
+                self._print_dump_image(otp_image)
+            else:
+                self._print_otp_image(header, otp_image)
+
+        elif soc_version in ['2700']:
+            header_size = self.otp_info.HEADER_SIZE_2700
+            header_format = self.otp_info.HEADER_FORMAT_2700
+            header = image_header(otp_image[0:header_size], header_format)
+            self._print_otp_image_v2(header, otp_image)
+
 
 
 class otpTool(object):
@@ -3120,6 +3202,10 @@ class otpTool(object):
 
         sub_parser = subparsers.add_parser('print',
                                            help='print otp image information.')
+        sub_parser.add_argument('--soc',
+                                help='soc id (e.g. 2600, 1030, 1060, 2700)',
+                                metavar='SOC',
+                                default='2600')
         sub_parser.add_argument('otp_image',
                                 help='OTP image',
                                 type=argparse.FileType('rb'))
@@ -3145,7 +3231,7 @@ class otpTool(object):
                                 args.no_last_bit)
 
     def print_otp_image(self, args):
-        self.otp.print_otp_image(args.otp_image)
+        self.otp.print_otp_image(args.soc, args.otp_image)
 
     def print_version(self, args):
         print(__version__)
