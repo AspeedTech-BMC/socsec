@@ -37,6 +37,12 @@ from bitarray import bitarray
 from Crypto.Cipher import PKCS1_v1_5 as Cipher_pkcs1_v1_5
 from ecdsa import SigningKey, VerifyingKey, NIST384p
 from ecdsa.ellipticcurve import Point
+from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.serialization import load_pem_private_key
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.asymmetric.utils import decode_dss_signature
+from cryptography.hazmat.primitives.asymmetric import utils
 
 from socsec import rsa_importkey
 from socsec import parse_path
@@ -484,11 +490,27 @@ def rsa_encrypt(rsa_key_file, src_bin, order='little', randfunc=None):
 
 def ecdsa_sign(ecdsa_sign_key_path, src_bin,
                signing_helper, signing_helper_with_files):
-    with open(ecdsa_sign_key_path, 'r') as f:
-        key_file_str = f.read()
-    ecdsa_key = SigningKey.from_pem(key_file_str)
-    return ecdsa_key.sign_digest_deterministic(src_bin)
+    with open(ecdsa_sign_key_path, 'rb') as f:
+        key_file_bytes = f.read()
 
+    # Load the private key from PEM file
+    private_key = load_pem_private_key(key_file_bytes, password=None, backend=default_backend())
+
+    # Sign the digest using ECDSA with SHA384
+    signature_der = private_key.sign(
+        src_bin,
+        ec.ECDSA(utils.Prehashed(hashes.SHA384()))
+    )
+
+    # Decode DER signature to raw (r, s) values
+    r, s = decode_dss_signature(signature_der)
+
+    # Convert r and s to raw signature (concatenate as bytes)
+    r_bytes = r.to_bytes(48, byteorder='big')
+    s_bytes = s.to_bytes(48, byteorder='big')
+    signature_raw = r_bytes + s_bytes
+
+    return signature_raw
 
 def ecdsa_verify(ecdsa_key_path, ecdsa_verify_key_path, src_bin, digest):
     if ecdsa_verify_key_path is None:

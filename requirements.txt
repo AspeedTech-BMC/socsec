@@ -5,3 +5,4 @@ pycryptodome==3.19.1
 coverage==5.3.1
 ecdsa==0.18.0
 xlrd==1.2.0
+cryptography==44.0.2
