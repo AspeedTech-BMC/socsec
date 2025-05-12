@@ -1,0 +1,37 @@
+{
+    "name": "2700-a1_prov-ctm",
+    "version": "2700A1",
+    "strap_region": {
+        // OTPSTRAP[16]
+        // This setting is optional.
+        // Customer can use hardware pin strap to enable Secure Boot in development.
+        "En_SecBoot": {
+            "value": true,
+            "protect": false
+        }
+    },
+    "secure_region": {
+        "keys": [
+            // key id #0 is optional, used in development.
+            // Enable low secure hardware pin strap to enable it.
+            {
+                "key_file": "test_oem_dss_public_key_ecdsa384_0.pem",
+                "type": "soc_ecdsa_pub",
+                "w_offset": "0xa0",
+                "number_id": 0
+            },
+            {
+                "key_file": "test_oem_dss_public_key_ecdsa384_1.pem",
+                "type": "soc_ecdsa_pub",
+                "w_offset": "0xd0",
+                "number_id": 1
+            },
+            {
+                "key_file": "test_owner_key_hash.bin",
+                "type": "cal_own_pub_hash",
+                "w_offset": "0x520",
+                "number_id": 0
+            }
+        ]
+    }
+}
