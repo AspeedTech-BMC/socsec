@@ -2586,7 +2586,7 @@ class OTP(object):
                     if otp_value == v['bit']:
                         info = ci['info'].format(v['value'])
             elif info_type == 'hex':
-                h = '0x{}'.format(otp_value)
+                h = '{}'.format(otp_value)
                 info = ci['info'].format(h)
                 if info == '':
                     info = 'error: 0x{:X}'.format(otp_value)
