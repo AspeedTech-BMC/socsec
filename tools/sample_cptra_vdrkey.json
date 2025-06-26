@@ -1,0 +1,18 @@
+{
+    "vendor": {
+        "ecc_keys": [
+            {
+                "key_file": "S2700_ECC_Public_Key_1.pem"
+            },
+            {
+                "key_file": "S2700_ECC_Public_Key_2.pem"
+            },
+            {
+                "key_file": "S2700_ECC_Public_Key_3.pem"
+            },
+            {
+                "key_file": "S2700_ECC_Public_Key_4.pem"
+            }
+        ]
+    }
+}

@@ -207,57 +207,56 @@ class genTool(object):
         owner_binary_outout = output_folder + 'owner_key.bin'
         owner_kh_binary_outout = output_folder + 'owner_key_hash.bin'
 
-        print("Generating vendor key hash binary files")
-        key_bin = bytearray(VEN_ECC_KEY_SIZE + VEN_LMS_KEY_SIZE)
-        print("size of key_bin", len(key_bin))
+        if "vendor" in config:
+            print("Generating vendor key hash binary files")
+            key_bin = bytearray(VEN_ECC_KEY_SIZE + VEN_LMS_KEY_SIZE)
+            print("size of key_bin", len(key_bin))
 
-        vendor_ecc_keys = config["vendor"]["ecc_keys"]
-        for i in range(len(vendor_ecc_keys)):
-                print(vendor_ecc_keys[i]["key_file"])
-                offset = i * 96
-                ecdsa_key_bin = ecdsa_key_to_bin(key_folder + vendor_ecc_keys[i]["key_file"], "big")
+            vendor_ecc_keys = config["vendor"]["ecc_keys"]
+            for i in range(len(vendor_ecc_keys)):
+                    print(vendor_ecc_keys[i]["key_file"])
+                    offset = i * 96
+                    ecdsa_key_bin = ecdsa_key_to_bin(key_folder + vendor_ecc_keys[i]["key_file"], "big")
+                    insert_key_bin = bytearray(ecdsa_key_bin)
+                    insert_bytearray(insert_key_bin, key_bin, offset)
+
+            if "lms_keys" in config["vendor"]:
+                    vendor_lms_keys = config["vendor"]["lms_keys"]
+                    for i in range(len(vendor_lms_keys)):
+                            print(vendor_lms_keys[i]["key_file"])
+                            offset = 4 * 96 + i * 48
+                            lms_key_bin = load_file(key_folder + vendor_lms_keys[i]["key_file"])
+                            insert_key_bin = bytearray(lms_key_bin)
+                            insert_bytearray(insert_key_bin, key_bin, offset)
+
+            sha = SHA384.new(key_bin)
+            digest_bin = sha.digest()
+
+            writeBinFile(key_bin, vendor_binary_outout)
+            writeBinFile(digest_bin, vendor_kh_binary_outout)
+
+        if "owner" in config:
+            print("Generating owner key hash binary files")
+            key_bin = bytearray(OWN_ECC_KEY_SIZE + OWN_LMS_KEY_SIZE)
+            print("size of key_bin", len(key_bin))
+
+            if "ecc_keys" in config["owner"]:
+                owner_ecc_keys = config["owner"]["ecc_keys"]
+                ecdsa_key_bin = ecdsa_key_to_bin(key_folder + owner_ecc_keys[0]["key_file"], "big")
                 insert_key_bin = bytearray(ecdsa_key_bin)
-                insert_bytearray(insert_key_bin, key_bin, offset)
+                insert_bytearray(insert_key_bin, key_bin, 0)
 
-        if "lms_keys" in config["vendor"]:
-                vendor_lms_keys = config["vendor"]["lms_keys"]
-                for i in range(len(vendor_lms_keys)):
-                        print(vendor_lms_keys[i]["key_file"])
-                        offset = 4 * 96 + i * 48
-                        lms_key_bin = load_file(key_folder + vendor_lms_keys[i]["key_file"])
-                        insert_key_bin = bytearray(lms_key_bin)
-                        insert_bytearray(insert_key_bin, key_bin, offset)
+            if "lms_keys" in config["owner"]:
+                    owner_lms_keys = config["owner"]["lms_keys"]
+                    lms_key_bin = load_file(key_folder + owner_lms_keys[0]["key_file"])
+                    insert_key_bin = bytearray(lms_key_bin)
+                    insert_bytearray(insert_key_bin, key_bin, OWN_ECC_KEY_SIZE)
 
-        sha = SHA384.new(key_bin)
-        digest_bin = sha.digest()
+            sha = SHA384.new(key_bin)
+            digest_bin = sha.digest()
 
-        writeBinFile(key_bin, vendor_binary_outout)
-        writeBinFile(digest_bin, vendor_kh_binary_outout)
-
-        if "owner" not in config:
-            return
-
-        print("Generating owner key hash binary files")
-        key_bin = bytearray(OWN_ECC_KEY_SIZE + OWN_LMS_KEY_SIZE)
-        print("size of key_bin", len(key_bin))
-
-        if "ecc_keys" in config["owner"]:
-            owner_ecc_keys = config["owner"]["ecc_keys"]
-            ecdsa_key_bin = ecdsa_key_to_bin(key_folder + owner_ecc_keys[0]["key_file"], "big")
-            insert_key_bin = bytearray(ecdsa_key_bin)
-            insert_bytearray(insert_key_bin, key_bin, 0)
-
-        if "lms_keys" in config["owner"]:
-                owner_lms_keys = config["owner"]["lms_keys"]
-                lms_key_bin = load_file(key_folder + owner_lms_keys[0]["key_file"])
-                insert_key_bin = bytearray(lms_key_bin)
-                insert_bytearray(insert_key_bin, key_bin, OWN_ECC_KEY_SIZE)
-
-        sha = SHA384.new(key_bin)
-        digest_bin = sha.digest()
-
-        writeBinFile(key_bin, owner_binary_outout)
-        writeBinFile(digest_bin, owner_kh_binary_outout)
+            writeBinFile(key_bin, owner_binary_outout)
+            writeBinFile(digest_bin, owner_kh_binary_outout)
 
 def gen_sample(tool, args):
         tool.gen_sample()

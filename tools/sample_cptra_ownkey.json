@@ -1,0 +1,14 @@
+{
+    "owner": {
+        "ecc_keys": [
+            {
+                "key_file": "own-pub-key.pem"
+            }
+        ],
+        "lms_keys": [
+            {
+                "key_file": "own-lms-pub-key.pem"
+            }
+        ]
+    }
+}
