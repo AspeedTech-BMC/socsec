@@ -1,11 +1,12 @@
 import struct
 import sys
-from pyhsslms import LmsPublicKey
+from pyhsslms import LmsPublicKey, LmsSignature
 import hashlib
 from cryptography.hazmat.primitives.asymmetric.ec import EllipticCurvePublicNumbers, SECP384R1
 from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric.utils import encode_dss_signature
+import argparse  # Added for argument parsing
 
 # DEBUG FLAG to dump debug information
 DEBUG = False
@@ -92,6 +93,13 @@ def verify_lms_signature(public_key_bytes, signature_bytes, signed_data):
         # Deserialize the public key using the correct constructors
         public_key = LmsPublicKey.deserialize(public_key_bytes)
 
+        if DEBUG:
+            print(public_key.prettyPrint())
+
+        if DEBUG:
+            sig = LmsSignature.deserialize(signature_bytes)
+            print(sig.prettyPrint())
+
         # Verify the signature using the public key and signed data
         return public_key.verify(signed_data, signature_bytes)
 
@@ -170,24 +178,24 @@ def verify_ecdsa384_signature(public_key_bytes, signature_bytes, signed_data):
 
 
 def main():
-    if len(sys.argv) != 2:
-        print("Usage: python lms_verification.py <source_file>")
-        sys.exit(1)
+    parser = argparse.ArgumentParser(description="Verify ECC and LMS signatures in a Caliptra firmware file.")
+    parser.add_argument("cptra_fw", help="Path to the source file to verify")
+    args = parser.parse_args()
 
-    source_file = sys.argv[1]
+    cptra_fw = args.cptra_fw
 
     try:
         # Vendor ECDSA384 verification
         vendor_index = None
-        with open(source_file, 'rb') as f:
+        with open(cptra_fw, 'rb') as f:
             f.seek(VENDOR_ECC_PUBLIC_KEY_INDEX_OFFSET)
             vendor_index = struct.unpack('<I', f.read(4))[0]
 
         vendor_public_key = extract_public_key(
-            source_file, VENDOR_ECC_PUBLIC_KEY_START_OFFSET, vendor_index, ECDSA384_PUBLIC_KEY_SIZE)
+            cptra_fw, VENDOR_ECC_PUBLIC_KEY_START_OFFSET, vendor_index, ECDSA384_PUBLIC_KEY_SIZE)
 
         vendor_signature, vendor_signed_data = extract_ecdsa384_signature(
-            source_file, VENDOR_ECC_SIGNATURE_OFFSET, SIGNED_DATA_OFFSET, VENDOR_SIGNED_DATA_SIZE)
+            cptra_fw, VENDOR_ECC_SIGNATURE_OFFSET, SIGNED_DATA_OFFSET, VENDOR_SIGNED_DATA_SIZE)
 
         if verify_ecdsa384_signature(vendor_public_key, vendor_signature, vendor_signed_data):
             print("Caliptra Vendor ECDSA384 signature verification succeeded.")
@@ -196,10 +204,10 @@ def main():
 
         # Owner ECDSA384 verification
         owner_public_key = extract_public_key(
-            source_file, OWNER_ECC_PUBLIC_KEY_START_OFFSET, 0, ECDSA384_PUBLIC_KEY_SIZE)
+            cptra_fw, OWNER_ECC_PUBLIC_KEY_START_OFFSET, 0, ECDSA384_PUBLIC_KEY_SIZE)
 
         owner_signature, owner_signed_data = extract_ecdsa384_signature(
-            source_file, OWNER_ECC_SIGNATURE_OFFSET, SIGNED_DATA_OFFSET, OWNER_SIGNED_DATA_SIZE)
+            cptra_fw, OWNER_ECC_SIGNATURE_OFFSET, SIGNED_DATA_OFFSET, OWNER_SIGNED_DATA_SIZE)
 
         if verify_ecdsa384_signature(owner_public_key, owner_signature, owner_signed_data):
             print("Caliptra Owner ECDSA384 signature verification succeeded.")
@@ -208,15 +216,15 @@ def main():
 
         # Vendor LMS verification
         vendor_index = None
-        with open(source_file, 'rb') as f:
+        with open(cptra_fw, 'rb') as f:
             f.seek(VENDOR_LMS_PUBLIC_KEY_INDEX_OFFSET)
             vendor_index = struct.unpack('<I', f.read(4))[0]
 
         vendor_public_key = extract_public_key(
-            source_file, VENDOR_LMS_PUBLIC_KEY_START_OFFSET, vendor_index, LMS_PUBLIC_KEY_SIZE)
+            cptra_fw, VENDOR_LMS_PUBLIC_KEY_START_OFFSET, vendor_index, LMS_PUBLIC_KEY_SIZE)
 
         vendor_signature, vendor_signed_data = extract_lms_signature(
-            source_file, VENDOR_LMS_SIGNATURE_OFFSET, SIGNED_DATA_OFFSET, VENDOR_SIGNED_DATA_SIZE)
+            cptra_fw, VENDOR_LMS_SIGNATURE_OFFSET, SIGNED_DATA_OFFSET, VENDOR_SIGNED_DATA_SIZE)
 
         if verify_lms_signature(vendor_public_key, vendor_signature, vendor_signed_data):
             print("Caliptra Vendor LMS signature verification succeeded.")
@@ -225,10 +233,10 @@ def main():
 
         # Owner LMS verification
         owner_public_key = extract_public_key(
-            source_file, OWNER_LMS_PUBLIC_KEY_START_OFFSET, 0, LMS_PUBLIC_KEY_SIZE)
+            cptra_fw, OWNER_LMS_PUBLIC_KEY_START_OFFSET, 0, LMS_PUBLIC_KEY_SIZE)
 
         owner_signature, owner_signed_data = extract_lms_signature(
-            source_file, OWNER_LMS_SIGNATURE_OFFSET, SIGNED_DATA_OFFSET, OWNER_SIGNED_DATA_SIZE)
+            cptra_fw, OWNER_LMS_SIGNATURE_OFFSET, SIGNED_DATA_OFFSET, OWNER_SIGNED_DATA_SIZE)
 
         if verify_lms_signature(owner_public_key, owner_signature, owner_signed_data):
             print("Caliptra Owner LMS signature verification succeeded.")
