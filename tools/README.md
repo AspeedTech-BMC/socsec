@@ -1,4 +1,4 @@
-# Tools
+# Tools - How to
 
 ## OTP info generation
 
@@ -32,6 +32,10 @@ $ python3 cal_info_gen.py gen_keyhash \
         --output_folder {output_folder} \
         config
 ```
+
+- Example
+  - config: sample_cptra_vdrkey.json
+  - config: sample_cptra_ownkey.json
 
 ## Extract Caliptra Firmware Image data to be signed
 ### Vendor TBS
@@ -164,4 +168,52 @@ positional arguments:
 
 options:
   -h, --help  show this help message and exit
+```
+
+## How to compare key hash?
+
+### Vendor key hash
+
+- Generate vendor key hash from key source
+```bash
+$ python3 cal_info_gen.py gen_keyhash \
+        --key_folder {key_folder} \
+        --output_folder {output_folder} \
+        sample_cptra_vdrkey.json
+
+Output: vendor_key.bin, vendor_key_hash.bin
+```
+
+- Generate vendor key hash from cptra fw
+```bash
+$ dd if={cptra_fw} of={output_file} bs=1 skip=8 count=$((0x788 - 0x8))
+$ sha384sum {output_file} | tee >(awk '{print $1}' | xxd -r -p > vendor_key_digest.bin)
+```
+
+- Compare two of them
+```bash
+$ diff vendor_key_hash.bin vendor_key_digest.bin
+```
+
+### Owner key hash
+
+- Generate owner key hash from key source
+```bash
+$ python3 cal_info_gen.py gen_keyhash \
+        --key_folder {key_folder} \
+        --output_folder {output_folder} \
+        sample_cptra_ownkey.json
+
+Output: owner_key.bin, owner_key_hash.bin
+```
+
+- Generate owner key hash from cptra fw
+```bash
+$ dd if={cptra_fw} of={output_file} bs=1 skip=3652 count=$((0x90))
+$ sha384sum {output_file} | tee >(awk '{print $1}' | xxd -r -p > owner_key_digest.bin)
+```
+
+- Compare two of them
+```bash
+$ diff owner_key_hash.bin owner_key_digest.bin
 ```
