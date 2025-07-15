@@ -127,7 +127,7 @@ def main():
     parser.add_argument("file_path", help="Path to the file to be modified (Caliptra firmware image)")
     parser.add_argument("key_directory", help="Directory containing the pem/pub files")
     parser.add_argument("vendor_ecc_sig_file", help="Path to the ECC signature file in DER format")
-    parser.add_argument("vendor_lms_sig_file", help="Path to the LMS signature file in binary format")
+    parser.add_argument("vendor_lms_sig_file", nargs="?", default=None, help="Path to the LMS signature file in binary format (optional)")
 
     args = parser.parse_args()
 
@@ -225,7 +225,7 @@ def main():
     replace_in_file(file_path, ecc_signature_offset, combined_rs)
     print("ECC Signature's r and s have been replaced in the file.")
 
-    if LMS_SUPPORTED:
+    if LMS_SUPPORTED and vendor_lms_sig_file:
         # Load LMS signature from the specified file
         with open(vendor_lms_sig_file, 'rb') as lms_sig_file:
             lms_signature = lms_sig_file.read()
@@ -238,11 +238,13 @@ def main():
         # Replace the LMS signature in the file at the specified offset
         replace_in_file(file_path, lms_signature_offset, lms_signature_hex)
         print("LMS signature has been replaced in the file.")
+    # elif LMS_SUPPORTED:
+    #     print("LMS signature file not provided. Replacing with zeros.")
+    #     # Replace LMS signature with all zeros
+    #     lms_value = '0' * (lms_signature_size * 2)  # Each byte is represented by 2 hex digits
+    #     replace_in_file(file_path, lms_signature_offset, lms_value)
     else:
         print("LMS is not supported. Skipping LMS signature replacement.")
-        # Replace LMS signature with all zeros
-        lms_value = '0' * (lms_signature_size * 2)  # Each byte is represented by 2 hex digits
-        replace_in_file(file_path, lms_signature_offset, lms_value)
 
 if __name__ == "__main__":
     main()

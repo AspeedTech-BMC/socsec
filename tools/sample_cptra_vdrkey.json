@@ -13,6 +13,104 @@
             {
                 "key_file": "S2700_ECC_Public_Key_4.pem"
             }
+        ],
+        "lms_keys": [
+            {
+                "key_file": "test_oem_dss_lms_key_0.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_1.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_2.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_3.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_0.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_1.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_2.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_3.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_0.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_1.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_2.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_3.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_0.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_1.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_2.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_3.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_0.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_1.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_2.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_3.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_0.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_1.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_2.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_3.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_0.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_1.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_2.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_3.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_0.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_1.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_2.pub"
+            },
+            {
+                "key_file": "test_oem_dss_lms_key_3.pub"
+            }
         ]
     }
 }

@@ -227,6 +227,11 @@ class genTool(object):
                             offset = 4 * 96 + i * 48
                             lms_key_bin = load_file(key_folder + vendor_lms_keys[i]["key_file"])
                             insert_key_bin = bytearray(lms_key_bin)
+                            if len(insert_key_bin) == 52:
+                                print("lms key size is 52 bytes, remove 4 bytes")
+                                insert_key_bin = insert_key_bin[4:]
+                            if len(insert_key_bin) != 48:
+                                print("lms key size error", len(insert_key_bin))
                             insert_bytearray(insert_key_bin, key_bin, offset)
 
             sha = SHA384.new(key_bin)
@@ -250,6 +255,11 @@ class genTool(object):
                     owner_lms_keys = config["owner"]["lms_keys"]
                     lms_key_bin = load_file(key_folder + owner_lms_keys[0]["key_file"])
                     insert_key_bin = bytearray(lms_key_bin)
+                    if len(insert_key_bin) == 52:
+                        print("lms key size is 52 bytes, remove 4 bytes")
+                        insert_key_bin = insert_key_bin[4:]
+                    if len(insert_key_bin) != 48:
+                        print("lms key size error", len(insert_key_bin))
                     insert_bytearray(insert_key_bin, key_bin, OWN_ECC_KEY_SIZE)
 
             sha = SHA384.new(key_bin)
