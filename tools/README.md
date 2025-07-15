@@ -217,3 +217,142 @@ $ sha384sum {output_file} | tee >(awk '{print $1}' | xxd -r -p > owner_key_diges
 ```bash
 $ diff owner_key_hash.bin owner_key_digest.bin
 ```
+
+## Extract SoC Manifest and tbs data
+
+This tool is used to extract SoC Manifest and manifest vendor/owner data tbs from input file.
+
+- Example
+```bash
+$ python3 extract_soc_manifest.py ast2700-abb.bin soc_manifest.bin manifest_vendor_data_tbs.bin manifest_owner_data_tbs.bin manifest2_owner_data_tbs.bin
+```
+
+- Usage
+```bash
+$ python3 extract_soc_manifest.py -h
+usage: extract_soc_manifest.py [-h]
+                               input_file output_manifest_file output_vendor_data_file output_owner_data_file
+                               output_manifest2_owner_data_file
+
+Extract SoC Manifest and manifest vendor data tbs from input file.
+
+positional arguments:
+  input_file            Path to the input file containing the header and images.
+  output_manifest_file  Path to write the extracted SoC Manifest.
+  output_vendor_data_file
+                        Path to write the extracted manifest vendor data tbs.
+  output_owner_data_file
+                        Path to write the extracted manifest owner data tbs.
+  output_manifest2_owner_data_file
+                        Path to write the extracted manifest2 owner data tbs.
+
+options:
+  -h, --help            show this help message and exit
+```
+
+## Insert Manifest Vendor keys and signatures
+
+This tool is used to insert manifest vendor ECC & LMS keys and signatures into a SoC manifest file.
+
+- Example
+```bash
+python3 mfst_vdr_sig_ins.py soc_manifest.bin manifest_vendor_ecc_sig.der manifest_vendor_lms_sig soc_manifest.bin
+```
+
+- Usage
+```bash
+$ python3 mfst_vdr_sig_ins.py -h
+usage: mfst_vdr_sig_ins.py [-h] input_manifest_file ecc_sig_file lms_sig_file output_manifest_file
+
+Insert manifest vendor ECC & LMS keys and signatures into a SoC manifest file.
+
+positional arguments:
+  input_manifest_file   Path to the input SoC manifest file.
+  ecc_sig_file          Path to the ECC signature file (96 bytes).
+  lms_sig_file          Path to the LMS signature file (1620 bytes).
+  output_manifest_file  Path to write the updated SoC manifest file.
+
+options:
+  -h, --help            show this help message and exit
+```
+
+## Insert Manifest Owner keys and signatures
+
+This tool is used to insert manifest owner ECC & LMS keys and signatures into a SoC manifest file.
+
+- Example
+```bash
+$ python3 mfst_own_sig_ins.py soc_manifest.bin manifest_owner_ecc_sig.bin manifest_owner_lms_sig soc_manifest.bin
+```
+
+- Usage
+```bash
+$ python3 mfst_own_sig_ins.py -h
+usage: mfst_own_sig_ins.py [-h] input_manifest_file ecc_sig_file lms_sig_file output_manifest_file
+
+Insert manifest owner ECC & LMS keys and signatures into a SoC manifest file.
+
+positional arguments:
+  input_manifest_file   Path to the input SoC manifest file.
+  ecc_sig_file          Path to the ECC signature file.
+  lms_sig_file          Path to the LMS signature file.
+  output_manifest_file  Path to write the updated SoC manifest file.
+
+options:
+  -h, --help            show this help message and exit
+```
+
+## Insert Manifest2 Owner keys and signatures
+
+This tool is used to insert manifest2 owner ECC & LMS keys and signatures into a SoC manifest file.
+
+- Example
+```bash
+$ python3 mfst2_own_sig_ins.py soc_manifest.bin manifest2_owner_data_sig.bin manifest2_owner_lms_sig soc_manifest.bin
+```
+
+- Usage
+```bash
+$ python3 mfst2_own_sig_ins.py -h
+usage: mfst2_own_sig_ins.py [-h] input_manifest_file ecc_sig_file lms_sig_file output_manifest_file
+
+Insert manifest2 owner ECC & LMS signatures into a SoC manifest file.
+
+positional arguments:
+  input_manifest_file   Path to the input SoC manifest file.
+  ecc_sig_file          Path to the ECC signature file.
+  lms_sig_file          Path to the LMS signature file.
+  output_manifest_file  Path to write the updated SoC manifest file.
+
+options:
+  -h, --help            show this help message and exit
+```
+
+## Verify SoC Manifest Signatures
+
+This tool is used to verify SoC manifest signatures.
+
+- Example
+```bash
+$ python3 soc_manifest_ver.py soc_manifest.bin {vendor_ecc_key} {owner_ecc_key} --vendor_lms_key {vendor_lms_key} --owner_lms_key {owner_lms_key}
+```
+
+- Usage
+```bash
+$ python3 soc_manifest_ver.py -h
+usage: soc_manifest_ver.py [-h] [--vendor_lms_key VENDOR_LMS_KEY] [--owner_lms_key OWNER_LMS_KEY] manifest vendor_ecc_key owner_ecc_key
+
+Verify signatures in soc_manifest.bin.
+
+positional arguments:
+  manifest              Path to the soc_manifest.bin file
+  vendor_ecc_key        Path to the vendor ECC public key
+  owner_ecc_key         Path to the owner ECC public key
+
+options:
+  -h, --help            show this help message and exit
+  --vendor_lms_key VENDOR_LMS_KEY
+                        Path to the vendor LMS public key (optional)
+  --owner_lms_key OWNER_LMS_KEY
+                        Path to the owner LMS public key (optional)
+```
