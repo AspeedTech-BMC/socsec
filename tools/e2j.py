@@ -27,14 +27,13 @@ import os
 import argparse
 import sys
 
-# Input_file = './otp_memory_map_A1.xlsx'
 OTPRBP_SHEET_NAME = 'OTPRBP'
 OTPCFG_SHEET_NAME = 'OTPCFG'
 OTPSTRAP_SHEET_NAME = 'OTPSTRAP-STRAPEXT'
-SECURE_SHEET_NAME = 'SECURE'
+SECURE_SHEET_NAME = 'OTPSEC'
 CALIPTRA_SHEET_NAME = 'OTPCAL'
 AST_CHIP_NAME = 'AST'
-AST_CHIP_VER = '2700a1'
+AST_CHIP_VER = '2700a2'
 
 class KeyType(Enum):
         SOC_ECDSA_PUB = 1
@@ -81,22 +80,27 @@ def otprbp_handler_info(sheet, list):
                 row_values = sh.row_values(rownum)
                 #print(row_values)
 
+                otp_addr = row_values[0]
+                otp_name = row_values[1]
+                otp_size = row_values[2]
+                otp_desc = row_values[5]
+
                 # reserved skip
-                if row_values[2] == "reserved" or row_values[2] == "Reserved":
+                if otp_name == "reserved" or otp_name == "Reserved":
                         continue
 
-                if row_values[2] == "Sum":
+                if otp_name == "Sum":
                         break
 
-                name = row_values[2].replace(' ', '_')
-                bit_length = int(row_values[3])
-                offset = int(row_values[1], 16) - 0x3e0
+                name = otp_name.replace(' ', '_')
+                bit_length = int(otp_size)
+                offset = int(otp_addr, 16) - 0x3e0
 
-                idx = row_values[6].find('\n')
+                idx = otp_desc.find('\n')
                 if idx != -1:
-                        desc = str(row_values[6])[:idx]
+                        desc = str(otp_desc)[:idx]
                 else:
-                        desc = str(row_values[6])
+                        desc = str(otp_desc)
 
                 if bit_length > 32:
                         for i in range (0, int(bit_length / 32)):
@@ -131,9 +135,9 @@ def otprbp_handler(sheet, data):
                 row_values = sh.row_values(rownum)
                 # print(row_values)
 
-                otp_addr = int(row_values[0])
-                otp_name = row_values[2]
-                otp_bit_size = int(row_values[3])
+                otp_addr = int(row_values[0], 16) - 0x3e0
+                otp_name = row_values[1]
+                otp_bit_size = int(row_values[2])
 
                 # reserved skip
                 if otp_name == "reserved" or otp_name == "Reserved":
@@ -167,13 +171,13 @@ def otpcfg_handler_info(sheet, list):
                 # print(row_values)
 
                 otp_addr = row_values[0]
-                otp_num = row_values[2]
-                otp_bit_msb = row_values[3]
-                otp_bit_lsb = row_values[4]
-                otp_bit_name = row_values[5]
-                otp_bit_desc = row_values[6]
+                otp_num = row_values[1]
+                otp_bit_msb = row_values[2]
+                otp_bit_lsb = row_values[3]
+                otp_bit_name = row_values[4]
+                otp_bit_desc = row_values[5]
 
-                if rownum < 4:
+                if rownum < 1:
                         continue
 
                 if otp_bit_msb == "" and otp_bit_lsb == "":
@@ -245,17 +249,17 @@ def otpcfg_handler(sheet, data):
 
         conf_region = OrderedDict()
         for rownum in range(0, sh.nrows):
-                if rownum < 4:
+                if rownum < 1:
                         continue
 
                 row_values = sh.row_values(rownum)
-                #print(row_values)
+                # print(row_values)
 
                 otp_addr = row_values[0]
-                otp_num = row_values[2]
-                otp_bit_msb = row_values[3]
-                otp_bit_lsb = row_values[4]
-                otp_bit_name = row_values[5]
+                otp_num = row_values[1]
+                otp_bit_msb = row_values[2]
+                otp_bit_lsb = row_values[3]
+                otp_bit_name = row_values[4]
 
                 # OTPCFG1 & OTPCFG3 skip
                 if otp_addr == "401" or otp_addr == "403":
@@ -448,7 +452,7 @@ def otpsec_handler(sheet, data):
         key_list = []
         sec_region = OrderedDict()
         for rownum in range(0, sh.nrows):
-                if rownum < 70:
+                if rownum < 22:
                         continue
 
                 keys = OrderedDict()
@@ -498,28 +502,31 @@ def otpcal_handler_info(sheet, list):
                 row_values = sh.row_values(rownum)
                 #print(row_values)
 
+                otp_name = row_values[1]
+                otp_size = row_values[3]
+
                 # reserved skip
-                if row_values[2] == "reserved" or row_values[2] == "Reserved":
+                if otp_name == "reserved" or otp_name == "Reserved":
                         continue
 
-                if row_values[2] == "Sum":
+                if otp_name == "Sum":
                         break
 
-                name = row_values[2].replace(' ', '_')
+                name = otp_name.replace(' ', '_')
                 cal['key'] = name
-                bit_length = int(row_values[3])
+                bit_length = int(otp_size)
                 if bit_length > 1:
                         cal['type'] = "string"
                 else:
                         cal['type'] = "boolean"
 
-                offset = int(row_values[1], 16) - 0x1c00
+                offset = int(row_values[0], 16) - 0x1c00
                 cal['w_offset'] = offset
                 cal['bit_offset'] = 0
-                if int(row_values[3]) > 1:
-                        cal['bit_length'] = int(row_values[3])
+                if int(otp_size) > 1:
+                        cal['bit_length'] = int(otp_size)
 
-                descs = row_values[2].split('\n')
+                descs = otp_name.split('\n')
                 desc = descs[0]
 
                 desc_list = []
@@ -560,19 +567,23 @@ def otpcal_handler(sheet, data):
                 row_values = sh.row_values(rownum)
                 # print(row_values)
 
+                otp_addr = int(row_values[0], 16) - 0x1c00
+                otp_name = row_values[1]
+                otp_size = row_values[3]
+
                 # reserved skip
-                if row_values[2] == "reserved" or row_values[2] == "Reserved":
+                if otp_name == "reserved" or otp_name == "Reserved":
                         continue
 
-                if row_values[2] == "Sum":
+                if otp_name == "Sum":
                         break
 
-                name = row_values[2].strip().replace(" ", "_")
+                name = otp_name.strip().replace(" ", "_")
 
-                cal_region["// OTPCAL" + str(int(row_values[0]))] = ""
-                if int(row_values[3]) == 1:
+                cal_region["// OTPCAL" + str(otp_addr)] = ""
+                if int(otp_size) == 1:
                         cal_region[name] = False
-                elif int(row_values[3]) > 1:
+                elif int(otp_size) > 1:
                         cal_region[name] = ""
                 else:
                         break
@@ -603,7 +614,7 @@ if __name__ == '__main__':
         wb_strap = xlrd.open_workbook(args.strap.name)
 
         data = OrderedDict()
-        data["name"] = "2700-a1_sample-full"
+        data["name"] = "2700-a2_sample-full"
         data["version"] = AST_CHIP_VER.upper()
 
         # OTP ROM
