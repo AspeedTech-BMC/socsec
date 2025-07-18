@@ -1834,7 +1834,7 @@ class OTP(object):
                           output_folder, no_last_bit=False):
         print(self.make_otp_image_v2.__name__)
 
-        if otp_config['version'] == '2700A1':
+        if otp_config['version'] in ['2700A1', '2700A2']:
             otp_info = self.otp_info.OTP_INFO['2700A1']
             version = OTP_info.SOC_AST2700A1
             genKeyHeader = self.genKeyHeader_2700a1
@@ -2222,7 +2222,7 @@ class OTP(object):
                        no_last_bit=False):
 
         otp_config = jstyleson.load(config_file)
-        if otp_config['version'] in ['2700A0', '2700A1']:
+        if otp_config['version'] in ['2700A0', '2700A1', '2700A2']:
             self.make_otp_image_v2(otp_config, key_folder,
                                    output_folder, no_last_bit)
         else:
