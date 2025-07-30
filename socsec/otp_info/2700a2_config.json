@@ -1,0 +1,1103 @@
+[
+    {
+        "key": "otp_mem_lock_enable",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 15,
+        "info": [
+            "OTP memory lock disable",
+            "OTP memory lock enable"
+        ]
+    },
+    {
+        "key": "wr_protect_puf",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 14,
+        "info": [
+            "Disable PUF program done",
+            "Enable PUF program done"
+        ]
+    },
+    {
+        "key": "dis_otp_bist",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 13,
+        "info": [
+            "Enable OTP Memory Factory Test Mode",
+            "Disable OTP Memory Factory Test Mode"
+        ]
+    },
+    {
+        "key": "wr_protect_caliptra",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 12,
+        "info": [
+            "Disable write protect of caliptra region",
+            "Enable write protect of caliptra region"
+        ]
+    },
+    {
+        "key": "rd_protect_caliptra",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 11,
+        "info": [
+            "Disable read protect of caliptra region",
+            "Enable read protect of caliptra region"
+        ]
+    },
+    {
+        "key": "wr_protect_otp_rbp",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 10,
+        "info": [
+            "Disable Write Protect of rbp region",
+            "Enable Write Protect of rbp region"
+        ]
+    },
+    {
+        "key": "enable_secure_boot",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 9,
+        "info": [
+            "Disable Secure Boot",
+            "Enable Secure Boot"
+        ]
+    },
+    {
+        "key": "retire_mechanism_option",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 8,
+        "info": [
+            "key retirement mechanism option disable",
+            "key retirement mechanism option enable"
+        ]
+    },
+    {
+        "key": "wr_protect_otp_strap",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 7,
+        "info": [
+            "Disable Write Protectof OTP strap region",
+            "Enable Write Protectof OTP strap region"
+        ]
+    },
+    {
+        "key": "wr_protect_otp_cfg",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 6,
+        "info": [
+            "Disable Write Protect of Configure region",
+            "Enable Write Protect of Configure region"
+        ]
+    },
+    {
+        "key": "wr_protect_rom",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 5,
+        "info": [
+            "Disable write protect of rom region",
+            "Enable write protect of rom region"
+        ]
+    },
+    {
+        "key": "wr_protect_otp_strap_ext",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 4,
+        "info": [
+            "Disable Write Protect of strap ext region",
+            "Enable Write Protect of strap ext region"
+        ]
+    },
+    {
+        "key": "rd_protect_otp_strap",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 3,
+        "info": [
+            "Disable read protect of strap region",
+            "Enable read protect of strap region"
+        ]
+    },
+    {
+        "key": "rd_protect_otp_cfg",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 2,
+        "info": [
+            "Disable read protect of configure region",
+            "Enable read protect of configure region"
+        ]
+    },
+    {
+        "key": "rd_protect_rom",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 1,
+        "info": [
+            "Disable read protect of rom region",
+            "Enable read protect of rom region"
+        ]
+    },
+    {
+        "key": "rd_protect_otp_strap_ext",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 0,
+        "info": [
+            "Disable read protect of strap ext region",
+            "Enable read protect of strap ext region"
+        ]
+    },
+    {
+        "key": "puf_source",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 13,
+        "info": [
+            "0: NIST-TRNG"
+        ]
+    },
+    {
+        "key": "ignore_secure_boot_hw_strap",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 12,
+        "info": [
+            "Ignore Secure Boot hardware strap disable",
+            "Ignore Secure Boot hardware strap enable"
+        ]
+    },
+    {
+        "key": "dis_low_secure_key0",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 11,
+        "info": [
+            "Enable low security key #0",
+            "Disable low security key #0"
+        ]
+    },
+    {
+        "key": "en_lms_verify\nReserved",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 10,
+        "info": [
+            "Disable SoC FMC verification with ECDSA and LMS",
+            "Enable SoC FMC verification with ECDSA and LMS"
+        ]
+    },
+    {
+        "key": "dev_life_cycle_state",
+        "type": "string",
+        "w_offset": 2,
+        "bit_offset": 8,
+        "bit_length": 2,
+        "info": [
+            "The Device Life Cycle State. It's the source of Security State. = Un-provisioned",
+            "The Device Life Cycle State. It's the source of Security State. = Manufacturing",
+            "The Device Life Cycle State. It's the source of Security State. = Reserved",
+            "The Device Life Cycle State. It's the source of Security State. = Production"
+        ]
+    },
+    {
+        "key": "Boot_From_UART_Port_Selection",
+        "type": "string",
+        "w_offset": 2,
+        "bit_offset": 6,
+        "bit_length": 2,
+        "info": [
+            "Boot From UART Port Selection = IO12 (BMC default port)",
+            "Boot From UART Port Selection = IO0 (Node 0 SUART common port)",
+            "Boot From UART Port Selection = IO5 (Node 1 SUART common port)"
+        ]
+    },
+    {
+        "key": "en_emmc_sw_reset",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 5,
+        "info": [
+            "Disable eMMC software reset",
+            "Enable eMMC software reset"
+        ]
+    },
+    {
+        "key": "dis_boot_msg",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 4,
+        "info": [
+            "Enable Uart Message of Boot ROM",
+            "Disable Uart Message of Boot ROM"
+        ]
+    },
+    {
+        "key": "dis_recovery_mode",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 3,
+        "info": [
+            "Enable Boot from Uart/USB",
+            "Disable Boot from Uart/USB"
+        ]
+    },
+    {
+        "key": "dis_post_rom_patch",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 2,
+        "info": [
+            "Enable Post ROM Patch code",
+            "Disable Post ROM Patch code"
+        ]
+    },
+    {
+        "key": "dis_pre_rom_patch",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 1,
+        "info": [
+            "Enable Pre ROM Patch code",
+            "Disable Pre ROM Patch code"
+        ]
+    },
+    {
+        "key": "Pre_OTP_Patch_Code_location",
+        "type": "string",
+        "w_offset": 4,
+        "bit_offset": 1,
+        "bit_length": 10,
+        "info": [
+            "The Pre OTP patch code location in OTP ROM Region"
+        ]
+    },
+    {
+        "key": "pre_otp_patch_vld",
+        "type": "boolean",
+        "w_offset": 4,
+        "bit_offset": 0,
+        "info": [
+            "Disable pre otp patch",
+            "Enable pre otp patch"
+        ]
+    },
+    {
+        "key": "Pre_OTP_Patch_Size",
+        "type": "string",
+        "w_offset": 5,
+        "bit_offset": 0,
+        "bit_length": 10,
+        "info": [
+            "Pre OTP Patch code size (unit: word)"
+        ]
+    },
+    {
+        "key": "Post_OTP_Patch_Code_location",
+        "type": "string",
+        "w_offset": 6,
+        "bit_offset": 1,
+        "bit_length": 10,
+        "info": [
+            "The Post OTP patch code location in OTP ROM Region"
+        ]
+    },
+    {
+        "key": "post_otp_patch_vld",
+        "type": "boolean",
+        "w_offset": 6,
+        "bit_offset": 0,
+        "info": [
+            "Disable post otp patch",
+            "Enable post otp patch"
+        ]
+    },
+    {
+        "key": "Post_OTP_Patch_Size",
+        "type": "string",
+        "w_offset": 7,
+        "bit_offset": 0,
+        "bit_length": 10,
+        "info": [
+            "Post OTP Patch code size"
+        ]
+    },
+    {
+        "key": "en_auto_load",
+        "type": "boolean",
+        "w_offset": 9,
+        "bit_offset": 15,
+        "info": [
+            "Disable auto load debug control SCU0C8 setting",
+            "Enable auto load debug control SCU0C8 setting"
+        ]
+    },
+    {
+        "key": "CPU_SCU0C8_auto_val",
+        "type": "string",
+        "w_offset": 9,
+        "bit_offset": 0,
+        "bit_length": 15,
+        "info": [
+            "CPU_SCU0C8[14 :0] auto setting value"
+        ]
+    },
+    {
+        "key": "IO_SCU0C8_auto_val",
+        "type": "string",
+        "w_offset": 10,
+        "bit_offset": 0,
+        "bit_length": 8,
+        "info": [
+            "IO_SCU0C8[7 :0] auto setting value"
+        ]
+    },
+    {
+        "key": "en_auto_load_usr0",
+        "type": "boolean",
+        "w_offset": 11,
+        "bit_offset": 15,
+        "info": [
+            "Disable auto load OTP region user 0 ctrl setting",
+            "Enable auto load OTP region user 0 ctrl setting"
+        ]
+    },
+    {
+        "key": "rd_protect_otp_usr0",
+        "type": "boolean",
+        "w_offset": 11,
+        "bit_offset": 14,
+        "info": [
+            "Disable Read protect for OTP region user 0",
+            "Enable Read protect for OTP region user 0"
+        ]
+    },
+    {
+        "key": "wr_protect_otp_usr0",
+        "type": "boolean",
+        "w_offset": 11,
+        "bit_offset": 13,
+        "info": [
+            "Disable Write protect for OTP region user 0",
+            "Enable Write protect for OTP region user 0"
+        ]
+    },
+    {
+        "key": "usr0_region_start_offset",
+        "type": "string",
+        "w_offset": 11,
+        "bit_offset": 0,
+        "bit_length": 12,
+        "info": [
+            "User 0 region start offset"
+        ]
+    },
+    {
+        "key": "usr0_region_size",
+        "type": "string",
+        "w_offset": 12,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "User 0 region size"
+        ]
+    },
+    {
+        "key": "en_auto_load_secure0",
+        "type": "boolean",
+        "w_offset": 13,
+        "bit_offset": 15,
+        "info": [
+            "Disable auto load OTP region secure 0 ctrl setting",
+            "Enable auto load OTP region secure 0 ctrl setting"
+        ]
+    },
+    {
+        "key": "rd_protect_otp_secure0",
+        "type": "boolean",
+        "w_offset": 13,
+        "bit_offset": 14,
+        "info": [
+            "Disable Read protect for OTP region secure 0",
+            "Enable Read protect for OTP region secure 0"
+        ]
+    },
+    {
+        "key": "wr_protect_otp_secure0",
+        "type": "boolean",
+        "w_offset": 13,
+        "bit_offset": 13,
+        "info": [
+            "Disable Write protect for OTP region secure 0",
+            "Enable Write protect for OTP region secure 0"
+        ]
+    },
+    {
+        "key": "secure0_region_start_offset",
+        "type": "string",
+        "w_offset": 13,
+        "bit_offset": 0,
+        "bit_length": 12,
+        "info": [
+            "Secure 0 region start offset"
+        ]
+    },
+    {
+        "key": "secure0_region_size",
+        "type": "string",
+        "w_offset": 14,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Secure 0 region size"
+        ]
+    },
+    {
+        "key": "recovery_mode_cfg_a",
+        "type": "string",
+        "w_offset": 15,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "reserved"
+        ]
+    },
+    {
+        "key": "recovery_mode_cfg_b",
+        "type": "string",
+        "w_offset": 16,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "reserved"
+        ]
+    },
+    {
+        "key": "usb_uart6_mode_lsb",
+        "type": "boolean",
+        "w_offset": 17,
+        "bit_offset": 15,
+        "info": [
+            "UART6 Mode - lsb (bit0)"
+        ]
+    },
+    {
+        "key": "usb_uart5_tx_discard_off",
+        "type": "boolean",
+        "w_offset": 17,
+        "bit_offset": 14,
+        "info": [
+            "Disable to turn off UART5 Tx Discard",
+            "Enable to turn off UART5 Tx Discard"
+        ]
+    },
+    {
+        "key": "usb_uart5_mode",
+        "type": "string",
+        "w_offset": 17,
+        "bit_offset": 12,
+        "bit_length": 2,
+        "info": [
+            "UART5 Mode = UART and Device both not connected",
+            "UART5 Mode = UART Real mode, and Device connected",
+            "UART5 Mode = UART Pseduo mode, and Device connected",
+            "UART5 Mode = UART not connected, but Device connected"
+        ]
+    },
+    {
+        "key": "usb_uart3_tx_discard_off",
+        "type": "boolean",
+        "w_offset": 17,
+        "bit_offset": 11,
+        "info": [
+            "Disable to turn off UART3 Tx Discard",
+            "Enable to turn off UART3 Tx Discard"
+        ]
+    },
+    {
+        "key": "usb_uart3_mode",
+        "type": "string",
+        "w_offset": 17,
+        "bit_offset": 9,
+        "bit_length": 2,
+        "info": [
+            "UART3 Mode = UART and Device both not connected",
+            "UART3 Mode = UART Real mode, and Device connected",
+            "UART3 Mode = UART Pseduo mode, and Device connected",
+            "UART3 Mode = UART not connected, but Device connected"
+        ]
+    },
+    {
+        "key": "usb_uart2_tx_discard_off",
+        "type": "boolean",
+        "w_offset": 17,
+        "bit_offset": 8,
+        "info": [
+            "Disable to turn off UART2 Tx Discard",
+            "Enable to turn off UART2 Tx Discard"
+        ]
+    },
+    {
+        "key": "usb_uart2_mode",
+        "type": "string",
+        "w_offset": 17,
+        "bit_offset": 6,
+        "bit_length": 2,
+        "info": [
+            "UART2 Mode = UART and Device both not connected",
+            "UART2 Mode = UART Real mode, and Device connected",
+            "UART2 Mode = UART Pseduo mode, and Device connected",
+            "UART2 Mode = UART not connected, but Device connected"
+        ]
+    },
+    {
+        "key": "usb_uart1_tx_discard_off",
+        "type": "boolean",
+        "w_offset": 17,
+        "bit_offset": 5,
+        "info": [
+            "Disable to turn off UART1 Tx Discard",
+            "Enable to turn off UART1 Tx Discard"
+        ]
+    },
+    {
+        "key": "usb_uart1_mode",
+        "type": "string",
+        "w_offset": 17,
+        "bit_offset": 3,
+        "bit_length": 2,
+        "info": [
+            "UART1 Mode = UART and Device both not connected",
+            "UART1 Mode = UART Real mode, and Device connected",
+            "UART1 Mode = UART Pseduo mode, and Device connected",
+            "UART1 Mode = UART not connected, but Device connected"
+        ]
+    },
+    {
+        "key": "usb_uart0_tx_discard_off",
+        "type": "boolean",
+        "w_offset": 17,
+        "bit_offset": 2,
+        "info": [
+            "Disable to turn off UART0 Tx Discard",
+            "Enable to turn off UART0 Tx Discard"
+        ]
+    },
+    {
+        "key": "usb_uart0_mode",
+        "type": "string",
+        "w_offset": 17,
+        "bit_offset": 0,
+        "bit_length": 2,
+        "info": [
+            "UART0 Mode = UART and Device both not connected",
+            "UART0 Mode = UART Real mode, and Device connected",
+            "UART0 Mode = UART Pseduo mode, and Device connected",
+            "UART0 Mode = UART not connected, but Device connected"
+        ]
+    },
+    {
+        "key": "usb_uart11_mode",
+        "type": "string",
+        "w_offset": 18,
+        "bit_offset": 14,
+        "bit_length": 2,
+        "info": [
+            "UART11 Mode = UART and Device both not connected",
+            "UART11 Mode = UART Real mode, and Device connected",
+            "UART11 Mode = UART Pseduo mode, and Device connected",
+            "UART11 Mode = UART not connected, but Device connected"
+        ]
+    },
+    {
+        "key": "usb_uart10_tx_discard_off",
+        "type": "boolean",
+        "w_offset": 18,
+        "bit_offset": 13,
+        "info": [
+            "Disable to turn off UART10 Tx Discard",
+            "Enable to turn off UART10 Tx Discard"
+        ]
+    },
+    {
+        "key": "usb_uart10_mode",
+        "type": "string",
+        "w_offset": 18,
+        "bit_offset": 11,
+        "bit_length": 2,
+        "info": [
+            "UART10 Mode = UART and Device both not connected",
+            "UART10 Mode = UART Real mode, and Device connected",
+            "UART10 Mode = UART Pseduo mode, and Device connected",
+            "UART10 Mode = UART not connected, but Device connected"
+        ]
+    },
+    {
+        "key": "usb_uart9_tx_discard_off",
+        "type": "boolean",
+        "w_offset": 18,
+        "bit_offset": 10,
+        "info": [
+            "Disable to turn off UART9 Tx Discard",
+            "Enable to turn off UART9 Tx Discard"
+        ]
+    },
+    {
+        "key": "usb_uart9_mode",
+        "type": "string",
+        "w_offset": 18,
+        "bit_offset": 8,
+        "bit_length": 2,
+        "info": [
+            "UART9 Mode = UART and Device both not connected",
+            "UART9 Mode = UART Real mode, and Device connected",
+            "UART9 Mode = UART Pseduo mode, and Device connected",
+            "UART9 Mode = UART not connected, but Device connected"
+        ]
+    },
+    {
+        "key": "usb_uart8_tx_discard_off",
+        "type": "boolean",
+        "w_offset": 18,
+        "bit_offset": 7,
+        "info": [
+            "Disable to turn off UART8 Tx Discard",
+            "Enable to turn off UART8 Tx Discard"
+        ]
+    },
+    {
+        "key": "usb_uart8_mode",
+        "type": "string",
+        "w_offset": 18,
+        "bit_offset": 5,
+        "bit_length": 2,
+        "info": [
+            "UART8 Mode = UART and Device both not connected",
+            "UART8 Mode = UART Real mode, and Device connected",
+            "UART8 Mode = UART Pseduo mode, and Device connected",
+            "UART8 Mode = UART not connected, but Device connected"
+        ]
+    },
+    {
+        "key": "usb_uart7_tx_discard_off",
+        "type": "boolean",
+        "w_offset": 18,
+        "bit_offset": 4,
+        "info": [
+            "Disable to turn off UART7 Tx Discard",
+            "Enable to turn off UART7 Tx Discard"
+        ]
+    },
+    {
+        "key": "usb_uart7_mode",
+        "type": "string",
+        "w_offset": 18,
+        "bit_offset": 2,
+        "bit_length": 2,
+        "info": [
+            "UART7 Mode = UART and Device both not connected",
+            "UART7 Mode = UART Real mode, and Device connected",
+            "UART7 Mode = UART Pseduo mode, and Device connected",
+            "UART7 Mode = UART not connected, but Device connected"
+        ]
+    },
+    {
+        "key": "usb_uart6_tx_discard_off",
+        "type": "boolean",
+        "w_offset": 18,
+        "bit_offset": 1,
+        "info": [
+            "Disable to turn off UART6 Tx Discard",
+            "Enable to turn off UART6 Tx Discard"
+        ]
+    },
+    {
+        "key": "usb_uart6_mode_msb",
+        "type": "boolean",
+        "w_offset": 18,
+        "bit_offset": 0,
+        "info": [
+            "UART6 Mode - msb (bit1)"
+        ]
+    },
+    {
+        "key": "uart_io_route",
+        "type": "string",
+        "w_offset": 19,
+        "bit_offset": 13,
+        "bit_length": 3,
+        "info": [
+            "uart11/13/14 routing (hw effect by scu)"
+        ]
+    },
+    {
+        "key": "usb_uart_put_all_boot_message",
+        "type": "boolean",
+        "w_offset": 19,
+        "bit_offset": 9,
+        "info": [
+            "Disable UART to put all boot message and wait the completetion",
+            "Enable UART to put all boot message and wait the completetion"
+        ]
+    },
+    {
+        "key": "usb_uart_mode3",
+        "type": "boolean",
+        "w_offset": 19,
+        "bit_offset": 8,
+        "info": [
+            "Disable Mode-3 (USB2UART only, no vHub)",
+            "Enable Mode-3 (USB2UART only, no vHub)"
+        ]
+    },
+    {
+        "key": "usb_uart_hub_23ports",
+        "type": "boolean",
+        "w_offset": 19,
+        "bit_offset": 7,
+        "info": [
+            "Disable Mode-0 hub to support 23 ports",
+            "Enable Mode-0 hub to support 23 ports"
+        ]
+    },
+    {
+        "key": "usb_uart15_tx_discard_off",
+        "type": "boolean",
+        "w_offset": 19,
+        "bit_offset": 6,
+        "info": [
+            "Disable to turn off UART15 Tx Discard",
+            "Enable to turn off UART15 Tx Discard"
+        ]
+    },
+    {
+        "key": "usb_uart15_mode",
+        "type": "string",
+        "w_offset": 19,
+        "bit_offset": 4,
+        "bit_length": 2,
+        "info": [
+            "UART15 Mode = UART and Device both not connected",
+            "UART15 Mode = UART Real mode, and Device connected",
+            "UART15 Mode = UART Pseduo mode, and Device connected",
+            "UART15 Mode = UART not connected, but Device connected"
+        ]
+    },
+    {
+        "key": "usb_uart12_tx_discard_off",
+        "type": "boolean",
+        "w_offset": 19,
+        "bit_offset": 3,
+        "info": [
+            "Disable to turn off UART12 Tx Discard",
+            "Enable to turn off UART12 Tx Discard"
+        ]
+    },
+    {
+        "key": "usb_uart12_mode",
+        "type": "string",
+        "w_offset": 19,
+        "bit_offset": 1,
+        "bit_length": 2,
+        "info": [
+            "UART12 Mode = UART and Device both not connected",
+            "UART12 Mode = UART Real mode, and Device connected",
+            "UART12 Mode = UART Pseduo mode, and Device connected",
+            "UART12 Mode = UART not connected, but Device connected"
+        ]
+    },
+    {
+        "key": "usb_uart11_tx_discard_off",
+        "type": "boolean",
+        "w_offset": 19,
+        "bit_offset": 0,
+        "info": [
+            "Disable to turn off UART11 Tx Discard",
+            "Enable to turn off UART11 Tx Discard"
+        ]
+    },
+    {
+        "key": "en_auto_load_cptra0",
+        "type": "boolean",
+        "w_offset": 20,
+        "bit_offset": 15,
+        "info": [
+            "Disable auto load OTP region cptra 0 ctrl setting",
+            "Enable auto load OTP region cptra 0 ctrl setting"
+        ]
+    },
+    {
+        "key": "rd_protect_otp_cptra0",
+        "type": "boolean",
+        "w_offset": 20,
+        "bit_offset": 14,
+        "info": [
+            "Disable Read protect for OTP region cptra 0",
+            "Enable Read protect for OTP region cptra 0"
+        ]
+    },
+    {
+        "key": "wr_protect_otp_cptra0",
+        "type": "boolean",
+        "w_offset": 20,
+        "bit_offset": 13,
+        "info": [
+            "Disable Write protect for OTP region cptra 0",
+            "Enable Write protect for OTP region cptra 0"
+        ]
+    },
+    {
+        "key": "cptra0_region_start_offset",
+        "type": "string",
+        "w_offset": 20,
+        "bit_offset": 0,
+        "bit_length": 12,
+        "info": [
+            "cptra 0 region start offset"
+        ]
+    },
+    {
+        "key": "cptra0_region_size",
+        "type": "string",
+        "w_offset": 21,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "cptra 0 region size"
+        ]
+    },
+    {
+        "key": "LTPI1_check_RX_LINK_SPEED_enable",
+        "type": "boolean",
+        "w_offset": 23,
+        "bit_offset": 9,
+        "info": [
+            "0=Don't check LINK_SPEED before AD (follow the LTPI spec.)"
+        ]
+    },
+    {
+        "key": "LTPI0_check_RX_LINK_SPEED_enable",
+        "type": "boolean",
+        "w_offset": 23,
+        "bit_offset": 8,
+        "info": [
+            "0=Don't check LINK_SPEED before AD (follow the LTPI spec.)"
+        ]
+    },
+    {
+        "key": "LTPI1_PHY_clock_inverse",
+        "type": "string",
+        "w_offset": 23,
+        "bit_offset": 6,
+        "bit_length": 2,
+        "info": [
+            "bit[1] - RX clock inverse"
+        ]
+    },
+    {
+        "key": "LTPI0_PHY_clock_inverse",
+        "type": "string",
+        "w_offset": 23,
+        "bit_offset": 4,
+        "bit_length": 2,
+        "info": [
+            "bit[1] - RX clock inverse"
+        ]
+    },
+    {
+        "key": "LTPI1_driving_strength",
+        "type": "string",
+        "w_offset": 23,
+        "bit_offset": 2,
+        "bit_length": 2,
+        "info": [
+            "4 levels"
+        ]
+    },
+    {
+        "key": "LTPI_Runtime_firmware_enable",
+        "type": "boolean",
+        "w_offset": 23,
+        "bit_offset": 1,
+        "info": [
+            "Set 1 to disable AST1700 runtime firmware",
+            "Set 1 to enable AST1700 runtime firmware"
+        ]
+    },
+    {
+        "key": "LTPI_CRC_format",
+        "type": "boolean",
+        "w_offset": 23,
+        "bit_offset": 0,
+        "info": [
+            "LTPI0 & LTPI1 CRC format"
+        ]
+    },
+    {
+        "key": "IO_SLI_TX_clock_select",
+        "type": "string",
+        "w_offset": 24,
+        "bit_offset": 12,
+        "bit_length": 4,
+        "info": [
+            "IOD TX (US) clock speed"
+        ]
+    },
+    {
+        "key": "IO_SLI_TX_clock_inverse",
+        "type": "boolean",
+        "w_offset": 24,
+        "bit_offset": 11,
+        "info": [
+            "IOD SLIH TXCLK delay[5]"
+        ]
+    },
+    {
+        "key": "IO_SLI_TX_clock_delay",
+        "type": "string",
+        "w_offset": 24,
+        "bit_offset": 6,
+        "bit_length": 5,
+        "info": [
+            "IOD SLIH TXCLK delay[4:0]"
+        ]
+    },
+    {
+        "key": "IO_SLI_RX_clock_inverse",
+        "type": "boolean",
+        "w_offset": 24,
+        "bit_offset": 5,
+        "info": [
+            "IOD SLIH RXCLK delay[5]"
+        ]
+    },
+    {
+        "key": "IO_SLI_RX_clock_delay",
+        "type": "string",
+        "w_offset": 24,
+        "bit_offset": 0,
+        "bit_length": 5,
+        "info": [
+            "IOD SLIH RXCLK delay[4:0]"
+        ]
+    },
+    {
+        "key": "CPU_SLI_TX_clock_select",
+        "type": "string",
+        "w_offset": 25,
+        "bit_offset": 12,
+        "bit_length": 4,
+        "info": [
+            "CPU TX (DS) clock speed"
+        ]
+    },
+    {
+        "key": "SLI_data_latch_control",
+        "type": "string",
+        "w_offset": 25,
+        "bit_offset": 0,
+        "bit_length": 6,
+        "info": [
+            "bit[5] - CPU SLIV RX latch data P/N swap"
+        ]
+    },
+    {
+        "key": "SLI-H_pad_delay",
+        "type": "string",
+        "w_offset": 26,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "bit[15:12] - CPU SLIH RXD1[3:0] = 8] - CPU SLIH RXD0[3",
+            "bit[15:12] - CPU SLIH RXD1[3:0] = 4] - IOD SLIH RXD1[3",
+            "bit[15:12] - CPU SLIH RXD1[3:0] = 0] - IOD SLIH RXD0[3"
+        ]
+    },
+    {
+        "key": "SLI-M_pad_delay_-_CPU_die",
+        "type": "string",
+        "w_offset": 27,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "bit[15:12] - CPU SLIM RXD3[3:0] = 8] - CPU SLIM RXD2[3",
+            "bit[15:12] - CPU SLIM RXD3[3:0] = 4] - CPU SLIM RXD1[3",
+            "bit[15:12] - CPU SLIM RXD3[3:0] = 0] - CPU SLIM RXD0[3"
+        ]
+    },
+    {
+        "key": "SLI-M_pad_delay_-_IO_die",
+        "type": "string",
+        "w_offset": 28,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "bit[15:12] - IOD SLIM RXD3[3:0] = 8] - IOD SLIM RXD2[3",
+            "bit[15:12] - IOD SLIM RXD3[3:0] = 4] - IOD SLIM RXD1[3",
+            "bit[15:12] - IOD SLIM RXD3[3:0] = 0] - IOD SLIM RXD0[3"
+        ]
+    },
+    {
+        "key": "SLI-V_pad_delay",
+        "type": "string",
+        "w_offset": 29,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "bit[15:12] - CPU SLIV RXD1[3:0] = 8] - CPU SLIV RXD0[3",
+            "bit[15:12] - CPU SLIV RXD1[3:0] = 4] - IOD SLIV RXD1[3",
+            "bit[15:12] - CPU SLIV RXD1[3:0] = 0] - IOD SLIV RXD0[3"
+        ]
+    },
+    {
+        "key": "LTPI0_DDR_mode_disable",
+        "type": "boolean",
+        "w_offset": 30,
+        "bit_offset": 15,
+        "info": [
+            "Set 1 to enable LTPI0 DDR mode",
+            "Set 1 to disable LTPI0 DDR mode"
+        ]
+    },
+    {
+        "key": "LTPI0_speed_capability_disabling",
+        "type": "string",
+        "w_offset": 30,
+        "bit_offset": 0,
+        "bit_length": 15,
+        "info": [
+            "bit[14:13] - LTPI spec. reserved"
+        ]
+    },
+    {
+        "key": "LTPI1_DDR_mode_disable",
+        "type": "boolean",
+        "w_offset": 31,
+        "bit_offset": 15,
+        "info": [
+            "Set 1 to enable LTPI1 DDR mode",
+            "Set 1 to disable LTPI1 DDR mode"
+        ]
+    },
+    {
+        "key": "LTPI1_speed_capability_disabling",
+        "type": "string",
+        "w_offset": 31,
+        "bit_offset": 0,
+        "bit_length": 15,
+        "info": [
+            "bit[14:13] - LTPI spec. reserved"
+        ]
+    }
+]

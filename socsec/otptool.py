@@ -1834,8 +1834,14 @@ class OTP(object):
                           output_folder, no_last_bit=False):
         print(self.make_otp_image_v2.__name__)
 
-        if otp_config['version'] in ['2700A1', '2700A2']:
+        if otp_config['version'] == '2700A1':
             otp_info = self.otp_info.OTP_INFO['2700A1']
+            version = OTP_info.SOC_AST2700A1
+            genKeyHeader = self.genKeyHeader_2700a1
+            key_to_bytearray = self.key_to_bytearray_2700a1
+            otp_info_inc = self.otp_info.OTP_INFO_INC_2700()
+        elif otp_config['version'] == '2700A2':
+            otp_info = self.otp_info.OTP_INFO['2700A2']
             version = OTP_info.SOC_AST2700A1
             genKeyHeader = self.genKeyHeader_2700a1
             key_to_bytearray = self.key_to_bytearray_2700a1

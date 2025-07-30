@@ -1,0 +1,900 @@
+[
+    {
+        "key": "BootSPI",
+        "key_type": "strap",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 1,
+        "info": [
+            "Disable Boot from CPU die SPI",
+            "Enable Boot from CPU die SPI"
+        ]
+    },
+    {
+        "key": "HPLLFreq",
+        "key_type": "strap",
+        "type": "string",
+        "w_offset": 0,
+        "bit_offset": 2,
+        "bit_length": 2,
+        "info": [
+            "HPLL default frequency selection = 2.0GHz",
+            "HPLL default frequency selection = 1.9GHz",
+            "HPLL default frequency selection = 1.8GHz",
+            "HPLL default frequency selection = 1.7GHz"
+        ]
+    },
+    {
+        "key": "CPUHPLL",
+        "key_type": "strap",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 4,
+        "info": [
+            "CPU clock PLL selection = MPLL",
+            "CPU clock PLL selection = HPLL"
+        ]
+    },
+    {
+        "key": "HCLKSel",
+        "key_type": "strap",
+        "type": "string",
+        "w_offset": 0,
+        "bit_offset": 5,
+        "bit_length": 2,
+        "info": [
+            "AXI/AHB clock selection = 400MHz",
+            "AXI/AHB clock selection = 400MHz",
+            "AXI/AHB clock selection = 266MHz",
+            "AXI/AHB clock selection = 200MHz when HCLKPLL=0"
+        ]
+    },
+    {
+        "key": "HCLKHPLL",
+        "key_type": "strap",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 7,
+        "info": [
+            "AXI/AHB clock PLL selection = MPLL",
+            "AXI/AHB clock PLL selection = HPLL"
+        ]
+    },
+    {
+        "key": "DisDebug",
+        "key_type": "strap",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 8,
+        "info": [
+            "Enable Debug Interfaces for CPU die",
+            "Disable Debug Interfaces for CPU die"
+        ]
+    },
+    {
+        "key": "TSPRsntSel",
+        "key_type": "strap",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 9,
+        "info": [
+            "TSP reset pin selection = SSPRSTN",
+            "TSP reset pin selection = GPIO18E0"
+        ]
+    },
+    {
+        "key": "VGALinearSize[0]",
+        "key_type": "strap",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 10,
+        "info": [
+            "VGA linear memory size",
+            "VGA linear memory size"
+        ]
+    },
+    {
+        "key": "VGALinearSize[1]",
+        "key_type": "strap",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 11,
+        "info": [
+            "VGA linear memory size",
+            "VGA linear memory size"
+        ]
+    },
+    {
+        "key": "DisSSP",
+        "key_type": "strap",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 12,
+        "info": [
+            "Enable SSP running",
+            "Disable SSP running"
+        ]
+    },
+    {
+        "key": "DisTSP",
+        "key_type": "strap",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 13,
+        "info": [
+            "Enable TSP running",
+            "Disable TSP running"
+        ]
+    },
+    {
+        "key": "En_UFS_Secure",
+        "key_type": "strap",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 14,
+        "info": [
+            "Disable UFS secure mode",
+            "Enable UFS secure mode"
+        ]
+    },
+    {
+        "key": "En_SecBoot",
+        "key_type": "strap",
+        "type": "boolean",
+        "w_offset": 1,
+        "bit_offset": 0,
+        "info": [
+            "Disable Secure Boot",
+            "Enable Secure Boot"
+        ]
+    },
+    {
+        "key": "DisDebug1",
+        "key_type": "strap",
+        "type": "boolean",
+        "w_offset": 1,
+        "bit_offset": 1,
+        "info": [
+            "Enable Debug Interfaces for IO die",
+            "Disable Debug Interfaces for IO die"
+        ]
+    },
+    {
+        "key": "Dis_WDTfull",
+        "key_type": "strap",
+        "type": "boolean",
+        "w_offset": 1,
+        "bit_offset": 2,
+        "info": [
+            "Enable WDT reset full",
+            "Disable WDT reset full"
+        ]
+    },
+    {
+        "key": "Dis_UartDbg",
+        "key_type": "strap",
+        "type": "boolean",
+        "w_offset": 1,
+        "bit_offset": 3,
+        "info": [
+            "Enable Uart Debug",
+            "Disable Uart Debug"
+        ]
+    },
+    {
+        "key": "UartDbgSel",
+        "key_type": "strap",
+        "type": "boolean",
+        "w_offset": 1,
+        "bit_offset": 4,
+        "info": [
+            "Selection of IO for Uart Debug = IO12",
+            "Selection of IO for Uart Debug = IO0"
+        ]
+    },
+    {
+        "key": "Dis_CptraJTag",
+        "key_type": "strap",
+        "type": "boolean",
+        "w_offset": 1,
+        "bit_offset": 5,
+        "info": [
+            "Enable JTAG of Caliptra permanently",
+            "Disable JTAG of Caliptra permanently"
+        ]
+    },
+    {
+        "key": "En_ROM_Intr",
+        "key_type": "strap",
+        "type": "boolean",
+        "w_offset": 1,
+        "bit_offset": 6,
+        "info": [
+            "Disable ROM interrupt",
+            "Enable ROM interrupt"
+        ]
+    },
+    {
+        "key": "Dis_ROM",
+        "key_type": "strap",
+        "type": "boolean",
+        "w_offset": 1,
+        "bit_offset": 7,
+        "info": [
+            "Enable BootMCU ROM & jump to I_FMC",
+            "Disable BootMCU ROM & jump to I_FMC"
+        ]
+    },
+    {
+        "key": "eMMC_UFS_Boot",
+        "key_type": "strap",
+        "type": "boolean",
+        "w_offset": 1,
+        "bit_offset": 8,
+        "info": [
+            "Boot from eMMC or UFS selection = eMMC",
+            "Boot from eMMC or UFS selection = UFS"
+        ]
+    },
+    {
+        "key": "SPI_Flash_Wait_Ready",
+        "key_type": "strap",
+        "type": "boolean",
+        "w_offset": 1,
+        "bit_offset": 9,
+        "info": [
+            "Allow BROM to wait SPI flash ready bit = disable",
+            "Allow BROM to wait SPI flash ready bit = enable"
+        ]
+    },
+    {
+        "key": "SPI_Flash_4_Byte_Mode",
+        "key_type": "strap",
+        "type": "boolean",
+        "w_offset": 1,
+        "bit_offset": 10,
+        "info": [
+            "Use 4-byte command to read flash = disable",
+            "Use 4-byte command to read flash = enable"
+        ]
+    },
+    {
+        "key": "Recovery_mode_selection",
+        "key_type": "strap",
+        "type": "string",
+        "w_offset": 1,
+        "bit_offset": 11,
+        "bit_length": 2,
+        "info": [
+            "Recovery from Uart or USB selection = Uart",
+            "Recovery from Uart or USB selection = USB",
+            "Recovery from Uart or USB selection = I2C",
+            "Recovery from Uart or USB selection = I3C"
+        ]
+    },
+    {
+        "key": "RecUSBSel",
+        "key_type": "strap",
+        "type": "string",
+        "w_offset": 1,
+        "bit_offset": 13,
+        "bit_length": 2,
+        "info": [
+            "Boot from USB port selection = port A",
+            "Boot from USB port selection = port B",
+            "Boot from USB port selection = port C",
+            "Boot from USB port selection = port D"
+        ]
+    },
+    {
+        "key": "Dis_Cptra",
+        "key_type": "strap",
+        "type": "boolean",
+        "w_offset": 1,
+        "bit_offset": 15,
+        "info": [
+            "Enable Caliptra booting",
+            "Disable Caliptra booting"
+        ]
+    },
+    {
+        "key": "DisARMICE",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 1,
+        "bit_offset": 0,
+        "info": [
+            "Enable ARM ICE",
+            "Disable ARM ICE"
+        ]
+    },
+    {
+        "key": "VGA_CC",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 1,
+        "bit_offset": 2,
+        "info": [
+            "VGA0/1 Class Code selection = Class Code of VGA device",
+            "VGA0/1 Class Code selection = Class code for video device"
+        ]
+    },
+    {
+        "key": "ufs_clk_sel",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 1,
+        "bit_offset": 3,
+        "info": [
+            "UFS reference clock selection = Internal clk",
+            "UFS reference clock selection = External clk (OSC)"
+        ]
+    },
+    {
+        "key": "BooteMMCSpeed",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 1,
+        "bit_offset": 4,
+        "info": [
+            "eMMC Boot Speed = low speed(25Mhz)",
+            "eMMC Boot Speed = 50Mhz"
+        ]
+    },
+    {
+        "key": "Disable_XHCI",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 1,
+        "bit_offset": 5,
+        "info": [
+            "Enable XHCI0/1",
+            "Disable XHCI0/1"
+        ]
+    },
+    {
+        "key": "DisARMICE_TZ",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 1,
+        "bit_offset": 6,
+        "info": [
+            "Enable ARM ICE in Trust World",
+            "Disable ARM ICE in Trust World"
+        ]
+    },
+    {
+        "key": "Dis_WDTfull",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 1,
+        "bit_offset": 9,
+        "info": [
+            "Enable WDT reset full",
+            "Disable WDT reset full"
+        ]
+    },
+    {
+        "key": "udbg_to_sel",
+        "key_type": "strap_ext",
+        "type": "string",
+        "w_offset": 1,
+        "bit_offset": 10,
+        "bit_length": 2,
+        "info": [
+            "Uart Debug timeout selection = unlimited",
+            "Uart Debug timeout selection",
+            "Uart Debug timeout selection",
+            "Uart Debug timeout selection"
+        ]
+    },
+    {
+        "key": "DAC_Src",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 1,
+        "bit_offset": 12,
+        "info": [
+            "DAC's source selection = PCIE VGA0",
+            "DAC's source selection = PCIE VGA1"
+        ]
+    },
+    {
+        "key": "DP_Src",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 1,
+        "bit_offset": 13,
+        "info": [
+            "DisplayPort's source selection = PCIE VGA0",
+            "DisplayPort's source selection = PCIE VGA1"
+        ]
+    },
+    {
+        "key": "Dis_RVAS",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 1,
+        "bit_offset": 14,
+        "info": [
+            "Enable RVAS0/1",
+            "Disable RVAS0/1"
+        ]
+    },
+    {
+        "key": "VRSize",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 6,
+        "bit_offset": 4,
+        "info": [
+            "Node0 : Size of VGA RAM = 32MB",
+            "Node0 : Size of VGA RAM = 64MB (DRAMC100[0])"
+        ]
+    },
+    {
+        "key": "En_PCIeVGA0",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 6,
+        "bit_offset": 7,
+        "info": [
+            "Disable PCIe VGA0",
+            "Enable PCIe VGA0"
+        ]
+    },
+    {
+        "key": "En_PCIeIPMI0",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 6,
+        "bit_offset": 8,
+        "info": [
+            "Disable PCIe IPMI0",
+            "Enable PCIe IPMI0"
+        ]
+    },
+    {
+        "key": "En_PCIeEHCI0",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 6,
+        "bit_offset": 9,
+        "info": [
+            "Disable PCIe EHCI0",
+            "Enable PCIe EHCI0"
+        ]
+    },
+    {
+        "key": "En_PCIeXHCI0",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 6,
+        "bit_offset": 10,
+        "info": [
+            "Disable PCIe XHCI0",
+            "Enable PCIe XHCI0"
+        ]
+    },
+    {
+        "key": "En_PCIeVGA1",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 6,
+        "bit_offset": 11,
+        "info": [
+            "Disable PCIe VGA1",
+            "Enable PCIe VGA1"
+        ]
+    },
+    {
+        "key": "En_PCIeIPMI1",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 6,
+        "bit_offset": 12,
+        "info": [
+            "Disable PCIe IPMI1",
+            "Enable PCIe IPMI1"
+        ]
+    },
+    {
+        "key": "En_PCIeEHCI1",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 6,
+        "bit_offset": 13,
+        "info": [
+            "Disable PCIe EHCI1",
+            "Enable PCIe EHCI1"
+        ]
+    },
+    {
+        "key": "En_PCIeXHCI1",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 6,
+        "bit_offset": 14,
+        "info": [
+            "Disable PCIe XHCI1",
+            "Enable PCIe XHCI1"
+        ]
+    },
+    {
+        "key": "ABR",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 0,
+        "info": [
+            "boot storage ABR disable",
+            "boot storage ABR enable"
+        ]
+    },
+    {
+        "key": "ROM_Clear_SRAM",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 1,
+        "info": [
+            "ROM clear SRAM",
+            "ROM clear SRAM = disable"
+        ]
+    },
+    {
+        "key": "udbg_to_sel",
+        "key_type": "strap_ext",
+        "type": "string",
+        "w_offset": 2,
+        "bit_offset": 7,
+        "bit_length": 2,
+        "info": [
+            "Uart Debug timeout selection = unlimited",
+            "Uart Debug timeout selection",
+            "Uart Debug timeout selection",
+            "Uart Debug timeout selection"
+        ]
+    },
+    {
+        "key": "En_Cptra_debug",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 11,
+        "info": [
+            "Disable Caliptra debug state",
+            "Enable Caliptra debug state"
+        ]
+    },
+    {
+        "key": "En_ROM_WDT",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 12,
+        "info": [
+            "Disable ROM WDT",
+            "Enable ROM WDT"
+        ]
+    },
+    {
+        "key": "FWSPISize",
+        "key_type": "strap_ext",
+        "type": "string",
+        "w_offset": 2,
+        "bit_offset": 13,
+        "bit_length": 3,
+        "info": [
+            "Size of FW SPI Flash = disable",
+            "Size of FW SPI Flash = 8MB",
+            "Size of FW SPI Flash = 16MB",
+            "Size of FW SPI Flash = 32MB",
+            "Size of FW SPI Flash = 64MB",
+            "Size of FW SPI Flash = 128MB",
+            "Size of FW SPI Flash = 256MB",
+            "Size of FW SPI Flash = 512MB"
+        ]
+    },
+    {
+        "key": "En_FWSPIAux",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 3,
+        "bit_offset": 0,
+        "info": [
+            "Disable FWSPI auxiliary pins",
+            "Enable FWSPI auxiliary pins"
+        ]
+    },
+    {
+        "key": "FWSPI_CRTM",
+        "key_type": "strap_ext",
+        "type": "string",
+        "w_offset": 3,
+        "bit_offset": 1,
+        "bit_length": 2,
+        "info": [
+            "Size of FWSPI CRTM",
+            "Size of FWSPI CRTM",
+            "Size of FWSPI CRTM",
+            "Size of FWSPI CRTM"
+        ]
+    },
+    {
+        "key": "Boot_SPI_Freq",
+        "key_type": "strap_ext",
+        "type": "string",
+        "w_offset": 3,
+        "bit_offset": 7,
+        "bit_length": 2,
+        "info": [
+            "Boot SPI Frequency Selection = 12.5MHz (by default)",
+            "Boot SPI Frequency Selection = 25MHz",
+            "Boot SPI Frequency Selection = 40MHz",
+            "Boot SPI Frequency Selection = 50MHz"
+        ]
+    },
+    {
+        "key": "Check_Flash_Access",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 3,
+        "bit_offset": 9,
+        "info": [
+            "check flash is ready for accessing = disable",
+            "check flash is ready for accessing = enable"
+        ]
+    },
+    {
+        "key": "ABR_RECOVERY_DIS",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 3,
+        "bit_offset": 11,
+        "info": [
+            "enable recovery mode after ABR",
+            "disable recovery mode after ABR"
+        ]
+    },
+    {
+        "key": "FMC_ABR_CS_SWAP_DIS",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 3,
+        "bit_offset": 12,
+        "info": [
+            "Enable CS swap after dual flash ABR is triggerred",
+            "Disable CS swap after dual flash ABR is triggerred"
+        ]
+    },
+    {
+        "key": "FMC_ABR_MODE",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 3,
+        "bit_offset": 13,
+        "info": [
+            "FMC abr mode = dual flash ABR",
+            "FMC abr mode = single flash ABR"
+        ]
+    },
+    {
+        "key": "Node0_HostSPISize0",
+        "key_type": "strap_ext",
+        "type": "string",
+        "w_offset": 4,
+        "bit_offset": 0,
+        "bit_length": 3,
+        "info": [
+            "Size of Host SPI Flash 0 = disable",
+            "Size of Host SPI Flash 0 = 8MB",
+            "Size of Host SPI Flash 0 = 16MB",
+            "Size of Host SPI Flash 0 = 32MB",
+            "Size of Host SPI Flash 0 = 64MB",
+            "Size of Host SPI Flash 0 = 128MB",
+            "Size of Host SPI Flash 0 = 256MB",
+            "Size of Host SPI Flash 0 = 512MB"
+        ]
+    },
+    {
+        "key": "Node0_En_HSPIAux",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 4,
+        "bit_offset": 3,
+        "info": [
+            "Disable Host SPI auxiliary pins",
+            "Enable Host SPI auxiliary pins"
+        ]
+    },
+    {
+        "key": "Node0_HSPI0_CRTM",
+        "key_type": "strap_ext",
+        "type": "string",
+        "w_offset": 4,
+        "bit_offset": 4,
+        "bit_length": 2,
+        "info": [
+            "Size of Host SPI0 CRTM",
+            "Size of Host SPI0 CRTM",
+            "Size of Host SPI0 CRTM",
+            "Size of Host SPI0 CRTM"
+        ]
+    },
+    {
+        "key": "Node0_SIODecSel",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 4,
+        "bit_offset": 6,
+        "info": [
+            "Selection of SIO decode address = 0x2E",
+            "Selection of SIO decode address = 0x4E"
+        ]
+    },
+    {
+        "key": "Node0_Dis_SIODec",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 4,
+        "bit_offset": 7,
+        "info": [
+            "Enable SIO Decoding",
+            "Disable SIO Decoding"
+        ]
+    },
+    {
+        "key": "Node0_En_ACPI",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 4,
+        "bit_offset": 8,
+        "info": [
+            "Disable ACPI",
+            "Enable ACPI"
+        ]
+    },
+    {
+        "key": "Node0_En_LPC",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 4,
+        "bit_offset": 9,
+        "info": [
+            "Disable LPC",
+            "Enable LPC"
+        ]
+    },
+    {
+        "key": "Node0_En_eDAF",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 4,
+        "bit_offset": 10,
+        "info": [
+            "Disable eDAF",
+            "Enable eDAF"
+        ]
+    },
+    {
+        "key": "Node0_En_eRTC",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 4,
+        "bit_offset": 11,
+        "info": [
+            "Disable eSPI RTC",
+            "Enable eSPI RTC"
+        ]
+    },
+    {
+        "key": "Node1_HostSPISize1",
+        "key_type": "strap_ext",
+        "type": "string",
+        "w_offset": 5,
+        "bit_offset": 0,
+        "bit_length": 3,
+        "info": [
+            "Size of Host SPI Flash 1 = disable",
+            "Size of Host SPI Flash 1 = 8MB",
+            "Size of Host SPI Flash 1 = 16MB",
+            "Size of Host SPI Flash 1 = 32MB",
+            "Size of Host SPI Flash 1 = 64MB",
+            "Size of Host SPI Flash 1 = 128MB",
+            "Size of Host SPI Flash 1 = 256MB",
+            "Size of Host SPI Flash 1 = 512MB"
+        ]
+    },
+    {
+        "key": "Node1_En_HSPIAux",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 5,
+        "bit_offset": 3,
+        "info": [
+            "Disable Host SPI auxiliary pins",
+            "Enable Host SPI auxiliary pins"
+        ]
+    },
+    {
+        "key": "Node1_HSPI1_CRTM",
+        "key_type": "strap_ext",
+        "type": "string",
+        "w_offset": 5,
+        "bit_offset": 4,
+        "bit_length": 2,
+        "info": [
+            "Size of Host SPI1 CRTM",
+            "Size of Host SPI1 CRTM",
+            "Size of Host SPI1 CRTM",
+            "Size of Host SPI1 CRTM"
+        ]
+    },
+    {
+        "key": "Node1_SIODecSel",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 5,
+        "bit_offset": 6,
+        "info": [
+            "Selection of SIO decode address = 0x2E",
+            "Selection of SIO decode address = 0x4E"
+        ]
+    },
+    {
+        "key": "Node1_Dis_SIODec",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 5,
+        "bit_offset": 7,
+        "info": [
+            "Enable SIO Decoding",
+            "Disable SIO Decoding"
+        ]
+    },
+    {
+        "key": "Node1_En_ACPI",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 5,
+        "bit_offset": 8,
+        "info": [
+            "Disable ACPI",
+            "Enable ACPI"
+        ]
+    },
+    {
+        "key": "Node1_En_LPC",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 5,
+        "bit_offset": 9,
+        "info": [
+            "Disable LPC",
+            "Enable LPC"
+        ]
+    },
+    {
+        "key": "Node1_En_eDAF",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 5,
+        "bit_offset": 10,
+        "info": [
+            "Disable eDAF",
+            "Enable eDAF"
+        ]
+    },
+    {
+        "key": "Node1_En_eRTC",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 5,
+        "bit_offset": 11,
+        "info": [
+            "Disable eSPI RTC",
+            "Enable eSPI RTC"
+        ]
+    }
+]

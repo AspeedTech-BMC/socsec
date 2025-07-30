@@ -395,6 +395,19 @@ class OTP_info(object):
             'strap_ext_bit_size': 128,
             'secure_region_size': 6144,
             'caliptra_region_size': 1792,
+        },
+        '2700A2': {
+            'rbp': pkgdata('socsec', 'otp_info/2700a2_rbp.json'),
+            'config': pkgdata('socsec', 'otp_info/2700a2_config.json'),
+            'strap': pkgdata('socsec', 'otp_info/2700a2_strap.json'),
+            'caliptra': pkgdata('socsec', 'otp_info/2700a2_caliptra.json'),
+            'rom_region_size': 1984,
+            'rbp_region_size': 64,
+            'config_region_size': 64,
+            'strap_bit_size': 32,
+            'strap_ext_bit_size': 128,
+            'secure_region_size': 6144,
+            'caliptra_region_size': 1792,
         }
     }
 

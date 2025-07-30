@@ -1,0 +1,82 @@
+[
+    {
+        "key": "Enable_LMS_verify",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 0,
+        "info": [
+            "Disable LMS verify",
+            "Enable LMS verify"
+        ]
+    },
+    {
+        "key": "Anti-rollback_disable",
+        "type": "boolean",
+        "w_offset": 1,
+        "bit_offset": 0,
+        "info": [
+            "Anti-rollback enable",
+            "Anti-rollback disable"
+        ]
+    },
+    {
+        "key": "Field_Entropy",
+        "type": "string",
+        "w_offset": 2,
+        "bit_offset": 0,
+        "bit_length": 32,
+        "info": [
+            "Field Entropy"
+        ]
+    },
+    {
+        "key": "Manufacture_Key_Hash",
+        "type": "string",
+        "w_offset": 18,
+        "bit_offset": 0,
+        "bit_length": 48,
+        "info": [
+            "Manufacture Key Hash"
+        ]
+    },
+    {
+        "key": "IDEVID_Cert_attr",
+        "type": "string",
+        "w_offset": 42,
+        "bit_offset": 0,
+        "bit_length": 96,
+        "info": [
+            "IDEVID Cert attr"
+        ]
+    },
+    {
+        "key": "IDEVID_manuf_HSM_identifier",
+        "type": "string",
+        "w_offset": 90,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "IDEVID manuf HSM identifier"
+        ]
+    },
+    {
+        "key": "IDEVID_TBS",
+        "type": "string",
+        "w_offset": 98,
+        "bit_offset": 0,
+        "bit_length": 1024,
+        "info": [
+            "IDEVID TBS"
+        ]
+    },
+    {
+        "key": "IDEVID_Cert_Signature",
+        "type": "string",
+        "w_offset": 610,
+        "bit_offset": 0,
+        "bit_length": 96,
+        "info": [
+            "IDEVID Cert Signature"
+        ]
+    }
+]
