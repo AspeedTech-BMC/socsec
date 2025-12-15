@@ -1,7 +1,7 @@
 [
     {
         "type": "string",
-        "key": "Caliptra_Owner_pk_key_hash_retire",
+        "key": "Caliptra_Owner_public_key_hash_retire",
         "w_offset": 3,
         "bit_offset": 0,
         "bit_length": 16,
@@ -13,7 +13,7 @@
         "w_offset": 4,
         "bit_offset": 0,
         "bit_length": 32,
-        "info": "[31:0] SoC Manifest security version number"
+        "info": "[31:0] SoC Manifest hardware security version number"
     },
     {
         "type": "string",
@@ -21,7 +21,7 @@
         "w_offset": 6,
         "bit_offset": 0,
         "bit_length": 32,
-        "info": "[63:32] SoC Manifest security version number"
+        "info": "[63:32] SoC Manifest hardware security version number"
     },
     {
         "type": "string",

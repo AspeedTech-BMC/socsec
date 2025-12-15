@@ -15,8 +15,8 @@
         "w_offset": 0,
         "bit_offset": 14,
         "info": [
-            "Disable PUF program done",
-            "Enable PUF program done"
+            "Disable static write protection of OTPPUF region",
+            "Enable static write protection of OTPPUF region"
         ]
     },
     {
@@ -35,8 +35,8 @@
         "w_offset": 0,
         "bit_offset": 12,
         "info": [
-            "Disable write protect of caliptra region",
-            "Enable write protect of caliptra region"
+            "Disable static write protection of OTPCAL region",
+            "Enable static write protection of OTPCAL region"
         ]
     },
     {
@@ -45,8 +45,8 @@
         "w_offset": 0,
         "bit_offset": 11,
         "info": [
-            "Disable read protect of caliptra region",
-            "Enable read protect of caliptra region"
+            "Disable static read protect of OTPCAL region",
+            "Enable static read protect of OTPCAL region"
         ]
     },
     {
@@ -55,8 +55,8 @@
         "w_offset": 0,
         "bit_offset": 10,
         "info": [
-            "Disable Write Protect of rbp region",
-            "Enable Write Protect of rbp region"
+            "Disable static write protection of OTPRBP region",
+            "Enable static write protection of OTPRBP region"
         ]
     },
     {
@@ -75,8 +75,8 @@
         "w_offset": 0,
         "bit_offset": 8,
         "info": [
-            "key retirement mechanism option disable",
-            "key retirement mechanism option enable"
+            "Key retirement mechanism option disable",
+            "Key retirement mechanism option enable"
         ]
     },
     {
@@ -85,8 +85,8 @@
         "w_offset": 0,
         "bit_offset": 7,
         "info": [
-            "Disable Write Protectof OTP strap region",
-            "Enable Write Protectof OTP strap region"
+            "Disable static write protection of OTPSTRAP region",
+            "Enable static write protection of OTPSTRAP region"
         ]
     },
     {
@@ -95,8 +95,8 @@
         "w_offset": 0,
         "bit_offset": 6,
         "info": [
-            "Disable Write Protect of Configure region",
-            "Enable Write Protect of Configure region"
+            "Disable static write protection of OTPCFG region",
+            "Enable static write protection of OTPCFG region"
         ]
     },
     {
@@ -105,8 +105,8 @@
         "w_offset": 0,
         "bit_offset": 5,
         "info": [
-            "Disable write protect of rom region",
-            "Enable write protect of rom region"
+            "Disable static write protection of OTPROM region",
+            "Enable static write protection of OTPROM region"
         ]
     },
     {
@@ -115,8 +115,8 @@
         "w_offset": 0,
         "bit_offset": 4,
         "info": [
-            "Disable Write Protect of strap ext region",
-            "Enable Write Protect of strap ext region"
+            "Disable static write protection of OTPSTRAP_EXT region",
+            "Enable static write protection of OTPSTRAP_EXT region"
         ]
     },
     {
@@ -125,8 +125,8 @@
         "w_offset": 0,
         "bit_offset": 3,
         "info": [
-            "Disable read protect of strap region",
-            "Enable read protect of strap region"
+            "Disable static read protection of OTPSTRAP region",
+            "Enable static read protection of OTPSTRAP region"
         ]
     },
     {
@@ -135,8 +135,8 @@
         "w_offset": 0,
         "bit_offset": 2,
         "info": [
-            "Disable read protect of configure region",
-            "Enable read protect of configure region"
+            "Disable static read protection of OTPCFG region",
+            "Enable static read protection of OTPCFG region"
         ]
     },
     {
@@ -145,8 +145,8 @@
         "w_offset": 0,
         "bit_offset": 1,
         "info": [
-            "Disable read protect of rom region",
-            "Enable read protect of rom region"
+            "Disable static read protection of OTPROM region",
+            "Enable static read protection of OTPROM region"
         ]
     },
     {
@@ -155,8 +155,8 @@
         "w_offset": 0,
         "bit_offset": 0,
         "info": [
-            "Disable read protect of strap ext region",
-            "Enable read protect of strap ext region"
+            "Disable static read protection of OTPSTRAP_EXT region",
+            "Enable static read protection of OTPSTRAP_EXT region"
         ]
     },
     {
@@ -166,16 +166,6 @@
         "bit_offset": 13,
         "info": [
             "0: NIST-TRNG"
-        ]
-    },
-    {
-        "key": "ignore_secure_boot_hw_strap",
-        "type": "boolean",
-        "w_offset": 2,
-        "bit_offset": 12,
-        "info": [
-            "Ignore Secure Boot hardware strap disable",
-            "Ignore Secure Boot hardware strap enable"
         ]
     },
     {
@@ -189,26 +179,16 @@
         ]
     },
     {
-        "key": "en_lms_verify\nReserved",
-        "type": "boolean",
-        "w_offset": 2,
-        "bit_offset": 10,
-        "info": [
-            "Disable SoC FMC verification with ECDSA and LMS",
-            "Enable SoC FMC verification with ECDSA and LMS"
-        ]
-    },
-    {
         "key": "dev_life_cycle_state",
         "type": "string",
         "w_offset": 2,
         "bit_offset": 8,
         "bit_length": 2,
         "info": [
-            "The Device Life Cycle State. It's the source of Security State. = Un-provisioned",
-            "The Device Life Cycle State. It's the source of Security State. = Manufacturing",
-            "The Device Life Cycle State. It's the source of Security State. = Reserved",
-            "The Device Life Cycle State. It's the source of Security State. = Production"
+            "The Device Life Cycle State (LCS). It's the source of Security State. = Un-provisioned",
+            "The Device Life Cycle State (LCS). It's the source of Security State. = Manufacturing",
+            "The Device Life Cycle State (LCS). It's the source of Security State. = Reserved",
+            "The Device Life Cycle State (LCS). It's the source of Security State. = Production"
         ]
     },
     {
@@ -249,118 +229,108 @@
         "w_offset": 2,
         "bit_offset": 3,
         "info": [
-            "Enable Boot from Uart/USB",
-            "Disable Boot from Uart/USB"
+            "Enable Recovery mode (Uart/USB/I2C/I3C)",
+            "Disable Recovery mode (Uart/USB/I2C/I3C)"
         ]
     },
     {
-        "key": "dis_post_rom_patch",
+        "key": "dis_rom_patch",
         "type": "boolean",
         "w_offset": 2,
-        "bit_offset": 2,
+        "bit_offset": 0,
         "info": [
-            "Enable Post ROM Patch code",
-            "Disable Post ROM Patch code"
+            "Enable ROM Patch code",
+            "Disable ROM Patch code"
         ]
     },
     {
-        "key": "dis_pre_rom_patch",
-        "type": "boolean",
-        "w_offset": 2,
-        "bit_offset": 1,
-        "info": [
-            "Enable Pre ROM Patch code",
-            "Disable Pre ROM Patch code"
-        ]
-    },
-    {
-        "key": "Pre_OTP_Patch_Code_location",
+        "key": "OTP_Patch_Code_location_1",
         "type": "string",
         "w_offset": 4,
         "bit_offset": 1,
         "bit_length": 10,
         "info": [
-            "The Pre OTP patch code location in OTP ROM Region"
+            "OTP patch code offset"
         ]
     },
     {
-        "key": "pre_otp_patch_vld",
+        "key": "otp_patch_vld_1",
         "type": "boolean",
         "w_offset": 4,
         "bit_offset": 0,
         "info": [
-            "Disable pre otp patch",
-            "Enable pre otp patch"
+            "Disable otp patch 1",
+            "Enable otp patch 1"
         ]
     },
     {
-        "key": "Pre_OTP_Patch_Size",
+        "key": "OTP_Patch_Size_1",
         "type": "string",
         "w_offset": 5,
         "bit_offset": 0,
         "bit_length": 10,
         "info": [
-            "Pre OTP Patch code size (unit: word)"
+            "OTP Patch 1 code size (unit: word)"
         ]
     },
     {
-        "key": "Post_OTP_Patch_Code_location",
+        "key": "OTP_Patch_Code_location_2",
         "type": "string",
         "w_offset": 6,
         "bit_offset": 1,
         "bit_length": 10,
         "info": [
-            "The Post OTP patch code location in OTP ROM Region"
+            "OTP patch code offset"
         ]
     },
     {
-        "key": "post_otp_patch_vld",
+        "key": "otp_patch_vld_2",
         "type": "boolean",
         "w_offset": 6,
         "bit_offset": 0,
         "info": [
-            "Disable post otp patch",
-            "Enable post otp patch"
+            "Disable otp patch 2",
+            "Enable otp patch 2"
         ]
     },
     {
-        "key": "Post_OTP_Patch_Size",
+        "key": "OTP_Patch_Size_2",
         "type": "string",
         "w_offset": 7,
         "bit_offset": 0,
         "bit_length": 10,
         "info": [
-            "Post OTP Patch code size"
+            "OTP Patch 2 code size (unit: word)"
         ]
     },
     {
-        "key": "en_auto_load",
+        "key": "en_auto_load_SCU_debug_control",
         "type": "boolean",
         "w_offset": 9,
         "bit_offset": 15,
         "info": [
-            "Disable auto load debug control SCU0C8 setting",
-            "Enable auto load debug control SCU0C8 setting"
+            "Disable auto load debug control SCU0_0C8 setting",
+            "Enable auto load debug control SCU0_0C8 setting"
         ]
     },
     {
-        "key": "CPU_SCU0C8_auto_val",
+        "key": "SCU0_0C8_debug_control_value",
         "type": "string",
         "w_offset": 9,
         "bit_offset": 0,
         "bit_length": 15,
         "info": [
-            "CPU_SCU0C8[14 :0] auto setting value"
+            "SCU0_0C8[14 :0] auto setting value"
         ]
     },
     {
-        "key": "IO_SCU0C8_auto_val",
+        "key": "SCU1_0C8_debug_control_value",
         "type": "string",
         "w_offset": 10,
         "bit_offset": 0,
         "bit_length": 8,
         "info": [
-            "IO_SCU0C8[7 :0] auto setting value"
+            "SCU1_0C8[7 :0] auto setting value"
         ]
     },
     {
@@ -369,8 +339,8 @@
         "w_offset": 11,
         "bit_offset": 15,
         "info": [
-            "Disable auto load OTP region user 0 ctrl setting",
-            "Enable auto load OTP region user 0 ctrl setting"
+            "Disable auto load OTP user0 ctrl setting to OTP register.",
+            "Enable auto load OTP user0 ctrl setting to OTP register."
         ]
     },
     {
@@ -400,7 +370,7 @@
         "bit_offset": 0,
         "bit_length": 12,
         "info": [
-            "User 0 region start offset"
+            "User 0 region start offset (unit: word)"
         ]
     },
     {
@@ -410,7 +380,7 @@
         "bit_offset": 0,
         "bit_length": 16,
         "info": [
-            "User 0 region size"
+            "User 0 region size (unit: word)"
         ]
     },
     {
@@ -419,8 +389,8 @@
         "w_offset": 13,
         "bit_offset": 15,
         "info": [
-            "Disable auto load OTP region secure 0 ctrl setting",
-            "Enable auto load OTP region secure 0 ctrl setting"
+            "Disable auto load OTP secure0 ctrl setting to OTP register.",
+            "Enable auto load OTP secure0 ctrl setting to OTP register."
         ]
     },
     {
@@ -450,7 +420,7 @@
         "bit_offset": 0,
         "bit_length": 12,
         "info": [
-            "Secure 0 region start offset"
+            "Secure 0 region start offset (unit: word)"
         ]
     },
     {
@@ -460,27 +430,37 @@
         "bit_offset": 0,
         "bit_length": 16,
         "info": [
-            "Secure 0 region size"
+            "Secure 0 region size (unit: word)"
         ]
     },
     {
-        "key": "recovery_mode_cfg_a",
+        "key": "i3c_i2c_identify",
+        "type": "string",
+        "w_offset": 15,
+        "bit_offset": 8,
+        "bit_length": 8,
+        "info": [
+            "i3c: DCR = Slave address"
+        ]
+    },
+    {
+        "key": "i3c_hj_req",
+        "type": "boolean",
+        "w_offset": 15,
+        "bit_offset": 4,
+        "info": [
+            "i3c hot-join request disable",
+            "i3c hot-join request enable"
+        ]
+    },
+    {
+        "key": "i3c_i2c_channel",
         "type": "string",
         "w_offset": 15,
         "bit_offset": 0,
-        "bit_length": 16,
+        "bit_length": 4,
         "info": [
-            "reserved"
-        ]
-    },
-    {
-        "key": "recovery_mode_cfg_b",
-        "type": "string",
-        "w_offset": 16,
-        "bit_offset": 0,
-        "bit_length": 16,
-        "info": [
-            "reserved"
+            "i3c/i2c channel used for recovery"
         ]
     },
     {
@@ -833,8 +813,8 @@
         "w_offset": 20,
         "bit_offset": 15,
         "info": [
-            "Disable auto load OTP region cptra 0 ctrl setting",
-            "Enable auto load OTP region cptra 0 ctrl setting"
+            "Disable auto load OTP cptra0 ctrl setting to OTP register.",
+            "Enable auto load OTP cptra0 ctrl setting to OTP register."
         ]
     },
     {
@@ -878,12 +858,23 @@
         ]
     },
     {
-        "key": "LTPI1_check_RX_LINK_SPEED_enable",
+        "key": "HPM_LTPI0_DDR_mode_disable",
         "type": "boolean",
-        "w_offset": 23,
-        "bit_offset": 9,
+        "w_offset": 22,
+        "bit_offset": 15,
         "info": [
-            "0=Don't check LINK_SPEED before AD (follow the LTPI spec.)"
+            "Set 1 to enable HPM_LTPI0 DDR mode",
+            "Set 1 to disable HPM_LTPI0 DDR mode"
+        ]
+    },
+    {
+        "key": "HPM_LTPI0_speed_capability_disabling",
+        "type": "string",
+        "w_offset": 22,
+        "bit_offset": 0,
+        "bit_length": 15,
+        "info": [
+            "bit[14:13] - LTPI spec. Reserved"
         ]
     },
     {
@@ -896,16 +887,6 @@
         ]
     },
     {
-        "key": "LTPI1_PHY_clock_inverse",
-        "type": "string",
-        "w_offset": 23,
-        "bit_offset": 6,
-        "bit_length": 2,
-        "info": [
-            "bit[1] - RX clock inverse"
-        ]
-    },
-    {
         "key": "LTPI0_PHY_clock_inverse",
         "type": "string",
         "w_offset": 23,
@@ -913,16 +894,6 @@
         "bit_length": 2,
         "info": [
             "bit[1] - RX clock inverse"
-        ]
-    },
-    {
-        "key": "LTPI1_driving_strength",
-        "type": "string",
-        "w_offset": 23,
-        "bit_offset": 2,
-        "bit_length": 2,
-        "info": [
-            "4 levels"
         ]
     },
     {
@@ -945,159 +916,93 @@
         ]
     },
     {
-        "key": "IO_SLI_TX_clock_select",
+        "key": "OTP_Patch_Code_location_3",
         "type": "string",
         "w_offset": 24,
-        "bit_offset": 12,
-        "bit_length": 4,
+        "bit_offset": 1,
+        "bit_length": 10,
         "info": [
-            "IOD TX (US) clock speed"
+            "OTP patch code offset"
         ]
     },
     {
-        "key": "IO_SLI_TX_clock_inverse",
+        "key": "otp_patch_vld_3",
         "type": "boolean",
-        "w_offset": 24,
-        "bit_offset": 11,
-        "info": [
-            "IOD SLIH TXCLK delay[5]"
-        ]
-    },
-    {
-        "key": "IO_SLI_TX_clock_delay",
-        "type": "string",
-        "w_offset": 24,
-        "bit_offset": 6,
-        "bit_length": 5,
-        "info": [
-            "IOD SLIH TXCLK delay[4:0]"
-        ]
-    },
-    {
-        "key": "IO_SLI_RX_clock_inverse",
-        "type": "boolean",
-        "w_offset": 24,
-        "bit_offset": 5,
-        "info": [
-            "IOD SLIH RXCLK delay[5]"
-        ]
-    },
-    {
-        "key": "IO_SLI_RX_clock_delay",
-        "type": "string",
         "w_offset": 24,
         "bit_offset": 0,
-        "bit_length": 5,
         "info": [
-            "IOD SLIH RXCLK delay[4:0]"
+            "Disable otp patch 3",
+            "Enable otp patch 3"
         ]
     },
     {
-        "key": "CPU_SLI_TX_clock_select",
-        "type": "string",
-        "w_offset": 25,
-        "bit_offset": 12,
-        "bit_length": 4,
-        "info": [
-            "CPU TX (DS) clock speed"
-        ]
-    },
-    {
-        "key": "SLI_data_latch_control",
+        "key": "OTP_Patch_Size_3",
         "type": "string",
         "w_offset": 25,
         "bit_offset": 0,
-        "bit_length": 6,
+        "bit_length": 10,
         "info": [
-            "bit[5] - CPU SLIV RX latch data P/N swap"
+            "OTP Patch 3 code size (unit: word)"
         ]
     },
     {
-        "key": "SLI-H_pad_delay",
+        "key": "OTP_Patch_Code_location_4",
         "type": "string",
         "w_offset": 26,
-        "bit_offset": 0,
-        "bit_length": 16,
+        "bit_offset": 1,
+        "bit_length": 10,
         "info": [
-            "bit[15:12] - CPU SLIH RXD1[3:0] = 8] - CPU SLIH RXD0[3",
-            "bit[15:12] - CPU SLIH RXD1[3:0] = 4] - IOD SLIH RXD1[3",
-            "bit[15:12] - CPU SLIH RXD1[3:0] = 0] - IOD SLIH RXD0[3"
+            "OTP patch code offset"
         ]
     },
     {
-        "key": "SLI-M_pad_delay_-_CPU_die",
+        "key": "otp_patch_vld_4",
+        "type": "boolean",
+        "w_offset": 26,
+        "bit_offset": 0,
+        "info": [
+            "Disable otp patch 4",
+            "Enable otp patch 4"
+        ]
+    },
+    {
+        "key": "OTP_Patch_Size_4",
         "type": "string",
         "w_offset": 27,
         "bit_offset": 0,
-        "bit_length": 16,
+        "bit_length": 10,
         "info": [
-            "bit[15:12] - CPU SLIM RXD3[3:0] = 8] - CPU SLIM RXD2[3",
-            "bit[15:12] - CPU SLIM RXD3[3:0] = 4] - CPU SLIM RXD1[3",
-            "bit[15:12] - CPU SLIM RXD3[3:0] = 0] - CPU SLIM RXD0[3"
+            "OTP Patch 4 code size (unit: word)"
         ]
     },
     {
-        "key": "SLI-M_pad_delay_-_IO_die",
+        "key": "OTP_Patch_Code_location_5",
         "type": "string",
         "w_offset": 28,
-        "bit_offset": 0,
-        "bit_length": 16,
+        "bit_offset": 1,
+        "bit_length": 10,
         "info": [
-            "bit[15:12] - IOD SLIM RXD3[3:0] = 8] - IOD SLIM RXD2[3",
-            "bit[15:12] - IOD SLIM RXD3[3:0] = 4] - IOD SLIM RXD1[3",
-            "bit[15:12] - IOD SLIM RXD3[3:0] = 0] - IOD SLIM RXD0[3"
+            "OTP patch code offset"
         ]
     },
     {
-        "key": "SLI-V_pad_delay",
+        "key": "otp_patch_vld_5",
+        "type": "boolean",
+        "w_offset": 28,
+        "bit_offset": 0,
+        "info": [
+            "Disable otp patch 5",
+            "Enable otp patch 5"
+        ]
+    },
+    {
+        "key": "OTP_Patch_Size_5",
         "type": "string",
         "w_offset": 29,
         "bit_offset": 0,
-        "bit_length": 16,
+        "bit_length": 10,
         "info": [
-            "bit[15:12] - CPU SLIV RXD1[3:0] = 8] - CPU SLIV RXD0[3",
-            "bit[15:12] - CPU SLIV RXD1[3:0] = 4] - IOD SLIV RXD1[3",
-            "bit[15:12] - CPU SLIV RXD1[3:0] = 0] - IOD SLIV RXD0[3"
-        ]
-    },
-    {
-        "key": "LTPI0_DDR_mode_disable",
-        "type": "boolean",
-        "w_offset": 30,
-        "bit_offset": 15,
-        "info": [
-            "Set 1 to enable LTPI0 DDR mode",
-            "Set 1 to disable LTPI0 DDR mode"
-        ]
-    },
-    {
-        "key": "LTPI0_speed_capability_disabling",
-        "type": "string",
-        "w_offset": 30,
-        "bit_offset": 0,
-        "bit_length": 15,
-        "info": [
-            "bit[14:13] - LTPI spec. reserved"
-        ]
-    },
-    {
-        "key": "LTPI1_DDR_mode_disable",
-        "type": "boolean",
-        "w_offset": 31,
-        "bit_offset": 15,
-        "info": [
-            "Set 1 to enable LTPI1 DDR mode",
-            "Set 1 to disable LTPI1 DDR mode"
-        ]
-    },
-    {
-        "key": "LTPI1_speed_capability_disabling",
-        "type": "string",
-        "w_offset": 31,
-        "bit_offset": 0,
-        "bit_length": 15,
-        "info": [
-            "bit[14:13] - LTPI spec. reserved"
+            "OTP Patch 5 code size (unit: word)"
         ]
     }
 ]
