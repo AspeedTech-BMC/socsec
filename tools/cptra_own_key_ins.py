@@ -60,9 +60,9 @@ def main():
     parser = argparse.ArgumentParser(description="Insert ECC and LMS keys and signatures into a firmware image.")
     parser.add_argument("file_path", help="Path to the firmware image file")
     parser.add_argument("--ecc_key", required=True, help="Path to the ECC public key file in PEM format")
-    parser.add_argument("--lms_key", required=True, help="Path to the LMS public key file in .pub format")
+    parser.add_argument("--lms_key", required=False, help="Path to the LMS public key file in .pub format")
     parser.add_argument("--ecc_sig", required=True, help="Path to the ECC signature file in DER format")
-    parser.add_argument("--lms_sig", required=True, help="Path to the LMS signature file in binary format")
+    parser.add_argument("--lms_sig", required=False, help="Path to the LMS signature file in binary format")
 
     args = parser.parse_args()
 
@@ -76,14 +76,14 @@ def main():
     # Replace ECC public key in the file
     replace_in_file(args.file_path, ecc_public_key_offset, combined_ecc_key)
 
-    # Load and process LMS public key
-    with open(args.lms_key, 'rb') as lms_file:
-        lms_file.read(4)  # Skip the first 4 bytes
-        lms_key_data = lms_file.read()
-    lms_key_hex = binascii.hexlify(lms_key_data).decode()
-
-    # Replace LMS public key in the file
-    replace_in_file(args.file_path, lms_public_key_offset, lms_key_hex)
+    # Load and process LMS public key (optional)
+    if args.lms_key:
+        with open(args.lms_key, 'rb') as lms_file:
+            lms_file.read(4)  # Skip the first 4 bytes
+            lms_key_data = lms_file.read()
+        lms_key_hex = binascii.hexlify(lms_key_data).decode()
+        # Replace LMS public key in the file
+        replace_in_file(args.file_path, lms_public_key_offset, lms_key_hex)
 
     # Load and process ECC signature
     ecc_signature = load_signature(args.ecc_sig)
@@ -95,13 +95,13 @@ def main():
     # Replace ECC signature in the file
     replace_in_file(args.file_path, ecc_signature_offset, combined_ecc_signature)
 
-    # Load and process LMS signature
-    with open(args.lms_sig, 'rb') as lms_sig_file:
-        lms_signature_data = lms_sig_file.read()
-    lms_signature_hex = binascii.hexlify(lms_signature_data).decode()
-
-    # Replace LMS signature in the file
-    replace_in_file(args.file_path, lms_signature_offset, lms_signature_hex)
+    # Load and process LMS signature (optional)
+    if args.lms_sig:
+        with open(args.lms_sig, 'rb') as lms_sig_file:
+            lms_signature_data = lms_sig_file.read()
+        lms_signature_hex = binascii.hexlify(lms_signature_data).decode()
+        # Replace LMS signature in the file
+        replace_in_file(args.file_path, lms_signature_offset, lms_signature_hex)
 
     print("Keys and signatures have been successfully inserted into the firmware image.")
 
