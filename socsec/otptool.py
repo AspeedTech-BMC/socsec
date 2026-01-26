@@ -1842,7 +1842,7 @@ class OTP(object):
             otp_info_inc = self.otp_info.OTP_INFO_INC_2700()
         elif otp_config['version'] == '2700A2':
             otp_info = self.otp_info.OTP_INFO['2700A2']
-            version = OTP_info.SOC_AST2700A1
+            version = OTP_info.SOC_AST2700A2
             genKeyHeader = self.genKeyHeader_2700a1
             key_to_bytearray = self.key_to_bytearray_2700a1
             otp_info_inc = self.otp_info.OTP_INFO_INC_2700()
@@ -2985,6 +2985,10 @@ class OTP(object):
             ver = "AST2700A1"
             key_type_list = self.otp_info.ast2700a1_key_type
             otp_info = self.otp_info.OTP_INFO['2700A1']
+        elif soc_ver == OTP_info.SOC_AST2700A2:
+            ver = "AST2700A2"
+            key_type_list = self.otp_info.ast2700a2_key_type
+            otp_info = self.otp_info.OTP_INFO['2700A2']
         else:
             print('SOC version is invalid: {:X}'.format(soc_ver))
             return None, None

@@ -27,7 +27,7 @@ from Crypto.PublicKey import RSA
 import binascii
 from enum import Enum
 
-__version__ = "2.1.0"
+__version__ = "2.2.0"
 
 
 def version2int(version):
@@ -299,6 +299,7 @@ class OTP_info(object):
     SOC_AST1060A2 = 7
     SOC_AST2700A0 = 8
     SOC_AST2700A1 = 9
+    SOC_AST2700A2 = 10
     INC_DATA = 1 << 31
     INC_CONF = 1 << 30
     INC_STRAP = 1 << 29
@@ -486,6 +487,14 @@ class OTP_info(object):
                  'ECDSA384 as SoC OEM DSS public keys'),
         key_type(2, OTP_KEY_TYPE_2700.OTP_KEY_TYPE_SOC_LMS_PUB.value, 1,
                  'LMS as SoC OEM DSS public keys'),
+        key_type(4, OTP_KEY_TYPE_2700.OTP_KEY_TYPE_CAL_OWN_PUB_HASH.value, 1,
+                 'Digest as Caliptra Owner public key hash'),
+        key_type(5, OTP_KEY_TYPE_2700.OTP_KEY_TYPE_SOC_VAULT.value, 0,
+                 'AES-256 as secret vault key'),
+        key_type(6, OTP_KEY_TYPE_2700.OTP_KEY_TYPE_SOC_VAULT_SEED.value, 0,
+                 'AES-256 as secret vault key seed'),
+    ]
+    ast2700a2_key_type = [
         key_type(4, OTP_KEY_TYPE_2700.OTP_KEY_TYPE_CAL_OWN_PUB_HASH.value, 1,
                  'Digest as Caliptra Owner public key hash'),
         key_type(5, OTP_KEY_TYPE_2700.OTP_KEY_TYPE_SOC_VAULT.value, 0,
