@@ -2383,6 +2383,7 @@ class OTP(object):
 
             print('key[{}]:'.format(i))
             print("Key Type: {}".format(info))
+            print("Key ID: {}".format(key_id))
 
             if key_type == self.otp_info.OTP_KEY_TYPE_2700.OTP_KEY_TYPE_SOC_ECDSA_PUB.value:
                 print('ASN1 OID: secp384r1')
