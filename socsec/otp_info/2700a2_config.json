@@ -160,6 +160,16 @@
         ]
     },
     {
+        "key": "CONCFG0_BK",
+        "type": "string",
+        "w_offset": 1,
+        "bit_offset": 0,
+	"bit_length": 16,
+        "info": [
+            "This is a backup of OTPCFG0"
+        ]
+    },
+    {
         "key": "puf_source",
         "type": "boolean",
         "w_offset": 2,
@@ -241,6 +251,16 @@
         "info": [
             "Enable ROM Patch code",
             "Disable ROM Patch code"
+        ]
+    },
+    {
+        "key": "CONCFG2_BK",
+        "type": "string",
+        "w_offset": 3,
+        "bit_offset": 0,
+	"bit_length": 16,
+        "info": [
+            "This is a backup of OTPCFG2"
         ]
     },
     {

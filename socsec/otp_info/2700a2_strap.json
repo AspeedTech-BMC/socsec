@@ -647,6 +647,17 @@
         ]
     },
     {
+        "key": "ABR_dis_B",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 3,
+        "bit_offset": 10,
+        "info": [
+            "enable B if ABR enabled",
+            "disable B if ABR enabled"
+        ]
+    },
+    {
         "key": "ABR_RECOVERY_DIS",
         "key_type": "strap_ext",
         "type": "boolean",
