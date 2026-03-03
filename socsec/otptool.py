@@ -1853,6 +1853,7 @@ class OTP(object):
         os.system('mkdir -p '+output_folder)
 
         all_image_output = output_folder + 'otp-all.image'
+        all_binary_output = output_folder + 'otp-all.bin'
 
         rom_image_output = output_folder + 'otp-rom.image'
         rom_binary_output = output_folder + 'otp-rom.bin'
@@ -1881,13 +1882,13 @@ class OTP(object):
         strap_size = 0
         strap_ext_all = bytes(0)
         strap_ext_size = 0
+        user_all = bytearray(otp_info['user_region_size'])
         secure_all = bytes(0)
         secure_size = 0
         caliptra_all = bytes(0)
         caliptra_size = 0
 
         if 'rom_region' in otp_config:
-
             if otp_config['rom_region'].get('file_name') is not None:
                 print("Generating Rom Image ...")
 
@@ -1928,6 +1929,16 @@ class OTP(object):
 
                 writeBinFile(header + rom_all + checksum, rom_image_output)
                 writeBinFile(rom_region, rom_binary_output)
+            else:
+                print("Rom Region File is not Configured, Skip Rom Image Generation")
+                rom_region = bytearray(otp_info['rom_region_size'])
+                writeBinFile(rom_region, rom_binary_output)
+                rom_all = rom_region
+        else:
+            print("No Rom Region Configured, Skip Rom Image Generation")
+            rom_region = bytearray(otp_info['rom_region_size'])
+            writeBinFile(rom_region, rom_binary_output)
+            rom_all = rom_region
 
         if 'secure_region' in otp_config:
             print("Generating Secure Image ...")
@@ -1968,6 +1979,11 @@ class OTP(object):
 
             writeBinFile(header + secure_all + checksum, secure_image_output)
             writeBinFile(secure_region, secure_binary_output)
+        else:
+            print("No Secure Region Configured, Skip Secure Image Generation")
+            secure_region = bytearray(otp_info['secure_region_size'])
+            writeBinFile(secure_region, secure_binary_output)
+            secure_all = secure_region
 
         if 'config_region' in otp_config:
             print("Generating Config Image ...")
@@ -2009,6 +2025,11 @@ class OTP(object):
 
             writeBinFile(header + config_all + checksum, config_image_output)
             writeBinFile(config_region, config_binary_output)
+        else:
+            print("No Config Region Configured, Skip Config Image Generation")
+            config_region = bytearray(otp_info['config_region_size'])
+            writeBinFile(config_region, config_binary_output)
+            config_all = config_region
 
         if 'strap_region' in otp_config:
             print("Generating Strap Image ...")
@@ -2049,7 +2070,18 @@ class OTP(object):
             checksum = sha.digest()
 
             writeBinFile(header + strap_all + checksum, strap_image_output)
+
+            # Trasform to actual otp memory content, using first option in strap
+            strap_region_val = strap_region[:4]
+            strap_region_pro = strap_region[4:8]
+            strap_region = strap_region_pro + strap_region_val * 6 + bytearray(4)
             writeBinFile(strap_region, strap_binary_output)
+            strap_all = strap_region
+        else:
+            print("No Strap Region Configured, Skip Strap Image Generation")
+            strap_region = bytearray(otp_info['strap_bit_size'])
+            writeBinFile(strap_region, strap_binary_output)
+            strap_all = strap_region
 
         if 'strap_ext_region' in otp_config:
             print("Generating Strap Extension Image ...")
@@ -2091,6 +2123,11 @@ class OTP(object):
 
             writeBinFile(header + strap_ext_all + checksum, strap_ext_image_output)
             writeBinFile(strap_ext_region, strap_ext_binary_output)
+        else:
+            print("No Strap Extension Region Configured, Skip Strap Extension Image Generation")
+            strap_ext_region = bytearray(otp_info['strap_ext_bit_size'] * 2 // 8)
+            writeBinFile(strap_ext_region, strap_ext_binary_output)
+            strap_ext_all = strap_ext_region
 
         if 'caliptra_region' in otp_config:
             print("Generating Caliptra Image ...")
@@ -2132,6 +2169,11 @@ class OTP(object):
 
             writeBinFile(header + caliptra_all + checksum, caliptra_image_output)
             writeBinFile(caliptra_region, caliptra_binary_output)
+        else:
+            print("No Caliptra Region Configured, Skip Caliptra Image Generation")
+            caliptra_region = bytearray(otp_info['caliptra_region_size'])
+            writeBinFile(caliptra_region, caliptra_binary_output)
+            caliptra_all = caliptra_region
 
         if 'rbp_region' in otp_config:
             print("Generating rbp Image ...")
@@ -2173,6 +2215,11 @@ class OTP(object):
 
             writeBinFile(header + rbp_all + checksum, rbp_image_output)
             writeBinFile(rbp_region, rbp_binary_output)
+        else:
+            print("No RBP Region Configured, Skip RBP Image Generation")
+            rbp_region = bytearray(otp_info['rbp_region_size'])
+            writeBinFile(rbp_region, rbp_binary_output)
+            rbp_all = rbp_region
 
         print("Generating OTP-all Image ...")
         image_size_all = self.otp_info.HEADER_SIZE_2700 + \
@@ -2222,6 +2269,9 @@ class OTP(object):
                      strap_all + strap_ext_all +
                      secure_all + caliptra_all +
                      checksum, all_image_output)
+        writeBinFile(rom_all + rbp_all + config_all +
+		     strap_all + strap_ext_all + user_all +
+		     secure_all + caliptra_all, all_binary_output)
 
     def make_otp_image(self, config_file, key_folder,
                        user_data_folder, output_folder,
