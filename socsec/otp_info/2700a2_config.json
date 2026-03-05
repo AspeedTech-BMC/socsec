@@ -164,7 +164,7 @@
         "type": "string",
         "w_offset": 1,
         "bit_offset": 0,
-	"bit_length": 16,
+        "bit_length": 16,
         "info": [
             "This is a backup of OTPCFG0"
         ]
@@ -258,7 +258,7 @@
         "type": "string",
         "w_offset": 3,
         "bit_offset": 0,
-	"bit_length": 16,
+        "bit_length": 16,
         "info": [
             "This is a backup of OTPCFG2"
         ]
@@ -329,28 +329,143 @@
         "w_offset": 9,
         "bit_offset": 15,
         "info": [
-            "Disable auto load debug control SCU0_0C8 setting",
-            "Enable auto load debug control SCU0_0C8 setting"
+            "Disable auto load debug control SCU0_0C8/SCU1_0C8 setting",
+            "Enable auto load debug control SCU0_0C8/SCU1_0C8 setting"
         ]
     },
     {
-        "key": "SCU0_0C8_debug_control_value",
-        "type": "string",
+        "key": "SCU0_DIS_RSA_PRIV_KEY_READ",
+        "type": "boolean",
         "w_offset": 9,
-        "bit_offset": 0,
-        "bit_length": 15,
+        "bit_offset": 10,
         "info": [
-            "SCU0_0C8[14 :0] auto setting value"
+            "Reference to datasheet SCU0_0C8"
         ]
     },
     {
-        "key": "SCU1_0C8_debug_control_value",
-        "type": "string",
+        "key": "SCU0_DIS_WDT_RSTFULL",
+        "type": "boolean",
+        "w_offset": 9,
+        "bit_offset": 9,
+        "info": [
+            "Reference to datasheet SCU0_0C8"
+        ]
+    },
+    {
+        "key": "SCU0_DIS_XDMA_VGA",
+        "type": "boolean",
+        "w_offset": 9,
+        "bit_offset": 8,
+        "info": [
+            "Reference to datasheet SCU0_0C8"
+        ]
+    },
+    {
+        "key": "SCU0_DIS_L2A",
+        "type": "boolean",
+        "w_offset": 9,
+        "bit_offset": 7,
+        "info": [
+            "Reference to datasheet SCU0_0C8"
+        ]
+    },
+    {
+        "key": "SCU0_DIS_PCIE_TRACE_BUF",
+        "type": "boolean",
+        "w_offset": 9,
+        "bit_offset": 5,
+        "info": [
+            "Reference to datasheet SCU0_0C8"
+        ]
+    },
+    {
+        "key": "SCU0_DIS_XDMA",
+        "type": "boolean",
+        "w_offset": 9,
+        "bit_offset": 2,
+        "info": [
+            "Reference to datasheet SCU0_0C8"
+        ]
+    },
+    {
+        "key": "SCU0_DIS_UART_DBG",
+        "type": "boolean",
+        "w_offset": 9,
+        "bit_offset": 1,
+        "info": [
+            "Reference to datasheet SCU0_0C8"
+        ]
+    },
+    {
+        "key": "SCU1_DIS_WDT_RSTFULL",
+        "type": "boolean",
+        "w_offset": 10,
+        "bit_offset": 7,
+        "info": [
+            "Reference to datasheet SCU1_0C8"
+        ]
+    },
+    {
+        "key": "SCU1_DIS_UART_DBG",
+        "type": "boolean",
+        "w_offset": 10,
+        "bit_offset": 6,
+        "info": [
+            "Reference to datasheet SCU1_0C8"
+        ]
+    },
+    {
+        "key": "SCU1_DIS_LPC1_BRIDGE_2",
+        "type": "boolean",
+        "w_offset": 10,
+        "bit_offset": 5,
+        "info": [
+            "Reference to datasheet SCU1_0C8"
+        ]
+    },
+    {
+        "key": "SCU1_DIS_LPC0_BRIDGE_2",
+        "type": "boolean",
+        "w_offset": 10,
+        "bit_offset": 4,
+        "info": [
+            "Reference to datasheet SCU1_0C8"
+        ]
+    },
+    {
+        "key": "SCU1_DIS_LPC1_BRIDGE_1",
+        "type": "boolean",
+        "w_offset": 10,
+        "bit_offset": 3,
+        "info": [
+            "Reference to datasheet SCU1_0C8"
+        ]
+    },
+    {
+        "key": "SCU1_DIS_LPC0_BRIDGE_1",
+        "type": "boolean",
+        "w_offset": 10,
+        "bit_offset": 2,
+        "info": [
+            "Reference to datasheet SCU1_0C8"
+        ]
+    },
+    {
+        "key": "SCU1_DIS_ESPI1_AHB",
+        "type": "boolean",
+        "w_offset": 10,
+        "bit_offset": 1,
+        "info": [
+            "Reference to datasheet SCU1_0C8"
+        ]
+    },
+    {
+        "key": "SCU1_DIS_ESPI0_AHB",
+        "type": "boolean",
         "w_offset": 10,
         "bit_offset": 0,
-        "bit_length": 8,
         "info": [
-            "SCU1_0C8[7 :0] auto setting value"
+            "Reference to datasheet SCU1_0C8"
         ]
     },
     {
