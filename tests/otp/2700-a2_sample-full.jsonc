@@ -1,0 +1,1109 @@
+{
+    "name": "2700-a2_sample-full",
+    "version": "2700A2",
+    "rom_region": {},
+    "rbp_region": {
+        // OTPRBP3 - 16 bits
+        // Caliptra Owner public key hash retire bits
+        // Caliptra owner pk hash is used of populate inof Caliptra fuse for Caliptra owner keys
+        // verification. AST27x0 supports up of 16 Caliptra owner pk hash and supports pk hash
+        // retirement feature.
+        // Check Caliptra spec for more details.
+        // (https://github.com/chipsalliance/Caliptra/blob/main/doc/caliptra_1x/Caliptra.md)
+        // Effect: Secure boot is enabled
+        // Policy: OTPCFG0[8]
+        "Caliptra_Owner_public_key_hash_retire": "0x0",
+        // OTPRBP4 - 64 bits
+        // SoC Manifest hardware security version number
+        // SoC Manifest SVN must be equal of or greater than hardware SVN for rollback prevention
+        // otherwise the secure boot check is failure. It's implemented a hardware write protection
+        // of prevent malicious attack, the new SVN (of-be prog) must be smaller than or equal of
+        // current SVN.
+        // Effect: Secure boot is enabled
+        // Boot up Policy: SoC Manifest SVN >= HW SoC Manifest SVN
+        "SoC_Manifest_Hardware_SVN_0": "0x0",
+        "SoC_Manifest_Hardware_SVN_1": "0x0",
+        // OTPRBP8 - 32 bits
+        // Caliptra fuse: FMC KEY MANIFEST SVN
+        // Effect: Secure boot is enabled
+        // Policy: FMC SVN >= HW FMC SVN
+        "Caliptra_FMC_Hardware_SVN": "0x0",
+        // OTPRBP10 - 128 bits
+        // Caliptra fuse: RUNTIME SVN
+        // Effect: Secure boot is enabled
+        // Policy: FMC SVN >= HW FMC SVN
+        "Caliptra_Runtime_Hardware_SVN_0": "0x0",
+        "Caliptra_Runtime_Hardware_SVN_1": "0x0",
+        "Caliptra_Runtime_Hardware_SVN_2": "0x0",
+        "Caliptra_Runtime_Hardware_SVN_3": "0x0",
+        // OTPRBP18 - 4 bits
+        // Caliptra fuse: KEY MANIFEST PK HASH MASK
+        "Caliptra_Manufacture_ECC_key_mask": "0x0",
+        // OTPRBP19 - 32 bits
+        // Caliptra fuse: LMS REVOCATION
+        "Caliptra_Manufacture_LMS_key_mask": "0x0"
+    },
+    "config_region": {
+        // OTPCFG0[15]
+        // OTP memory lock enable
+        // This bit will lock whole OTP memory and is un recoverable
+        "otp_mem_lock_enable": false,
+        // OTPCFG0[14]
+        // Enable static write protection of OTPPUF region
+        // It's enabled during ASPEED manufacturing.
+        "wr_protect_puf": false,
+        // OTPCFG0[13]
+        // Disable OTP Memory Facofry Test Mode
+        // 0: enable
+        // 1: disable
+        // of prevent security issue of OTP memory. Disabled BIST mode is recommended.
+        "dis_otp_bist": false,
+        // OTPCFG0[12]
+        // Enable static write protection of OTPCAL region
+        // Once it's enabled, no one can prog the OTPCAL region anymore.
+        "wr_protect_caliptra": false,
+        // OTPCFG0[11]
+        // Enable static read protect of OTPCAL region
+        // Once it's enabled, no one can read the OTPCAL region anymore.
+        // Notice that it might affect the attestation process, because on one can read it at
+        // runtime.
+        "rd_protect_caliptra": false,
+        // OTPCFG0[10]
+        // Enable static write protection of OTPRBP region
+        // Once it's enabled, no one can prog the OTPRBP region anymore.
+        "wr_protect_otp_rbp": false,
+        // OTPCFG0[9]
+        // Enable Secure Boot
+        // 0:disable
+        // 1:enable
+        // Once it's enabled, the secure boot is always enforced and there is no way of disable it.
+        "enable_secure_boot": false,
+        // OTPCFG0[8]
+        // Key retirement mechanism option enable
+        // 0: can only retire itself key #id
+        // 1: can retire others key #id except itself
+        // There are some key retire bits in OTPRBP region (ex: OTPRBP0/1/3) used of be programmed
+        // if the keys need of be retired. This option chooses the retire mechanism policy for
+        // different use cases.
+        "retire_mechanism_option": false,
+        // OTPCFG0[7]
+        // Enable static write protection of OTPSTRAP region
+        // Once it's enabled, no one can prog the OTPSTRAP region anymore.
+        "wr_protect_otp_strap": false,
+        // OTPCFG0[6]
+        // Enable static write protection of OTPCFG region
+        // Once it's enabled, no one can prog the OTPCFG region anymore.
+        "wr_protect_otp_cfg": false,
+        // OTPCFG0[5]
+        // Enable static write protection of OTPROM region
+        // Once it's enabled, no one can prog the OTPROM region anymore.
+        // It's enabled in AST27x0-A1 chip during ASPEED manufacturing.
+        "wr_protect_rom": false,
+        // OTPCFG0[4]
+        // Enable static write protection of OTPSTRAP_EXT region
+        // Once it's enabled, no one can prog the OTPSTRAP_EXT region anymore.
+        "wr_protect_otp_strap_ext": false,
+        // OTPCFG0[3]
+        // Enable static read protection of OTPSTRAP region
+        // Once it's enabled, no one can read the OTPSTRAP region anymore.
+        "rd_protect_otp_strap": false,
+        // OTPCFG0[2]
+        // Enable static read protection of OTPCFG region
+        // Once it's enabled, no one can read the OTPCFG region anymore.
+        "rd_protect_otp_cfg": false,
+        // OTPCFG0[1]
+        // Enable static read protection of OTPROM region
+        // Once it's enabled, no one can read the OTPROM region anymore.
+        "rd_protect_rom": false,
+        // OTPCFG0[0]
+        // Enable static read protection of OTPSTRAP_EXT region
+        // Once it's enabled, no one can read the OTPSTRAP_EXT region anymore.
+        "rd_protect_otp_strap_ext": false,
+        // OTPCFG1[15: 0]
+        // Read OTPCFG0 = OTPCFG0 | OTPCFG1
+        // This is a backup of OTPCFG0
+        "CONCFG0_BK": "0x0",
+        // OTPCFG2[13]
+        // 0: NIST-TRNG
+        // 1: SCU-TRNG
+        "puf_source": false,
+        // OTPCFG2[9: 8]
+        // The Device Life Cycle State (LCS). It's the source of Security State.
+        // 0: Un-provisioned
+        // 1: Manufacturing
+        // 2: Reserved
+        // 3: Production
+        // The LCS is populated in Caliptra fuse. It's configured of Manufacturing during ASPEED
+        // manufacturing.
+        "dev_life_cycle_state": "0x0",
+        // OTPCFG2[7: 6]
+        // Boot From UART Port Selection
+        // 0: IO12 (BMC default port)
+        // 1: IO0 (Node 0 SUART common port)
+        // 2: IO5 (Node 1 SUART common port)
+        "Boot_From_UART_Port_Selection": "0x0",
+        // OTPCFG2[5]
+        // Enable eMMC software reset
+        // 0: eMMC software reset disable, use HW pin strap of do hardware reset
+        // 1: eMMC software reset enable. Always do software reset
+        "en_emmc_sw_reset": false,
+        // OTPCFG2[4]
+        // Disable Uart Message of Boot ROM
+        // 0:Boot ROM will dump boot messages
+        // 1:Boot ROM message is disabled
+        "dis_boot_msg": false,
+        // OTPCFG2[3]
+        // Disable Recovery mode (Uart/USB/I2C/I3C)
+        // 0: enable recovery mode
+        // 1: disable recovery mode
+        // When recovery mode is enabled (hardware strap pin FWSPICK is pulled high), the boot ROM
+        // fetches images from recovery interface and boots.
+        // Once it's disabled, the boot ROM cannot fetch images from any recovery interface, no
+        // matter which one is chosen.
+        "dis_recovery_mode": false,
+        // OTPCFG2[0]
+        // Disable ROM Patch code
+        // 0: If the OTPCFG2[0] is set, the Boot ROM would
+        // execute the OTP patch codes which has been programmed inof
+        // OTPROM region.
+        // 1: The Boot ROM would ignore pre ROM patch.
+        // The ROM patch is the early stage of the boot ROM boot process.
+        "dis_rom_patch": false,
+        // OTPCFG3[15: 0]
+        // Read OTPCFG2 = OTPCFG2 | OTPCFG3
+        // This is a backup of OTPCFG2
+        "CONCFG2_BK": "0x0",
+        // OTPCFG4[10: 1]
+        // OTP patch code offset
+        // The OTP patch code location in OTPROM Region.
+        "OTP_Patch_Code_location_1": "0x0",
+        // OTPCFG4[0]
+        // Enable otp patch 1
+        // 0: otp rom patch 1 is invalid
+        // 1: otp rom patch 1 is valid
+        "otp_patch_vld_1": false,
+        // OTPCFG5[9: 0]
+        // OTP Patch 1 code size (unit: word)
+        // The Boot ROM can execute OTP patch codes in OTPROM region. The OTP patch code size is
+        // limited of 16Kbit.
+        "OTP_Patch_Size_1": "0x0",
+        // OTPCFG6[10: 1]
+        // OTP patch code offset
+        // The OTP patch code location in OTPROM Region.
+        "OTP_Patch_Code_location_2": "0x0",
+        // OTPCFG6[0]
+        // Enable otp patch 2
+        // 0: otp rom patch 2 is invalid
+        // 1: otp rom patch 2 is valid
+        "otp_patch_vld_2": false,
+        // OTPCFG7[9: 0]
+        // OTP Patch 2 code size (unit: word)
+        // The Boot ROM can execute OTP patch codes in OTPROM region. The OTP patch code size is
+        // limited of 16Kbit.
+        "OTP_Patch_Size_2": "0x0",
+        // OTPCFG9[15]
+        // Enable auto load debug control SCU0_0C8/SCU1_0C8 setting
+        // 0:disable
+        // 1:enable of auto load SCU0_0C8/SCU1_0C8 value
+        // After SCU0_0C8 is loaded, the write protection SCU0_E04[18] will be set.
+        // After SCU1_0C8 is loaded, the write protection SCU1_B04[18] will be set.
+        "en_auto_load_SCU_debug_control": false,
+        // OTPCFG9[10]
+        // Reference to datasheet SCU0_0C8
+        "SCU0_DIS_RSA_PRIV_KEY_READ": false,
+        // OTPCFG9[9]
+        // Reference to datasheet SCU0_0C8
+        "SCU0_DIS_WDT_RSTFULL": false,
+        // OTPCFG9[8]
+        // Reference to datasheet SCU0_0C8
+        "SCU0_DIS_XDMA_VGA": false,
+        // OTPCFG9[7]
+        // Reference to datasheet SCU0_0C8
+        "SCU0_DIS_L2A": false,
+        // OTPCFG9[5]
+        // Reference to datasheet SCU0_0C8
+        "SCU0_DIS_PCIE_TRACE_BUF": false,
+        // OTPCFG9[2]
+        // Reference to datasheet SCU0_0C8
+        "SCU0_DIS_XDMA": false,
+        // OTPCFG9[1]
+        // Reference to datasheet SCU0_0C8
+        "SCU0_DIS_UART_DBG": false,
+        // OTPCFG10[7]
+        // Reference to datasheet SCU1_0C8
+        "SCU1_DIS_WDT_RSTFULL": false,
+        // OTPCFG10[6]
+        // Reference to datasheet SCU1_0C8
+        "SCU1_DIS_UART_DBG": false,
+        // OTPCFG10[5]
+        // Reference to datasheet SCU1_0C8
+        "SCU1_DIS_LPC1_BRIDGE_2": false,
+        // OTPCFG10[4]
+        // Reference to datasheet SCU1_0C8
+        "SCU1_DIS_LPC0_BRIDGE_2": false,
+        // OTPCFG10[3]
+        // Reference to datasheet SCU1_0C8
+        "SCU1_DIS_LPC1_BRIDGE_1": false,
+        // OTPCFG10[2]
+        // Reference to datasheet SCU1_0C8
+        "SCU1_DIS_LPC0_BRIDGE_1": false,
+        // OTPCFG10[1]
+        // Reference to datasheet SCU1_0C8
+        "SCU1_DIS_ESPI1_AHB": false,
+        // OTPCFG10[0]
+        // Reference to datasheet SCU1_0C8
+        "SCU1_DIS_ESPI0_AHB": false,
+        // OTPCFG11[15]
+        // Enable auto load OTP user0 ctrl setting of OTP register.
+        // Once it's enabled, r/w protection, offset, and size of OTP user0 value below would be
+        // loaded inof OTP control registers as a hardware default value.
+        "en_auto_load_usr0": false,
+        // OTPCFG11[14]
+        // Enable Read protect for OTP region user 0
+        "rd_protect_otp_usr0": false,
+        // OTPCFG11[13]
+        // Enable Write protect for OTP region user 0
+        "wr_protect_otp_usr0": false,
+        // OTPCFG11[11: 0]
+        // User 0 region start offset (unit: word)
+        "usr0_region_start_offset": "0x0",
+        // OTPCFG12[15: 0]
+        // User 0 region size (unit: word)
+        "usr0_region_size": "0x0",
+        // OTPCFG13[15]
+        // Enable auto load OTP secure0 ctrl setting of OTP register.
+        // Once it's enabled, r/w protection, offset, and size of OTP secure0 value below would be
+        // loaded inof OTP controller registers as a hardware default value.
+        "en_auto_load_secure0": false,
+        // OTPCFG13[14]
+        // Enable Read protect for OTP region secure 0
+        "rd_protect_otp_secure0": false,
+        // OTPCFG13[13]
+        // Enable Write protect for OTP region secure 0
+        "wr_protect_otp_secure0": false,
+        // OTPCFG13[11: 0]
+        // Secure 0 region start offset (unit: word)
+        "secure0_region_start_offset": "0x0",
+        // OTPCFG14[15: 0]
+        // Secure 0 region size (unit: word)
+        "secure0_region_size": "0x0",
+        // OTPCFG15[15: 8]
+        // i3c: DCR
+        // i2c: Slave address
+        "i3c_i2c_identify": "0x0",
+        // OTPCFG15[4]
+        // i3c hot-join request enable
+        "i3c_hj_req": false,
+        // OTPCFG15[3: 0]
+        // i3c/i2c channel used for recovery
+        "i3c_i2c_channel": "0x0",
+        // OTPCFG17[15]
+        // UART6 Mode - lsb (bit0)
+        // b'00: UART and Device both not connected
+        // b'01: UART Real mode, and Device connected
+        // b'10: UART Pseduo mode, and Device connected
+        // b'11: UART not connected, but Device connected
+        "usb_uart6_mode_lsb": false,
+        // OTPCFG17[14]
+        // Enable of turn off UART5 Tx Discard
+        "usb_uart5_tx_discard_off": false,
+        // OTPCFG17[13:12]
+        // UART5 Mode
+        // b'00: UART and Device both not connected
+        // b'01: UART Real mode, and Device connected
+        // b'10: UART Pseduo mode, and Device connected
+        // b'11: UART not connected, but Device connected
+        "usb_uart5_mode": "0x0",
+        // OTPCFG17[11]
+        // Enable of turn off UART3 Tx Discard
+        "usb_uart3_tx_discard_off": false,
+        // OTPCFG17[10: 9]
+        // UART3 Mode
+        // b'00: UART and Device both not connected
+        // b'01: UART Real mode, and Device connected
+        // b'10: UART Pseduo mode, and Device connected
+        // b'11: UART not connected, but Device connected
+        "usb_uart3_mode": "0x0",
+        // OTPCFG17[8]
+        // Enable of turn off UART2 Tx Discard
+        "usb_uart2_tx_discard_off": false,
+        // OTPCFG17[7: 6]
+        // UART2 Mode
+        // b'00: UART and Device both not connected
+        // b'01: UART Real mode, and Device connected
+        // b'10: UART Pseduo mode, and Device connected
+        // b'11: UART not connected, but Device connected
+        "usb_uart2_mode": "0x0",
+        // OTPCFG17[5]
+        // Enable of turn off UART1 Tx Discard
+        "usb_uart1_tx_discard_off": false,
+        // OTPCFG17[4: 3]
+        // UART1 Mode
+        // b'00: UART and Device both not connected
+        // b'01: UART Real mode, and Device connected
+        // b'10: UART Pseduo mode, and Device connected
+        // b'11: UART not connected, but Device connected
+        "usb_uart1_mode": "0x0",
+        // OTPCFG17[2]
+        // Enable of turn off UART0 Tx Discard
+        "usb_uart0_tx_discard_off": false,
+        // OTPCFG17[1: 0]
+        // UART0 Mode
+        // b'00: UART and Device both not connected
+        // b'01: UART Real mode, and Device connected
+        // b'10: UART Pseduo mode, and Device connected
+        // b'11: UART not connected, but Device connected
+        "usb_uart0_mode": "0x0",
+        // OTPCFG18[15:14]
+        // UART11 Mode
+        // b'00: UART and Device both not connected
+        // b'01: UART Real mode, and Device connected
+        // b'10: UART Pseduo mode, and Device connected
+        // b'11: UART not connected, but Device connected
+        "usb_uart11_mode": "0x0",
+        // OTPCFG18[13]
+        // Enable of turn off UART10 Tx Discard
+        "usb_uart10_tx_discard_off": false,
+        // OTPCFG18[12:11]
+        // UART10 Mode
+        // b'00: UART and Device both not connected
+        // b'01: UART Real mode, and Device connected
+        // b'10: UART Pseduo mode, and Device connected
+        // b'11: UART not connected, but Device connected
+        "usb_uart10_mode": "0x0",
+        // OTPCFG18[10]
+        // Enable of turn off UART9 Tx Discard
+        "usb_uart9_tx_discard_off": false,
+        // OTPCFG18[9: 8]
+        // UART9 Mode
+        // b'00: UART and Device both not connected
+        // b'01: UART Real mode, and Device connected
+        // b'10: UART Pseduo mode, and Device connected
+        // b'11: UART not connected, but Device connected
+        "usb_uart9_mode": "0x0",
+        // OTPCFG18[7]
+        // Enable of turn off UART8 Tx Discard
+        "usb_uart8_tx_discard_off": false,
+        // OTPCFG18[6: 5]
+        // UART8 Mode
+        // b'00: UART and Device both not connected
+        // b'01: UART Real mode, and Device connected
+        // b'10: UART Pseduo mode, and Device connected
+        // b'11: UART not connected, but Device connected
+        "usb_uart8_mode": "0x0",
+        // OTPCFG18[4]
+        // Enable of turn off UART7 Tx Discard
+        "usb_uart7_tx_discard_off": false,
+        // OTPCFG18[3: 2]
+        // UART7 Mode
+        // b'00: UART and Device both not connected
+        // b'01: UART Real mode, and Device connected
+        // b'10: UART Pseduo mode, and Device connected
+        // b'11: UART not connected, but Device connected
+        "usb_uart7_mode": "0x0",
+        // OTPCFG18[1]
+        // Enable of turn off UART6 Tx Discard
+        "usb_uart6_tx_discard_off": false,
+        // OTPCFG18[0]
+        // UART6 Mode - msb (bit1)
+        "usb_uart6_mode_msb": false,
+        // OTPCFG19[15:13]
+        // uart11/13/14 routing (hw effect by scu)
+        "uart_io_route": "0x0",
+        // OTPCFG19[9]
+        // Enable UART of put all boot message and wait the completetion
+        "usb_uart_put_all_boot_message": false,
+        // OTPCFG19[8]
+        // Enable Mode-3 (USB2UART only, no vHub)
+        "usb_uart_mode3": false,
+        // OTPCFG19[7]
+        // Enable Mode-0 hub of support 23 ports
+        "usb_uart_hub_23ports": false,
+        // OTPCFG19[6]
+        // Enable of turn off UART15 Tx Discard
+        "usb_uart15_tx_discard_off": false,
+        // OTPCFG19[5: 4]
+        // UART15 Mode
+        // b'00: UART and Device both not connected
+        // b'01: UART Real mode, and Device connected
+        // b'10: UART Pseduo mode, and Device connected
+        // b'11: UART not connected, but Device connected
+        "usb_uart15_mode": "0x0",
+        // OTPCFG19[3]
+        // Enable of turn off UART12 Tx Discard
+        "usb_uart12_tx_discard_off": false,
+        // OTPCFG19[2: 1]
+        // UART12 Mode
+        // b'00: UART and Device both not connected
+        // b'01: UART Real mode, and Device connected
+        // b'10: UART Pseduo mode, and Device connected
+        // b'11: UART not connected, but Device connected
+        "usb_uart12_mode": "0x0",
+        // OTPCFG19[0]
+        // Enable of turn off UART11 Tx Discard
+        "usb_uart11_tx_discard_off": false,
+        // OTPCFG20[15]
+        // Enable auto load OTP cptra0 ctrl setting of OTP register.
+        // Once it's enabled, r/w protection, offset, and size of OTP cptra0 value below would be
+        // loaded inof OTP controller registers as a hardware default value.
+        "en_auto_load_cptra0": false,
+        // OTPCFG20[14]
+        // Enable Read protect for OTP region cptra 0
+        "rd_protect_otp_cptra0": false,
+        // OTPCFG20[13]
+        // Enable Write protect for OTP region cptra 0
+        "wr_protect_otp_cptra0": false,
+        // OTPCFG20[11: 0]
+        // cptra 0 region start offset
+        "cptra0_region_start_offset": "0x0",
+        // OTPCFG21[15: 0]
+        // cptra 0 region size
+        "cptra0_region_size": "0x0",
+        // OTPCFG24[10: 1]
+        // OTP patch code offset
+        // The OTP patch code location in OTPROM Region.
+        "OTP_Patch_Code_location_3": "0x0",
+        // OTPCFG24[0]
+        // Enable otp patch 3
+        // 0: otp rom patch 3 is invalid
+        // 1: otp rom patch 3 is valid
+        "otp_patch_vld_3": false,
+        // OTPCFG25[9: 0]
+        // OTP Patch 3 code size (unit: word)
+        // The Boot ROM can execute OTP patch codes in OTPROM region. The OTP patch code size is
+        // limited of 16Kbit.
+        "OTP_Patch_Size_3": "0x0",
+        // OTPCFG26[10: 1]
+        // OTP patch code offset
+        // The OTP patch code location in OTPROM Region.
+        "OTP_Patch_Code_location_4": "0x0",
+        // OTPCFG26[0]
+        // Enable otp patch 4
+        // 0: otp rom patch 4 is invalid
+        // 1: otp rom patch 4 is valid
+        "otp_patch_vld_4": false,
+        // OTPCFG27[9: 0]
+        // OTP Patch 4 code size (unit: word)
+        // The Boot ROM can execute OTP patch codes in OTPROM region. The OTP patch code size is
+        // limited of 16Kbit.
+        "OTP_Patch_Size_4": "0x0",
+        // OTPCFG28[10: 1]
+        // OTP patch code offset
+        // The OTP patch code location in OTPROM Region.
+        "OTP_Patch_Code_location_5": "0x0",
+        // OTPCFG28[0]
+        // Enable otp patch 5
+        // 0: otp rom patch 5 is invalid
+        // 1: otp rom patch 5 is valid
+        "otp_patch_vld_5": false,
+        // OTPCFG29[9: 0]
+        // OTP Patch 5 code size (unit: word)
+        // The Boot ROM can execute OTP patch codes in OTPROM region. The OTP patch code size is
+        // limited of 16Kbit.
+        "OTP_Patch_Size_5": "0x0"
+    },
+    "strap_region": {
+        // OTPSTRAP[1]/SCU0_010[1]
+        // Boot from CPU die SPI
+        // 0: Boot from IO die SPI
+        // 1: Boot from CPU die SPI
+        "BootSPI": {
+            "value": false,
+            "protect": false
+        },
+        // OTPSTRAP[3:2]/SCU0_010[3:2]
+        // HPLL default frequency
+        // 00: 2.0GHz, 01: 1.9GHz, 10: 1.8GHz, 11: 1.7GHz
+        "HPLLFreq": {
+            "value": "0x0",
+            "protect": false
+        },
+        // OTPSTRAP[4]/SCU0_010[4]
+        // CPU clock PLL
+        // 0: MPLL, 1: HPLL
+        "CPUHPLL": {
+            "value": false,
+            "protect": false
+        },
+        // OTPSTRAP[6:5]/SCU0_010[6:5]
+        // AXI/AHB clock selection
+        // 0x: 400MHz, 10: 266MHz, 11: 200MHz when HCLKPLL=0
+        // 0x: 500MHz, 10: 333MHz, 11: 250MHz when HCLKPLL=1
+        "HCLKSel": {
+            "value": "0x0",
+            "protect": false
+        },
+        // OTPSTRAP[7]/SCU0_010[7]
+        // AXI/AHB clock PLL
+        // 0: MPLL, 1: HPLL
+        "HCLKHPLL": {
+            "value": false,
+            "protect": false
+        },
+        // OTPSTRAP[8]/SCU0_010[8]
+        // Disable Debug Interfaces for CPU die
+        // all debug interface SCU0_0C8
+        "DisDebug": {
+            "value": false,
+            "protect": false
+        },
+        // OTPSTRAP[9]/SCU0_010[9]
+        // TSP reset pin selection
+        // 0: SSPRSTN, 1: GPIO18E0
+        "TSPRsntSel": {
+            "value": false,
+            "protect": false
+        },
+        // OTPSTRAP[10]/SCU0_010[10]
+        // VGA linear memory size
+        // SW-ROM write of DRAMC100[0]
+        "VGALinearSize[0]": {
+            "value": false,
+            "protect": false
+        },
+        // OTPSTRAP[11]/SCU0_010[11]
+        // VGA linear memory size
+        // SW-ROM write of DRAMC100[0]
+        "VGALinearSize[1]": {
+            "value": false,
+            "protect": false
+        },
+        // OTPSTRAP[12]/SCU0_010[12]
+        // Disable SSP running
+        // 0: disable 1: enable
+        "DisSSP": {
+            "value": false,
+            "protect": false
+        },
+        // OTPSTRAP[13]/SCU0_010[13]
+        // Disable TSP running
+        // 0: disable 1: enable
+        "DisTSP": {
+            "value": false,
+            "protect": false
+        },
+        // OTPSTRAP[16]/SCU1_010[5]
+        // Enable Secure Boot
+        // 0: disable 1: enable
+        "En_SecBoot": {
+            "value": false,
+            "protect": false
+        },
+        // OTPSTRAP[17]/SCU1_010[16]
+        // Disable Debug Interfaces for IO die
+        // all debug interface SCU1_0C8
+        "DisDebug1": {
+            "value": false,
+            "protect": false
+        },
+        // OTPSTRAP[18]/SCU1_010[17]
+        // Disable WDT reset full
+        // 0: enable 1: disable
+        "Dis_WDTfull": {
+            "value": false,
+            "protect": false
+        },
+        // OTPSTRAP[19]/SCU1_010[18]
+        // Disable Uart Debug
+        // 0: enable 1: disable
+        "Dis_UartDbg": {
+            "value": false,
+            "protect": false
+        },
+        // OTPSTRAP[20]/SCU1_010[19]
+        // Selection of IO for Uart Debug
+        "UartDbgSel": {
+            "value": false,
+            "protect": false
+        },
+        // OTPSTRAP[21]/SCU1_010[20]
+        // Disable JTAG of Caliptra permanently
+        // 0: enable 1: disable
+        "Dis_CptraJTag": {
+            "value": false,
+            "protect": false
+        },
+        // OTPSTRAP[22]/SCU1_010[21]
+        // Enable ROM interrupt
+        // 0: disable 1: enable
+        "En_ROM_Intr": {
+            "value": false,
+            "protect": false
+        },
+        // OTPSTRAP[23]/SCU1_010[22]
+        // Disable BootMCU ROM & jump of FMC
+        // 0: enable 1: disable
+        // (wlock)
+        "Dis_ROM": {
+            "value": false,
+            "protect": false
+        },
+        // OTPSTRAP[24]/SCU1_010[23]
+        // Boot from eMMC or UFS selection
+        // 0: eMMC 1: UFS
+        "eMMC_UFS_Boot": {
+            "value": false,
+            "protect": false
+        },
+        // OTPSTRAP[25]/SCU1_010[24]
+        // Allow BROM of wait SPI flash ready bit
+        // 0: disable 1: enable
+        "SPI_Flash_Wait_Ready": {
+            "value": false,
+            "protect": false
+        },
+        // OTPSTRAP[26]/SCU1_010[25]
+        // Use 4-byte command of read flash
+        // 0: disable 1: enable
+        "SPI_Flash_4_Byte_Mode": {
+            "value": false,
+            "protect": false
+        },
+        // OTPSTRAP[28:27]/SCU1_010[27:26]
+        // Recovery from Uart or USB selection
+        // 0: Uart
+        // 1: USB
+        // 2: I2C
+        // 3: I3C
+        "Recovery_mode_selection": {
+            "value": "0x0",
+            "protect": false
+        },
+        // OTPSTRAP[30:29]/SCU1_010[29:28]
+        // Boot from USB port selection
+        // 0: port A
+        // 1: port B
+        // 2: port C
+        // 3: port D
+        "RecUSBSel": {
+            "value": "0x0",
+            "protect": false
+        },
+        // OTPSTRAP[31]/SCU1_010[30]
+        // Disable Caliptra booting
+        // 0: enable 1: disable
+        "Dis_Cptra": {
+            "value": false,
+            "protect": false
+        }
+    },
+    "strap_ext_region": {
+        // OTPSTRAP_EXT1/SCU0_010[16]
+        // Disable ARM ICE
+        "DisARMICE": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT1/SCU0_010[18]
+        // VGA0/1 Class Code
+        // 0: Class Code of VGA device
+        // 1: Class code for video device
+        "VGA_CC": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT1/SCU0_010[19]
+        // UFS reference clock selection
+        // 0: Internal clk
+        // 1: External clk (OSC)
+        "ufs_clk_sel": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT1/SCU0_010[20]
+        // eMMC Boot Speed
+        // 0: low speed(25Mhz) 1: 50Mhz
+        "BooteMMCSpeed": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT1/SCU0_010[21]
+        // Disable XHCI0/1
+        "Disable_XHCI": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT1/SCU0_010[22]
+        // Disable ARM ICE in Trust World
+        "DisARMICE_TZ": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT1/SCU0_010[25]
+        // Disable WDT reset full
+        "Dis_WDTfull": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT2/SCU1_030[8:7]
+        // Uart Debug timeout selection
+        "udbg_to_sel": {
+            "value": "0x0",
+            "valid": false
+        },
+        // OTPSTRAP_EXT1/SCU0_010[28]
+        // DAC's source selection
+        // 0: PCIE VGA0
+        // 1: PCIE VGA1
+        "DAC_Src": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT1/SCU0_010[29]
+        // DisplayPort's source selection
+        // 0: PCIE VGA0
+        // 1: PCIE VGA1
+        "DP_Src": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT1/SCU0_010[30]
+        // Disable RVAS0/1
+        "Dis_RVAS": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT2/SCU1_030[0]
+        // boot sofrage ABR enable
+        // 0: disable 1: enable
+        "ABR": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT2/SCU1_030[1]
+        // ROM clear SRAM
+        // 0: disable 1: enable
+        "ROM_Clear_SRAM": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT2/SCU1_030[11]
+        // Enable Caliptra debug state
+        // 0: disable 1: enable
+        "En_Cptra_debug": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT2/SCU1_030[15:13]
+        // Size of FW SPI Flash
+        // 7: 512MB. 6: 256MB. 5: 128MB. 4: 64MB. 3: 32MB. 2: 16MB. 1: 8MB. 0: disable
+        "FWSPISize": {
+            "value": "0x0",
+            "valid": false
+        },
+        // OTPSTRAP_EXT3/SCU1_030[16]
+        // Enable FWSPI auxiliary pins
+        // FWSPIDQ2/FWSPIDQ3/FWSPIABR/FWSPIWP#
+        "En_FWSPIAux": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT3/SCU1_030[24:23]
+        // Boot SPI Frequency Selection
+        // 2b'00: 12.5MHz (by default)
+        // 2b'01: 25MHz
+        // 2b'10: 40MHz
+        // 2b'11: 50MHz
+        "Boot_SPI_Freq": {
+            "value": "0x0",
+            "valid": false
+        },
+        // OTPSTRAP_EXT3/SCU1_030[25]
+        // check flash is ready for accessing
+        // 0: disable 1: enable
+        "Check_Flash_Access": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT3/SCU1_030[26]
+        // disable B if ABR enabled
+        // 0: enable 1: disable
+        "ABR_dis_B": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT3/SCU1_030[27]
+        // disable recovery mode after ABR
+        // 0: enable 1: disable
+        "ABR_RECOVERY_DIS": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT3/SCU1_030[28]
+        // Disable CS swap after dual flash ABR is triggerred
+        // 0: enable 1: disable
+        "FMC_ABR_CS_SWAP_DIS": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT3/SCU1_030[29]
+        // FMC abr mode
+        // 0: dual flash ABR
+        // 1: single flash ABR
+        "FMC_ABR_MODE": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT4/SCU1_A00[6]
+        // Selection of SIO decode address
+        // 0: 0x2E. 1: 0x4E
+        "Node0_SIODecSel": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT4/SCU1_A00[7]
+        // Disable SIO Decoding
+        "Node0_Dis_SIODec": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT4/SCU1_A00[8]
+        // Enable ACPI
+        "Node0_En_ACPI": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT4/SCU1_A00[9]
+        // Enable LPC
+        "Node0_En_LPC": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT4/SCU1_A00[10]
+        // Enable eDAF
+        // Only takes effect for eSPI mode
+        "Node0_En_eDAF": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT4/SCU1_A00[11]
+        // Enable eSPI RTC
+        "Node0_En_eRTC": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT6/NA
+        // Node0: Size of VGA RAM
+        // 0: 32MB 1: 64MB (DRAMC100[0])
+        "VRSize": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT6/SCU0_A70[0]
+        // Enable PCIe VGA0
+        "En_PCIeVGA0": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT6/SCU0_A70[1]
+        // Enable PCIe IPMI0
+        "En_PCIeIPMI0": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT6/SCU0_A70[2]
+        // Enable PCIe EHCI0
+        "En_PCIeEHCI0": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT6/SCU0_A70[3]
+        // Enable PCIe XHCI0
+        "En_PCIeXHCI0": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT6/SCU0_AF0[0]
+        // Enable PCIe VGA1
+        "En_PCIeVGA1": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT6/SCU0_AF0[1]
+        // Enable PCIe IPMI1
+        "En_PCIeIPMI1": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT6/SCU0_AF0[2]
+        // Enable PCIe EHCI1
+        "En_PCIeEHCI1": {
+            "value": false,
+            "valid": false
+        },
+        // OTPSTRAP_EXT6/SCU0_AF0[3]
+        // Enable PCIe XHCI1
+        "En_PCIeXHCI1": {
+            "value": false,
+            "valid": false
+        }
+    },
+    "secure_region": {
+        "keys": [
+            {
+                "key_file": "owner_key_hash.bin",
+                "type": "cal_own_pub_hash",
+                "w_offset": "0xa0",
+                "number_id": 0
+            },
+            {
+                "key_file": "owner_key_hash.bin",
+                "type": "cal_own_pub_hash",
+                "w_offset": "0xb8",
+                "number_id": 1
+            },
+            {
+                "key_file": "owner_key_hash.bin",
+                "type": "cal_own_pub_hash",
+                "w_offset": "0xd0",
+                "number_id": 2
+            },
+            {
+                "key_file": "owner_key_hash.bin",
+                "type": "cal_own_pub_hash",
+                "w_offset": "0xe8",
+                "number_id": 3
+            },
+            {
+                "key_file": "owner_key_hash.bin",
+                "type": "cal_own_pub_hash",
+                "w_offset": "0x100",
+                "number_id": 4
+            },
+            {
+                "key_file": "owner_key_hash.bin",
+                "type": "cal_own_pub_hash",
+                "w_offset": "0x118",
+                "number_id": 5
+            },
+            {
+                "key_file": "owner_key_hash.bin",
+                "type": "cal_own_pub_hash",
+                "w_offset": "0x130",
+                "number_id": 6
+            },
+            {
+                "key_file": "owner_key_hash.bin",
+                "type": "cal_own_pub_hash",
+                "w_offset": "0x148",
+                "number_id": 7
+            },
+            {
+                "key_file": "owner_key_hash.bin",
+                "type": "cal_own_pub_hash",
+                "w_offset": "0x160",
+                "number_id": 8
+            },
+            {
+                "key_file": "owner_key_hash.bin",
+                "type": "cal_own_pub_hash",
+                "w_offset": "0x178",
+                "number_id": 9
+            },
+            {
+                "key_file": "owner_key_hash.bin",
+                "type": "cal_own_pub_hash",
+                "w_offset": "0x190",
+                "number_id": 10
+            },
+            {
+                "key_file": "owner_key_hash.bin",
+                "type": "cal_own_pub_hash",
+                "w_offset": "0x1a8",
+                "number_id": 11
+            },
+            {
+                "key_file": "owner_key_hash.bin",
+                "type": "cal_own_pub_hash",
+                "w_offset": "0x1c0",
+                "number_id": 12
+            },
+            {
+                "key_file": "owner_key_hash.bin",
+                "type": "cal_own_pub_hash",
+                "w_offset": "0x1d8",
+                "number_id": 13
+            },
+            {
+                "key_file": "owner_key_hash.bin",
+                "type": "cal_own_pub_hash",
+                "w_offset": "0x1f0",
+                "number_id": 14
+            },
+            {
+                "key_file": "owner_key_hash.bin",
+                "type": "cal_own_pub_hash",
+                "w_offset": "0x208",
+                "number_id": 15
+            },
+            {
+                "key_file": "vault_key.bin",
+                "type": "soc_vault",
+                "w_offset": "0x220",
+                "number_id": 0
+            },
+            {
+                "key_file": "vault_key.bin",
+                "type": "soc_vault",
+                "w_offset": "0x230",
+                "number_id": 1
+            },
+            {
+                "key_file": "vault_key.bin",
+                "type": "soc_vault",
+                "w_offset": "0x240",
+                "number_id": 2
+            },
+            {
+                "key_file": "vault_key.bin",
+                "type": "soc_vault",
+                "w_offset": "0x250",
+                "number_id": 3
+            }
+        ]
+    },
+    "caliptra_region": {
+        // OTPCAL0
+        // Caliptra fuse: LMS VERIFY
+        // Verify Caliptra firmware images with both ECDSA and LMS
+        "Enable_LMS_verify": false,
+        // OTPCAL1
+        // Caliptra fuse: ANTI-ROLLBACK DISABLE
+        // Disable anti-rollback support from Caliptra
+        "Anti-rollback_disable": false,
+        // OTPCAL2
+        // Caliptra fuse: FIELD ENTROPY
+        // Owner secret of hedge against UDS disclosure in the supply chain
+        "Field_Entropy": "",
+        // OTPCAL18
+        // Caliptra fuse: KEY MANIFEST PK HASH
+        // Manufacture/Vendor key hash
+        "Manufacture_Key_Hash": "",
+        // OTPCAL42
+        // Caliptra fuse: IDEVID CERT IDEVID ATTR
+        // The information for generating IDEVID CSR
+        // DW 0: X509 key ID algorithm
+        // 0: SHA1
+        // 1: SHA256
+        // 2: SHA384
+        // 3: Fuse → already programmed DW 1/2/3/4/5, not runtime gen
+        // DW 1/2/3/4/5: Subject Key ID
+        // DW 6: ueid_type (0x1: random)
+        // DW 7/8/9/10: Unique endpoint ID (Manufacture Serial number)
+        "IDEVID_Cert_attr": "",
+        // OTPCAL90
+        // Caliptra fuse: IDEVID MANUF HSM IDENTIFIER
+        // Vendor IDevID provisioner CA identifiers
+        "IDEVID_manuf_HSM_identifier": "",
+        // OTPCAL98
+        // of-be-signed (TBS) payload.
+        // The TBS is the certificate template already patched with the IDevID public key, Subject
+        // Key Identifier, serial number, and any extensions that are unique of the device that the
+        // vendor may have included.
+        // Maximum size is 916 bytes according of mailbox command
+        "IDEVID_TBS": "",
+        // OTPCAL610
+        // IDEVID Certificate Signature R & S
+        "IDEVID_Cert_Signature": ""
+    }
+}
