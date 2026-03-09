@@ -394,6 +394,7 @@ class OTP_info(object):
             'config_region_size': 64,
             'strap_bit_size': 32,
             'strap_ext_bit_size': 128,
+            'user_region_size': 6016,
             'secure_region_size': 6144,
             'caliptra_region_size': 1792,
         },
