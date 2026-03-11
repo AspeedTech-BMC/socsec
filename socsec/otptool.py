@@ -3203,6 +3203,292 @@ class OTP(object):
             strap_region_dw.append(h)
         self.otp_print_strap_info(header.soc_ver, strap_info, strap_region_dw)
 
+    def export_otp_image(self, soc_version, otp_image_fd, output_path, excel_path=None):
+        otp_image = bytearray(otp_image_fd.read())
+        is_raw_binary = False
+        try:
+            self.check_image(soc_version, otp_image)
+        except OtpError as e:
+            if 'magic word is invalid' in str(e):
+                is_raw_binary = True
+            else:
+                raise e
+
+        if soc_version in ['2600', '1030', '1060']:
+            raise OtpError(f"Export not yet supported for SOC {soc_version}")
+
+        elif soc_version in ['2700']:
+            if not is_raw_binary:
+                header_size = self.otp_info.HEADER_SIZE_2700
+                header_format = self.otp_info.HEADER_FORMAT_2700
+                header = image_header(otp_image[0:header_size], header_format)
+            else:
+                header = None
+            self._export_otp_image_v2(header, otp_image, output_path, excel_path, is_raw_binary)
+
+    def _export_otp_image_v2(self, header, otp_image, output_path, excel_path=None, is_raw_binary=False):
+        import pandas as pd
+        import json
+        import re
+        import os
+        import textwrap
+
+        if is_raw_binary:
+            key_type_list, otp_info = self._parse_image_soc_ver(OTP_info.SOC_AST2700A2)
+        else:
+            key_type_list, otp_info = self._parse_image_soc_ver(header.soc_ver)
+        if key_type_list is None or otp_info is None:
+            raise OtpError("Failed to parse SOC version")
+
+        if is_raw_binary:
+            otp_payload = otp_image
+        else:
+            rom_offset = header.rom_info & 0xffff
+            otp_payload = otp_image[rom_offset:]
+
+        excel_sheet_mapping = {
+            "OTPROM": {"region": "rom_region", "base": 0x0},
+            "OTPRBP": {"region": "rbp_region", "base": 0x3E0},
+            "OTPCFG": {"region": "config_region", "base": 0x400},
+            "OTPSTRAP": {"region": "strap_region", "base": 0x420},
+            "OTPSTRAP_EXT": {"region": "strap_ext_region", "base": 0x430},
+            "OTPSEC": {"region": "secure_region", "base": 0x1000},
+            "OTPCAL": {"region": "caliptra_region", "base": 0x1C00},
+            "OTPPUF": {"region": "puf_region", "base": 0x1F80}
+        }
+
+        if is_raw_binary:
+            # For raw `otp-all.bin` lack of header, sizes map to concatenations defined in make_otp_image_v2
+            # Notice make_otp_image_v2 pads user region BEFORE secure region, but PUF is conceptually past PUF
+            off_rom, len_rom = 0, 1984
+            off_rbp, len_rbp = off_rom + len_rom, 64
+            off_cfg, len_cfg = off_rbp + len_rbp, 64
+            off_strp, len_strp = off_cfg + len_cfg, 32
+            off_strp_ext, len_strp_ext = off_strp + len_strp, 32
+            off_user, len_user = off_strp_ext + len_strp_ext, 6016
+            off_sec, len_sec = off_user + len_user, 6144
+            off_cal, len_cal = off_sec + len_sec, 1792
+            off_puf, len_puf = off_cal + len_cal, 4096 # Hardware PUF region mapped directly after Caliptra
+
+            region_payloads = {
+                "rom_region": otp_image[off_rom:off_rom+len_rom],
+                "rbp_region": otp_image[off_rbp:off_rbp+len_rbp],
+                "config_region": otp_image[off_cfg:off_cfg+len_cfg],
+                "strap_region": otp_image[off_strp:off_strp+len_strp],
+                "strap_ext_region": otp_image[off_strp_ext:off_strp_ext+len_strp_ext],
+                "secure_region": otp_image[off_sec:off_sec+len_sec],
+                "caliptra_region": otp_image[off_cal:off_cal+len_cal],
+                # `make_otp_image` currently doesn't concatenate OTPPUF, so if file ends before off_puf this handles gracefully via empty slice
+                "puf_region": otp_image[off_puf:off_puf+len_puf]
+            }
+        else:
+            strap_raw = otp_image[(header.strap_info & 0xffff): (header.strap_info & 0xffff) + (header.strap_info >> 16 & 0xffff)]
+            strap_payload = bytearray(32)
+            if len(strap_raw) >= 8:
+                strap_payload[0:4] = strap_raw[4:8] # Protect
+                strap_payload[4:8] = strap_raw[0:4] # Data
+
+            strap_ext_raw = otp_image[(header.strap_ext_info & 0xffff): (header.strap_ext_info & 0xffff) + (header.strap_ext_info >> 16 & 0xffff)]
+            strap_ext_payload = bytearray(32)
+            if len(strap_ext_raw) >= 32:
+                strap_ext_payload[0:16] = strap_ext_raw[16:32] # Protect
+                strap_ext_payload[16:32] = strap_ext_raw[0:16] # Data
+
+            region_payloads = {
+                "rom_region": otp_image[(header.rom_info & 0xffff): (header.rom_info & 0xffff) + (header.rom_info >> 16 & 0xffff)].ljust(otp_info.get('rom_region_size', 0), b'\x00'),
+                "rbp_region": otp_image[(header.rbp_info & 0xffff): (header.rbp_info & 0xffff) + (header.rbp_info >> 16 & 0xffff)].ljust(otp_info.get('rbp_region_size', 0), b'\x00'),
+                "config_region": otp_image[(header.config_info & 0xffff): (header.config_info & 0xffff) + (header.config_info >> 16 & 0xffff)].ljust(otp_info.get('config_region_size', 0), b'\x00'),
+                "strap_region": strap_payload,
+                "strap_ext_region": strap_ext_payload,
+                "secure_region": otp_image[(header.secure_info & 0xffff): (header.secure_info & 0xffff) + (header.secure_info >> 16 & 0xffff)].ljust(otp_info.get('secure_region_size', 0), b'\x00'),
+                "caliptra_region": otp_image[(header.caliptra_info & 0xffff): (header.caliptra_info & 0xffff) + (header.caliptra_info >> 16 & 0xffff)].ljust(otp_info.get('caliptra_region_size', 0), b'\x00'),
+                "puf_region": bytearray() # PUF rarely header-mapped by bootrom tools unless extended header standard
+            }
+
+        output_name = "exported_" + os.path.splitext(os.path.basename(output_path))[0]
+        from datetime import datetime, timezone
+        out_data = {
+            "name": output_name,
+            "version": "2700A2",
+            "endianness": "Little-Endian",
+            "source_xlsx": os.path.basename(excel_path) if excel_path and os.path.exists(excel_path) else "None",
+            "generated_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "rom_region": {},
+            "rbp_region": {},
+            "config_region": {},
+            "strap_region": {},
+            "strap_ext_region": {},
+            "secure_region": {},
+            "caliptra_region": {},
+            "puf_region": {}
+        }
+
+        comments = {k: {} for k in out_data.keys()}
+
+        def clean_field_name(name, addr_int, bit_offset):
+            if pd.isna(name): return ""
+            s = str(name).strip()
+            if s.lower() == 'reserved' or s.lower().startswith('reserved'):
+                s = f"reserved_{addr_int:x}_{bit_offset}"
+            elif s.lower().startswith('duplicate'):
+                s = f"{s.replace(' ', '_').lower()}_{addr_int:x}_{bit_offset}"
+            s = re.sub(r'[^a-zA-Z0-9_\[\].\s\-]', '', s)
+            s = re.sub(r'\s+', '_', s)
+            s = s.lower()
+            return s
+
+        if excel_path and os.path.exists(excel_path):
+            xl = pd.ExcelFile(excel_path)
+            for sheet_name, region_info in excel_sheet_mapping.items():
+                region_name = region_info["region"]
+                base_addr = region_info["base"]
+                region_bytes = region_payloads.get(region_name, bytearray())
+                if not region_bytes:
+                    continue
+                region_int = int.from_bytes(region_bytes, byteorder='little')
+
+                if sheet_name not in xl.sheet_names:
+                    continue
+                df = pd.read_excel(xl, sheet_name)
+
+                last_addr_int = None
+
+                for idx, row in df.iterrows():
+                    name_raw = str(row.get('Name', ''))
+                    if pd.isna(name_raw) or not name_raw.strip() or name_raw == 'nan' or name_raw in ['Sum', 'Actual']:
+                        continue
+
+                    addr_raw = row.get('Start address (word)', '')
+                    if pd.isna(addr_raw) or str(addr_raw).strip().lower() == 'nan' or str(addr_raw).strip() == '':
+                        if last_addr_int is not None:
+                            addr_int = last_addr_int
+                        else:
+                            continue
+                    else:
+                        addr_str = str(addr_raw).strip()
+                        if addr_str.endswith('.0'):
+                            addr_str = addr_str[:-2]
+                        try:
+                            addr_int = int(addr_str, 16)
+                            last_addr_int = addr_int
+                        except ValueError:
+                            if last_addr_int is not None:
+                                addr_int = last_addr_int
+                            else:
+                                continue
+
+                    # Ignore fields located before region base memory boundary
+                    if addr_int < base_addr:
+                        continue
+                    relative_word_addr = addr_int - base_addr
+
+                    try:
+                        size_bit_raw = row.get('Size (bit)', 0)
+                        if pd.isna(size_bit_raw) or str(size_bit_raw).strip().lower() == 'nan':
+                            continue
+                        size_str = str(size_bit_raw).strip()
+                        if size_str.endswith('.0'):
+                            size_str = size_str[:-2]
+                        size_bit = int(size_str)
+                        if size_bit == 0: continue
+
+                        bit_col = str(row.get('Bit', '')).strip()
+                        if bit_col.endswith('.0'):
+                            bit_col = bit_col[:-2]
+                        if not bit_col or bit_col.lower() == 'nan':
+                            bit_offset = 0
+                        elif ':' in bit_col:
+                            bit_offset = int(bit_col.split(':')[1].strip())
+                        else:
+                            bit_offset = int(bit_col)
+
+                        clean_n = clean_field_name(name_raw, addr_int, bit_offset)
+                        if not clean_n: continue
+
+                        # Calculate relative bit offset into the carved region bytearray
+                        total_bit_offset = (relative_word_addr * 16) + bit_offset
+
+                        # Verify we do not overflow beyond region chunk length
+                        if total_bit_offset >= len(region_bytes) * 8:
+                            continue
+
+                        val_int = (region_int >> total_bit_offset) & ((1 << size_bit) - 1)
+                        out_data[region_name][clean_n] = f"0x{val_int:x}"
+
+                        desc = str(row.get('Description', ''))
+                        desc = desc if desc and str(desc).lower() != 'nan' else ""
+                        byte_c = (size_bit + 7) // 8
+                        word_c = (size_bit + 15) // 16
+                        c_str = f"XLSX: row#{idx+2}:0x{addr_int:X}:\"{name_raw}\":{size_bit} bits:{byte_c} bytes:{word_c} words"
+                        if desc:
+                            c_str += f"\nDescription: {desc}"
+                        comments[region_name][clean_n] = c_str
+
+                    except (ValueError, TypeError):
+                        pass
+
+        def format_val(val):
+            if isinstance(val, str) and val.startswith("0x") and len(val) > 66:
+                hex_body = val[2:]
+                chunks = textwrap.wrap(hex_body, width=64)
+                if not chunks:
+                    return '"0x"'
+                chunks[0] = "0x" + chunks[0]
+                formatted = "[\n"
+                for i, chunk in enumerate(chunks):
+                    formatted += f'            "{chunk}"'
+                    if i < len(chunks) - 1:
+                        formatted += ",\n"
+                    else:
+                        formatted += "\n        ]"
+                return formatted
+            return json.dumps(val)
+
+        with open(output_path, 'w') as f:
+            f.write("{\n")
+            f.write(f'    "name": {json.dumps(out_data["name"])},\n')
+            f.write(f'    "version": {json.dumps(out_data["version"])},\n')
+            f.write(f'    "endianness": {json.dumps(out_data.get("endianness", "Little-Endian"))},\n')
+            f.write(f'    "source_xlsx": {json.dumps(out_data.get("source_xlsx", "None"))},\n')
+            f.write(f'    "generated_utc": {json.dumps(out_data.get("generated_utc", ""))},\n')
+
+            regions = [
+                "rom_region", "rbp_region", "config_region", "strap_region",
+                "strap_ext_region", "secure_region", "caliptra_region", "puf_region"
+            ]
+
+            WRAP_WIDTH = 100
+
+            for i, region in enumerate(regions):
+                f.write(f'    "{region}": ')
+                if region == "rom_region" and not out_data[region]:
+                    f.write("{}")
+                elif not out_data[region]:
+                    f.write("{}")
+                else:
+                    f.write("{\n")
+                    items = list(out_data[region].items())
+                    for j, (key, val) in enumerate(items):
+                        comment = comments.get(region, {}).get(key)
+                        if comment:
+                            for raw_line in str(comment).split('\n'):
+                                raw_line = raw_line.strip()
+                                if not raw_line: continue
+                                wrapped_lines = textwrap.wrap(raw_line, width=WRAP_WIDTH)
+                                for w_line in wrapped_lines:
+                                    f.write(f'        // {w_line}\n')
+
+                        comma = "" if j == len(items) - 1 else ","
+                        val_str = format_val(val)
+                        f.write(f'        "{key}": {val_str}{comma}\n')
+                    f.write("    }")
+
+                if i < len(regions) - 1:
+                    f.write(",")
+                f.write("\n")
+
+            f.write("}\n")
+
     def print_otp_image(self, soc_version, otp_image_fd):
         otp_image = bytearray(otp_image_fd.read())
 
@@ -3282,6 +3568,22 @@ class otpTool(object):
                                            help='print otptool version.')
         sub_parser.set_defaults(func=self.print_version)
 
+        sub_parser = subparsers.add_parser('export',
+                                           help='export otp image configuration to json.')
+        sub_parser.add_argument('--soc',
+                                help='soc id (e.g. 2700)',
+                                metavar='SOC',
+                                default='2700')
+        sub_parser.add_argument('otp_image',
+                                help='OTP image',
+                                type=argparse.FileType('rb'))
+        sub_parser.add_argument('--output',
+                                help='output json file',
+                                required=True)
+        sub_parser.add_argument('--excel',
+                                help='OTP Excel map file to extract field metadata (e.g. AST2700A2_OTP_memory_map.xlsx)')
+        sub_parser.set_defaults(func=self.export_otp_image)
+
         args = parser.parse_args(argv[1:])
 
         if (len(argv) == 1):
@@ -3299,6 +3601,9 @@ class otpTool(object):
 
     def print_otp_image(self, args):
         self.otp.print_otp_image(args.soc, args.otp_image)
+
+    def export_otp_image(self, args):
+        self.otp.export_otp_image(args.soc, args.otp_image, args.output, getattr(args, 'excel', None))
 
     def print_version(self, args):
         print(__version__)
