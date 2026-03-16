@@ -194,7 +194,7 @@ class image_header(object):
         elif format == OTP.otp_info.HEADER_FORMAT_2700:
             (self.magic, self.soc_ver, self.otptool_ver, self.image_info, self.rom_info,
             self.rbp_info, self.config_info, self.strap_info, self.strap_ext_info, self.secure_info,
-            self.caliptra_info, self.checksum_offset) = struct.unpack(format, header)
+            self.caliptra_info, self.user_info, self.checksum_offset) = struct.unpack(format, header)
 
 
 class strap_sts(object):
@@ -1830,7 +1830,7 @@ class OTP(object):
 
         return data_region
 
-    def make_otp_image_v2(self, otp_config, key_folder,
+    def make_otp_image_v2(self, otp_config, config_file, key_folder,
                           output_folder, no_last_bit=False):
         print(self.make_otp_image_v2.__name__)
 
@@ -1865,6 +1865,8 @@ class OTP(object):
         strap_binary_output = output_folder + 'otp-strap.bin'
         strap_ext_image_output = output_folder + 'otp-strap-ext.image'
         strap_ext_binary_output = output_folder + 'otp-strap-ext.bin'
+        user_image_output = output_folder + 'otp-user.image'
+        user_binary_output = output_folder + 'otp-user.bin'
         secure_image_output = output_folder + 'otp-secure.image'
         secure_binary_output = output_folder + 'otp-secure.bin'
         caliptra_image_output = output_folder + 'otp-caliptra.image'
@@ -1882,7 +1884,8 @@ class OTP(object):
         strap_size = 0
         strap_ext_all = bytes(0)
         strap_ext_size = 0
-        user_actual_all = bytearray(otp_info['user_region_size'])
+        user_all = bytes(0)
+        user_size = 0
         secure_all = bytes(0)
         secure_size = 0
         caliptra_all = bytes(0)
@@ -1914,6 +1917,7 @@ class OTP(object):
                     version2int(__version__),
                     image_info,
                     rom_info,
+                    0,
                     0,
                     0,
                     0,
@@ -1971,6 +1975,7 @@ class OTP(object):
                 0,
                 secure_info,
                 0,
+                0,
                 checksum_offset
             )
 
@@ -2013,6 +2018,7 @@ class OTP(object):
                 0,
                 0,
                 config_header,
+                0,
                 0,
                 0,
                 0,
@@ -2061,6 +2067,7 @@ class OTP(object):
                 0,
                 0,
                 strap_header,
+                0,
                 0,
                 0,
                 0,
@@ -2116,6 +2123,7 @@ class OTP(object):
                 strap_header,
                 0,
                 0,
+                0,
                 checksum_offset
             )
 
@@ -2132,6 +2140,57 @@ class OTP(object):
             strap_ext_region = bytearray(otp_info['strap_ext_bit_size'] * 2 // 8)
             writeBinFile(strap_ext_region, strap_ext_binary_output)
             strap_ext_actual_all = strap_ext_region
+
+        if 'user_region' in otp_config:
+            print("Generating User Image ...")
+            if 'user' in otp_info and os.path.exists(otp_info['user']):
+                with open(otp_info['user'], 'r') as user_info_fd:
+                    user_info = jstyleson.load(user_info_fd)
+
+                user_region = self.make_config_region_v2(
+                    otp_config['user_region'], user_info,
+                    otp_info['user_region_size'])
+
+                user_size = len(user_region)
+
+                # Calculate image info for user_region header
+                image_size = self.otp_info.HEADER_SIZE_2700 + user_size
+                image_info = image_size | otp_info_inc.INC_USER
+                image_info_all = image_info_all | otp_info_inc.INC_USER
+                user_offset = self.otp_info.HEADER_SIZE_2700
+                user_header = user_offset | (user_size << 16)
+                checksum_offset = user_offset + user_size
+                header = struct.pack(
+                    self.otp_info.HEADER_FORMAT_2700,
+                    self.otp_info.MAGIC_WORD_OTP.encode(),
+                    version,
+                    version2int(__version__),
+                    image_info,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    user_header,
+                    checksum_offset
+                )
+
+                user_all = user_region
+                sha = SHA384.new(header + user_all)
+                checksum = sha.digest()
+
+                writeBinFile(header + user_all + checksum, user_image_output)
+                writeBinFile(user_region, user_binary_output)
+                user_actual_all = user_region
+            else:
+                print(f"Warning: 'user_region' found in JSONC but 'user' config is missing in otp_info. Skipping packing.")
+        else:
+            print("No User Region Configured, Skip User Image Generation")
+            user_region = bytearray(otp_info['user_region_size'])
+            writeBinFile(user_region, user_binary_output)
+            user_actual_all = user_region
 
         if 'caliptra_region' in otp_config:
             print("Generating Caliptra Image ...")
@@ -2163,6 +2222,7 @@ class OTP(object):
                 0,
                 0,
                 caliptra_header,
+                0,
                 checksum_offset
             )
 
@@ -2210,6 +2270,7 @@ class OTP(object):
                 0,
                 0,
                 0,
+                0,
                 checksum_offset
             )
 
@@ -2230,7 +2291,7 @@ class OTP(object):
         print("Generating OTP-all Image ...")
         image_size_all = self.otp_info.HEADER_SIZE_2700 + \
             rom_size + rbp_size + config_size + strap_size + \
-            strap_ext_size + secure_size + caliptra_size
+            strap_ext_size + secure_size + caliptra_size + user_size
         image_info_all = image_info_all | image_size_all
 
         rom_offset = self.otp_info.HEADER_SIZE_2700
@@ -2240,7 +2301,8 @@ class OTP(object):
         strap_ext_offset = strap_offset + strap_size
         secure_offset = strap_ext_offset + strap_ext_size
         caliptra_offset = secure_offset + secure_size
-        checksum_offset = caliptra_offset + caliptra_size
+        user_offset = caliptra_offset + caliptra_size
+        checksum_offset = user_offset + user_size
 
         rom_header = rom_offset | (rom_size << 16)
         rbp_header = rbp_offset | (rbp_size << 16)
@@ -2249,6 +2311,7 @@ class OTP(object):
         strap_ext_header = strap_ext_offset | (strap_ext_size << 16)
         secure_header = secure_offset | (secure_size << 16)
         caliptra_header = caliptra_offset | (caliptra_size << 16)
+        user_header = user_offset | (user_size << 16)
 
         header = struct.pack(
             self.otp_info.HEADER_FORMAT_2700,
@@ -2263,17 +2326,18 @@ class OTP(object):
             strap_ext_header,
             secure_header,
             caliptra_header,
+            user_header,
             checksum_offset
         )
 
         sha = SHA384.new(header + rom_all + rbp_all + config_all +
                          strap_all + strap_ext_all +
-                         secure_all + caliptra_all)
+                         secure_all + caliptra_all + user_all)
         checksum = sha.digest()
 
         writeBinFile(header + rom_all + rbp_all + config_all +
                      strap_all + strap_ext_all +
-                     secure_all + caliptra_all +
+                     secure_all + caliptra_all + user_all +
                      checksum, all_image_output)
         writeBinFile(rom_actual_all + rbp_actual_all + config_actual_all +
 		     strap_actual_all + strap_ext_actual_all + user_actual_all +
@@ -2285,7 +2349,7 @@ class OTP(object):
 
         otp_config = jstyleson.load(config_file)
         if otp_config['version'] in ['2700A0', '2700A1', '2700A2']:
-            self.make_otp_image_v2(otp_config, key_folder,
+            self.make_otp_image_v2(otp_config, config_file, key_folder,
                                    output_folder, no_last_bit)
         else:
             self.make_otp_image_v1(otp_config, key_folder, user_data_folder,
@@ -3254,6 +3318,7 @@ class OTP(object):
             "OTPSTRAP_EXT": {"region": "strap_ext_region", "base": 0x430},
             "OTPSEC": {"region": "secure_region", "base": 0x1000},
             "OTPCAL": {"region": "caliptra_region", "base": 0x1C00},
+            "OTPUSR": {"region": "user_region", "base": 0x440},
             "OTPPUF": {"region": "puf_region", "base": 0x1F80}
         }
 
@@ -3278,6 +3343,7 @@ class OTP(object):
                 "strap_ext_region": otp_image[off_strp_ext:off_strp_ext+len_strp_ext],
                 "secure_region": otp_image[off_sec:off_sec+len_sec],
                 "caliptra_region": otp_image[off_cal:off_cal+len_cal],
+                "user_region": otp_image[off_user:off_user+len_user],
                 # `make_otp_image` currently doesn't concatenate OTPPUF, so if file ends before off_puf this handles gracefully via empty slice
                 "puf_region": otp_image[off_puf:off_puf+len_puf]
             }
@@ -3302,6 +3368,7 @@ class OTP(object):
                 "strap_ext_region": strap_ext_payload,
                 "secure_region": otp_image[(header.secure_info & 0xffff): (header.secure_info & 0xffff) + (header.secure_info >> 16 & 0xffff)].ljust(otp_info.get('secure_region_size', 0), b'\x00'),
                 "caliptra_region": otp_image[(header.caliptra_info & 0xffff): (header.caliptra_info & 0xffff) + (header.caliptra_info >> 16 & 0xffff)].ljust(otp_info.get('caliptra_region_size', 0), b'\x00'),
+                "user_region": otp_image[(header.user_info & 0xffff): (header.user_info & 0xffff) + (header.user_info >> 16 & 0xffff)].ljust(otp_info.get('user_region_size', 0), b'\x00'),
                 "puf_region": bytearray() # PUF rarely header-mapped by bootrom tools unless extended header standard
             }
 
@@ -3318,6 +3385,7 @@ class OTP(object):
             "config_region": {},
             "strap_region": {},
             "strap_ext_region": {},
+            "user_region": {},
             "secure_region": {},
             "caliptra_region": {},
             "puf_region": {}
@@ -3454,7 +3522,7 @@ class OTP(object):
 
             regions = [
                 "rom_region", "rbp_region", "config_region", "strap_region",
-                "strap_ext_region", "secure_region", "caliptra_region", "puf_region"
+                "strap_ext_region", "user_region", "secure_region", "caliptra_region", "puf_region"
             ]
 
             WRAP_WIDTH = 100

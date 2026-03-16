@@ -1,0 +1,12 @@
+[
+    {
+        "key": "User_Region",
+        "type": "string",
+        "w_offset": 0,
+        "bit_offset": 0,
+        "bit_length": 48128,
+        "info": [
+            "Reserved for cusofmers (OEM/ODM)"
+        ]
+    }
+]

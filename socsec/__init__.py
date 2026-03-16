@@ -27,7 +27,7 @@ from Crypto.PublicKey import RSA
 import binascii
 from enum import Enum
 
-__version__ = "2.2.0"
+__version__ = "2.3.0"
 
 
 def version2int(version):
@@ -279,7 +279,7 @@ class OTP_info(object):
     MAGIC_WORD_OTP = 'SOCOTP'
     HEADER_FORMAT = '<8s8I'
     HEADER_SIZE = struct.calcsize(HEADER_FORMAT)
-    HEADER_FORMAT_2700 = '<8s11I'
+    HEADER_FORMAT_2700 = '<8s12I'
     HEADER_SIZE_2700 = struct.calcsize(HEADER_FORMAT_2700)
     CHECKSUM_LEN = 32
     OTP_KEY_TYPE_RSA_PUB = 1
@@ -317,6 +317,7 @@ class OTP_info(object):
         INC_STRAPEXT = 1 << 27
         INC_SECURE = 1 << 26
         INC_CALIPTRA = 1 << 25
+        INC_USER = 1 << 24
 
     class OTP_KEY_TYPE_2700(Enum):
         OTP_KEY_TYPE_SOC_ECDSA_PUB = 1
@@ -403,6 +404,7 @@ class OTP_info(object):
             'config': pkgdata('socsec', 'otp_info/2700a2_config.json'),
             'strap': pkgdata('socsec', 'otp_info/2700a2_strap.json'),
             'caliptra': pkgdata('socsec', 'otp_info/2700a2_caliptra.json'),
+            'user': pkgdata('socsec', 'otp_info/2700a2_usr.json'),
             'rom_region_size': 1984,
             'rbp_region_size': 64,
             'config_region_size': 64,

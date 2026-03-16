@@ -33,13 +33,14 @@ def write_jsonc(data, comments, output_path):
         f.write(f'    "name": {json.dumps(data["name"])},\n')
         f.write(f'    "version": {json.dumps(data["version"])},\n')
 
-        # New order: rom_region -> rbp_region -> config_region -> strap_region -> strap_ext_region -> secure_region -> caliptra_region
+        # New order: rom_region -> rbp_region -> config_region -> strap_region -> strap_ext_region -> user_region -> secure_region -> caliptra_region
         regions = [
             "rom_region",
             "rbp_region",
             "config_region",
             "strap_region",
             "strap_ext_region",
+            "user_region",
             "secure_region",
             "caliptra_region"
         ]
@@ -89,10 +90,12 @@ def excel_to_jsonc(excel_path, output_path):
         "config_region": {},
         "strap_region": {},
         "strap_ext_region": {},
+        "user_region": {},
         "secure_region": {"keys": []},
         "caliptra_region": {}
     }
     comments = {k: {} for k in data.keys()}
+    usr_config = []
 
     # 1. OTPRBP
     if 'OTPRBP' in xl.sheet_names:
@@ -172,6 +175,35 @@ def excel_to_jsonc(excel_path, output_path):
             desc = str(row['Description']) if 'Description' in row else ""
             comments["strap_ext_region"][clean_n] = f"{reg_val}\n{desc}"
 
+    # 4_5. OTPUSR
+    if 'OTPUSR' in xl.sheet_names:
+        df = pd.read_excel(xl, 'OTPUSR')
+        for _, row in df.iterrows():
+            name = str(row['Name'])
+            if 'Reserved' in name or name in ['Sum', 'Actual']:
+                continue
+
+            clean_n = clean_field_name(name)
+            size_bit = row['Size (bit)']
+            addr_raw = row['Start address (word)']
+
+            try:
+                addr_int = int(str(addr_raw), 16) if isinstance(addr_raw, str) else int(addr_raw)
+                desc = str(row['Description']) if 'Description' in row else ""
+
+                usr_config.append({
+                    "key": clean_n,
+                    "type": "string" if size_bit > 1 else "boolean",
+                    "w_offset": addr_int - 0x440,
+                    "bit_offset": 0,
+                    "bit_length": size_bit,
+                    "info": [desc] if desc else []
+                })
+                data["user_region"][clean_n] = "0x0" if size_bit > 1 else False
+                comments["user_region"][clean_n] = f"OTPUSR 0x{addr_int:X} - {size_bit} bits\n{desc}"
+            except (ValueError, TypeError):
+                pass
+
     # 5. OTPSEC (secure_region)
     if 'OTPSEC' in xl.sheet_names:
         df = pd.read_excel(xl, 'OTPSEC')
@@ -212,6 +244,12 @@ def excel_to_jsonc(excel_path, output_path):
 
     write_jsonc(data, comments, output_path)
     print(f"Successfully converted '{excel_path}' to '{output_path}'")
+
+    if usr_config:
+        config_path = os.path.join(os.path.dirname(output_path), "2700a2_usr.json")
+        with open(config_path, 'w') as f:
+            json.dump(usr_config, f, indent=4)
+        print(f"Successfully generated OTP user configuration to '{config_path}'")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Convert AST2700 OTP Excel memory map to JSONC.')
