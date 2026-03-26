@@ -21,7 +21,17 @@
 from bitarray import bitarray
 import os
 from ecdsa.keys import VerifyingKey
-from pkg_resources import resource_filename as pkgdata
+try:
+    from importlib import resources as importlib_resources
+except ImportError:
+    import importlib_resources
+
+def pkgdata(package, resource):
+    try:
+        return str(importlib_resources.files(package).joinpath(resource))
+    except AttributeError:
+        with importlib_resources.path(package, resource) as p:
+            return str(p)
 import struct
 from Crypto.PublicKey import RSA
 import binascii
