@@ -4,11 +4,15 @@
 
 ## OTP info generation
 
+Generate the initial structures into a new file:
 ```bash
 $ python3 otp_info_gen.py \
-        {workbook} {sheet} \
-        {output_file} \
-        {conf/strap/strap_ext/caliptra}
+        {workbook} \
+        {output_file}
+```
+Example:
+```bash
+$ python3 otp_info_gen.py memory_map/AST2700A2_OTP_memory_map.xlsx a2_otp_info.h
 ```
 
 ## OTP sample json file generation

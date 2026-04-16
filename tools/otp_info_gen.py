@@ -1,211 +1,189 @@
-# Copyright (c) 2024 ASPEED Technology Inc.
-
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-
+import pandas as pd
 import sys
-import xlrd
+import math
+
+# Usage: python3 otp_info_gen.py <xlsx file> <output_header_file>
+
+def parse_bit_string(bit_str):
+    if ':' in bit_str:
+        parts = bit_str.split(':')
+        return int(parts[0]), int(parts[1])
+    else:
+        return int(bit_str), int(bit_str)
+
 import re
 
-def gen_line_info(w_offset, bit_offset, width, value, desc):
-    line_str = "\t{ "
+def format_desc(desc):
+    desc_str = str(desc).strip()
 
-    if w_offset is None:
-        line_str += str(bit_offset) + ", " + str(int(width)) + ", " + str(value) + ", \"" + desc + "\" },\n"
+    parts0 = re.split(r'\s*0\s*:', desc_str)
+    if parts0[0].strip():
+        desc_str = parts0[0].strip()
+
+    parts = desc_str.replace('\n', '. ').split('. ')
+    first_sentence = parts[0].strip()
+    return first_sentence.replace('"', '\\"')
+
+def get_desc_en_dis(desc_raw):
+    desc_str = str(desc_raw).strip().replace('"', '\\"')
+
+    parts0 = re.split(r'\s*0\s*:', desc_str)
+    prefix_text = parts0[0].strip().lower()
+
+    # If the prefix text already contains enable/disable, it's a perfect boolean title! Ignore 0:/1: verbosity.
+    if "enable" not in prefix_text and "disable" not in prefix_text:
+        if ('0:' in desc_str or '0 : ' in desc_str) and ('1:' in desc_str or '1 : ' in desc_str):
+            m0 = re.search(r'0\s*:\s*(.*?)(?=\s*1\s*:|\n|$)', desc_str, re.IGNORECASE)
+            m1 = re.search(r'1\s*:\s*(.*?)(?=\s*0\s*:|\n|$)', desc_str, re.IGNORECASE)
+            if m0 and m1:
+                desc0 = m0.group(1).strip('., \t\n')
+                desc1 = m1.group(1).strip('., \t\n')
+                if desc0.lower() not in ["enable", "disable", "valid", "invalid"] and \
+                   desc1.lower() not in ["enable", "disable", "valid", "invalid"]:
+                    prefix_title = format_desc(desc_raw)
+                    prefix_title = re.sub(r"\s*b'?[01]*\s*$", "", prefix_title).strip()
+                    if prefix_title:
+                        return f"{prefix_title}: {desc1}", f"{prefix_title}: {desc0}"
+                    else:
+                        return desc1, desc0
+
+    first_sentence = format_desc(desc_raw)
+
+    if "Disable" in first_sentence:
+        return first_sentence, first_sentence.replace("Disable", "Enable")
+    elif "disable" in first_sentence:
+        return first_sentence, first_sentence.replace("disable", "enable")
+    elif "DISABLE" in first_sentence:
+        return first_sentence, first_sentence.replace("DISABLE", "ENABLE")
+    elif "Enable" in first_sentence:
+        return first_sentence, first_sentence.replace("Enable", "Disable")
+    elif "enable" in first_sentence:
+        return first_sentence, first_sentence.replace("enable", "disable")
+    elif "ENABLE" in first_sentence:
+        return first_sentence, first_sentence.replace("ENABLE", "DISABLE")
     else:
-        line_str += str(w_offset) + ", " + str(bit_offset) + ", " + str(int(width)) + ", " + str(value) + ", \"" + desc + "\" },\n"
+        return first_sentence, first_sentence
 
-    return line_str
+def main():
+    if len(sys.argv) < 3:
+        print("Usage: python3 otp_info_gen.py <xlsx_file> <output_file>")
+        sys.exit(1)
 
-def strap_handler(worksheet, otp_type, output_file):
+    xlsx_path = sys.argv[1]
+    out_path = sys.argv[2]
 
-    # Iterate the rows and columns
-    for i in range(worksheet.nrows):
-        name = worksheet.cell_value(i, 1).strip()
-        otpstrap_val = worksheet.cell_value(i, 7)
+    sheets = {
+        'OTPCFG': 'a2_conf_info',
+        'OTPSTRAP': 'a2_strap_info',
+        'OTPSTRAP_EXT': 'a2_strap_ext_info',
+        'OTPCAL': 'a2_cal_info',
+        'OTPRBP': 'a2_rbp_info'
+    }
 
-        if name == "" or name == "Reserved":
-            continue
+    with open(out_path, 'w') as f:
+        f.write("/* Generated by otp_info_gen.py */\n\n")
 
-        if otp_type == "strap":
-            if otpstrap_val.startswith("OTPSTRAP"):
-                print(otpstrap_val)
-            else:
+        for sheet, arr_name in sheets.items():
+            print(f"Processing {sheet}...")
+            df = pd.read_excel(xlsx_path, sheet_name=sheet)
+
+            # Clean dataframe
+            df = df.dropna(subset=['Start address (word)', 'Name'])
+            if df.empty:
                 continue
-        elif otp_type == "strap_ext":
-            if otpstrap_val.startswith("OTPFLASHSTRAP"):
-                print(otpstrap_val)
+            if sheet == 'OTPSTRAP':
+                base_w_offset = int('422', 16)
+            elif sheet == 'OTPSTRAP_EXT':
+                base_w_offset = int('431', 16)
             else:
+                base_w_offset = int(str(df['Start address (word)'].iloc[0]), 16)
+
+            def is_unwanted(r):
+                text = (str(r.get('Name', '')) + ' ' + str(r.get('Description', ''))).lower()
+                if 'duplicate of' in text: return True
+                if 'ecc/brp' in text: return True
+                if 'otpstrap_ext source valid' in text: return True
+                if 'write protection of otpstrap' in text: return True
+                return False
+
+            df = df[~df.apply(is_unwanted, axis=1)]
+
+            df = df[df['Name'] != 'Reserved']
+            df = df[df['Name'] != 'Sum']
+            df = df[df['Name'] != 'Actual']
+            df = df[df['Name'] != 'PUF']
+
+            if df.empty:
                 continue
-        else:
-            print("Wrong usage")
-            break
 
-        otp_desc = worksheet.cell_value(i, 2)
-        width = worksheet.cell_value(i, 0)
+            if sheet == 'OTPCFG':
+                struct_name = 'otpconf_info'
+            elif sheet == 'OTPSTRAP':
+                struct_name = 'otpstrap_info'
+            elif sheet == 'OTPSTRAP_EXT':
+                struct_name = 'otpstrap_ext_info'
+            elif sheet == 'OTPCAL':
+                struct_name = 'otpcal_info'
+            else:
+                struct_name = 'otprbp_info'
 
-        bit_str = otpstrap_val[otpstrap_val.index('[') + 1:otpstrap_val.index(']')]
+            f.write(f"static const struct {struct_name} {arr_name}[] = {{\n")
 
-        bit_str = bit_str.split(':')
-        if len(bit_str) == 1:
-            bit_offset = bit_str[0]
-        else:
-            bit_offset = bit_str[1]
+            for _, row in df.iterrows():
+                try:
+                    addr_val = row['Start address (word)']
+                    w_offset = int(str(addr_val), 16) - base_w_offset
 
-        if int(width) == 1:
-            line_str = gen_line_info(None, bit_offset, width, 1, otp_desc)
-            output_file.writelines(line_str)
-            #print(otp_desc)
+                    desc = format_desc(row['Description'])
+                    if str(desc) == "nan":
+                        desc = format_desc(row['Name'])
 
-            if "Enable" in otp_desc:
-                otp_desc = otp_desc.replace("Enable", "Disable")
-            elif "Disable" in otp_desc:
-                otp_desc = otp_desc.replace("Disable", "Enable")
+                    bit_str = str(row['Bit']).strip()
+                    end_bit, start_bit = parse_bit_string(bit_str)
+                    length = end_bit - start_bit + 1
 
-            #print(otp_desc)
-            line_str = gen_line_info(None, bit_offset, width, 0, otp_desc)
-            output_file.writelines(line_str)
-            continue
+                    if sheet == 'OTPRBP':
+                        f.write(f"\t{{ {w_offset}, {length}, \"{desc}\" }},\n")
+                    elif sheet == 'OTPCFG':
+                        if length == 1:
+                            desc_en, desc_dis = get_desc_en_dis(row['Description'])
+                            if str(desc_en) == "nan" or not desc_en:
+                                desc_en = format_desc(row['Name'])
+                                desc_dis = desc_en
+                            f.write(f"\t{{ {w_offset}, {start_bit}, 1, 1, \"{desc_en}\" }},\n")
+                            f.write(f"\t{{ {w_offset}, {start_bit}, 1, 0, \"{desc_dis}\" }},\n")
+                        else:
+                            f.write(f"\t{{ {w_offset}, {start_bit}, {length}, OTP_REG_VALUE, \"{desc}: 0x%x\" }},\n")
+                    elif sheet in ['OTPSTRAP', 'OTPSTRAP_EXT']:
+                        accumulated_bit = w_offset * 16 + start_bit
 
-        for j in range(2 ** int(width)):
-            line_str = gen_line_info(None, bit_offset, width, j, otp_desc)
-            output_file.writelines(line_str)
+                        if length == 1:
+                            desc_en, desc_dis = get_desc_en_dis(row['Description'])
+                            if str(desc_en) == "nan" or not desc_en:
+                                desc_en = format_desc(row['Name'])
+                                desc_dis = desc_en
+                            f.write(f"\t{{ {accumulated_bit}, 1, 1, \"{desc_en}\" }},\n")
+                            f.write(f"\t{{ {accumulated_bit}, 1, 0, \"{desc_dis}\" }},\n")
+                        elif length <= 5:
+                            for val in range(2**length):
+                                f.write(f"\t{{ {accumulated_bit}, {length}, {val}, \"{desc}\" }},\n")
+                        else:
+                            f.write(f"\t{{ {accumulated_bit}, {length}, OTP_REG_VALUE, \"{desc}: 0x%x\" }},\n")
+                    elif sheet == 'OTPCAL':
+                        # OTPCAL info: { int w_offset; signed char bit_offset; int length; int value; const char *information; }
+                        if length == 1:
+                            desc_en, desc_dis = get_desc_en_dis(row['Description'])
+                            if str(desc_en) == "nan" or not desc_en:
+                                desc_en = format_desc(row['Name'])
+                                desc_dis = desc_en
+                            f.write(f"\t{{ {w_offset}, {start_bit}, 1, 1, \"{desc_en}\" }},\n")
+                            f.write(f"\t{{ {w_offset}, {start_bit}, 1, 0, \"{desc_dis}\" }},\n")
+                        else:
+                            f.write(f"\t{{ {w_offset}, {start_bit}, {length}, OTP_REG_VALUE, \"{desc}: 0x%x\" }},\n")
 
-def conf_handler(worksheet, output_file):
-
-    # Iterate the rows and columns
-    for i in range(worksheet.nrows):
-        if i < 4:
-            continue
-
-        # print(worksheet.cell_value(i, 1))
-        if worksheet.cell_value(i, 1) == "OTP001" or worksheet.cell_value(i, 1) == "OTP003":
-            continue
-
-        if worksheet.cell_value(i, 2) != "":
-            conf_val = worksheet.cell_value(i, 2)
-
-        if worksheet.cell_value(i, 5) == "reserved" or worksheet.cell_value(i, 5) == "Reserved":
-            continue
-
-        msb = int(worksheet.cell_value(i, 3))
-        lsb = int(worksheet.cell_value(i, 4))
-        # print(conf_val, msb, lsb)
-
-        w_offset = int(re.findall(r'-?\d+', conf_val)[0])
-        width = msb - lsb + 1
-        bit_offset = lsb
-        idx = worksheet.cell_value(i, 6).find('\n')
-        if idx != -1:
-            otp_desc = worksheet.cell_value(i, 6)[:idx]
-        else:
-            otp_desc = worksheet.cell_value(i, 6)
-
-        if int(width) == 1:
-            line_str = gen_line_info(w_offset, bit_offset, width, 1, otp_desc)
-            output_file.writelines(line_str)
-
-            if "Enable" in otp_desc:
-                otp_desc = otp_desc.replace("Enable", "Disable")
-            elif "enable" in otp_desc:
-                otp_desc = otp_desc.replace("enable", "disable")
-            elif "Disable" in otp_desc:
-                otp_desc = otp_desc.replace("Disable", "Enable")
-            elif "disable" in otp_desc:
-                otp_desc = otp_desc.replace("disable", "enable")
-
-            line_str = gen_line_info(w_offset, bit_offset, width, 0, otp_desc)
-            output_file.writelines(line_str)
-            continue
-        else:
-            line_str = gen_line_info(w_offset, bit_offset, width, "OTP_REG_VALUE", otp_desc + ": 0x%x")
-            output_file.writelines(line_str)
-
-        if worksheet.cell_value(i, 1) == "OTP031" or worksheet.cell_value(i + 1, 5) == "":
-            return
-
-def caliptra_handler(worksheet, output_file):
-
-    # Iterate the rows and columns
-    for i in range(worksheet.nrows):
-        if i < 1:
-            continue
-
-        if worksheet.cell_value(i, 2) == "reserved" or worksheet.cell_value(i, 2) == "Reserved":
-            continue
-
-        if worksheet.cell_value(i, 2) == "Sum":
-            break
-
-        print(worksheet.cell_value(i, 0))
-        if worksheet.cell_value(i, 0) != "":
-            cal_val = worksheet.cell_value(i, 0)
-        width = int(worksheet.cell_value(i, 3))
-
-        # w_offset = int(re.findall(r'-?\d+', cal_val)[0])
-        w_offset = int(cal_val)
-        bit_offset = 0
-        otp_desc = worksheet.cell_value(i, 2)
-
-        if int(width) == 1:
-            line_str = gen_line_info(w_offset, bit_offset, width, 1, otp_desc)
-            output_file.writelines(line_str)
-
-            if "Enable" in otp_desc:
-                otp_desc = otp_desc.replace("Enable", "Disable")
-            elif "enable" in otp_desc:
-                otp_desc = otp_desc.replace("enable", "disable")
-            elif "Disable" in otp_desc:
-                otp_desc = otp_desc.replace("Disable", "Enable")
-            elif "disable" in otp_desc:
-                otp_desc = otp_desc.replace("disable", "enable")
-
-            line_str = gen_line_info(w_offset, bit_offset, width, 0, otp_desc)
-            output_file.writelines(line_str)
-            continue
-        else:
-            line_str = gen_line_info(w_offset, bit_offset, width, "OTP_REG_VALUE", otp_desc + ": 0x%x")
-            output_file.writelines(line_str)
-
-        if worksheet.cell_value(i, 0) == "OTPCAL78":
-            return
+                except Exception as e:
+                    print(f"Error parsing row in {sheet}: {row['Name']} - {e}")
+            f.write("};\n\n")
 
 if __name__ == '__main__':
-
-    print("Generate OTPSTRAP/OTPSTRAP_EXT info...")
-    print("Usage:\n\tpython3 otp_info_gen.py {workbook} {sheet} {output} {type: conf/strap/strap_ext/caliptra}")
-
-    # Open the workbook
-    workbook = xlrd.open_workbook(sys.argv[1])
-
-    # Open the worksheet
-    worksheet = workbook.sheet_by_name(sys.argv[2])
-
-    output_file = open(sys.argv[3], "w")
-    otp_type = sys.argv[4]
-
-    if otp_type == "strap" or otp_type == "strap_ext":
-        strap_handler(worksheet, otp_type, output_file)
-    elif otp_type == "conf":
-        conf_handler(worksheet, output_file)
-    elif otp_type == "caliptra":
-        caliptra_handler(worksheet, output_file)
-
-    output_file.close()
-
-    print("Done")
+    main()
