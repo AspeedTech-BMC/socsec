@@ -391,3 +391,57 @@ options:
   --owner_lms_key OWNER_LMS_KEY
                         Path to the owner LMS public key (optional)
 ```
+
+## Caliptra Hash Extraction Tool (hash_extract.py)
+
+This tool is used to extract FMC and Runtime SHA-384 hashes from a Caliptra firmware bundle and compare them against official GitHub releases.
+
+### Features
+- **Automatic Hash Extraction**: Parses the CMAN manifest and TOC entries to extract image measurement hashes.
+- **Endianness Correction**: Automatically detects and corrects word-swapped hashes to match standard Big-Endian format.
+- **Online Comparison**: Fetches the latest official release table from [chipsalliance/caliptra-sw](https://github.com/chipsalliance/caliptra-sw) for automated verification.
+- **Default Firmware Support**: Automatically downloads the latest `caliptra-fw.bin` from [AspeedTech-BMC/bmc-pb](https://github.com/AspeedTech-BMC/bmc-pb) if no input file is provided.
+
+### Usage
+
+#### 1. Extract and Verify a Specific Firmware Image
+```bash
+python3 hash_extract.py path/to/your/caliptra-fw.bin
+```
+
+#### 2. Run with Default Firmware
+If no arguments are provided, the tool downloads and processes the default firmware from the Aspeed GitHub repository:
+```bash
+python3 hash_extract.py
+```
+
+### Configuration
+The target comparison version can be configured directly in `hash_extract.py` by modifying the `TARGET_VERSION` global variable:
+```python
+TARGET_VERSION = "rt-1.2.1"
+```
+
+### URLs Used
+- **Default FW**: https://raw.githubusercontent.com/AspeedTech-BMC/bmc-pb/refs/heads/master/ast2700a2/caliptra-fw.bin
+- **Official README URL**: https://raw.githubusercontent.com/chipsalliance/caliptra-sw/main/README.md
+
+#### Example Output
+```text
+$ python3 hash_extract.py
+[*] Default FW URL: https://raw.githubusercontent.com/AspeedTech-BMC/bmc-pb/refs/heads/master/ast2700a2/caliptra-fw.bin
+[*] Processing firmware: caliptra-fw.bin
+[*] Official README URL: https://raw.githubusercontent.com/chipsalliance/caliptra-sw/main/README.md
+[*] Fetching official release info for rt-1.2.1...
+----------------------------------------
+Results for target version: rt-1.2.1
+----------------------------------------
+FMC (Extracted): cefdc6454ee254661d35f2ecc7a973aadc1c1c8a4e702376171ef10385d624360df5f79779d2ab30edc82805784c3dd5
+FMC (Official):  cefdc6454ee254661d35f2ecc7a973aadc1c1c8a4e702376171ef10385d624360df5f79779d2ab30edc82805784c3dd5
+FMC Match?       [ OK ]
+
+RT  (Extracted): d48f83b629378d32ac2547b31799794e353e1460ae773048f902723ab95efffb142cc7e51c7f4580a7ec89f22ea531c1
+RT  (Official):  d48f83b629378d32ac2547b31799794e353e1460ae773048f902723ab95efffb142cc7e51c7f4580a7ec89f22ea531c1
+RT  Match?       [ OK ]
+----------------------------------------
+[+] Success: All hashes match the official release.
+```
