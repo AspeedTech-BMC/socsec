@@ -285,3 +285,46 @@ The `export` command is an addition to `otptool` that allows reverse-parsing com
 - Correctly accounts for duplicated configurable logic (e.g. `Duplicate of 422`) by appending base offsets algorithmically to avoid JSON dictionary collision.
 - Automatically handles intelligent `Little-Endian` byte conversion of fields to format their physical states onto readable JSON values.
 - Formats excessively long hex keys seamlessly into arrays of `< 64 byte` chunked strings to avoid unreadable file wrap.
+
+## Supplemental Tools (Caliptra Workflow)
+
+The [tools/](tools/) directory contains utility scripts mapping directly to the most critical firmware and root of trust requirements on the AST2700 platform. The typical Caliptra workflow consists of the following 5 main steps:
+
+### 1. Generate Caliptra Owner Key Hash
+Before programming OTP or signing firmware, you must generate the owner key binary and its SHA-384 hash combination from your provisioned keys:
+```bash
+python3 tools/cal_info_gen.py gen_keyhash \
+        --key_folder <key_folder> \
+        --output_folder <output_folder> \
+        sample_cptra_ownkey.json
+```
+*Output: `owner_key.bin`, `owner_key_hash.bin`*
+
+### 2. Program Key Hash into OTP
+Once the `owner_key_hash.bin` is generated, assign its path inside your OTP JSON configuration file (e.g. `2700-a2_sample-full.jsonc`) under the `caliptra_region`. Then generate the OTP image to be programmed into the system:
+```bash
+otptool make_otp_image --key_folder <key_folder> 2700-a2_sample-full.jsonc
+```
+*Output: `otp-all.image` (Use the AST2700 u-boot/linux OTP utility to program this file)*
+
+### 3. Insert Key & Signature into Caliptra firmware bundle (`cptra_own_key_ins.py`)
+After generating raw firmware signatures (ECC or LMS), you must append the signature structures and the public keys directly into the Caliptra firmware bundle:
+```bash
+python3 tools/cptra_own_key_ins.py <cptra_fw_file> \
+        --ecc_key <pubKey.pem> \
+        --lms_key <pubKey.pub> \
+        --ecc_sig <signature_ecc.der> \
+        --lms_sig <signature_lms.bin>
+```
+
+### 4. FW Image Signature Verification (`cptra_img_sig_ver.py`)
+Validate that the inserted ECC/LMS signatures correctly authenticate the embedded Vendor and Owner elements inside the Caliptra image:
+```bash
+python3 tools/cptra_img_sig_ver.py <cptra_fw_file>
+```
+
+### 5. Caliptra FW Hash Extraction (`hash_extract.py`)
+Extract the vital runtime (RT) and First Mutable Code (FMC) measurements to verify your build against the officially supported releases from the chipsalliance GitHub:
+```bash
+python3 tools/hash_extract.py <cptra_fw_file>
+```

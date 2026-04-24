@@ -29,7 +29,8 @@ import sys
 
 OTPRBP_SHEET_NAME = 'OTPRBP'
 OTPCFG_SHEET_NAME = 'OTPCFG'
-OTPSTRAP_SHEET_NAME = 'OTPSTRAP-STRAPEXT'
+OTPSTRAP_SHEET_NAME = 'OTPSTRAP'
+OTPSTRAP_EXT_SHEET_NAME = 'OTPSTRAP_EXT'
 SECURE_SHEET_NAME = 'OTPSEC'
 CALIPTRA_SHEET_NAME = 'OTPCAL'
 AST_CHIP_NAME = 'AST'
@@ -70,6 +71,55 @@ OTP_KEY_FILE_NAME = [
         "test_vault_key_seed.bin"
 ]
 
+
+
+def parse_int(val, default=0):
+    """Safely parse an integer from Excel value."""
+    if isinstance(val, (int, float)):
+        return int(val)
+    s = str(val).strip()
+    if not s:
+        return default
+    # Handle ranges like '9: 8' by taking the first number
+    if ':' in s:
+        try:
+            return int(s.split(':')[0])
+        except ValueError:
+            return default
+    try:
+        # Handle cases like '400.0', '0x100', or '1C00'
+        if s.startswith('0x') or s.startswith('0X'):
+            return int(s, 16)
+        # Try hex first if it contains A-F
+        if any(c in 'ABCDEFabcdef' for c in s):
+            try:
+                return int(s, 16)
+            except ValueError:
+                pass
+        return int(float(s))
+    except ValueError:
+        return default
+
+
+def parse_bit_size(val):
+    """Parse bit size which could be an int, or a string like '15: 0' or '16'."""
+    if isinstance(val, (int, float)):
+        return int(val)
+    s = str(val).strip()
+    if not s:
+        return 0
+    if ':' in s:
+        try:
+            parts = s.split(':')
+            return abs(int(parts[0].strip()) - int(parts[1].strip())) + 1
+        except (ValueError, IndexError):
+            return 0
+    try:
+        return int(float(s))
+    except ValueError:
+        return 0
+
+
 def otprbp_handler_info(sheet, list):
         sh = sheet
 
@@ -83,20 +133,18 @@ def otprbp_handler_info(sheet, list):
                 otp_addr = row_values[0]
                 otp_name = row_values[1]
                 otp_size = row_values[2]
-                otp_desc = row_values[5]
+                otp_desc = row_values[6]
 
+                name_str = str(otp_name).strip()
                 # reserved skip
-                if otp_name == "reserved" or otp_name == "Reserved":
+                if name_str.lower() == "reserved" or name_str in ["Sum", "Actual"]:
                         continue
 
-                if otp_name == "Sum":
-                        break
+                name = str(otp_name).replace(' ', '_')
+                bit_length = parse_bit_size(otp_size)
+                offset = parse_int(otp_addr) - 0x3e0
 
-                name = otp_name.replace(' ', '_')
-                bit_length = int(otp_size)
-                offset = int(otp_addr, 16) - 0x3e0
-
-                idx = otp_desc.find('\n')
+                idx = str(otp_desc).find('\n')
                 if idx != -1:
                         desc = str(otp_desc)[:idx]
                 else:
@@ -135,12 +183,13 @@ def otprbp_handler(sheet, data):
                 row_values = sh.row_values(rownum)
                 # print(row_values)
 
-                otp_addr = int(row_values[0], 16) - 0x3e0
+                otp_addr = parse_int(row_values[0]) - 0x3e0
                 otp_name = row_values[1]
-                otp_bit_size = int(row_values[2])
+                otp_bit_size = parse_bit_size(row_values[2])
 
+                name_str = str(otp_name).strip()
                 # reserved skip
-                if otp_name == "reserved" or otp_name == "Reserved":
+                if name_str.lower() == "reserved" or name_str in ["Sum", "Actual"]:
                         continue
 
                 if otp_addr == 32:
@@ -149,7 +198,7 @@ def otprbp_handler(sheet, data):
                 desc = "// " + "OTPRBP" + str(otp_addr) + " - " +str(otp_bit_size) + " bits"
 
                 rbp_region[desc] = ""
-                keys = otp_name.replace(" ", "_")
+                keys = str(otp_name).replace(" ", "_")
                 if otp_bit_size <= 32:
                         rbp_region[keys] = "0x0"
                 else:
@@ -171,39 +220,52 @@ def otpcfg_handler_info(sheet, list):
                 # print(row_values)
 
                 otp_addr = row_values[0]
-                otp_num = row_values[1]
+                otp_num = row_values[8]
                 otp_bit_msb = row_values[2]
-                otp_bit_lsb = row_values[3]
-                otp_bit_name = row_values[4]
-                otp_bit_desc = row_values[5]
+                otp_bit_lsb = row_values[2]
+                otp_bit_name = row_values[1]
+                otp_bit_desc = row_values[6]
 
                 if rownum < 1:
                         continue
 
-                if otp_bit_msb == "" and otp_bit_lsb == "":
+                # skip Sum and Actual
+                if str(otp_bit_name).strip() in ["Sum", "Actual"]:
+                        continue
+
+                if otp_bit_msb == "":
                         break
 
-                # OTPCFG1 & OTPCFG3 skip
-                if otp_addr == "401" or otp_addr == "403":
-                        continue
 
                 if otp_num != "":
-                        otpcfg_num = otp_num.split("/")[0]
+                        parts = str(otp_num).split("/")
+                        otpcfg_num = parts[0] if parts else ""
+                else:
+                        otpcfg_num = ""
 
                 # reserved skip
-                if otp_bit_name == "reserved" or otp_bit_name == "Reserved":
+                if str(otp_bit_name).lower() == "reserved":
                         continue
 
-                if otp_bit_msb != otp_bit_lsb:
+                msb = parse_int(otp_bit_msb)
+                lsb = parse_int(otp_bit_lsb)
+                if ':' in str(otp_bit_msb):
+                        parts = str(otp_bit_msb).split(':')
+                        msb = int(parts[0].strip())
+                        lsb = int(parts[1].strip())
+
+                if msb != lsb:
                         multi_value = True
-                        bit_length =  int(otp_bit_msb) - int(otp_bit_lsb) + 1
+                        bit_length = msb - lsb + 1
                 else:
                         multi_value = False
 
-                descs = otp_bit_desc.split('\n')
+                descs_raw = str(otp_bit_desc)
+                descs_raw = re.sub(r'(?<!\n)\s+(?=\d+:)', '\n', descs_raw)
+                descs = descs_raw.split('\n')
                 desc = descs[0]
 
-                name = otp_bit_name.replace(' ', '_')
+                name = str(otp_bit_name).replace(' ', '_')
 
                 conf['key'] = name
                 if multi_value:
@@ -211,8 +273,9 @@ def otpcfg_handler_info(sheet, list):
                 else:
                         conf['type'] = "boolean"
 
-                conf['w_offset'] = int(re.findall(r'-?\d+', otpcfg_num)[0])
-                conf['bit_offset'] = int(otp_bit_lsb)
+                nums = re.findall(r'-?\d+', str(otpcfg_num))
+                conf['w_offset'] = int(nums[0]) if nums else 0
+                conf['bit_offset'] = lsb
                 if bit_length != 0:
                         conf['bit_length'] = bit_length
 
@@ -228,14 +291,18 @@ def otpcfg_handler_info(sheet, list):
                                 desc_list.append(desc.replace(x, matches_a[matches_b.index(x)]))
                                 desc_list.append(desc)
 
-                if bit_length != 0:
-                        for i in range(0, 2 ** bit_length):
-                                if i + 1 >= len(descs):
+                if bit_length != 0 and bit_length < 8 and desc_list == []:
+                        has_title = ':' not in descs[0] and len(descs) > 1
+                        start_idx = 1 if has_title else 0
+
+                        for i in range(0, int(2 ** bit_length)):
+                                idx_val = start_idx + i
+                                if idx_val >= len(descs):
                                         break
-                                desc_val = descs[i + 1].split(':')
+                                desc_val = descs[idx_val].split(':')
                                 if len(desc_val) < 2:
                                         break
-                                desc_list.append(desc + " = " + descs[i + 1].split(':')[1].strip())
+                                desc_list.append(desc + " = " + desc_val[1].strip())
 
                 if desc_list == []:
                         desc_list.append(desc)
@@ -256,33 +323,40 @@ def otpcfg_handler(sheet, data):
                 # print(row_values)
 
                 otp_addr = row_values[0]
-                otp_num = row_values[1]
+                otp_num = row_values[8]
                 otp_bit_msb = row_values[2]
-                otp_bit_lsb = row_values[3]
-                otp_bit_name = row_values[4]
+                otp_bit_lsb = row_values[2]
+                otp_bit_name = row_values[1]
 
-                # OTPCFG1 & OTPCFG3 skip
-                if otp_addr == "401" or otp_addr == "403":
-                        continue
 
                 if otp_num != "":
-                        otpcfg_num = otp_num.split("/")[0]
+                        parts = str(otp_num).split("/")
+                        otpcfg_num = parts[0] if parts else ""
+                else:
+                        otpcfg_num = ""
 
                 # reserved skip
-                if otp_bit_name == "reserved" or otp_bit_name == "Reserved":
+                if str(otp_bit_name).lower() == "reserved":
                         continue
-                if otp_bit_msb == "" and otp_bit_lsb == "":
+                if otp_bit_msb == "":
                         break
 
-                if otp_bit_msb != otp_bit_lsb:
-                        desc = "// " + otpcfg_num + "[" + str(int(otp_bit_msb)) + ":" + str(int(otp_bit_lsb)) + "]"
+                msb = parse_int(otp_bit_msb)
+                lsb = parse_int(otp_bit_lsb)
+                if ':' in str(otp_bit_msb):
+                        parts = str(otp_bit_msb).split(':')
+                        msb = int(parts[0].strip())
+                        lsb = int(parts[1].strip())
+
+                if msb != lsb:
+                        desc = "// " + otpcfg_num + "[" + str(msb) + ":" + str(lsb) + "]"
                         multi_value = True
                 else:
-                        desc = "// " + otpcfg_num + "[" + str(int(otp_bit_lsb)) + "]"
+                        desc = "// " + otpcfg_num + "[" + str(lsb) + "]"
                         multi_value = False
 
                 conf_region[desc] = ""
-                keys = otp_bit_name.replace(" ", "_")
+                keys = str(otp_bit_name).replace(" ", "_")
                 if multi_value:
                         conf_region[keys] = "0x0"
                 else:
@@ -300,7 +374,7 @@ def otpstrap_handler_info(sheet, list):
         for rownum in range(0, sh.nrows):
                 strap = OrderedDict()
 
-                if rownum < 5:
+                if rownum < 1:
                         continue
 
                 row_values = sh.row_values(rownum)
@@ -310,43 +384,53 @@ def otpstrap_handler_info(sheet, list):
                 is_strap = False
 
                 # OTPSTRAP & OTPSTRAP_EXT only
-                if str(row_values[7]).startswith("OTPSTRAP_EXT"):
+                if str(row_values[8]).startswith("OTPSTRAP_EXT"):
                         is_strapext = True
-                elif str(row_values[7]).startswith("OTPSTRAP"):
+                elif str(row_values[8]).startswith("OTPSTRAP"):
                         is_strap = True
                 else:
                         continue
 
+                name_str = str(row_values[1]).strip()
                 # reserved skip
-                if row_values[1] == "reserved" or row_values[1] == "Reserved":
+                if name_str.lower() == "reserved" or name_str in ["Sum", "Actual"]:
                         continue
 
-                strap['key'] = row_values[1].strip()
+                strap['key'] = str(row_values[1]).strip()
 
                 if is_strap:
                         strap['key_type'] = "strap"
                 elif is_strapext:
                         strap['key_type'] = "strap_ext"
 
-                bit_length = int(row_values[0])
+                bit_length = parse_bit_size(row_values[3])
+                nums = re.findall(r'-?\d+', str(row_values[8]))
                 if bit_length == 1:
                         strap['type'] = "boolean"
-                        strap_num = int(re.findall(r'-?\d+', row_values[7])[0])
+                        strap_num = int(nums[0]) if nums else 0
                 else:
                         strap['type'] = "string"
-                        strap_num = int(re.findall(r'-?\d+', row_values[7])[1])
+                        strap_num = int(nums[1]) if len(nums) > 1 else (int(nums[0]) if nums else 0)
 
-                strap['w_offset'] = strap_num // 16
-                strap['bit_offset'] = strap_num % 16
+                if is_strap:
+                        strap['w_offset'] = parse_int(row_values[0]) - 422
+                elif is_strapext:
+                        strap['w_offset'] = parse_int(row_values[0]) - 430
+
+                bit_str = str(row_values[2])
+                if ':' in bit_str:
+                        strap['bit_offset'] = int(bit_str.split(':')[1].strip())
+                else:
+                        strap['bit_offset'] = parse_int(bit_str)
 
                 if bit_length > 1:
                         strap['bit_length'] = bit_length
 
-                idx = row_values[2].find('\n')
+                idx = str(row_values[6]).find('\n')
                 if idx != -1:
-                        desc = str(row_values[2])[:idx]
+                        desc = str(row_values[6])[:idx]
                 else:
-                        desc = str(row_values[2])
+                        desc = str(row_values[6])
 
                 desc_list = []
                 matches_a = ["enable", "Enable"]
@@ -360,11 +444,17 @@ def otpstrap_handler_info(sheet, list):
                                 desc_list.append(desc.replace(x, matches_a[matches_b.index(x)]))
                                 desc_list.append(desc)
 
-                descs = re.split(r'\n|, ', row_values[3])
+                descs_raw = str(row_values[6])
+                descs_raw = re.sub(r'(?<!\n)\s+(?=\d+:)', '\n', descs_raw)
+                descs = re.split(r'\n|, ', descs_raw)
                 if bit_length != 0 and desc_list == []:
-                        for i in range(0, 2 ** bit_length):
-                                if i < len(descs):
-                                        desc_val = descs[i].split(':')
+                        has_title = ':' not in descs[0] and len(descs) > 1
+                        start_idx = 1 if has_title else 0
+
+                        for i in range(0, int(2 ** bit_length)):
+                                idx_val = start_idx + i
+                                if idx_val < len(descs):
+                                        desc_val = descs[idx_val].split(':')
                                         if len(desc_val) < 2:
                                                 desc_list.append(desc)
                                         else:
@@ -400,7 +490,7 @@ def otpstrap_handler(sheet, data):
         strap_region = OrderedDict()
         strap_ext_region = OrderedDict()
         for rownum in range(0, sh.nrows):
-                if rownum < 25:
+                if rownum < 1:
                         continue
 
                 row_values = sh.row_values(rownum)
@@ -410,39 +500,39 @@ def otpstrap_handler(sheet, data):
                 is_strap = False
 
                 # OTPSTRAP & OTPSTRAP_EXT only
-                if str(row_values[7]).startswith("OTPSTRAP_EXT"):
+                if str(row_values[8]).startswith("OTPSTRAP_EXT"):
                         is_strapext = True
-                elif str(row_values[7]).startswith("OTPSTRAP"):
+                elif str(row_values[8]).startswith("OTPSTRAP"):
                         is_strap = True
                 else:
                         continue
 
                 # reserved skip
-                if row_values[1] == "reserved" or row_values[1] == "Reserved":
+                if str(row_values[1]).lower() == "reserved":
                         continue
 
                 strap_details = OrderedDict()
                 if is_strap:
-                        strap_region["// " + row_values[7]] = ""
+                        strap_region["// " + str(row_values[8])] = ""
                 elif is_strapext:
-                        strap_ext_region["// " + row_values[7]] = ""
+                        strap_ext_region["// " + str(row_values[8])] = ""
 
                 # if isinstance(row_values[0], int) and int(row_values[0]) == 1:
-                if int(row_values[0]) == 1:
+                if parse_int(row_values[3]) == 1:
                         strap_details["value"] = False
                 else:
                         strap_details["value"] = "0x0"
                         if is_strap:
-                                strap_region["// " + row_values[3]] = ""
+                                strap_region["// " + str(row_values[6])] = ""
                         elif is_strapext:
-                                strap_ext_region["// " + row_values[3]] = ""
+                                strap_ext_region["// " + str(row_values[6])] = ""
 
                 if is_strap:
                         strap_details["protect"] = False
-                        strap_region[row_values[1].strip()] = strap_details
+                        strap_region[str(row_values[1]).strip()] = strap_details
                 elif is_strapext:
                         strap_details["valid"] = False
-                        strap_ext_region[row_values[1].strip()] = strap_details
+                        strap_ext_region[str(row_values[1]).strip()] = strap_details
 
         data["strap_region"] = strap_region
         data["strap_ext_region"] = strap_ext_region
@@ -465,22 +555,23 @@ def otpsec_handler(sheet, data):
 
                 #keys = sec_region
                 for i in range (len(OTP_KEY_NAME)):
-                        if str(row_values[6]).startswith(OTP_KEY_NAME[i]):
-                                print("Found key", row_values[6])
+                        if str(row_values[7]).startswith(OTP_KEY_NAME[i]):
+                                print("Found key", row_values[7])
                                 if i == 0:
-                                        number = re.search(r'\d+', row_values[6]).group()
+                                        number = re.search(r'\d+', str(row_values[7])).group()
                                         key_file = OTP_KEY_FILE_NAME[i] + number + ".pem"
                                         keys["key_file"] = key_file
                                 elif i == 1:
-                                        number = re.search(r'\d+', row_values[6]).group()
+                                        number = re.search(r'\d+', str(row_values[7])).group()
                                         key_file = OTP_KEY_FILE_NAME[i] + number + ".pub"
                                         keys["key_file"] = key_file
                                 else:
                                         keys["key_file"] = OTP_KEY_FILE_NAME[i]
 
                                 keys["type"] = OTP_KEY_TYPE_NAME[i]
-                                keys["w_offset"] = hex(int(str(row_values[1])[:4], 16) - 4096)
-                                keys["number_id"] = int(re.findall(r'\d+', str(row_values[6]))[0])
+                                keys["w_offset"] = hex(parse_int(row_values[0]) - 4096)
+                                nums = re.findall(r'\d+', str(row_values[1]))
+                                keys["number_id"] = int(nums[0]) if nums else 0
 
                                 if OTP_KEY_TYPE_NAME[i] == "cal_manu_pub_hash":
                                         keys["ecc_key_mask"] = "0x0"
@@ -504,29 +595,31 @@ def otpcal_handler_info(sheet, list):
 
                 otp_name = row_values[1]
                 otp_size = row_values[3]
+                otp_desc = row_values[6]
 
-                # reserved skip
-                if otp_name == "reserved" or otp_name == "Reserved":
+                name_str = str(otp_name).strip()
+                # skip reserved, Sum, Actual
+                if name_str.lower() == "reserved" or name_str in ["Sum", "Actual"]:
                         continue
 
-                if otp_name == "Sum":
-                        break
-
-                name = otp_name.replace(' ', '_')
+                name = str(otp_name).replace(' ', '_')
                 cal['key'] = name
-                bit_length = int(otp_size)
+                bit_length = parse_bit_size(otp_size)
+                if bit_length == 0:
+                        continue
+
                 if bit_length > 1:
                         cal['type'] = "string"
                 else:
                         cal['type'] = "boolean"
 
-                offset = int(row_values[0], 16) - 0x1c00
+                offset = parse_int(row_values[0]) - 0x1c00
                 cal['w_offset'] = offset
                 cal['bit_offset'] = 0
-                if int(otp_size) > 1:
-                        cal['bit_length'] = int(otp_size)
+                if bit_length > 1:
+                        cal['bit_length'] = bit_length
 
-                descs = otp_name.split('\n')
+                descs = str(otp_name).split('\n')
                 desc = descs[0]
 
                 desc_list = []
@@ -542,10 +635,17 @@ def otpcal_handler_info(sheet, list):
                                 desc_list.append(desc)
 
                 if bit_length == 1 and desc_list == []:
-                        for i in range(0, 2 ** bit_length):
-                                if i < len(descs):
-                                        desc_val = descs[i].split(':')
-                                        desc_list.append(desc_val[1].strip())
+                        has_title = ':' not in descs[0] and len(descs) > 1
+                        start_idx = 1 if has_title else 0
+
+                        for i in range(0, int(2 ** bit_length)):
+                                idx_val = start_idx + i
+                                if idx_val < len(descs):
+                                        desc_val = descs[idx_val].split(':')
+                                        if len(desc_val) > 1:
+                                                desc_list.append(desc_val[1].strip())
+                                        else:
+                                                desc_list.append(desc)
                                 else:
                                         desc_list.append(desc)
 
@@ -567,18 +667,18 @@ def otpcal_handler(sheet, data):
                 row_values = sh.row_values(rownum)
                 # print(row_values)
 
-                otp_addr = int(row_values[0], 16) - 0x1c00
+                otp_addr = parse_int(row_values[0]) - 0x1c00
                 otp_name = row_values[1]
                 otp_size = row_values[3]
 
                 # reserved skip
-                if otp_name == "reserved" or otp_name == "Reserved":
+                if str(otp_name).lower() == "reserved":
                         continue
 
-                if otp_name == "Sum":
+                if str(otp_name).strip() == "Sum":
                         break
 
-                name = otp_name.strip().replace(" ", "_")
+                name = str(otp_name).strip().replace(" ", "_")
 
                 cal_region["// OTPCAL" + str(otp_addr)] = ""
                 if int(otp_size) == 1:
@@ -652,7 +752,7 @@ if __name__ == '__main__':
                 # print("sheet %d name: %s" % (sheetnum, sh.name))
 
                 # OTPSTRAP & OTPSTRAPEXT
-                if sh.name == "OTP":
+                if sh.name == OTPSTRAP_SHEET_NAME or sh.name == OTPSTRAP_EXT_SHEET_NAME:
                         otpstrap_handler(sh, data)
                         continue
 
@@ -702,10 +802,9 @@ if __name__ == '__main__':
                 sh = wb_strap.sheet_by_index(sheetnum)
                 print("sheet %d name: %s" % (sheetnum, sh.name))
 
-                # OTPCFG
-                if sh.name == "OTP":
+                # OTPSTRAP & OTPSTRAP_EXT
+                if sh.name == OTPSTRAP_SHEET_NAME or sh.name == OTPSTRAP_EXT_SHEET_NAME:
                         otpstrap_handler_info(sh, strap_list)
-                else:
                         continue
 
         with open(AST_CHIP_VER + "_strap.json", "w", encoding="utf-8") as writeJsonfile:

@@ -2,6 +2,7 @@
 
 [TOC]
 
+# OTP Tool
 ## OTP info generation
 
 Generate the initial structures into a new file:
@@ -15,14 +16,15 @@ Example:
 $ python3 otp_info_gen.py memory_map/AST2700A2_OTP_memory_map.xlsx a2_otp_info.h
 ```
 
-## OTP sample json file generation
+## OTP info json file generation
 
 ```bash
 $ python3 e2j.py \
         --input {otp_memory_map_file} \
         --strap {otp_strap_file}
 ```
-Output file: AST2700a1_Sample.json
+
+## OTP full sample jsonc generation
 
 ### AST2700
 
@@ -31,8 +33,9 @@ $ python3 excel_to_json.py \
         {otp_memory_map_file} \
         {output JSONC}
 
-$ python3 excel_to_json.py memory_map/AST2700A2_OTP_memory_map.xlsx 2700-a2_sample-full.jsonc
+$ python3 excel_to_jsonc.py memory_map/AST2700A2_OTP_memory_map.xlsx 2700-a2_sample-full.jsonc
 Successfully converted 'memory_map/AST2700A2_OTP_memory_map.xlsx' to '2700-a2_sample-full.jsonc'
+Successfully generated OTP user configuration to '2700a2_usr.json'
 ```
 Output file: 2700-a2_sample-full.jsonc
 
@@ -53,6 +56,7 @@ $ python3 visualize_bin.py -d otp-all.bin otp-ast2700.bin
 ```
 ![Compare_otp_memory](pic/image-1.png)
 
+# Caliptra tool
 ## Caliptra keys sample json file generation
 
 ```bash
@@ -205,7 +209,7 @@ options:
   -h, --help  show this help message and exit
 ```
 
-## How to compare key hash?
+## How to compare key hash
 
 ### Vendor key hash
 
@@ -392,7 +396,7 @@ options:
                         Path to the owner LMS public key (optional)
 ```
 
-## Caliptra Hash Extraction Tool (hash_extract.py)
+## Caliptra Hash Extraction
 
 This tool is used to extract FMC and Runtime SHA-384 hashes from a Caliptra firmware bundle and compare them against official GitHub releases.
 
@@ -415,17 +419,11 @@ If no arguments are provided, the tool downloads and processes the default firmw
 python3 hash_extract.py
 ```
 
-### Configuration
-The target comparison version can be configured directly in `hash_extract.py` by modifying the `TARGET_VERSION` global variable:
-```python
-TARGET_VERSION = "rt-1.2.1"
-```
-
 ### URLs Used
 - **Default FW**: https://raw.githubusercontent.com/AspeedTech-BMC/bmc-pb/refs/heads/master/ast2700a2/caliptra-fw.bin
-- **Official README URL**: https://raw.githubusercontent.com/chipsalliance/caliptra-sw/main/README.md
+- **Official FW**: https://raw.githubusercontent.com/chipsalliance/caliptra-sw/main/README.md
 
-#### Example Output
+### Example Output
 ```text
 $ python3 hash_extract.py
 [*] Default FW URL: https://raw.githubusercontent.com/AspeedTech-BMC/bmc-pb/refs/heads/master/ast2700a2/caliptra-fw.bin

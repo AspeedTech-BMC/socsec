@@ -14,5 +14,6 @@ setuptools.setup(
         url="https://github.com/AspeedTech-BMC/socsec/",
         packages=setuptools.find_packages(),
         scripts=['tools/socsec', 'tools/otptool'],
-        package_data={'socsec': ['otp_info/*']}
+        package_data={'socsec': ['otp_info/*']},
+        zip_safe=False
 )

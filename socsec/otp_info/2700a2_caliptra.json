@@ -24,7 +24,7 @@
         "type": "string",
         "w_offset": 2,
         "bit_offset": 0,
-        "bit_length": 32,
+        "bit_length": 256,
         "info": [
             "Field Entropy"
         ]
@@ -34,7 +34,7 @@
         "type": "string",
         "w_offset": 18,
         "bit_offset": 0,
-        "bit_length": 48,
+        "bit_length": 384,
         "info": [
             "Manufacture Key Hash"
         ]
@@ -44,7 +44,7 @@
         "type": "string",
         "w_offset": 42,
         "bit_offset": 0,
-        "bit_length": 96,
+        "bit_length": 768,
         "info": [
             "IDEVID Cert attr"
         ]
@@ -54,7 +54,7 @@
         "type": "string",
         "w_offset": 90,
         "bit_offset": 0,
-        "bit_length": 16,
+        "bit_length": 128,
         "info": [
             "IDEVID manuf HSM identifier"
         ]
@@ -64,7 +64,7 @@
         "type": "string",
         "w_offset": 98,
         "bit_offset": 0,
-        "bit_length": 1024,
+        "bit_length": 8192,
         "info": [
             "IDEVID TBS"
         ]
@@ -74,7 +74,7 @@
         "type": "string",
         "w_offset": 610,
         "bit_offset": 0,
-        "bit_length": 96,
+        "bit_length": 768,
         "info": [
             "IDEVID Cert Signature"
         ]

@@ -6,8 +6,8 @@
         "w_offset": 0,
         "bit_offset": 1,
         "info": [
-            "Disable Boot from CPU die SPI",
-            "Enable Boot from CPU die SPI"
+            "Boot from CPU die SPI = Boot from IO die SPI",
+            "Boot from CPU die SPI = Boot from CPU die SPI"
         ]
     },
     {
@@ -18,10 +18,10 @@
         "bit_offset": 2,
         "bit_length": 2,
         "info": [
-            "HPLL default frequency selection = 2.0GHz",
-            "HPLL default frequency selection = 1.9GHz",
-            "HPLL default frequency selection = 1.8GHz",
-            "HPLL default frequency selection = 1.7GHz"
+            "HPLL default frequency = 2.0GHz,",
+            "HPLL default frequency = 1.9GHz,",
+            "HPLL default frequency = 1.8GHz,",
+            "HPLL default frequency = 1.7GHz"
         ]
     },
     {
@@ -31,8 +31,8 @@
         "w_offset": 0,
         "bit_offset": 4,
         "info": [
-            "CPU clock PLL selection = MPLL",
-            "CPU clock PLL selection = HPLL"
+            "CPU clock PLL = MPLL,",
+            "CPU clock PLL = HPLL"
         ]
     },
     {
@@ -43,10 +43,10 @@
         "bit_offset": 5,
         "bit_length": 2,
         "info": [
-            "AXI/AHB clock selection = 400MHz",
-            "AXI/AHB clock selection = 400MHz",
-            "AXI/AHB clock selection = 266MHz",
-            "AXI/AHB clock selection = 200MHz when HCLKPLL=0"
+            "AXI/AHB clock selection = 400MHz,",
+            "AXI/AHB clock selection = 266MHz,",
+            "AXI/AHB clock selection = 200MHz when HCLKPLL=0",
+            "AXI/AHB clock selection = 500MHz,"
         ]
     },
     {
@@ -56,8 +56,8 @@
         "w_offset": 0,
         "bit_offset": 7,
         "info": [
-            "AXI/AHB clock PLL selection = MPLL",
-            "AXI/AHB clock PLL selection = HPLL"
+            "AXI/AHB clock PLL = MPLL,",
+            "AXI/AHB clock PLL = HPLL"
         ]
     },
     {
@@ -78,7 +78,7 @@
         "w_offset": 0,
         "bit_offset": 9,
         "info": [
-            "TSP reset pin selection = SSPRSTN",
+            "TSP reset pin selection = SSPRSTN,",
             "TSP reset pin selection = GPIO18E0"
         ]
     },
@@ -124,17 +124,6 @@
         "info": [
             "Enable TSP running",
             "Disable TSP running"
-        ]
-    },
-    {
-        "key": "En_UFS_Secure",
-        "key_type": "strap",
-        "type": "boolean",
-        "w_offset": 0,
-        "bit_offset": 14,
-        "info": [
-            "Disable UFS secure mode",
-            "Enable UFS secure mode"
         ]
     },
     {
@@ -221,8 +210,8 @@
         "w_offset": 1,
         "bit_offset": 7,
         "info": [
-            "Enable BootMCU ROM & jump to I_FMC",
-            "Disable BootMCU ROM & jump to I_FMC"
+            "Enable BootMCU ROM & jump of FMC",
+            "Disable BootMCU ROM & jump of FMC"
         ]
     },
     {
@@ -243,8 +232,8 @@
         "w_offset": 1,
         "bit_offset": 9,
         "info": [
-            "Allow BROM to wait SPI flash ready bit = disable",
-            "Allow BROM to wait SPI flash ready bit = enable"
+            "Allow BROM of wait SPI flash ready bit = disable",
+            "Allow BROM of wait SPI flash ready bit = enable"
         ]
     },
     {
@@ -254,8 +243,8 @@
         "w_offset": 1,
         "bit_offset": 10,
         "info": [
-            "Use 4-byte command to read flash = disable",
-            "Use 4-byte command to read flash = enable"
+            "Use 4-byte command of read flash = disable",
+            "Use 4-byte command of read flash = enable"
         ]
     },
     {
@@ -315,8 +304,8 @@
         "w_offset": 1,
         "bit_offset": 2,
         "info": [
-            "VGA0/1 Class Code selection = Class Code of VGA device",
-            "VGA0/1 Class Code selection = Class code for video device"
+            "VGA0/1 Class Code = Class Code of VGA device",
+            "VGA0/1 Class Code = Class code for video device"
         ]
     },
     {
@@ -379,7 +368,7 @@
         "key_type": "strap_ext",
         "type": "string",
         "w_offset": 1,
-        "bit_offset": 10,
+        "bit_offset": 0,
         "bit_length": 2,
         "info": [
             "Uart Debug timeout selection = unlimited",
@@ -422,14 +411,227 @@
         ]
     },
     {
+        "key": "ABR",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 0,
+        "info": [
+            "boot storage ABR disable",
+            "boot storage ABR enable"
+        ]
+    },
+    {
+        "key": "ROM_Clear_SRAM",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 1,
+        "info": [
+            "ROM clear SRAM = disable",
+            "ROM clear SRAM = enable"
+        ]
+    },
+    {
+        "key": "udbg_to_sel",
+        "key_type": "strap_ext",
+        "type": "string",
+        "w_offset": 2,
+        "bit_offset": 7,
+        "bit_length": 2,
+        "info": [
+            "Uart Debug timeout selection",
+            "Uart Debug timeout selection",
+            "Uart Debug timeout selection",
+            "Uart Debug timeout selection"
+        ]
+    },
+    {
+        "key": "En_Cptra_debug",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 11,
+        "info": [
+            "Disable Caliptra debug state",
+            "Enable Caliptra debug state"
+        ]
+    },
+    {
+        "key": "FWSPISize",
+        "key_type": "strap_ext",
+        "type": "string",
+        "w_offset": 2,
+        "bit_offset": 13,
+        "bit_length": 3,
+        "info": [
+            "Size of FW SPI Flash = 512MB.",
+            "Size of FW SPI Flash = 256MB.",
+            "Size of FW SPI Flash = 128MB.",
+            "Size of FW SPI Flash = 64MB.",
+            "Size of FW SPI Flash = 32MB.",
+            "Size of FW SPI Flash = 16MB.",
+            "Size of FW SPI Flash = 8MB.",
+            "Size of FW SPI Flash = disable"
+        ]
+    },
+    {
+        "key": "En_FWSPIAux",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 3,
+        "bit_offset": 0,
+        "info": [
+            "Disable FWSPI auxiliary pins",
+            "Enable FWSPI auxiliary pins"
+        ]
+    },
+    {
+        "key": "Boot_SPI_Freq",
+        "key_type": "strap_ext",
+        "type": "string",
+        "w_offset": 3,
+        "bit_offset": 7,
+        "bit_length": 2,
+        "info": [
+            "Boot SPI Frequency Selection = 12.5MHz (by default)",
+            "Boot SPI Frequency Selection = 25MHz",
+            "Boot SPI Frequency Selection = 40MHz",
+            "Boot SPI Frequency Selection = 50MHz"
+        ]
+    },
+    {
+        "key": "Check_Flash_Access",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 3,
+        "bit_offset": 9,
+        "info": [
+            "check flash is ready for accessing = disable",
+            "check flash is ready for accessing = enable"
+        ]
+    },
+    {
+        "key": "ABR_dis_B",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 3,
+        "bit_offset": 10,
+        "info": [
+            "disable B if ABR disabled",
+            "disable B if ABR enabled",
+            "enable B if ABR enabled",
+            "disable B if ABR enabled"
+        ]
+    },
+    {
+        "key": "ABR_RECOVERY_DIS",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 3,
+        "bit_offset": 11,
+        "info": [
+            "enable recovery mode after ABR",
+            "disable recovery mode after ABR"
+        ]
+    },
+    {
+        "key": "FMC_ABR_CS_SWAP_DIS",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 3,
+        "bit_offset": 12,
+        "info": [
+            "Enable CS swap after dual flash ABR is triggerred",
+            "Disable CS swap after dual flash ABR is triggerred"
+        ]
+    },
+    {
+        "key": "FMC_ABR_MODE",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 3,
+        "bit_offset": 13,
+        "info": [
+            "FMC abr mode = dual flash ABR",
+            "FMC abr mode = single flash ABR"
+        ]
+    },
+    {
+        "key": "Node0_SIODecSel",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 4,
+        "bit_offset": 6,
+        "info": [
+            "Selection of SIO decode address = 0x2E.",
+            "Selection of SIO decode address = 0x4E"
+        ]
+    },
+    {
+        "key": "Node0_Dis_SIODec",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 4,
+        "bit_offset": 7,
+        "info": [
+            "Enable SIO Decoding",
+            "Disable SIO Decoding"
+        ]
+    },
+    {
+        "key": "Node0_En_ACPI",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 4,
+        "bit_offset": 8,
+        "info": [
+            "Disable ACPI",
+            "Enable ACPI"
+        ]
+    },
+    {
+        "key": "Node0_En_LPC",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 4,
+        "bit_offset": 9,
+        "info": [
+            "Disable LPC",
+            "Enable LPC"
+        ]
+    },
+    {
+        "key": "Node0_En_eDAF",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 4,
+        "bit_offset": 10,
+        "info": [
+            "Disable eDAF",
+            "Enable eDAF"
+        ]
+    },
+    {
+        "key": "Node0_En_eRTC",
+        "key_type": "strap_ext",
+        "type": "boolean",
+        "w_offset": 4,
+        "bit_offset": 11,
+        "info": [
+            "Disable eSPI RTC",
+            "Enable eSPI RTC"
+        ]
+    },
+    {
         "key": "VRSize",
         "key_type": "strap_ext",
         "type": "boolean",
         "w_offset": 6,
         "bit_offset": 4,
         "info": [
-            "Node0 : Size of VGA RAM = 32MB",
-            "Node0 : Size of VGA RAM = 64MB (DRAMC100[0])"
+            "Node0: Size of VGA RAM = Size of VGA RAM",
+            "Node0: Size of VGA RAM = 32MB"
         ]
     },
     {
@@ -518,394 +720,6 @@
         "info": [
             "Disable PCIe XHCI1",
             "Enable PCIe XHCI1"
-        ]
-    },
-    {
-        "key": "ABR",
-        "key_type": "strap_ext",
-        "type": "boolean",
-        "w_offset": 2,
-        "bit_offset": 0,
-        "info": [
-            "boot storage ABR disable",
-            "boot storage ABR enable"
-        ]
-    },
-    {
-        "key": "ROM_Clear_SRAM",
-        "key_type": "strap_ext",
-        "type": "boolean",
-        "w_offset": 2,
-        "bit_offset": 1,
-        "info": [
-            "ROM clear SRAM",
-            "ROM clear SRAM = disable"
-        ]
-    },
-    {
-        "key": "udbg_to_sel",
-        "key_type": "strap_ext",
-        "type": "string",
-        "w_offset": 2,
-        "bit_offset": 7,
-        "bit_length": 2,
-        "info": [
-            "Uart Debug timeout selection = unlimited",
-            "Uart Debug timeout selection",
-            "Uart Debug timeout selection",
-            "Uart Debug timeout selection"
-        ]
-    },
-    {
-        "key": "En_Cptra_debug",
-        "key_type": "strap_ext",
-        "type": "boolean",
-        "w_offset": 2,
-        "bit_offset": 11,
-        "info": [
-            "Disable Caliptra debug state",
-            "Enable Caliptra debug state"
-        ]
-    },
-    {
-        "key": "En_ROM_WDT",
-        "key_type": "strap_ext",
-        "type": "boolean",
-        "w_offset": 2,
-        "bit_offset": 12,
-        "info": [
-            "Disable ROM WDT",
-            "Enable ROM WDT"
-        ]
-    },
-    {
-        "key": "FWSPISize",
-        "key_type": "strap_ext",
-        "type": "string",
-        "w_offset": 2,
-        "bit_offset": 13,
-        "bit_length": 3,
-        "info": [
-            "Size of FW SPI Flash = disable",
-            "Size of FW SPI Flash = 8MB",
-            "Size of FW SPI Flash = 16MB",
-            "Size of FW SPI Flash = 32MB",
-            "Size of FW SPI Flash = 64MB",
-            "Size of FW SPI Flash = 128MB",
-            "Size of FW SPI Flash = 256MB",
-            "Size of FW SPI Flash = 512MB"
-        ]
-    },
-    {
-        "key": "En_FWSPIAux",
-        "key_type": "strap_ext",
-        "type": "boolean",
-        "w_offset": 3,
-        "bit_offset": 0,
-        "info": [
-            "Disable FWSPI auxiliary pins",
-            "Enable FWSPI auxiliary pins"
-        ]
-    },
-    {
-        "key": "FWSPI_CRTM",
-        "key_type": "strap_ext",
-        "type": "string",
-        "w_offset": 3,
-        "bit_offset": 1,
-        "bit_length": 2,
-        "info": [
-            "Size of FWSPI CRTM",
-            "Size of FWSPI CRTM",
-            "Size of FWSPI CRTM",
-            "Size of FWSPI CRTM"
-        ]
-    },
-    {
-        "key": "Boot_SPI_Freq",
-        "key_type": "strap_ext",
-        "type": "string",
-        "w_offset": 3,
-        "bit_offset": 7,
-        "bit_length": 2,
-        "info": [
-            "Boot SPI Frequency Selection = 12.5MHz (by default)",
-            "Boot SPI Frequency Selection = 25MHz",
-            "Boot SPI Frequency Selection = 40MHz",
-            "Boot SPI Frequency Selection = 50MHz"
-        ]
-    },
-    {
-        "key": "Check_Flash_Access",
-        "key_type": "strap_ext",
-        "type": "boolean",
-        "w_offset": 3,
-        "bit_offset": 9,
-        "info": [
-            "check flash is ready for accessing = disable",
-            "check flash is ready for accessing = enable"
-        ]
-    },
-    {
-        "key": "ABR_dis_B",
-        "key_type": "strap_ext",
-        "type": "boolean",
-        "w_offset": 3,
-        "bit_offset": 10,
-        "info": [
-            "enable B if ABR enabled",
-            "disable B if ABR enabled"
-        ]
-    },
-    {
-        "key": "ABR_RECOVERY_DIS",
-        "key_type": "strap_ext",
-        "type": "boolean",
-        "w_offset": 3,
-        "bit_offset": 11,
-        "info": [
-            "enable recovery mode after ABR",
-            "disable recovery mode after ABR"
-        ]
-    },
-    {
-        "key": "FMC_ABR_CS_SWAP_DIS",
-        "key_type": "strap_ext",
-        "type": "boolean",
-        "w_offset": 3,
-        "bit_offset": 12,
-        "info": [
-            "Enable CS swap after dual flash ABR is triggerred",
-            "Disable CS swap after dual flash ABR is triggerred"
-        ]
-    },
-    {
-        "key": "FMC_ABR_MODE",
-        "key_type": "strap_ext",
-        "type": "boolean",
-        "w_offset": 3,
-        "bit_offset": 13,
-        "info": [
-            "FMC abr mode = dual flash ABR",
-            "FMC abr mode = single flash ABR"
-        ]
-    },
-    {
-        "key": "Node0_HostSPISize0",
-        "key_type": "strap_ext",
-        "type": "string",
-        "w_offset": 4,
-        "bit_offset": 0,
-        "bit_length": 3,
-        "info": [
-            "Size of Host SPI Flash 0 = disable",
-            "Size of Host SPI Flash 0 = 8MB",
-            "Size of Host SPI Flash 0 = 16MB",
-            "Size of Host SPI Flash 0 = 32MB",
-            "Size of Host SPI Flash 0 = 64MB",
-            "Size of Host SPI Flash 0 = 128MB",
-            "Size of Host SPI Flash 0 = 256MB",
-            "Size of Host SPI Flash 0 = 512MB"
-        ]
-    },
-    {
-        "key": "Node0_En_HSPIAux",
-        "key_type": "strap_ext",
-        "type": "boolean",
-        "w_offset": 4,
-        "bit_offset": 3,
-        "info": [
-            "Disable Host SPI auxiliary pins",
-            "Enable Host SPI auxiliary pins"
-        ]
-    },
-    {
-        "key": "Node0_HSPI0_CRTM",
-        "key_type": "strap_ext",
-        "type": "string",
-        "w_offset": 4,
-        "bit_offset": 4,
-        "bit_length": 2,
-        "info": [
-            "Size of Host SPI0 CRTM",
-            "Size of Host SPI0 CRTM",
-            "Size of Host SPI0 CRTM",
-            "Size of Host SPI0 CRTM"
-        ]
-    },
-    {
-        "key": "Node0_SIODecSel",
-        "key_type": "strap_ext",
-        "type": "boolean",
-        "w_offset": 4,
-        "bit_offset": 6,
-        "info": [
-            "Selection of SIO decode address = 0x2E",
-            "Selection of SIO decode address = 0x4E"
-        ]
-    },
-    {
-        "key": "Node0_Dis_SIODec",
-        "key_type": "strap_ext",
-        "type": "boolean",
-        "w_offset": 4,
-        "bit_offset": 7,
-        "info": [
-            "Enable SIO Decoding",
-            "Disable SIO Decoding"
-        ]
-    },
-    {
-        "key": "Node0_En_ACPI",
-        "key_type": "strap_ext",
-        "type": "boolean",
-        "w_offset": 4,
-        "bit_offset": 8,
-        "info": [
-            "Disable ACPI",
-            "Enable ACPI"
-        ]
-    },
-    {
-        "key": "Node0_En_LPC",
-        "key_type": "strap_ext",
-        "type": "boolean",
-        "w_offset": 4,
-        "bit_offset": 9,
-        "info": [
-            "Disable LPC",
-            "Enable LPC"
-        ]
-    },
-    {
-        "key": "Node0_En_eDAF",
-        "key_type": "strap_ext",
-        "type": "boolean",
-        "w_offset": 4,
-        "bit_offset": 10,
-        "info": [
-            "Disable eDAF",
-            "Enable eDAF"
-        ]
-    },
-    {
-        "key": "Node0_En_eRTC",
-        "key_type": "strap_ext",
-        "type": "boolean",
-        "w_offset": 4,
-        "bit_offset": 11,
-        "info": [
-            "Disable eSPI RTC",
-            "Enable eSPI RTC"
-        ]
-    },
-    {
-        "key": "Node1_HostSPISize1",
-        "key_type": "strap_ext",
-        "type": "string",
-        "w_offset": 5,
-        "bit_offset": 0,
-        "bit_length": 3,
-        "info": [
-            "Size of Host SPI Flash 1 = disable",
-            "Size of Host SPI Flash 1 = 8MB",
-            "Size of Host SPI Flash 1 = 16MB",
-            "Size of Host SPI Flash 1 = 32MB",
-            "Size of Host SPI Flash 1 = 64MB",
-            "Size of Host SPI Flash 1 = 128MB",
-            "Size of Host SPI Flash 1 = 256MB",
-            "Size of Host SPI Flash 1 = 512MB"
-        ]
-    },
-    {
-        "key": "Node1_En_HSPIAux",
-        "key_type": "strap_ext",
-        "type": "boolean",
-        "w_offset": 5,
-        "bit_offset": 3,
-        "info": [
-            "Disable Host SPI auxiliary pins",
-            "Enable Host SPI auxiliary pins"
-        ]
-    },
-    {
-        "key": "Node1_HSPI1_CRTM",
-        "key_type": "strap_ext",
-        "type": "string",
-        "w_offset": 5,
-        "bit_offset": 4,
-        "bit_length": 2,
-        "info": [
-            "Size of Host SPI1 CRTM",
-            "Size of Host SPI1 CRTM",
-            "Size of Host SPI1 CRTM",
-            "Size of Host SPI1 CRTM"
-        ]
-    },
-    {
-        "key": "Node1_SIODecSel",
-        "key_type": "strap_ext",
-        "type": "boolean",
-        "w_offset": 5,
-        "bit_offset": 6,
-        "info": [
-            "Selection of SIO decode address = 0x2E",
-            "Selection of SIO decode address = 0x4E"
-        ]
-    },
-    {
-        "key": "Node1_Dis_SIODec",
-        "key_type": "strap_ext",
-        "type": "boolean",
-        "w_offset": 5,
-        "bit_offset": 7,
-        "info": [
-            "Enable SIO Decoding",
-            "Disable SIO Decoding"
-        ]
-    },
-    {
-        "key": "Node1_En_ACPI",
-        "key_type": "strap_ext",
-        "type": "boolean",
-        "w_offset": 5,
-        "bit_offset": 8,
-        "info": [
-            "Disable ACPI",
-            "Enable ACPI"
-        ]
-    },
-    {
-        "key": "Node1_En_LPC",
-        "key_type": "strap_ext",
-        "type": "boolean",
-        "w_offset": 5,
-        "bit_offset": 9,
-        "info": [
-            "Disable LPC",
-            "Enable LPC"
-        ]
-    },
-    {
-        "key": "Node1_En_eDAF",
-        "key_type": "strap_ext",
-        "type": "boolean",
-        "w_offset": 5,
-        "bit_offset": 10,
-        "info": [
-            "Disable eDAF",
-            "Enable eDAF"
-        ]
-    },
-    {
-        "key": "Node1_En_eRTC",
-        "key_type": "strap_ext",
-        "type": "boolean",
-        "w_offset": 5,
-        "bit_offset": 11,
-        "info": [
-            "Disable eSPI RTC",
-            "Enable eSPI RTC"
         ]
     }
 ]

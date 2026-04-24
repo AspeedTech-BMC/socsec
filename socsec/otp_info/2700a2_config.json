@@ -70,16 +70,6 @@
         ]
     },
     {
-        "key": "retire_mechanism_option",
-        "type": "boolean",
-        "w_offset": 0,
-        "bit_offset": 8,
-        "info": [
-            "Key retirement mechanism option disable",
-            "Key retirement mechanism option enable"
-        ]
-    },
-    {
         "key": "wr_protect_otp_strap",
         "type": "boolean",
         "w_offset": 0,
@@ -166,7 +156,27 @@
         "bit_offset": 0,
         "bit_length": 16,
         "info": [
-            "This is a backup of OTPCFG0"
+            "Read OTPCFG0 = OTPCFG0 | OTPCFG1"
+        ]
+    },
+    {
+        "key": "dis_fmc_arb",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 15,
+        "info": [
+            "Enable SoC FMC Anti-rollback feature",
+            "Disable SoC FMC Anti-rollback feature"
+        ]
+    },
+    {
+        "key": "dis_cptra_owner_key_retry",
+        "type": "boolean",
+        "w_offset": 2,
+        "bit_offset": 14,
+        "info": [
+            "Enable Caliptra owner keyhash retry mechanism",
+            "Disable Caliptra owner keyhash retry mechanism"
         ]
     },
     {
@@ -176,16 +186,6 @@
         "bit_offset": 13,
         "info": [
             "0: NIST-TRNG"
-        ]
-    },
-    {
-        "key": "dis_low_secure_key0",
-        "type": "boolean",
-        "w_offset": 2,
-        "bit_offset": 11,
-        "info": [
-            "Enable low security key #0",
-            "Disable low security key #0"
         ]
     },
     {
@@ -260,7 +260,7 @@
         "bit_offset": 0,
         "bit_length": 16,
         "info": [
-            "This is a backup of OTPCFG2"
+            "Read OTPCFG2 = OTPCFG2 | OTPCFG3"
         ]
     },
     {
@@ -474,8 +474,8 @@
         "w_offset": 11,
         "bit_offset": 15,
         "info": [
-            "Disable auto load OTP user0 ctrl setting to OTP register.",
-            "Enable auto load OTP user0 ctrl setting to OTP register."
+            "Disable auto load OTP user0 ctrl setting of OTP register.",
+            "Enable auto load OTP user0 ctrl setting of OTP register."
         ]
     },
     {
@@ -524,8 +524,8 @@
         "w_offset": 13,
         "bit_offset": 15,
         "info": [
-            "Disable auto load OTP secure0 ctrl setting to OTP register.",
-            "Enable auto load OTP secure0 ctrl setting to OTP register."
+            "Disable auto load OTP secure0 ctrl setting of OTP register.",
+            "Enable auto load OTP secure0 ctrl setting of OTP register."
         ]
     },
     {
@@ -575,7 +575,7 @@
         "bit_offset": 8,
         "bit_length": 8,
         "info": [
-            "i3c: DCR = Slave address"
+            "i3c: DCR"
         ]
     },
     {
@@ -613,8 +613,8 @@
         "w_offset": 17,
         "bit_offset": 14,
         "info": [
-            "Disable to turn off UART5 Tx Discard",
-            "Enable to turn off UART5 Tx Discard"
+            "Disable of turn off UART5 Tx Discard",
+            "Enable of turn off UART5 Tx Discard"
         ]
     },
     {
@@ -636,8 +636,8 @@
         "w_offset": 17,
         "bit_offset": 11,
         "info": [
-            "Disable to turn off UART3 Tx Discard",
-            "Enable to turn off UART3 Tx Discard"
+            "Disable of turn off UART3 Tx Discard",
+            "Enable of turn off UART3 Tx Discard"
         ]
     },
     {
@@ -659,8 +659,8 @@
         "w_offset": 17,
         "bit_offset": 8,
         "info": [
-            "Disable to turn off UART2 Tx Discard",
-            "Enable to turn off UART2 Tx Discard"
+            "Disable of turn off UART2 Tx Discard",
+            "Enable of turn off UART2 Tx Discard"
         ]
     },
     {
@@ -682,8 +682,8 @@
         "w_offset": 17,
         "bit_offset": 5,
         "info": [
-            "Disable to turn off UART1 Tx Discard",
-            "Enable to turn off UART1 Tx Discard"
+            "Disable of turn off UART1 Tx Discard",
+            "Enable of turn off UART1 Tx Discard"
         ]
     },
     {
@@ -705,8 +705,8 @@
         "w_offset": 17,
         "bit_offset": 2,
         "info": [
-            "Disable to turn off UART0 Tx Discard",
-            "Enable to turn off UART0 Tx Discard"
+            "Disable of turn off UART0 Tx Discard",
+            "Enable of turn off UART0 Tx Discard"
         ]
     },
     {
@@ -741,8 +741,8 @@
         "w_offset": 18,
         "bit_offset": 13,
         "info": [
-            "Disable to turn off UART10 Tx Discard",
-            "Enable to turn off UART10 Tx Discard"
+            "Disable of turn off UART10 Tx Discard",
+            "Enable of turn off UART10 Tx Discard"
         ]
     },
     {
@@ -764,8 +764,8 @@
         "w_offset": 18,
         "bit_offset": 10,
         "info": [
-            "Disable to turn off UART9 Tx Discard",
-            "Enable to turn off UART9 Tx Discard"
+            "Disable of turn off UART9 Tx Discard",
+            "Enable of turn off UART9 Tx Discard"
         ]
     },
     {
@@ -787,8 +787,8 @@
         "w_offset": 18,
         "bit_offset": 7,
         "info": [
-            "Disable to turn off UART8 Tx Discard",
-            "Enable to turn off UART8 Tx Discard"
+            "Disable of turn off UART8 Tx Discard",
+            "Enable of turn off UART8 Tx Discard"
         ]
     },
     {
@@ -810,8 +810,8 @@
         "w_offset": 18,
         "bit_offset": 4,
         "info": [
-            "Disable to turn off UART7 Tx Discard",
-            "Enable to turn off UART7 Tx Discard"
+            "Disable of turn off UART7 Tx Discard",
+            "Enable of turn off UART7 Tx Discard"
         ]
     },
     {
@@ -833,8 +833,8 @@
         "w_offset": 18,
         "bit_offset": 1,
         "info": [
-            "Disable to turn off UART6 Tx Discard",
-            "Enable to turn off UART6 Tx Discard"
+            "Disable of turn off UART6 Tx Discard",
+            "Enable of turn off UART6 Tx Discard"
         ]
     },
     {
@@ -862,8 +862,8 @@
         "w_offset": 19,
         "bit_offset": 9,
         "info": [
-            "Disable UART to put all boot message and wait the completetion",
-            "Enable UART to put all boot message and wait the completetion"
+            "Disable UART of put all boot message and wait the completetion",
+            "Enable UART of put all boot message and wait the completetion"
         ]
     },
     {
@@ -882,8 +882,8 @@
         "w_offset": 19,
         "bit_offset": 7,
         "info": [
-            "Disable Mode-0 hub to support 23 ports",
-            "Enable Mode-0 hub to support 23 ports"
+            "Disable Mode-0 hub of support 23 ports",
+            "Enable Mode-0 hub of support 23 ports"
         ]
     },
     {
@@ -892,8 +892,8 @@
         "w_offset": 19,
         "bit_offset": 6,
         "info": [
-            "Disable to turn off UART15 Tx Discard",
-            "Enable to turn off UART15 Tx Discard"
+            "Disable of turn off UART15 Tx Discard",
+            "Enable of turn off UART15 Tx Discard"
         ]
     },
     {
@@ -915,8 +915,8 @@
         "w_offset": 19,
         "bit_offset": 3,
         "info": [
-            "Disable to turn off UART12 Tx Discard",
-            "Enable to turn off UART12 Tx Discard"
+            "Disable of turn off UART12 Tx Discard",
+            "Enable of turn off UART12 Tx Discard"
         ]
     },
     {
@@ -938,8 +938,8 @@
         "w_offset": 19,
         "bit_offset": 0,
         "info": [
-            "Disable to turn off UART11 Tx Discard",
-            "Enable to turn off UART11 Tx Discard"
+            "Disable of turn off UART11 Tx Discard",
+            "Enable of turn off UART11 Tx Discard"
         ]
     },
     {
@@ -948,8 +948,8 @@
         "w_offset": 20,
         "bit_offset": 15,
         "info": [
-            "Disable auto load OTP cptra0 ctrl setting to OTP register.",
-            "Enable auto load OTP cptra0 ctrl setting to OTP register."
+            "Disable auto load OTP cptra0 ctrl setting of OTP register.",
+            "Enable auto load OTP cptra0 ctrl setting of OTP register."
         ]
     },
     {
@@ -990,64 +990,6 @@
         "bit_length": 16,
         "info": [
             "cptra 0 region size"
-        ]
-    },
-    {
-        "key": "HPM_LTPI0_DDR_mode_disable",
-        "type": "boolean",
-        "w_offset": 22,
-        "bit_offset": 15,
-        "info": [
-            "Set 1 to enable HPM_LTPI0 DDR mode",
-            "Set 1 to disable HPM_LTPI0 DDR mode"
-        ]
-    },
-    {
-        "key": "HPM_LTPI0_speed_capability_disabling",
-        "type": "string",
-        "w_offset": 22,
-        "bit_offset": 0,
-        "bit_length": 15,
-        "info": [
-            "bit[14:13] - LTPI spec. Reserved"
-        ]
-    },
-    {
-        "key": "LTPI0_check_RX_LINK_SPEED_enable",
-        "type": "boolean",
-        "w_offset": 23,
-        "bit_offset": 8,
-        "info": [
-            "0=Don't check LINK_SPEED before AD (follow the LTPI spec.)"
-        ]
-    },
-    {
-        "key": "LTPI0_PHY_clock_inverse",
-        "type": "string",
-        "w_offset": 23,
-        "bit_offset": 4,
-        "bit_length": 2,
-        "info": [
-            "bit[1] - RX clock inverse"
-        ]
-    },
-    {
-        "key": "LTPI_Runtime_firmware_enable",
-        "type": "boolean",
-        "w_offset": 23,
-        "bit_offset": 1,
-        "info": [
-            "Set 1 to disable AST1700 runtime firmware",
-            "Set 1 to enable AST1700 runtime firmware"
-        ]
-    },
-    {
-        "key": "LTPI_CRC_format",
-        "type": "boolean",
-        "w_offset": 23,
-        "bit_offset": 0,
-        "info": [
-            "LTPI0 & LTPI1 CRC format"
         ]
     },
     {
