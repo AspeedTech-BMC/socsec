@@ -94,7 +94,7 @@ def main():
             if sheet == 'OTPSTRAP':
                 base_w_offset = int('422', 16)
             elif sheet == 'OTPSTRAP_EXT':
-                base_w_offset = int('431', 16)
+                base_w_offset = int('430', 16)
             else:
                 base_w_offset = int(str(df['Start address (word)'].iloc[0]), 16)
 
