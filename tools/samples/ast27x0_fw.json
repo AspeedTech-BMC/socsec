@@ -1,0 +1,12 @@
+{
+	"FMC": "ast2700-mcu-runtime.bin",
+	"DP": "dp_fw.bin",
+	"DDR0": "ddr5_pmu_train_imem.bin",
+	"DDR1": "ddr5_pmu_train_dmem.bin",
+	"ATF": "bl31.bin",
+	"OPTEE": "tee-raw.bin",
+	"UBOOT": "u-boot.bin",
+	"SSP": "zephyr-aspeed-ssp.bin",
+	"TSP": "zephyr-aspeed-tsp.bin",
+	"KERNEL": "fitImage-obmc-phosphor-initramfs-ast2700-default-ast2700-default"
+}

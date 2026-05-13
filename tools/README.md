@@ -443,3 +443,105 @@ RT  Match?       [ OK ]
 ----------------------------------------
 [+] Success: All hashes match the official release.
 ```
+
+# Calculate Reference Measurements
+
+This tool pre-computes the SHA-384 measurements that the ROM/ROM-patch stashes into Caliptra PCR31 via the `STASH_MEASUREMENT` flow. Use it to generate a reference JSON that can be compared against the values reported by the device at runtime.
+
+## Inputs
+
+| Argument | Required | Description |
+|---|---|---|
+| `--efuse` | yes | eFuse JSON file containing `SCU0_810` and `SCU1_804` register values |
+| `--hwstrap` | yes | HW Strap JSON file containing `SCU0_010`, `SCU1_010`, and `SCU1_030` register values |
+| `--otp` | yes | OTP binary image dumped from the device (e.g. via the OTP dump command) |
+| `--output` | yes | Path for the output reference measurements JSON |
+| `--fw` | no | FW JSON file mapping component names to image filenames (secure boot only) |
+| `--image-dir` | no | Directory containing FW images; defaults to `../image` |
+
+## Measurement order
+
+**Normal boot** (no FMC):
+```
+PCR31 = extend(extend(extend(0, OTP), STRA), EFUS)
+```
+
+**Secure boot** (FMC present):
+```
+PCR31 = extend(FMC, OTP, STRA, EFUS, DP, DDR0, DDR1, UEFI0,
+               UEFI1, ATF, OPTEE, UBOOT, SSP, TSP,
+               KERNEL-FIT (linux, dtb, initramfs))
+```
+
+KERNEL-FIT is extended 3 times (linux image, dtb, initramfs regions).
+
+## Usage
+
+Normal boot (OTP + HW strap + eFuse only):
+```bash
+python3 scripts/calculate_measurements.py \
+    --efuse=samples/ast27x0_efuse.json \
+    --hwstrap=samples/ast27x0_hwstrap.json \
+    --otp=samples/otp-all.bin \
+    --output=samples/reference_measurements.json
+```
+
+Secure boot (with full FW image set):
+```bash
+python3 scripts/calculate_measurements.py \
+    --efuse=ast27x0_efuse.json \
+    --hwstrap=ast27x0_hwstrap.json \
+    --otp=otp-all.bin \
+    --fw=ast27x0_fw.json \
+    --output=reference_measurements.json \
+    --image-dir=../image
+```
+
+## Input file formats
+
+**eFuse JSON** (`ast27x0_efuse.json`):
+```json
+{
+    "SCU0_810": "0x00200000",
+    "SCU1_804": "0x00000000"
+}
+```
+
+**HW Strap JSON** (`ast27x0_hwstrap.json`):
+```json
+{
+    "SCU0_010": "0x00000000",
+    "SCU1_010": "0x00000300",
+    "SCU1_030": "0x00000000"
+}
+```
+
+**FW JSON** (`ast27x0_fw.json`) — maps Caliptra component names to image filenames:
+```json
+{
+    "FMC":    "ast2700-mcu-runtime.bin",
+    "DP":     "dp_fw.bin",
+    "DDR0":   "ddr5_pmu_train_imem.bin",
+    "DDR1":   "ddr5_pmu_train_dmem.bin",
+    "ATF":    "bl31.bin",
+    "OPTEE":  "tee-raw.bin",
+    "UBOOT":  "u-boot.bin",
+    "SSP":    "zephyr-aspeed-ssp.bin",
+    "TSP":    "zephyr-aspeed-tsp.bin",
+    "KERNEL": "fitImage-obmc-phosphor-initramfs-ast2700-default"
+}
+```
+
+## Output
+
+The output JSON contains the individual component hashes and the final PCR31 value:
+```json
+{
+    "OTP_FULL": "<sha384hex>",
+    "STRA":     "<sha384hex>",
+    "EFUS":     "<sha384hex>",
+    "PCR31":    "<sha384hex>"
+}
+```
+
+With `--fw`, additional per-component entries (e.g. `FMC`, `ATF`, `KERNEL`) are included.
