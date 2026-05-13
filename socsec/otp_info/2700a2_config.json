@@ -160,16 +160,6 @@
         ]
     },
     {
-        "key": "dis_fmc_arb",
-        "type": "boolean",
-        "w_offset": 2,
-        "bit_offset": 15,
-        "info": [
-            "Enable SoC FMC Anti-rollback feature",
-            "Disable SoC FMC Anti-rollback feature"
-        ]
-    },
-    {
         "key": "dis_cptra_owner_key_retry",
         "type": "boolean",
         "w_offset": 2,
@@ -469,53 +459,83 @@
         ]
     },
     {
-        "key": "en_auto_load_usr0",
+        "key": "wr_protect_otp_usr3",
         "type": "boolean",
         "w_offset": 11,
-        "bit_offset": 15,
+        "bit_offset": 7,
         "info": [
-            "Disable auto load OTP user0 ctrl setting of OTP register.",
-            "Enable auto load OTP user0 ctrl setting of OTP register."
+            "Disable Write protect for OTP region user 3",
+            "Enable Write protect for OTP region user 3"
         ]
     },
     {
-        "key": "rd_protect_otp_usr0",
+        "key": "rd_protect_otp_usr3",
         "type": "boolean",
         "w_offset": 11,
-        "bit_offset": 14,
+        "bit_offset": 6,
         "info": [
-            "Disable Read protect for OTP region user 0",
-            "Enable Read protect for OTP region user 0"
+            "Disable Read protect for OTP region user 3",
+            "Enable Read protect for OTP region user 3"
+        ]
+    },
+    {
+        "key": "wr_protect_otp_usr2",
+        "type": "boolean",
+        "w_offset": 11,
+        "bit_offset": 5,
+        "info": [
+            "Disable Write protect for OTP region user 2",
+            "Enable Write protect for OTP region user 2"
+        ]
+    },
+    {
+        "key": "rd_protect_otp_usr2",
+        "type": "boolean",
+        "w_offset": 11,
+        "bit_offset": 4,
+        "info": [
+            "Disable Read protect for OTP region user 2",
+            "Enable Read protect for OTP region user 2"
+        ]
+    },
+    {
+        "key": "wr_protect_otp_usr1",
+        "type": "boolean",
+        "w_offset": 11,
+        "bit_offset": 3,
+        "info": [
+            "Disable Write protect for OTP region user 1",
+            "Enable Write protect for OTP region user 1"
+        ]
+    },
+    {
+        "key": "rd_protect_otp_usr1",
+        "type": "boolean",
+        "w_offset": 11,
+        "bit_offset": 2,
+        "info": [
+            "Disable Read protect for OTP region user 1",
+            "Enable Read protect for OTP region user 1"
         ]
     },
     {
         "key": "wr_protect_otp_usr0",
         "type": "boolean",
         "w_offset": 11,
-        "bit_offset": 13,
+        "bit_offset": 1,
         "info": [
             "Disable Write protect for OTP region user 0",
             "Enable Write protect for OTP region user 0"
         ]
     },
     {
-        "key": "usr0_region_start_offset",
-        "type": "string",
+        "key": "rd_protect_otp_usr0",
+        "type": "boolean",
         "w_offset": 11,
         "bit_offset": 0,
-        "bit_length": 12,
         "info": [
-            "User 0 region start offset (unit: word)"
-        ]
-    },
-    {
-        "key": "usr0_region_size",
-        "type": "string",
-        "w_offset": 12,
-        "bit_offset": 0,
-        "bit_length": 16,
-        "info": [
-            "User 0 region size (unit: word)"
+            "Disable Read protect for OTP region user 0",
+            "Enable Read protect for OTP region user 0"
         ]
     },
     {

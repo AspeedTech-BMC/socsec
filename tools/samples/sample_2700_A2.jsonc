@@ -59,7 +59,7 @@
         // It's enabled during ASPEED manufacturing.
         "wr_protect_puf": false,
         // OTPCFG0[13]
-        // Disable OTP Memory Facofry Test Mode
+        // Disable OTP Memory Factory Test Mode
         // 0: enable
         // 1: disable
         // of prevent security issue of OTP memory. Disabled BIST mode is recommended.
@@ -121,9 +121,6 @@
         // Read OTPCFG0 = OTPCFG0 | OTPCFG1
         // This is a backup of OTPCFG0
         "CONCFG0_BK": "0x0",
-        // OTPCFG2[15]
-        // Disable SoC FMC Anti-rollback feature
-        "dis_fmc_arb": false,
         // OTPCFG2[14]
         // Disable Caliptra owner keyhash retry mechanism
         "dis_cptra_owner_key_retry": false,
@@ -257,23 +254,30 @@
         // OTPCFG10[0]
         // Reference to datasheet SCU1_0C8
         "SCU1_DIS_ESPI0_AHB": false,
-        // OTPCFG11[15]
-        // Enable auto load OTP user0 ctrl setting of OTP register.
-        // Once it's enabled, r/w protection, offset, and size of OTP user0 value below would be
-        // loaded inof OTP control registers as a hardware default value.
-        "en_auto_load_usr0": false,
-        // OTPCFG11[14]
-        // Enable Read protect for OTP region user 0
-        "rd_protect_otp_usr0": false,
-        // OTPCFG11[13]
+        // OTPCFG11[7]
+        // Enable Write protect for OTP region user 3
+        "wr_protect_otp_usr3": false,
+        // OTPCFG11[6]
+        // Enable Read protect for OTP region user 3
+        "rd_protect_otp_usr3": false,
+        // OTPCFG11[5]
+        // Enable Write protect for OTP region user 2
+        "wr_protect_otp_usr2": false,
+        // OTPCFG11[4]
+        // Enable Read protect for OTP region user 2
+        "rd_protect_otp_usr2": false,
+        // OTPCFG11[3]
+        // Enable Write protect for OTP region user 1
+        "wr_protect_otp_usr1": false,
+        // OTPCFG11[2]
+        // Enable Read protect for OTP region user 1
+        "rd_protect_otp_usr1": false,
+        // OTPCFG11[1]
         // Enable Write protect for OTP region user 0
         "wr_protect_otp_usr0": false,
-        // OTPCFG11[11: 0]
-        // User 0 region start offset (unit: word)
-        "usr0_region_start_offset": "0x0",
-        // OTPCFG12[15: 0]
-        // User 0 region size (unit: word)
-        "usr0_region_size": "0x0",
+        // OTPCFG11[0]
+        // Enable Read protect for OTP region user 0
+        "rd_protect_otp_usr0": false,
         // OTPCFG13[15]
         // Enable auto load OTP secure0 ctrl setting of OTP register.
         // Once it's enabled, r/w protection, offset, and size of OTP secure0 value below would be
@@ -616,6 +620,7 @@
         },
         // OTPSTRAP[20]/SCU1_010[19]
         // Selection of IO for Uart Debug
+        // 0: IO12 1: IO0
         "UartDbgSel": {
             "value": false,
             "protect": false
@@ -768,7 +773,7 @@
             "valid": false
         },
         // OTPSTRAP_EXT2/SCU1_030[0]
-        // boot sofrage ABR enable
+        // boot storage ABR enable
         // 0: disable 1: enable
         "ABR": {
             "value": false,
@@ -943,9 +948,9 @@
         }
     },
     "user_region": {
-        // OTPUSR 0x440 - 48128 bits
-        // Reserved for cusofmers (OEM/ODM)
-        "User_Region": "0x0"
+        // OTPUSR 0x440 - 32768 bits
+        // ROM patch used
+        "ROM_patch": "0x0"
     },
     "secure_region": {
         "keys": [

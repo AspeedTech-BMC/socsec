@@ -1,12 +1,12 @@
 [
     {
-        "key": "User_Region",
+        "key": "ROM_patch",
         "type": "string",
         "w_offset": 0,
         "bit_offset": 0,
-        "bit_length": 48128,
+        "bit_length": 32768,
         "info": [
-            "Reserved for cusofmers (OEM/ODM)"
+            "ROM patch used"
         ]
     }
 ]

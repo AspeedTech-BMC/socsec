@@ -1171,7 +1171,7 @@ class OTP(object):
                     raise ValueError("Input value is out of range.", value)
 
                 if hex_value != 0:
-                    print("key {} set value {}".format(key, hex_value))
+                    print("key {} set value {}".format(key, value))
                     print("offset len", offset, bit_length)
                 config_region[offset:offset+len(bit_value)] = bit_value
 
@@ -1307,7 +1307,7 @@ class OTP(object):
                     raise ValueError("Input value is out of range.", value)
 
                 if hex_value != 0:
-                    print("key {} set value {}".format(key, hex_value))
+                    print("key {} set value {}".format(key, value))
                     print("offset len", offset, bit_length)
 
                 strap_region[offset:offset+len(bit_value)] = bit_value
@@ -1362,7 +1362,7 @@ class OTP(object):
                     raise ValueError("Input value is out of range.", value)
 
                 if hex_value != 0:
-                    print("key {} set value {}".format(key, hex_value))
+                    print("key {} set value {}".format(key, value))
                     print("offset len", offset, bit_length)
 
                 strap_ext_region[offset:offset+len(bit_value)] = bit_value
@@ -1484,7 +1484,7 @@ class OTP(object):
                     raise ValueError("key %s Input value %s is out of range." % (key, value))
 
                 if hex_value != 0:
-                    print("key {} set value {}".format(key, hex_value))
+                    print("key {} set value {}".format(key, value))
                     print("offset len", offset, bit_length)
                 rbp_region[offset:offset+len(bit_value)] = bit_value
 
