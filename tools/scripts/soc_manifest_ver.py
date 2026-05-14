@@ -121,7 +121,10 @@ def main():
     ecc_sig_offset = 0xe9c
     lms_sig_offset = ecc_sig_offset + 0x60
     owner2_ecc_sig = manifest_data[ecc_sig_offset:ecc_sig_offset + 96]
-    owner2_lms_sig = manifest_data[lms_sig_offset:lms_sig_offset + 1620]
+
+    # cptra_imgtool stores the MFST2 LMS signature q field in little-endian; swap it back
+    owner2_lms_sig_raw = manifest_data[lms_sig_offset:lms_sig_offset + 1620]
+    owner2_lms_sig = owner2_lms_sig_raw[0:4][::-1] + owner2_lms_sig_raw[4:]
 
     # Verify vendor ECC signature
     print("Verifying MFST vendor ECC signature...")
