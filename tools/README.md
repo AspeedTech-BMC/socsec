@@ -263,7 +263,7 @@ This tool is used to extract SoC Manifest and manifest vendor/owner data tbs fro
 
 - Example
 ```bash
-$ python3 scripts/extract_soc_manifest.py ast2700-abb.bin soc_manifest.bin manifest_vendor_data_tbs.bin manifest_owner_data_tbs.bin manifest2_owner_data_tbs.bin
+$ python3 scripts/extract_soc_manifest.py <input_image.bin> soc_manifest.bin manifest_vendor_data_tbs.bin manifest_owner_data_tbs.bin manifest2_owner_data_tbs.bin
 ```
 
 - Usage
