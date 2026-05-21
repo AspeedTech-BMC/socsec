@@ -948,7 +948,7 @@
         }
     },
     "user_region": {
-        // OTPUSR 0x440 - 32768 bits
+        // OTPUSR 0x800 - 32768 bits
         // ROM patch used
         "ROM_patch": "0x0"
     },

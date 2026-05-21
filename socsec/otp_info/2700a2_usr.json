@@ -2,7 +2,7 @@
     {
         "key": "ROM_patch",
         "type": "string",
-        "w_offset": 0,
+        "w_offset": 960,
         "bit_offset": 0,
         "bit_length": 32768,
         "info": [
