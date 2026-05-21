@@ -1,6 +1,7 @@
 import argparse
 import hashlib
 from pyhsslms import LmsPrivateKey, LmsPublicKey, LmsSignature
+from pyhsslms.pyhsslms import lms_params
 import struct
 import os
 
@@ -91,6 +92,22 @@ def generate_lms_signature(private_key_bytes, data_to_sign, output_file):
     except Exception as e:
         print(f"Error during LMS signing: {e}")
 
+def normalize_lms_private_key(raw_bytes):
+    """
+    Normalize raw key bytes to the format expected by LmsPrivateKey.deserialize():
+      lms_type(4) + lmots_type(4) + SEED(n) + I(16) + q(4)
+
+    Supported input formats:
+      .pem  (48 bytes): lms_type + lmots_type + SEED + I          (no q, starts with valid typecode)
+      .prv  (64 bytes): 12-byte header + lms_type + ... + I + q   (has header, q included)
+    """
+    if raw_bytes[0:4] in lms_params:
+        # .pem format: starts directly with lms_type, q=0 appended
+        return raw_bytes + struct.pack(">L", 0)
+    else:
+        # .prv format: skip 12-byte header; q is already present
+        return raw_bytes[12:]
+
 def load_lms_private_key_from_binary(binary_file_path):
     """
     Loads an LMS private key from a binary file.
@@ -132,7 +149,7 @@ def main():
         if CPTRA_SAMPLE_KEY:
             generate_lms_signature(private_key_bytes, data_to_sign, args.output)
         else:
-            generate_lms_signature(private_key_bytes[12:], data_to_sign, args.output)
+            generate_lms_signature(normalize_lms_private_key(private_key_bytes), data_to_sign, args.output)
 
         # Attempt to verify the generated signature using the corresponding public key
         if args.public_key:
