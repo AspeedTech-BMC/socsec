@@ -11,7 +11,7 @@ import os
 import argparse
 
 # Global configuration
-TARGET_VERSION = "rt-1.2.1"
+TARGET_VERSION = "rt-1.2.5"
 OFFICIAL_README_URL = "https://raw.githubusercontent.com/chipsalliance/caliptra-sw/main/README.md"
 DEFAULT_FW_URL = "https://raw.githubusercontent.com/AspeedTech-BMC/bmc-pb/refs/heads/master/ast2700a2/caliptra-fw.bin"
 DEFAULT_FW_NAME = "caliptra-fw.bin"
@@ -89,16 +89,10 @@ def split_caliptra_measurements(caliptra_image: bytes) -> tuple[bytes, bytes]:
         image_offset = int.from_bytes(toc[48:52], 'little')
         image_size = int.from_bytes(toc[52:56], 'little')
 
-        # Calculate digest of the image data as-is
+        # Caliptra stores images in flash byte order (each 32-bit word byte-swapped).
+        # The official hashes are computed over the word-swapped digest.
         digest = _sha384(caliptra_image[image_offset:][:image_size])
-
-        # Determine the correct Big-Endian representation
-        # If the hash starts with known swapped patterns (e.g. 0x45c6...), fix it.
-        # This handles the difference between flash-swapped and standard digests.
-        if digest.hex().startswith("45c6fdce") or digest.hex().startswith("b6838fd4"):
-            standard_hash = swap_word_endianness(digest)
-        else:
-            standard_hash = digest
+        standard_hash = swap_word_endianness(digest)
 
         if toc_id == TOC_ID_FMC:
             fmc_hash = standard_hash
