@@ -1,0 +1,88 @@
+{
+    // OEM key type test config for AST2700-A2
+    //
+    // Bit 7~9 encoding in key header:
+    //   000 -> empty (no OEM key)
+    //   001 -> oem_type0
+    //   010 -> oem_type1
+    //   ...
+    //   111 -> oem_type6
+    //
+    // w_offset starts from 0x260, which is right after the last soc_vault key
+    // in the full sample config (see tools/samples/sample_2700_A2.jsonc):
+    //   cal_own_pub_hash x16 : 0xa0  ~ 0x208  (48 bytes each)
+    //   soc_vault        x4  : 0x220 ~ 0x250  (32 bytes each)
+    //   --> next available   : 0x260
+    //
+    // Usage:
+    //   otptool make_otp_image \
+    //       --key_folder tests/keys/ \
+    //       --output_folder tests/otp/out-2700-a2_oem-key/ \
+    //       tests/otp/2700-a2_oem-key.jsonc
+    //
+    // NOTE: Replace oem_typeN.bin with actual OEM data before programming.
+    //
+    // Secure region layout for OEM keys (byte offsets, 48 bytes each):
+    //   0x4c0 ~ 0x4ef : oem_type0 data (bits 7~9 = 001)
+    //   0x4f0 ~ 0x51f : oem_type1 data (bits 7~9 = 010)
+    //   0x520 ~ 0x54f : oem_type2 data (bits 7~9 = 011)
+    //   0x550 ~ 0x57f : oem_type3 data (bits 7~9 = 100)
+    //   0x580 ~ 0x5af : oem_type4 data (bits 7~9 = 101)
+    //   0x5b0 ~ 0x5df : oem_type5 data (bits 7~9 = 110)
+    //   0x5e0 ~ 0x60f : oem_type6 data (bits 7~9 = 111)
+    "name": "2700-a2_oem-key",
+    "version": "2700A2",
+    "secure_region": {
+        "keys": [
+            {
+                // bits 7~9 = 001
+                "type": "oem_type0",
+                "key_file": "oem_type0.bin",
+                "w_offset": "0x260",
+                "number_id": 0
+            },
+            {
+                // bits 7~9 = 010
+                "type": "oem_type1",
+                "key_file": "oem_type1.bin",
+                "w_offset": "0x278",
+                "number_id": 0
+            },
+            {
+                // bits 7~9 = 011
+                "type": "oem_type2",
+                "key_file": "oem_type2.bin",
+                "w_offset": "0x290",
+                "number_id": 0
+            },
+            {
+                // bits 7~9 = 100
+                "type": "oem_type3",
+                "key_file": "oem_type3.bin",
+                "w_offset": "0x2a8",
+                "number_id": 0
+            },
+            {
+                // bits 7~9 = 101
+                "type": "oem_type4",
+                "key_file": "oem_type4.bin",
+                "w_offset": "0x2c0",
+                "number_id": 0
+            },
+            {
+                // bits 7~9 = 110
+                "type": "oem_type5",
+                "key_file": "oem_type5.bin",
+                "w_offset": "0x2d8",
+                "number_id": 0
+            },
+            {
+                // bits 7~9 = 111
+                "type": "oem_type6",
+                "key_file": "oem_type6.bin",
+                "w_offset": "0x2f0",
+                "number_id": 0
+            }
+        ]
+    }
+}
