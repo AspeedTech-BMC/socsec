@@ -1825,6 +1825,12 @@ class OTP(object):
                 # offset: word -> byte
                 offset = int(conf['w_offset'], 16) * 2
                 key_bin = key_to_bytearray(conf, key_folder)
+                if offset + len(key_bin) > data_region_size:
+                    raise OtpError(
+                        "Key '%s' at w_offset 0x%x (byte offset 0x%x) with size 0x%x "
+                        "exceeds secure region size 0x%x" %
+                        (conf.get('type', '?'), int(conf['w_offset'], 16),
+                         offset, len(key_bin), data_region_size))
                 insert_bytearray(key_bin, data_region, offset)
 
     def make_secure_region(self, data_config, key_folder, genKeyHeader,
