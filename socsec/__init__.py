@@ -337,6 +337,9 @@ class OTP_info(object):
         OTP_KEY_TYPE_SOC_VAULT = 5
         OTP_KEY_TYPE_SOC_VAULT_SEED = 6
 
+    # bits 7~9: 0=empty, 1~7 => oem_type0~oem_type6
+    OTP_OEM_KEY_TYPE_COUNT = 7
+
     OTP_KEY_TYPE_NAME_2700 = [
         "soc_ecdsa_pub",
         "soc_lms_pub",
@@ -344,6 +347,13 @@ class OTP_info(object):
         "cal_own_pub_hash",
         "soc_vault",
         "soc_vault_seed",
+        "oem_type0",
+        "oem_type1",
+        "oem_type2",
+        "oem_type3",
+        "oem_type4",
+        "oem_type5",
+        "oem_type6",
     ]
 
     OTP_INFO = {
@@ -507,6 +517,7 @@ class OTP_info(object):
                  'AES-256 as secret vault key'),
         key_type(6, OTP_KEY_TYPE_2700.OTP_KEY_TYPE_SOC_VAULT_SEED.value, 0,
                  'AES-256 as secret vault key seed'),
+        *[key_type(i + 1, i + 1, 0, 'OEM binary data type %d' % i) for i in range(7)],
     ]
     ast2700a2_key_type = [
         key_type(4, OTP_KEY_TYPE_2700.OTP_KEY_TYPE_CAL_OWN_PUB_HASH.value, 1,
@@ -515,4 +526,5 @@ class OTP_info(object):
                  'AES-256 as secret vault key'),
         key_type(6, OTP_KEY_TYPE_2700.OTP_KEY_TYPE_SOC_VAULT_SEED.value, 0,
                  'AES-256 as secret vault key seed'),
+        *[key_type(i + 1, i + 1, 0, 'OEM binary data type %d' % i) for i in range(7)],
     ]

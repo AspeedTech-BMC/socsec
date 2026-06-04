@@ -711,6 +711,13 @@ class OTP(object):
             header |= self.otp_info.OTP_KEY_TYPE_2700.OTP_KEY_TYPE_SOC_VAULT.value << 4
         elif type == 'soc_vault_seed':
             header |= self.otp_info.OTP_KEY_TYPE_2700.OTP_KEY_TYPE_SOC_VAULT_SEED.value << 4
+        elif type.startswith('oem_type'):
+            oem_idx = int(type[len('oem_type'):])
+            if oem_idx < 0 or oem_idx > self.otp_info.OTP_OEM_KEY_TYPE_COUNT - 1:
+                raise ValueError("oem key type index must be 0~%d" %
+                                 (self.otp_info.OTP_OEM_KEY_TYPE_COUNT - 1))
+            # bits 7~9: 0=empty, 1~7 => oem_type0~oem_type6 (store N+1)
+            header |= (oem_idx + 1) << 7
         else:
             raise ValueError("type is not supported")
 
@@ -847,6 +854,9 @@ class OTP(object):
             # insert_key_bin += insert_key_mask_bin
 
         elif type in ['cal_own_pub_hash', 'soc_vault', 'soc_vault_seed']:
+            key_bin = load_file(key_folder + key_config['key_file'])
+            insert_key_bin = bytearray(key_bin)
+        elif type.startswith('oem_type'):
             key_bin = load_file(key_folder + key_config['key_file'])
             insert_key_bin = bytearray(key_bin)
         else:
