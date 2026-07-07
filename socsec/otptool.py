@@ -2645,7 +2645,11 @@ class OTP(object):
             if otp_value == 0:
                 continue
 
-            info = ci['info'][otp_value]
+            info_list = ci['info']
+            if otp_value < len(info_list):
+                info = info_list[otp_value]
+            else:
+                info = info_list[0]
             if info != '':
                 print('0x{:<4X}'.format(w_offset), end='')
                 if bit_length == 1:
