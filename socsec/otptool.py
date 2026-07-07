@@ -3083,7 +3083,7 @@ class OTP(object):
         image_size = header.image_info & 0xffff
         sha = SHA384.new(otp_image[:image_size])
         digest = sha.digest()
-        co = header.checksum_offset
+        co = header.checksum_offset if header.checksum_offset != 0 else image_size
         if digest != otp_image[co:co+48]:
             raise OtpError('OTP image checksum is invalid')
 
