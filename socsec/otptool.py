@@ -3158,7 +3158,8 @@ class OTP(object):
             caliptra_info = jstyleson.load(caliptra_info_fd)
 
         rom_offset = header.rom_info & 0xffff
-        rom_region = otp_image[rom_offset:rom_offset+1984]
+        rom_size = (header.rom_info >> 16) & 0xffff
+        rom_region = otp_image[rom_offset:rom_offset+rom_size]
         rbp_offset = header.rbp_info & 0xffff
         rbp_region = otp_image[rbp_offset:rbp_offset+64]
         conf_offset = header.config_info & 0xffff
@@ -3173,8 +3174,16 @@ class OTP(object):
         secure_region = otp_image[secure_offset:secure_offset+6144]
         caliptra_offset = header.caliptra_info & 0xffff
         caliptra_region = otp_image[caliptra_offset:caliptra_offset+1792]
+        user_offset = header.user_info & 0xffff
+        user_size = (header.user_info >> 16) & 0xffff
+        user_region = otp_image[user_offset:user_offset+user_size]
 
         otp_info_inc = self.otp_info.OTP_INFO_INC_2700()
+
+        if header.image_info & otp_info_inc.INC_ROM:
+            print('OTP ROM region:')
+            hexdump(rom_region, skip_zeros=True)
+            print()
 
         if header.image_info & otp_info_inc.INC_RBP:
             print('OTP RBP region:')
@@ -3199,6 +3208,11 @@ class OTP(object):
         if header.image_info & otp_info_inc.INC_CALIPTRA:
             print("OTP Caliptra region:")
             self.otp_print_image_caliptra(caliptra_info, caliptra_region)
+
+        if header.image_info & otp_info_inc.INC_USER:
+            print('OTP USR region:')
+            hexdump(user_region, skip_zeros=True)
+            print()
 
     def _print_otp_image(self, header, otp_image):
         key_type_list, otp_info = self._parse_image_soc_ver(header.soc_ver)

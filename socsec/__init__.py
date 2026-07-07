@@ -189,14 +189,24 @@ def chunks(seq, size):
         yield seq[d*size:]
 
 
-def hexdump(data):
+def hexdump(data, skip_zeros=False):
     '''
     Transform binary data to the hex dump text format:
 
     00000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
+
+    If skip_zeros is True, all-zero rows are suppressed and a single '*' is
+    printed in their place (only once per contiguous skipped block).
     '''
     generator = chunks(data, 16)
+    in_zero_run = False
     for addr, d in enumerate(generator):
+        if skip_zeros and all(b == 0 for b in d):
+            if not in_zero_run:
+                print('*')
+                in_zero_run = True
+            continue
+        in_zero_run = False
         # 00000000:
         line = '%08X: ' % (addr*16)
         # 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
