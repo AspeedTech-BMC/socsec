@@ -2,9 +2,9 @@
     {
         "key": "ROM_patch",
         "type": "string",
-        "w_offset": 960,
+        "w_offset": 640,
         "bit_offset": 0,
-        "bit_length": 32768,
+        "bit_length": 37888,
         "info": [
             "ROM patch used"
         ]
