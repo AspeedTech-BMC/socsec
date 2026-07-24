@@ -41,13 +41,7 @@
         "Caliptra_Manufacture_ECC_key_mask": "0x0",
         // OTPRBP19 - 32 bits
         // Caliptra fuse: LMS REVOCATION
-        "Caliptra_Manufacture_LMS_key_mask": "0x0",
-        // OTPRBP21 - 128 bits
-        // SoC FMC hardware SVN
-        "SoC_FMC_Hardware_SVN_0": "0x0",
-        "SoC_FMC_Hardware_SVN_1": "0x0",
-        "SoC_FMC_Hardware_SVN_2": "0x0",
-        "SoC_FMC_Hardware_SVN_3": "0x0"
+        "Caliptra_Manufacture_LMS_key_mask": "0x0"
     },
     "config_region": {
         // OTPCFG0[15]
@@ -84,6 +78,14 @@
         // 1:enable
         // Once it's enabled, the secure boot is always enforced and there is no way of disable it.
         "enable_secure_boot": false,
+        // OTPCFG0[8]
+        // Enable key retirement mechanism option
+        // 0: can only retire itself key #id
+        // 1: can retire others key #id except itself
+        // There are some key retire bits in OTPRBP region (ex: OTPRBP0/1/3) used of be programmed
+        // if the keys need of be retired. This option chooses the retire mechanism policy for
+        // different use cases.
+        "retire_mechanism_option": false,
         // OTPCFG0[7]
         // Enable static write protection of OTPSTRAP region
         // Once it's enabled, no one can prog the OTPSTRAP region anymore.

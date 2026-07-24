@@ -29,6 +29,9 @@ $ python3 scripts/e2j.py \
 ### AST2700
 
 ```bash
+$ python3 -m pip install pandas
+$ python3 -m pip install openpyxl
+
 $ python3 scripts/excel_to_json.py \
         {otp_memory_map_file} \
         {output JSONC}

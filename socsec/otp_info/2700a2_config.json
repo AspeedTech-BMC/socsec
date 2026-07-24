@@ -70,6 +70,16 @@
         ]
     },
     {
+        "key": "retire_mechanism_option",
+        "type": "boolean",
+        "w_offset": 0,
+        "bit_offset": 8,
+        "info": [
+            "Disable key retirement mechanism option",
+            "Enable key retirement mechanism option"
+        ]
+    },
+    {
         "key": "wr_protect_otp_strap",
         "type": "boolean",
         "w_offset": 0,

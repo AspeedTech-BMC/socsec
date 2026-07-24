@@ -78,37 +78,5 @@
         "bit_offset": 0,
         "bit_length": 32,
         "info": "Caliptra fuse: LMS REVOCATION"
-    },
-    {
-        "type": "string",
-        "key": "SoC_FMC_Hardware_SVN_0",
-        "w_offset": 21,
-        "bit_offset": 0,
-        "bit_length": 32,
-        "info": "[31:0] SoC FMC hardware SVN"
-    },
-    {
-        "type": "string",
-        "key": "SoC_FMC_Hardware_SVN_1",
-        "w_offset": 23,
-        "bit_offset": 0,
-        "bit_length": 32,
-        "info": "[63:32] SoC FMC hardware SVN"
-    },
-    {
-        "type": "string",
-        "key": "SoC_FMC_Hardware_SVN_2",
-        "w_offset": 25,
-        "bit_offset": 0,
-        "bit_length": 32,
-        "info": "[95:64] SoC FMC hardware SVN"
-    },
-    {
-        "type": "string",
-        "key": "SoC_FMC_Hardware_SVN_3",
-        "w_offset": 27,
-        "bit_offset": 0,
-        "bit_length": 32,
-        "info": "[127:96] SoC FMC hardware SVN"
     }
 ]
