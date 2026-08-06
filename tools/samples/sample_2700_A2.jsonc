@@ -5,8 +5,8 @@
     "rbp_region": {
         // OTPRBP3 - 16 bits
         // Caliptra Owner public key hash retire
-        // Caliptra owner pk hash is used of populate inof Caliptra fuse for Caliptra owner keys
-        // verification. AST27x0 supports up of 16 Caliptra owner pk hash and supports pk hash
+        // Caliptra owner pk hash is used to populate into Caliptra fuse for Caliptra owner keys
+        // verification. AST27x0 supports up to 16 Caliptra owner pk hash and supports pk hash
         // retirement feature.
         // Check Caliptra spec for more details.
         // (https://github.com/chipsalliance/Caliptra/blob/main/doc/caliptra_1x/Caliptra.md)
@@ -15,9 +15,9 @@
         "Caliptra_Owner_public_key_hash_retire": "0x0",
         // OTPRBP4 - 64 bits
         // SoC Manifest hardware SVN
-        // SoC Manifest SVN must be equal of or greater than hardware SVN for rollback prevention
+        // SoC Manifest SVN must be equal to or greater than hardware SVN for rollback prevention
         // otherwise the secure boot check is failure. It's implemented a hardware write protection
-        // of prevent malicious attack, the new SVN (of-be prog) must be smaller than or equal of
+        // to prevent malicious attack, the new SVN (to-be prog) must be smaller than or equal to
         // current SVN.
         // Effect: Secure boot is enabled
         // Boot up Policy: SoC Manifest SVN >= HW SoC Manifest SVN
@@ -31,7 +31,7 @@
         // OTPRBP10 - 128 bits
         // Caliptra fuse: RUNTIME SVN
         // Effect: Secure boot is enabled
-        // Policy: FMC SVN >= HW FMC SVN
+        // Policy: RUNTIME SVN >= HW RUNTIME SVN
         "Caliptra_Runtime_Hardware_SVN_0": "0x0",
         "Caliptra_Runtime_Hardware_SVN_1": "0x0",
         "Caliptra_Runtime_Hardware_SVN_2": "0x0",
@@ -56,7 +56,7 @@
         // Disable OTP Memory Factory Test Mode
         // 0: enable
         // 1: disable
-        // of prevent security issue of OTP memory. Disabled BIST mode is recommended.
+        // to prevent security issue of OTP memory. Disabled BIST mode is recommended.
         "dis_otp_bist": false,
         // OTPCFG0[12]
         // Enable static write protection of OTPCAL region
@@ -76,14 +76,14 @@
         // Enable Secure Boot
         // 0:disable
         // 1:enable
-        // Once it's enabled, the secure boot is always enforced and there is no way of disable it.
+        // Once it's enabled, the secure boot is always enforced and there is no way to disable it.
         "enable_secure_boot": false,
         // OTPCFG0[8]
         // Enable key retirement mechanism option
         // 0: can only retire itself key #id
         // 1: can retire others key #id except itself
-        // There are some key retire bits in OTPRBP region (ex: OTPRBP0/1/3) used of be programmed
-        // if the keys need of be retired. This option chooses the retire mechanism policy for
+        // There are some key retire bits in OTPRBP region (ex: OTPRBP0/1/3) used to be programmed
+        // if the keys need to be retired. This option chooses the retire mechanism policy for
         // different use cases.
         "retire_mechanism_option": false,
         // OTPCFG0[7]
@@ -123,9 +123,6 @@
         // Read OTPCFG0 = OTPCFG0 | OTPCFG1
         // This is a backup of OTPCFG0
         "CONCFG0_BK": "0x0",
-        // OTPCFG2[14]
-        // Disable Caliptra owner keyhash retry mechanism
-        "dis_cptra_owner_key_retry": false,
         // OTPCFG2[13]
         // 0: NIST-TRNG
         // 1: SCU-TRNG
@@ -136,7 +133,7 @@
         // 1: Manufacturing
         // 2: Reserved
         // 3: Production
-        // The LCS is populated in Caliptra fuse. It's configured of Manufacturing during ASPEED
+        // The LCS is populated in Caliptra fuse. It's configured to Manufacturing during ASPEED
         // manufacturing.
         "dev_life_cycle_state": "0x0",
         // OTPCFG2[7: 6]
@@ -147,7 +144,7 @@
         "Boot_From_UART_Port_Selection": "0x0",
         // OTPCFG2[5]
         // Enable eMMC software reset
-        // 0: eMMC software reset disable, use HW pin strap of do hardware reset
+        // 0: eMMC software reset disable, use HW pin strap to do hardware reset
         // 1: eMMC software reset enable. Always do software reset
         "en_emmc_sw_reset": false,
         // OTPCFG2[4]
@@ -167,7 +164,7 @@
         // OTPCFG2[0]
         // Disable ROM Patch code
         // 0: If the OTPCFG2[0] is set, the Boot ROM would
-        // execute the OTP patch codes which has been programmed inof
+        // execute the OTP patch codes which has been programmed into
         // OTPROM region.
         // 1: The Boot ROM would ignore pre ROM patch.
         // The ROM patch is the early stage of the boot ROM boot process.
@@ -188,7 +185,7 @@
         // OTPCFG5[9: 0]
         // OTP Patch 1 code size (unit: word)
         // The Boot ROM can execute OTP patch codes in OTPROM region. The OTP patch code size is
-        // limited of 16Kbit.
+        // limited to 16Kbit.
         "OTP_Patch_Size_1": "0x0",
         // OTPCFG6[10: 1]
         // OTP patch code offset
@@ -202,12 +199,12 @@
         // OTPCFG7[9: 0]
         // OTP Patch 2 code size (unit: word)
         // The Boot ROM can execute OTP patch codes in OTPROM region. The OTP patch code size is
-        // limited of 16Kbit.
+        // limited to 16Kbit.
         "OTP_Patch_Size_2": "0x0",
         // OTPCFG9[15]
         // Enable auto load debug control SCU0_0C8/SCU1_0C8 setting
         // 0:disable
-        // 1:enable of auto load SCU0_0C8/SCU1_0C8 value
+        // 1:enable to auto load SCU0_0C8/SCU1_0C8 value
         // After SCU0_0C8 is loaded, the write protection SCU0_E04[18] will be set.
         // After SCU1_0C8 is loaded, the write protection SCU1_B04[18] will be set.
         "en_auto_load_SCU_debug_control": false,
@@ -283,7 +280,7 @@
         // OTPCFG13[15]
         // Enable auto load OTP secure0 ctrl setting of OTP register.
         // Once it's enabled, r/w protection, offset, and size of OTP secure0 value below would be
-        // loaded inof OTP controller registers as a hardware default value.
+        // loaded into OTP controller registers as a hardware default value.
         "en_auto_load_secure0": false,
         // OTPCFG13[14]
         // Enable Read protect for OTP region secure 0
@@ -315,7 +312,7 @@
         // b'11: UART not connected, but Device connected
         "usb_uart6_mode_lsb": false,
         // OTPCFG17[14]
-        // Enable of turn off UART5 Tx Discard
+        // Enable to turn off UART5 Tx Discard
         "usb_uart5_tx_discard_off": false,
         // OTPCFG17[13:12]
         // UART5 Mode
@@ -325,7 +322,7 @@
         // b'11: UART not connected, but Device connected
         "usb_uart5_mode": "0x0",
         // OTPCFG17[11]
-        // Enable of turn off UART3 Tx Discard
+        // Enable to turn off UART3 Tx Discard
         "usb_uart3_tx_discard_off": false,
         // OTPCFG17[10: 9]
         // UART3 Mode
@@ -335,7 +332,7 @@
         // b'11: UART not connected, but Device connected
         "usb_uart3_mode": "0x0",
         // OTPCFG17[8]
-        // Enable of turn off UART2 Tx Discard
+        // Enable to turn off UART2 Tx Discard
         "usb_uart2_tx_discard_off": false,
         // OTPCFG17[7: 6]
         // UART2 Mode
@@ -345,7 +342,7 @@
         // b'11: UART not connected, but Device connected
         "usb_uart2_mode": "0x0",
         // OTPCFG17[5]
-        // Enable of turn off UART1 Tx Discard
+        // Enable to turn off UART1 Tx Discard
         "usb_uart1_tx_discard_off": false,
         // OTPCFG17[4: 3]
         // UART1 Mode
@@ -355,7 +352,7 @@
         // b'11: UART not connected, but Device connected
         "usb_uart1_mode": "0x0",
         // OTPCFG17[2]
-        // Enable of turn off UART0 Tx Discard
+        // Enable to turn off UART0 Tx Discard
         "usb_uart0_tx_discard_off": false,
         // OTPCFG17[1: 0]
         // UART0 Mode
@@ -372,7 +369,7 @@
         // b'11: UART not connected, but Device connected
         "usb_uart11_mode": "0x0",
         // OTPCFG18[13]
-        // Enable of turn off UART10 Tx Discard
+        // Enable to turn off UART10 Tx Discard
         "usb_uart10_tx_discard_off": false,
         // OTPCFG18[12:11]
         // UART10 Mode
@@ -382,7 +379,7 @@
         // b'11: UART not connected, but Device connected
         "usb_uart10_mode": "0x0",
         // OTPCFG18[10]
-        // Enable of turn off UART9 Tx Discard
+        // Enable to turn off UART9 Tx Discard
         "usb_uart9_tx_discard_off": false,
         // OTPCFG18[9: 8]
         // UART9 Mode
@@ -392,7 +389,7 @@
         // b'11: UART not connected, but Device connected
         "usb_uart9_mode": "0x0",
         // OTPCFG18[7]
-        // Enable of turn off UART8 Tx Discard
+        // Enable to turn off UART8 Tx Discard
         "usb_uart8_tx_discard_off": false,
         // OTPCFG18[6: 5]
         // UART8 Mode
@@ -402,7 +399,7 @@
         // b'11: UART not connected, but Device connected
         "usb_uart8_mode": "0x0",
         // OTPCFG18[4]
-        // Enable of turn off UART7 Tx Discard
+        // Enable to turn off UART7 Tx Discard
         "usb_uart7_tx_discard_off": false,
         // OTPCFG18[3: 2]
         // UART7 Mode
@@ -412,7 +409,7 @@
         // b'11: UART not connected, but Device connected
         "usb_uart7_mode": "0x0",
         // OTPCFG18[1]
-        // Enable of turn off UART6 Tx Discard
+        // Enable to turn off UART6 Tx Discard
         "usb_uart6_tx_discard_off": false,
         // OTPCFG18[0]
         // UART6 Mode - msb (bit1)
@@ -421,16 +418,16 @@
         // uart11/13/14 routing (hw effect by scu)
         "uart_io_route": "0x0",
         // OTPCFG19[9]
-        // Enable UART of put all boot message and wait the completetion
+        // Enable UART to put all boot message and wait the completetion
         "usb_uart_put_all_boot_message": false,
         // OTPCFG19[8]
         // Enable Mode-3 (USB2UART only, no vHub)
         "usb_uart_mode3": false,
         // OTPCFG19[7]
-        // Enable Mode-0 hub of support 23 ports
+        // Enable Mode-0 hub to support 23 ports
         "usb_uart_hub_23ports": false,
         // OTPCFG19[6]
-        // Enable of turn off UART15 Tx Discard
+        // Enable to turn off UART15 Tx Discard
         "usb_uart15_tx_discard_off": false,
         // OTPCFG19[5: 4]
         // UART15 Mode
@@ -440,7 +437,7 @@
         // b'11: UART not connected, but Device connected
         "usb_uart15_mode": "0x0",
         // OTPCFG19[3]
-        // Enable of turn off UART12 Tx Discard
+        // Enable to turn off UART12 Tx Discard
         "usb_uart12_tx_discard_off": false,
         // OTPCFG19[2: 1]
         // UART12 Mode
@@ -450,12 +447,12 @@
         // b'11: UART not connected, but Device connected
         "usb_uart12_mode": "0x0",
         // OTPCFG19[0]
-        // Enable of turn off UART11 Tx Discard
+        // Enable to turn off UART11 Tx Discard
         "usb_uart11_tx_discard_off": false,
         // OTPCFG20[15]
         // Enable auto load OTP cptra0 ctrl setting of OTP register.
         // Once it's enabled, r/w protection, offset, and size of OTP cptra0 value below would be
-        // loaded inof OTP controller registers as a hardware default value.
+        // loaded into OTP controller registers as a hardware default value.
         "en_auto_load_cptra0": false,
         // OTPCFG20[14]
         // Enable Read protect for OTP region cptra 0
@@ -481,7 +478,7 @@
         // OTPCFG25[9: 0]
         // OTP Patch 3 code size (unit: word)
         // The Boot ROM can execute OTP patch codes in OTPROM region. The OTP patch code size is
-        // limited of 16Kbit.
+        // limited to 16Kbit.
         "OTP_Patch_Size_3": "0x0",
         // OTPCFG26[10: 1]
         // OTP patch code offset
@@ -495,7 +492,7 @@
         // OTPCFG27[9: 0]
         // OTP Patch 4 code size (unit: word)
         // The Boot ROM can execute OTP patch codes in OTPROM region. The OTP patch code size is
-        // limited of 16Kbit.
+        // limited to 16Kbit.
         "OTP_Patch_Size_4": "0x0",
         // OTPCFG28[10: 1]
         // OTP patch code offset
@@ -509,7 +506,7 @@
         // OTPCFG29[9: 0]
         // OTP Patch 5 code size (unit: word)
         // The Boot ROM can execute OTP patch codes in OTPROM region. The OTP patch code size is
-        // limited of 16Kbit.
+        // limited to 16Kbit.
         "OTP_Patch_Size_5": "0x0"
     },
     "strap_region": {
@@ -566,14 +563,14 @@
         },
         // OTPSTRAP[10]/SCU0_010[10]
         // VGA linear memory size
-        // SW-ROM write of DRAMC100[0]
+        // SW-ROM write to DRAMC100[0]
         "VGALinearSize[0]": {
             "value": false,
             "protect": false
         },
         // OTPSTRAP[11]/SCU0_010[11]
         // VGA linear memory size
-        // SW-ROM write of DRAMC100[0]
+        // SW-ROM write to DRAMC100[0]
         "VGALinearSize[1]": {
             "value": false,
             "protect": false
@@ -628,7 +625,7 @@
             "protect": false
         },
         // OTPSTRAP[21]/SCU1_010[20]
-        // Disable JTAG of Caliptra permanently
+        // Disable JTAG to Caliptra permanently
         // 0: enable 1: disable
         "Dis_CptraJTag": {
             "value": false,
@@ -642,7 +639,7 @@
             "protect": false
         },
         // OTPSTRAP[23]/SCU1_010[22]
-        // Disable BootMCU ROM & jump of FMC
+        // Disable BootMCU ROM & jump to FMC
         // 0: enable 1: disable
         // (wlock)
         "Dis_ROM": {
@@ -657,14 +654,14 @@
             "protect": false
         },
         // OTPSTRAP[25]/SCU1_010[24]
-        // Allow BROM of wait SPI flash ready bit
+        // Allow BROM to wait SPI flash ready bit
         // 0: disable 1: enable
         "SPI_Flash_Wait_Ready": {
             "value": false,
             "protect": false
         },
         // OTPSTRAP[26]/SCU1_010[25]
-        // Use 4-byte command of read flash
+        // Use 4-byte command to read flash
         // 0: disable 1: enable
         "SPI_Flash_4_Byte_Mode": {
             "value": false,
@@ -950,8 +947,8 @@
         }
     },
     "user_region": {
-        // OTPUSR 0x800 - 32768 bits
-        // ROM patch used
+        // OTPUSR 0x6C0 - 37888 bits
+        // Used for ROM patch code. (usr2 & usr3)
         "ROM_patch": "0x0"
     },
     "secure_region": {
@@ -1089,11 +1086,17 @@
         "Anti-rollback_disable": false,
         // OTPCAL2
         // Caliptra fuse: FIELD ENTROPY
-        // Owner secret of hedge against UDS disclosure in the supply chain
+        // Owner secret to hedge against UDS disclosure in the supply chain
         "Field_Entropy": "",
         // OTPCAL18
         // Caliptra fuse: KEY MANIFEST PK HASH
         // Manufacture/Vendor key hash
+        // Single-HSM:
+        // 428d18b0b49192c0163b4e0b2e231d20eef3ae37f8046c09
+        // a31911e3f6875a9a287342c58c7f8d68b69fafe1dd27b2dc
+        // Dual-HSM:
+        // ddd4b37b7773fb84c5fabf2ce55f6035b64190f9ae4cc3c1
+        // 0b385b81f11b1aebd813ae0f6e8be8f0c2c3575ea0bbd9fd
         "Manufacture_Key_Hash": "",
         // OTPCAL42
         // Caliptra fuse: IDEVID CERT IDEVID ATTR
@@ -1114,9 +1117,9 @@
         // OTPCAL98
         // to-be-signed (TBS) payload.
         // The TBS is the certificate template already patched with the IDevID public key, Subject
-        // Key Identifier, serial number, and any extensions that are unique of the device that the
+        // Key Identifier, serial number, and any extensions that are unique to the device that the
         // vendor may have included.
-        // Maximum size is 916 bytes according of mailbox command
+        // Maximum size is 916 bytes according to mailbox command
         "IDEVID_TBS": "",
         // OTPCAL610
         // IDEVID Certificate Signature R & S

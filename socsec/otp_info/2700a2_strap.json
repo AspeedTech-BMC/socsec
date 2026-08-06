@@ -188,8 +188,8 @@
         "w_offset": 1,
         "bit_offset": 5,
         "info": [
-            "Enable JTAG of Caliptra permanently",
-            "Disable JTAG of Caliptra permanently"
+            "Enable JTAG to Caliptra permanently",
+            "Disable JTAG to Caliptra permanently"
         ]
     },
     {
@@ -210,8 +210,8 @@
         "w_offset": 1,
         "bit_offset": 7,
         "info": [
-            "Enable BootMCU ROM & jump of FMC",
-            "Disable BootMCU ROM & jump of FMC"
+            "Enable BootMCU ROM & jump to FMC",
+            "Disable BootMCU ROM & jump to FMC"
         ]
     },
     {
@@ -232,8 +232,8 @@
         "w_offset": 1,
         "bit_offset": 9,
         "info": [
-            "Allow BROM of wait SPI flash ready bit = disable",
-            "Allow BROM of wait SPI flash ready bit = enable"
+            "Allow BROM to wait SPI flash ready bit = disable",
+            "Allow BROM to wait SPI flash ready bit = enable"
         ]
     },
     {
@@ -243,8 +243,8 @@
         "w_offset": 1,
         "bit_offset": 10,
         "info": [
-            "Use 4-byte command of read flash = disable",
-            "Use 4-byte command of read flash = enable"
+            "Use 4-byte command to read flash = disable",
+            "Use 4-byte command to read flash = enable"
         ]
     },
     {
@@ -368,7 +368,7 @@
         "key_type": "strap_ext",
         "type": "string",
         "w_offset": 1,
-        "bit_offset": 0,
+        "bit_offset": 10,
         "bit_length": 2,
         "info": [
             "Uart Debug timeout selection = unlimited",

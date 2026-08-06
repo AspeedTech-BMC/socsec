@@ -170,16 +170,6 @@
         ]
     },
     {
-        "key": "dis_cptra_owner_key_retry",
-        "type": "boolean",
-        "w_offset": 2,
-        "bit_offset": 14,
-        "info": [
-            "Enable Caliptra owner keyhash retry mechanism",
-            "Disable Caliptra owner keyhash retry mechanism"
-        ]
-    },
-    {
         "key": "puf_source",
         "type": "boolean",
         "w_offset": 2,
@@ -643,8 +633,8 @@
         "w_offset": 17,
         "bit_offset": 14,
         "info": [
-            "Disable of turn off UART5 Tx Discard",
-            "Enable of turn off UART5 Tx Discard"
+            "Disable to turn off UART5 Tx Discard",
+            "Enable to turn off UART5 Tx Discard"
         ]
     },
     {
@@ -666,8 +656,8 @@
         "w_offset": 17,
         "bit_offset": 11,
         "info": [
-            "Disable of turn off UART3 Tx Discard",
-            "Enable of turn off UART3 Tx Discard"
+            "Disable to turn off UART3 Tx Discard",
+            "Enable to turn off UART3 Tx Discard"
         ]
     },
     {
@@ -689,8 +679,8 @@
         "w_offset": 17,
         "bit_offset": 8,
         "info": [
-            "Disable of turn off UART2 Tx Discard",
-            "Enable of turn off UART2 Tx Discard"
+            "Disable to turn off UART2 Tx Discard",
+            "Enable to turn off UART2 Tx Discard"
         ]
     },
     {
@@ -712,8 +702,8 @@
         "w_offset": 17,
         "bit_offset": 5,
         "info": [
-            "Disable of turn off UART1 Tx Discard",
-            "Enable of turn off UART1 Tx Discard"
+            "Disable to turn off UART1 Tx Discard",
+            "Enable to turn off UART1 Tx Discard"
         ]
     },
     {
@@ -735,8 +725,8 @@
         "w_offset": 17,
         "bit_offset": 2,
         "info": [
-            "Disable of turn off UART0 Tx Discard",
-            "Enable of turn off UART0 Tx Discard"
+            "Disable to turn off UART0 Tx Discard",
+            "Enable to turn off UART0 Tx Discard"
         ]
     },
     {
@@ -771,8 +761,8 @@
         "w_offset": 18,
         "bit_offset": 13,
         "info": [
-            "Disable of turn off UART10 Tx Discard",
-            "Enable of turn off UART10 Tx Discard"
+            "Disable to turn off UART10 Tx Discard",
+            "Enable to turn off UART10 Tx Discard"
         ]
     },
     {
@@ -794,8 +784,8 @@
         "w_offset": 18,
         "bit_offset": 10,
         "info": [
-            "Disable of turn off UART9 Tx Discard",
-            "Enable of turn off UART9 Tx Discard"
+            "Disable to turn off UART9 Tx Discard",
+            "Enable to turn off UART9 Tx Discard"
         ]
     },
     {
@@ -817,8 +807,8 @@
         "w_offset": 18,
         "bit_offset": 7,
         "info": [
-            "Disable of turn off UART8 Tx Discard",
-            "Enable of turn off UART8 Tx Discard"
+            "Disable to turn off UART8 Tx Discard",
+            "Enable to turn off UART8 Tx Discard"
         ]
     },
     {
@@ -840,8 +830,8 @@
         "w_offset": 18,
         "bit_offset": 4,
         "info": [
-            "Disable of turn off UART7 Tx Discard",
-            "Enable of turn off UART7 Tx Discard"
+            "Disable to turn off UART7 Tx Discard",
+            "Enable to turn off UART7 Tx Discard"
         ]
     },
     {
@@ -863,8 +853,8 @@
         "w_offset": 18,
         "bit_offset": 1,
         "info": [
-            "Disable of turn off UART6 Tx Discard",
-            "Enable of turn off UART6 Tx Discard"
+            "Disable to turn off UART6 Tx Discard",
+            "Enable to turn off UART6 Tx Discard"
         ]
     },
     {
@@ -892,8 +882,8 @@
         "w_offset": 19,
         "bit_offset": 9,
         "info": [
-            "Disable UART of put all boot message and wait the completetion",
-            "Enable UART of put all boot message and wait the completetion"
+            "Disable UART to put all boot message and wait the completetion",
+            "Enable UART to put all boot message and wait the completetion"
         ]
     },
     {
@@ -912,8 +902,8 @@
         "w_offset": 19,
         "bit_offset": 7,
         "info": [
-            "Disable Mode-0 hub of support 23 ports",
-            "Enable Mode-0 hub of support 23 ports"
+            "Disable Mode-0 hub to support 23 ports",
+            "Enable Mode-0 hub to support 23 ports"
         ]
     },
     {
@@ -922,8 +912,8 @@
         "w_offset": 19,
         "bit_offset": 6,
         "info": [
-            "Disable of turn off UART15 Tx Discard",
-            "Enable of turn off UART15 Tx Discard"
+            "Disable to turn off UART15 Tx Discard",
+            "Enable to turn off UART15 Tx Discard"
         ]
     },
     {
@@ -945,8 +935,8 @@
         "w_offset": 19,
         "bit_offset": 3,
         "info": [
-            "Disable of turn off UART12 Tx Discard",
-            "Enable of turn off UART12 Tx Discard"
+            "Disable to turn off UART12 Tx Discard",
+            "Enable to turn off UART12 Tx Discard"
         ]
     },
     {
@@ -968,8 +958,8 @@
         "w_offset": 19,
         "bit_offset": 0,
         "info": [
-            "Disable of turn off UART11 Tx Discard",
-            "Enable of turn off UART11 Tx Discard"
+            "Disable to turn off UART11 Tx Discard",
+            "Enable to turn off UART11 Tx Discard"
         ]
     },
     {
