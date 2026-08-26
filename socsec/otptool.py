@@ -3076,8 +3076,8 @@ class OTP(object):
 
         header = image_header(otp_image[0:header_size], header_format)
 
-        magic = header.magic[0:len(self.otp_info.MAGIC_WORD_OTP)].decode()
-        if magic != self.otp_info.MAGIC_WORD_OTP:
+        magic = header.magic[0:len(self.otp_info.MAGIC_WORD_OTP)]
+        if magic != self.otp_info.MAGIC_WORD_OTP.encode():
             raise OtpError('OTP image magic word is invalid')
 
         image_size = header.image_info & 0xffff

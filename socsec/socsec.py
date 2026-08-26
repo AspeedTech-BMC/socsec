@@ -1414,8 +1414,8 @@ class SecureBootVerify(object):
         (magic_b, soc_ver, _, image_info, data_info, config_info, strap_info, _,
          checksum_offset) = struct.unpack(self.otp.HEADER_FORMAT, header)
 
-        magic = magic_b[0:len(self.otp.MAGIC_WORD_OTP)].decode()
-        if magic != self.otp.MAGIC_WORD_OTP:
+        magic = magic_b[0:len(self.otp.MAGIC_WORD_OTP)]
+        if magic != self.otp.MAGIC_WORD_OTP.encode():
             raise SecError('OTP image magic word is invalid')
         info_struct['rsa_key_order'] = 'little'
         if soc_ver == OTP_info.SOC_AST2600A0:
