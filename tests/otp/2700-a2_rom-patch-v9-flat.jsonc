@@ -1,0 +1,1453 @@
+{
+    "name": "exported_ast2700a2_otp_input",
+    "version": "2700A2",
+    "endianness": "Little-Endian",
+    "source_xlsx": "AST2700A2_OTP_memory_map.xlsx",
+    "generated_utc": "2026-08-26T10:59:05Z",
+    "rom_region": {
+        // XLSX: row#2:0x0:"ROM patch":15872 bits:1984 bytes:992 words
+        // Description: SoC ROM supports multiple ROM patch stages. Check OTPCFG4~7/OTPCFG24~29 for more
+        // details.
+        "rom_patch": [
+            "0x63324950200000006f3249502036421f1ff9b2fc360646cbd879f5e6c4c16d6b",
+            "cc31b91808d7b2da86f056407f00008082614d50ba821860ef00f704630247a7",
+            "83477a14bbd7b7000197828007879314bba7b7cf8830ef4532d2b8f0ef15c785",
+            "1314b807b7cb9187aaad4910ef853a1347859314b807b70200061318f8816910",
+            "ef853e85ba085c18f8f51900ef853a8007859314bba7b70887861367850858ef",
+            "1900ef853e085cfae7dce38437879367854722c43e078547a200e79023006157",
+            "0397ba4742078647a2d6e830ef4532da18f0ef1547851314b807b7cb9187aab5",
+            "0890ef853a85be00610793873e6c07879347a2a089c402cb9843584bfc47b214",
+            "bb973700f7186347894bb847b200f7076347854bb847b2cb994bbc47b2c7854b",
+            "fc47b2c39800040737e047879314c037b70007d963439c8907879314c037b7c8",
+            "3e8007879314bba7b7c63ef007879314bb97b7cf3e0247a78314bbd7b7d70671",
+            "710000000000000000000000008082614550b2853e47c2c83e0807e79347c2c7",
+            "8947c2c82afda470ef453245d2466246f2a83947a900e7f46314ba07b7973e47",
+            "f24762a80547a5e39947f2c39947e2a8350ff00793c7810e87a78347b2ce3e47",
+            "dc47b2cc3e57dc47b2ca3e479c47b2a8b147c2c39947c2c82a336d4532c802c6",
+            "2ad60671798082612150f2853e57edfcf048e347f2ce3e17fd47f2f6f550ef45",
+            "814505a8214781804580ef4512559203000613cb898b8557b2d63e439c079112",
+            "c1f7b7a805ce3e6a07879367e1c398470512c1f7b70007a02312c1f7b7c39847",
+            "0505c7879312c1f7b7c39857220587879312c1f7b7c39847220547879312c1f7",
+            "b7c39847220487879312c1f7b70007a0230347879312c1f7b7c3985712044787",
+            "9312c1f7b70007a0230307879312c1f7b7c39857020407879312c1f7b7c39840",
+            "20071307a112c1f7b7d43e46a00793c39847050207879312c1f7b70007a02302",
+            "07879312c1f7b7c39847412047879312c027b7c39867092447879312c027b7c3",
+            "9847412007879312c027b78e8580ef550245b24622a22957a900e7f463fc0787",
+            "9367854722d23e0a07879314bbe7b7d03e0e07879314bbd7b7c232c42ec62ade",
+            "0671398082612150f2853e57a2a011479100f76463004007b74f9847b200f778",
+            "63004007b74b9847b200f77e63004007b7479847b2a035479100e7f463000387",
+            "b74fd847b200e7e863e847879367914bd847b200e7ef63000207b747d847b2cf",
+            "d847b25b9847e2cf9847b257d847e2cbd847b253d847e2cb9847b2539847e2c7",
+            "d847b24f9847e2c79847b24bd847e2a059478500f70463478d579847e200f717",
+            "6347894fd847e200f71c6347854b9847e2a065478d00f704635732479c47e2d6",
+            "2a3fb9456255823701a0c1478900f70463c4678793485357b7439847e2a8d108",
+            "07e79357a2c78957a2d42aa61470ef45325592466246f2d402d202d03e47a1ce",
+            "3e03400793cc3e43dc47b2c62ade06713980826105853efff7c79347e2fcf765",
+            "e347a24772ce3e078547f2cc3e8fb9439c97b6078a2b06869314b806b70ff7f7",
+            "938fb547e286be0007c78397b647f246b20087d71347e2a815ce02cc3e57fdc4",
+            "2ec62a11018082014100010001fae7f7e30ff007934712c23e07854792c39847",
+            "2297ba078a47922b07871314b807b7fce7dce3479d4732c63e078547b2c43e83",
+            "8547a2a0198fb932078793edb887b70017d71347a2cb918b8547a2a01dc602c4",
+            "3e4792a0b9c202114114bb930c14bb91cebd4742d1e8e02897d3bdc876489c64",
+            "5b9ecc5616449723753f4838fa12f1a35100000063314950200000006f314950",
+            "20000000030000000c02fffd00000000dc0158fba8000000d80055fb53000000",
+            "d4004bfb08000000d00148f9c0000000cc0188f838000000c80400f438000000",
+            "c4f4380000000000c0000087020000009c000003020000009800003b3a000000",
+            "940000030200000090000007060000008c00000302000000880000bfbe000000",
+            "8400000302000000807f7f3b3a000000140f0c2120000000100f406d7efba193",
+            "a1a1179741fb10365b00008082612d40fef7c860ef00f704630247a783473e14",
+            "bbd7b70001c4a830ef4552c7d8f0ef2887851314b807b7cb9187aaa26910ef85",
+            "3e85ba02000613017c1178f65900ef853e85ba105c0178e9f900ef853e14b805",
+            "b75602105ce37900ef853e105cd03e97ba63400793873e078600615783faf74c",
+            "e3474200615783c83e078547c200e790230021570397ba4772078647c2cc2830",
+            "ef4552cf58f0ef2807851314b807b7cb9187aaaa4890ef853a85be0021079387",
+            "3e97ba47c200415703a091c802ce3e97ba14b807b76340071300f1132383c18f",
+            "f903ff07b7476200f1122383857fe7f79347e2cc3e439c8b07879314c037b798",
+            "e910ef2907851314b807b7458102000613c5bec3bac1b6df32dd2edb2ad942d7",
+            "464fdc4f984bd44b9047cc47880047a8030007a8832907879314b807b7fef761",
+            "e33847879314bb97b74732c3984318c6360047869347b2c43e004707934722a8",
+            "19c63e0007879314bb97b7c43e2b07879314b807b7fce7d2e347c94742c83e07",
+            "8547c2c29c43dc97ba078e47c21e87871314b807b786be97ba3007879314c0a7",
+            "b7873e0007d78397ba078e47c21e87871314b807b7a82dc802c3989767071367",
+            "111807879314c027b7ca3ef007879314bb97b7c7be0247a78314bbd7b7cf8671",
+            "15"
+        ]
+    },
+    "rbp_region": {
+        // XLSX: row#2:0x3E0:"Reserved":16 bits:2 bytes:1 words
+        // Description: Reserved
+        "reserved_3e0_0": "0x0",
+        // XLSX: row#3:0x3E1:"Reserved":16 bits:2 bytes:1 words
+        // Description: Reserved
+        "reserved_3e1_0": "0x0",
+        // XLSX: row#4:0x3E2:"Reserved":16 bits:2 bytes:1 words
+        // Description: Reserved
+        "reserved_3e2_0": "0x0",
+        // XLSX: row#5:0x3E3:"Caliptra Owner public key hash retire":16 bits:2 bytes:1 words
+        // Description: Caliptra Owner public key hash retire
+        // Caliptra owner pk hash is used to populate into Caliptra fuse for Caliptra owner keys verification.
+        // AST27x0 supports up to 16 Caliptra owner pk hash and supports pk hash retirement feature.
+        // Check Caliptra spec for more details.
+        // (https://github.com/chipsalliance/Caliptra/blob/main/doc/caliptra_1x/Caliptra.md)
+        // Effect: Secure boot is enabled
+        // Policy: OTPCFG0[8]
+        "caliptra_owner_public_key_hash_retire": "0x0",
+        // XLSX: row#6:0x3E4:"SoC Manifest Hardware SVN":64 bits:8 bytes:4 words
+        // Description: SoC Manifest hardware SVN
+        // SoC Manifest SVN must be equal to or greater than hardware SVN for rollback prevention otherwise the
+        // secure boot check is failure. It's implemented a hardware write protection to prevent malicious
+        // attack, the new SVN (to-be prog) must be smaller than or equal to current SVN.
+        // Effect: Secure boot is enabled
+        // Boot up Policy: SoC Manifest SVN >= HW SoC Manifest SVN
+        "soc_manifest_hardware_svn": "0x0",
+        // XLSX: row#7:0x3E8:"Caliptra FMC Hardware SVN":32 bits:4 bytes:2 words
+        // Description: Caliptra fuse: FMC KEY MANIFEST SVN
+        // Effect: Secure boot is enabled
+        // Policy: FMC SVN >= HW FMC SVN
+        "caliptra_fmc_hardware_svn": "0x0",
+        // XLSX: row#8:0x3EA:"Caliptra Runtime Hardware SVN":128 bits:16 bytes:8 words
+        // Description: Caliptra fuse: RUNTIME SVN
+        // Effect: Secure boot is enabled
+        // Policy: RUNTIME SVN >= HW RUNTIME SVN
+        "caliptra_runtime_hardware_svn": "0x0",
+        // XLSX: row#9:0x3F2:"Caliptra Manufacture ECC key mask":4 bits:1 bytes:1 words
+        // Description: Caliptra fuse: KEY MANIFEST PK HASH MASK
+        "caliptra_manufacture_ecc_key_mask": "0x0",
+        // XLSX: row#10:0x3F2:"Reserved":12 bits:2 bytes:1 words
+        // Description: Reserved
+        "reserved_3f2_4": "0x0",
+        // XLSX: row#11:0x3F3:"Caliptra Manufacture LMS key mask":32 bits:4 bytes:2 words
+        // Description: Caliptra fuse: LMS REVOCATION
+        "caliptra_manufacture_lms_key_mask": "0x0",
+        // XLSX: row#12:0x3F5:"Reserved":176 bits:22 bytes:11 words
+        // Description: Reserved
+        "reserved_3f5_0": "0x0"
+    },
+    "config_region": {
+        // XLSX: row#2:0x400:"otp_mem_lock_enable":1 bits:1 bytes:1 words
+        // Description: OTP memory lock enable
+        // This bit will lock whole OTP memory and is un recoverable
+        "otp_mem_lock_enable": "0x0",
+        // XLSX: row#3:0x400:"wr_protect_puf":1 bits:1 bytes:1 words
+        // Description: Enable static write protection of OTPPUF region
+        // It's enabled during ASPEED manufacturing.
+        "wr_protect_puf": "0x0",
+        // XLSX: row#4:0x400:"dis_otp_bist":1 bits:1 bytes:1 words
+        // Description: Disable OTP Memory Factory Test Mode
+        // 0: enable
+        // 1: disable
+        // to prevent security issue of OTP memory. Disabled BIST mode is recommended.
+        "dis_otp_bist": "0x0",
+        // XLSX: row#5:0x400:"wr_protect_caliptra":1 bits:1 bytes:1 words
+        // Description: Enable static write protection of OTPCAL region
+        // Once it's enabled, no one can prog the OTPCAL region anymore.
+        "wr_protect_caliptra": "0x0",
+        // XLSX: row#6:0x400:"rd_protect_caliptra":1 bits:1 bytes:1 words
+        // Description: Enable static read protect of OTPCAL region
+        // Once it's enabled, no one can read the OTPCAL region anymore.
+        // Notice that it might affect the attestation process, because on one can read it at runtime.
+        "rd_protect_caliptra": "0x0",
+        // XLSX: row#7:0x400:"wr_protect_otp_rbp":1 bits:1 bytes:1 words
+        // Description: Enable static write protection of OTPRBP region
+        // Once it's enabled, no one can prog the OTPRBP region anymore.
+        "wr_protect_otp_rbp": "0x0",
+        // XLSX: row#8:0x400:"enable_secure_boot":1 bits:1 bytes:1 words
+        // Description: Enable Secure Boot
+        // 0:disable
+        // 1:enable
+        // Once it's enabled, the secure boot is always enforced and there is no way to disable it.
+        "enable_secure_boot": "0x0",
+        // XLSX: row#9:0x400:"retire_mechanism_option":1 bits:1 bytes:1 words
+        // Description: Enable key retirement mechanism option
+        // 0: can only retire itself key #id
+        // 1: can retire others key #id except itself
+        // There are some key retire bits in OTPRBP region (ex: OTPRBP0/1/3) used to be programmed if the keys
+        // need to be retired. This option chooses the retire mechanism policy for different use cases.
+        "retire_mechanism_option": "0x0",
+        // XLSX: row#10:0x400:"wr_protect_otp_strap":1 bits:1 bytes:1 words
+        // Description: Enable static write protection of OTPSTRAP region
+        // Once it's enabled, no one can prog the OTPSTRAP region anymore.
+        "wr_protect_otp_strap": "0x0",
+        // XLSX: row#11:0x400:"wr_protect_otp_cfg":1 bits:1 bytes:1 words
+        // Description: Enable static write protection of OTPCFG region
+        // Once it's enabled, no one can prog the OTPCFG region anymore.
+        "wr_protect_otp_cfg": "0x0",
+        // XLSX: row#12:0x400:"wr_protect_rom":1 bits:1 bytes:1 words
+        // Description: Enable static write protection of OTPROM region
+        // Once it's enabled, no one can prog the OTPROM region anymore.
+        // It's enabled in AST27x0-A1 chip during ASPEED manufacturing.
+        "wr_protect_rom": "0x1",
+        // XLSX: row#13:0x400:"wr_protect_otp_strap_ext":1 bits:1 bytes:1 words
+        // Description: Enable static write protection of OTPSTRAP_EXT region
+        // Once it's enabled, no one can prog the OTPSTRAP_EXT region anymore.
+        "wr_protect_otp_strap_ext": "0x0",
+        // XLSX: row#14:0x400:"rd_protect_otp_strap":1 bits:1 bytes:1 words
+        // Description: Enable static read protection of OTPSTRAP region
+        // Once it's enabled, no one can read the OTPSTRAP region anymore.
+        "rd_protect_otp_strap": "0x0",
+        // XLSX: row#15:0x400:"rd_protect_otp_cfg":1 bits:1 bytes:1 words
+        // Description: Enable static read protection of OTPCFG region
+        // Once it's enabled, no one can read the OTPCFG region anymore.
+        "rd_protect_otp_cfg": "0x0",
+        // XLSX: row#16:0x400:"rd_protect_rom":1 bits:1 bytes:1 words
+        // Description: Enable static read protection of OTPROM region
+        // Once it's enabled, no one can read the OTPROM region anymore.
+        "rd_protect_rom": "0x0",
+        // XLSX: row#17:0x400:"rd_protect_otp_strap_ext":1 bits:1 bytes:1 words
+        // Description: Enable static read protection of OTPSTRAP_EXT region
+        // Once it's enabled, no one can read the OTPSTRAP_EXT region anymore.
+        "rd_protect_otp_strap_ext": "0x0",
+        // XLSX: row#18:0x401:"CONCFG0_BK":16 bits:2 bytes:1 words
+        // Description: Read OTPCFG0 = OTPCFG0 | OTPCFG1
+        // This is a backup of OTPCFG0
+        "concfg0_bk": "0x0",
+        // XLSX: row#19:0x402:"Reserved":2 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_402_14": "0x0",
+        // XLSX: row#20:0x402:"puf_source":1 bits:1 bytes:1 words
+        // Description: 0: NIST-TRNG
+        // 1: SCU-TRNG
+        "puf_source": "0x0",
+        // XLSX: row#21:0x402:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_402_12": "0x0",
+        // XLSX: row#22:0x402:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_402_11": "0x0",
+        // XLSX: row#23:0x402:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_402_10": "0x0",
+        // XLSX: row#24:0x402:"dev_life_cycle_state":2 bits:1 bytes:1 words
+        // Description: The Device Life Cycle State (LCS). It's the source of Security State.
+        // 0: Un-provisioned
+        // 1: Manufacturing
+        // 2: Reserved
+        // 3: Production
+        // The LCS is populated in Caliptra fuse. It's configured to Manufacturing during ASPEED manufacturing.
+        "dev_life_cycle_state": "0x0",
+        // XLSX: row#25:0x402:"Boot From UART Port Selection":2 bits:1 bytes:1 words
+        // Description: Boot From UART Port Selection
+        // 0: IO12 (BMC default port)
+        // 1: IO0 (Node 0 SUART common port)
+        // 2: IO5 (Node 1 SUART common port)
+        "boot_from_uart_port_selection": "0x0",
+        // XLSX: row#26:0x402:"en_emmc_sw_reset":1 bits:1 bytes:1 words
+        // Description: Enable eMMC software reset
+        // 0: eMMC software reset disable, use HW pin strap to do hardware reset
+        // 1: eMMC software reset enable. Always do software reset
+        "en_emmc_sw_reset": "0x0",
+        // XLSX: row#27:0x402:"dis_boot_msg":1 bits:1 bytes:1 words
+        // Description: Disable Uart Message of Boot ROM
+        // 0:Boot ROM will dump boot messages
+        // 1:Boot ROM message is disabled
+        "dis_boot_msg": "0x0",
+        // XLSX: row#28:0x402:"dis_recovery_mode":1 bits:1 bytes:1 words
+        // Description: Disable Recovery mode (Uart/USB/I2C/I3C)
+        // 0: enable recovery mode
+        // 1: disable recovery mode
+        // When recovery mode is enabled (hardware strap pin FWSPICK is pulled high), the boot ROM fetches
+        // images from recovery interface and boots.
+        // Once it's disabled, the boot ROM cannot fetch images from any recovery interface, no matter which
+        // one is chosen.
+        "dis_recovery_mode": "0x0",
+        // XLSX: row#29:0x402:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_402_2": "0x0",
+        // XLSX: row#30:0x402:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_402_1": "0x0",
+        // XLSX: row#31:0x402:"dis_rom_patch":1 bits:1 bytes:1 words
+        // Description: Disable ROM Patch code
+        // 0: If the OTPCFG2[0] is set, the Boot ROM would
+        // execute the OTP patch codes which has been programmed into
+        // OTPROM region.
+        // 1: The Boot ROM would ignore pre ROM patch.
+        // The ROM patch is the early stage of the boot ROM boot process.
+        "dis_rom_patch": "0x0",
+        // XLSX: row#32:0x403:"CONCFG2_BK":16 bits:2 bytes:1 words
+        // Description: Read OTPCFG2 = OTPCFG2 | OTPCFG3
+        // This is a backup of OTPCFG2
+        "concfg2_bk": "0x0",
+        // XLSX: row#33:0x404:"Reserved":5 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_404_11": "0x0",
+        // XLSX: row#34:0x404:"OTP Patch Code location 1":10 bits:2 bytes:1 words
+        // Description: OTP patch code offset
+        // The OTP patch code location in OTPROM Region.
+        "otp_patch_code_location_1": "0x0",
+        // XLSX: row#35:0x404:"otp_patch_vld 1":1 bits:1 bytes:1 words
+        // Description: Enable otp patch 1
+        // 0: otp rom patch 1 is invalid
+        // 1: otp rom patch 1 is valid
+        "otp_patch_vld_1": "0x0",
+        // XLSX: row#36:0x405:"Reserved":6 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_405_10": "0x0",
+        // XLSX: row#37:0x405:"OTP Patch Size 1":10 bits:2 bytes:1 words
+        // Description: OTP Patch 1 code size (unit: word)
+        // The Boot ROM can execute OTP patch codes in OTPROM region. The OTP patch code size is limited to
+        // 16Kbit.
+        "otp_patch_size_1": "0x0",
+        // XLSX: row#38:0x406:"Reserved":5 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_406_11": "0x0",
+        // XLSX: row#39:0x406:"OTP Patch Code location 2":10 bits:2 bytes:1 words
+        // Description: OTP patch code offset
+        // The OTP patch code location in OTPROM Region.
+        "otp_patch_code_location_2": "0x0",
+        // XLSX: row#40:0x406:"otp_patch_vld 2":1 bits:1 bytes:1 words
+        // Description: Enable otp patch 2
+        // 0: otp rom patch 2 is invalid
+        // 1: otp rom patch 2 is valid
+        "otp_patch_vld_2": "0x1",
+        // XLSX: row#41:0x407:"Reserved":6 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_407_10": "0x0",
+        // XLSX: row#42:0x407:"OTP Patch Size 2":10 bits:2 bytes:1 words
+        // Description: OTP Patch 2 code size (unit: word)
+        // The Boot ROM can execute OTP patch codes in OTPROM region. The OTP patch code size is limited to
+        // 16Kbit.
+        "otp_patch_size_2": "0x31a",
+        // XLSX: row#43:0x408:"Reserved":16 bits:2 bytes:1 words
+        // Description: Reserved
+        "reserved_408_0": "0x0",
+        // XLSX: row#44:0x409:"en_auto_load SCU debug control":1 bits:1 bytes:1 words
+        // Description: Enable auto load debug control SCU0_0C8/SCU1_0C8 setting
+        // 0:disable
+        // 1:enable to auto load SCU0_0C8/SCU1_0C8 value
+        // After SCU0_0C8 is loaded, the write protection SCU0_E04[18] will be set.
+        // After SCU1_0C8 is loaded, the write protection SCU1_B04[18] will be set.
+        "en_auto_load_scu_debug_control": "0x0",
+        // XLSX: row#45:0x409:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reference to datasheet SCU0_0C8
+        "reserved_409_14": "0x0",
+        // XLSX: row#46:0x409:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reference to datasheet SCU0_0C8
+        "reserved_409_13": "0x0",
+        // XLSX: row#47:0x409:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reference to datasheet SCU0_0C8
+        "reserved_409_12": "0x0",
+        // XLSX: row#48:0x409:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reference to datasheet SCU0_0C8
+        "reserved_409_11": "0x0",
+        // XLSX: row#49:0x409:"SCU0_DIS_RSA_PRIV_KEY_READ":1 bits:1 bytes:1 words
+        // Description: Reference to datasheet SCU0_0C8
+        "scu0_dis_rsa_priv_key_read": "0x0",
+        // XLSX: row#50:0x409:"SCU0_DIS_WDT_RSTFULL":1 bits:1 bytes:1 words
+        // Description: Reference to datasheet SCU0_0C8
+        "scu0_dis_wdt_rstfull": "0x0",
+        // XLSX: row#51:0x409:"SCU0_DIS_XDMA_VGA":1 bits:1 bytes:1 words
+        // Description: Reference to datasheet SCU0_0C8
+        "scu0_dis_xdma_vga": "0x0",
+        // XLSX: row#52:0x409:"SCU0_DIS_L2A":1 bits:1 bytes:1 words
+        // Description: Reference to datasheet SCU0_0C8
+        "scu0_dis_l2a": "0x0",
+        // XLSX: row#53:0x409:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reference to datasheet SCU0_0C8
+        "reserved_409_6": "0x0",
+        // XLSX: row#54:0x409:"SCU0_DIS_PCIE_TRACE_BUF":1 bits:1 bytes:1 words
+        // Description: Reference to datasheet SCU0_0C8
+        "scu0_dis_pcie_trace_buf": "0x0",
+        // XLSX: row#55:0x409:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reference to datasheet SCU0_0C8
+        "reserved_409_4": "0x0",
+        // XLSX: row#56:0x409:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reference to datasheet SCU0_0C8
+        "reserved_409_3": "0x0",
+        // XLSX: row#57:0x409:"SCU0_DIS_XDMA":1 bits:1 bytes:1 words
+        // Description: Reference to datasheet SCU0_0C8
+        "scu0_dis_xdma": "0x0",
+        // XLSX: row#58:0x409:"SCU0_DIS_UART_DBG":1 bits:1 bytes:1 words
+        // Description: Reference to datasheet SCU0_0C8
+        "scu0_dis_uart_dbg": "0x0",
+        // XLSX: row#59:0x409:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reference to datasheet SCU0_0C8
+        "reserved_409_0": "0x0",
+        // XLSX: row#60:0x40A:"Reserved":8 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_40a_8": "0x0",
+        // XLSX: row#61:0x40A:"SCU1_DIS_WDT_RSTFULL":1 bits:1 bytes:1 words
+        // Description: Reference to datasheet SCU1_0C8
+        "scu1_dis_wdt_rstfull": "0x0",
+        // XLSX: row#62:0x40A:"SCU1_DIS_UART_DBG":1 bits:1 bytes:1 words
+        // Description: Reference to datasheet SCU1_0C8
+        "scu1_dis_uart_dbg": "0x0",
+        // XLSX: row#63:0x40A:"SCU1_DIS_LPC1_BRIDGE_2":1 bits:1 bytes:1 words
+        // Description: Reference to datasheet SCU1_0C8
+        "scu1_dis_lpc1_bridge_2": "0x0",
+        // XLSX: row#64:0x40A:"SCU1_DIS_LPC0_BRIDGE_2":1 bits:1 bytes:1 words
+        // Description: Reference to datasheet SCU1_0C8
+        "scu1_dis_lpc0_bridge_2": "0x0",
+        // XLSX: row#65:0x40A:"SCU1_DIS_LPC1_BRIDGE_1":1 bits:1 bytes:1 words
+        // Description: Reference to datasheet SCU1_0C8
+        "scu1_dis_lpc1_bridge_1": "0x0",
+        // XLSX: row#66:0x40A:"SCU1_DIS_LPC0_BRIDGE_1":1 bits:1 bytes:1 words
+        // Description: Reference to datasheet SCU1_0C8
+        "scu1_dis_lpc0_bridge_1": "0x0",
+        // XLSX: row#67:0x40A:"SCU1_DIS_ESPI1_AHB":1 bits:1 bytes:1 words
+        // Description: Reference to datasheet SCU1_0C8
+        "scu1_dis_espi1_ahb": "0x0",
+        // XLSX: row#68:0x40A:"SCU1_DIS_ESPI0_AHB":1 bits:1 bytes:1 words
+        // Description: Reference to datasheet SCU1_0C8
+        "scu1_dis_espi0_ahb": "0x0",
+        // XLSX: row#69:0x40B:"Reserved":8 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_40b_8": "0x0",
+        // XLSX: row#70:0x40B:"wr_protect_otp_usr3":1 bits:1 bytes:1 words
+        // Description: Enable Write protect for OTP region user 3
+        "wr_protect_otp_usr3": "0x1",
+        // XLSX: row#71:0x40B:"rd_protect_otp_usr3":1 bits:1 bytes:1 words
+        // Description: Enable Read protect for OTP region user 3
+        "rd_protect_otp_usr3": "0x0",
+        // XLSX: row#72:0x40B:"wr_protect_otp_usr2":1 bits:1 bytes:1 words
+        // Description: Enable Write protect for OTP region user 2
+        "wr_protect_otp_usr2": "0x1",
+        // XLSX: row#73:0x40B:"rd_protect_otp_usr2":1 bits:1 bytes:1 words
+        // Description: Enable Read protect for OTP region user 2
+        "rd_protect_otp_usr2": "0x0",
+        // XLSX: row#74:0x40B:"wr_protect_otp_usr1":1 bits:1 bytes:1 words
+        // Description: Enable Write protect for OTP region user 1
+        "wr_protect_otp_usr1": "0x0",
+        // XLSX: row#75:0x40B:"rd_protect_otp_usr1":1 bits:1 bytes:1 words
+        // Description: Enable Read protect for OTP region user 1
+        "rd_protect_otp_usr1": "0x0",
+        // XLSX: row#76:0x40B:"wr_protect_otp_usr0":1 bits:1 bytes:1 words
+        // Description: Enable Write protect for OTP region user 0
+        "wr_protect_otp_usr0": "0x0",
+        // XLSX: row#77:0x40B:"rd_protect_otp_usr0":1 bits:1 bytes:1 words
+        // Description: Enable Read protect for OTP region user 0
+        "rd_protect_otp_usr0": "0x0",
+        // XLSX: row#78:0x40C:"Reserved":16 bits:2 bytes:1 words
+        // Description: Reserved
+        "reserved_40c_0": "0x0",
+        // XLSX: row#79:0x40D:"en_auto_load_secure0":1 bits:1 bytes:1 words
+        // Description: Enable auto load OTP secure0 ctrl setting of OTP register.
+        // Once it's enabled, r/w protection, offset, and size of OTP secure0 value below would be loaded into
+        // OTP controller registers as a hardware default value.
+        "en_auto_load_secure0": "0x0",
+        // XLSX: row#80:0x40D:"rd_protect_otp_secure0":1 bits:1 bytes:1 words
+        // Description: Enable Read protect for OTP region secure 0
+        "rd_protect_otp_secure0": "0x0",
+        // XLSX: row#81:0x40D:"wr_protect_otp_secure0":1 bits:1 bytes:1 words
+        // Description: Enable Write protect for OTP region secure 0
+        "wr_protect_otp_secure0": "0x0",
+        // XLSX: row#82:0x40D:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_40d_12": "0x0",
+        // XLSX: row#83:0x40D:"secure0_region_start_offset":12 bits:2 bytes:1 words
+        // Description: Secure 0 region start offset (unit: word)
+        "secure0_region_start_offset": "0x0",
+        // XLSX: row#84:0x40E:"secure0_region_size":16 bits:2 bytes:1 words
+        // Description: Secure 0 region size (unit: word)
+        "secure0_region_size": "0x0",
+        // XLSX: row#85:0x40F:"i3c_i2c_identify":8 bits:1 bytes:1 words
+        // Description: i3c: DCR
+        // i2c: Slave address
+        "i3c_i2c_identify": "0x0",
+        // XLSX: row#86:0x40F:"Reserved":3 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_40f_5": "0x0",
+        // XLSX: row#87:0x40F:"i3c_hj_req":1 bits:1 bytes:1 words
+        // Description: i3c hot-join request enable
+        "i3c_hj_req": "0x0",
+        // XLSX: row#88:0x40F:"i3c_i2c_channel":4 bits:1 bytes:1 words
+        // Description: i3c/i2c channel used for recovery
+        "i3c_i2c_channel": "0x0",
+        // XLSX: row#89:0x410:"Reserved":16 bits:2 bytes:1 words
+        // Description: Reserved
+        "reserved_410_0": "0x0",
+        // XLSX: row#90:0x411:"usb_uart6_mode_lsb":1 bits:1 bytes:1 words
+        // Description: UART6 Mode - lsb (bit0)
+        // b'00: UART and Device both not connected
+        // b'01: UART Real mode, and Device connected
+        // b'10: UART Pseduo mode, and Device connected
+        // b'11: UART not connected, but Device connected
+        "usb_uart6_mode_lsb": "0x0",
+        // XLSX: row#91:0x411:"usb_uart5_tx_discard_off":1 bits:1 bytes:1 words
+        // Description: Enable to turn off UART5 Tx Discard
+        "usb_uart5_tx_discard_off": "0x0",
+        // XLSX: row#92:0x411:"usb_uart5_mode":2 bits:1 bytes:1 words
+        // Description: UART5 Mode
+        // b'00: UART and Device both not connected
+        // b'01: UART Real mode, and Device connected
+        // b'10: UART Pseduo mode, and Device connected
+        // b'11: UART not connected, but Device connected
+        "usb_uart5_mode": "0x0",
+        // XLSX: row#93:0x411:"usb_uart3_tx_discard_off":1 bits:1 bytes:1 words
+        // Description: Enable to turn off UART3 Tx Discard
+        "usb_uart3_tx_discard_off": "0x0",
+        // XLSX: row#94:0x411:"usb_uart3_mode":2 bits:1 bytes:1 words
+        // Description: UART3 Mode
+        // b'00: UART and Device both not connected
+        // b'01: UART Real mode, and Device connected
+        // b'10: UART Pseduo mode, and Device connected
+        // b'11: UART not connected, but Device connected
+        "usb_uart3_mode": "0x0",
+        // XLSX: row#95:0x411:"usb_uart2_tx_discard_off":1 bits:1 bytes:1 words
+        // Description: Enable to turn off UART2 Tx Discard
+        "usb_uart2_tx_discard_off": "0x0",
+        // XLSX: row#96:0x411:"usb_uart2_mode":2 bits:1 bytes:1 words
+        // Description: UART2 Mode
+        // b'00: UART and Device both not connected
+        // b'01: UART Real mode, and Device connected
+        // b'10: UART Pseduo mode, and Device connected
+        // b'11: UART not connected, but Device connected
+        "usb_uart2_mode": "0x0",
+        // XLSX: row#97:0x411:"usb_uart1_tx_discard_off":1 bits:1 bytes:1 words
+        // Description: Enable to turn off UART1 Tx Discard
+        "usb_uart1_tx_discard_off": "0x0",
+        // XLSX: row#98:0x411:"usb_uart1_mode":2 bits:1 bytes:1 words
+        // Description: UART1 Mode
+        // b'00: UART and Device both not connected
+        // b'01: UART Real mode, and Device connected
+        // b'10: UART Pseduo mode, and Device connected
+        // b'11: UART not connected, but Device connected
+        "usb_uart1_mode": "0x0",
+        // XLSX: row#99:0x411:"usb_uart0_tx_discard_off":1 bits:1 bytes:1 words
+        // Description: Enable to turn off UART0 Tx Discard
+        "usb_uart0_tx_discard_off": "0x0",
+        // XLSX: row#100:0x411:"usb_uart0_mode":2 bits:1 bytes:1 words
+        // Description: UART0 Mode
+        // b'00: UART and Device both not connected
+        // b'01: UART Real mode, and Device connected
+        // b'10: UART Pseduo mode, and Device connected
+        // b'11: UART not connected, but Device connected
+        "usb_uart0_mode": "0x0",
+        // XLSX: row#101:0x412:"usb_uart11_mode":2 bits:1 bytes:1 words
+        // Description: UART11 Mode
+        // b'00: UART and Device both not connected
+        // b'01: UART Real mode, and Device connected
+        // b'10: UART Pseduo mode, and Device connected
+        // b'11: UART not connected, but Device connected
+        "usb_uart11_mode": "0x0",
+        // XLSX: row#102:0x412:"usb_uart10_tx_discard_off":1 bits:1 bytes:1 words
+        // Description: Enable to turn off UART10 Tx Discard
+        "usb_uart10_tx_discard_off": "0x0",
+        // XLSX: row#103:0x412:"usb_uart10_mode":2 bits:1 bytes:1 words
+        // Description: UART10 Mode
+        // b'00: UART and Device both not connected
+        // b'01: UART Real mode, and Device connected
+        // b'10: UART Pseduo mode, and Device connected
+        // b'11: UART not connected, but Device connected
+        "usb_uart10_mode": "0x0",
+        // XLSX: row#104:0x412:"usb_uart9_tx_discard_off":1 bits:1 bytes:1 words
+        // Description: Enable to turn off UART9 Tx Discard
+        "usb_uart9_tx_discard_off": "0x0",
+        // XLSX: row#105:0x412:"usb_uart9_mode":2 bits:1 bytes:1 words
+        // Description: UART9 Mode
+        // b'00: UART and Device both not connected
+        // b'01: UART Real mode, and Device connected
+        // b'10: UART Pseduo mode, and Device connected
+        // b'11: UART not connected, but Device connected
+        "usb_uart9_mode": "0x0",
+        // XLSX: row#106:0x412:"usb_uart8_tx_discard_off":1 bits:1 bytes:1 words
+        // Description: Enable to turn off UART8 Tx Discard
+        "usb_uart8_tx_discard_off": "0x0",
+        // XLSX: row#107:0x412:"usb_uart8_mode":2 bits:1 bytes:1 words
+        // Description: UART8 Mode
+        // b'00: UART and Device both not connected
+        // b'01: UART Real mode, and Device connected
+        // b'10: UART Pseduo mode, and Device connected
+        // b'11: UART not connected, but Device connected
+        "usb_uart8_mode": "0x0",
+        // XLSX: row#108:0x412:"usb_uart7_tx_discard_off":1 bits:1 bytes:1 words
+        // Description: Enable to turn off UART7 Tx Discard
+        "usb_uart7_tx_discard_off": "0x0",
+        // XLSX: row#109:0x412:"usb_uart7_mode":2 bits:1 bytes:1 words
+        // Description: UART7 Mode
+        // b'00: UART and Device both not connected
+        // b'01: UART Real mode, and Device connected
+        // b'10: UART Pseduo mode, and Device connected
+        // b'11: UART not connected, but Device connected
+        "usb_uart7_mode": "0x0",
+        // XLSX: row#110:0x412:"usb_uart6_tx_discard_off":1 bits:1 bytes:1 words
+        // Description: Enable to turn off UART6 Tx Discard
+        "usb_uart6_tx_discard_off": "0x0",
+        // XLSX: row#111:0x412:"usb_uart6_mode_msb":1 bits:1 bytes:1 words
+        // Description: UART6 Mode - msb (bit1)
+        "usb_uart6_mode_msb": "0x0",
+        // XLSX: row#112:0x413:"uart_io_route":3 bits:1 bytes:1 words
+        // Description: uart11/13/14 routing (hw effect by scu)
+        "uart_io_route": "0x0",
+        // XLSX: row#113:0x413:"Reserved":3 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_413_10": "0x0",
+        // XLSX: row#114:0x413:"usb_uart_put_all_boot_message":1 bits:1 bytes:1 words
+        // Description: Enable UART to put all boot message and wait the completetion
+        "usb_uart_put_all_boot_message": "0x0",
+        // XLSX: row#115:0x413:"usb_uart_mode3":1 bits:1 bytes:1 words
+        // Description: Enable Mode-3 (USB2UART only, no vHub)
+        "usb_uart_mode3": "0x0",
+        // XLSX: row#116:0x413:"usb_uart_hub_23ports":1 bits:1 bytes:1 words
+        // Description: Enable Mode-0 hub to support 23 ports
+        "usb_uart_hub_23ports": "0x0",
+        // XLSX: row#117:0x413:"usb_uart15_tx_discard_off":1 bits:1 bytes:1 words
+        // Description: Enable to turn off UART15 Tx Discard
+        "usb_uart15_tx_discard_off": "0x0",
+        // XLSX: row#118:0x413:"usb_uart15_mode":2 bits:1 bytes:1 words
+        // Description: UART15 Mode
+        // b'00: UART and Device both not connected
+        // b'01: UART Real mode, and Device connected
+        // b'10: UART Pseduo mode, and Device connected
+        // b'11: UART not connected, but Device connected
+        "usb_uart15_mode": "0x0",
+        // XLSX: row#119:0x413:"usb_uart12_tx_discard_off":1 bits:1 bytes:1 words
+        // Description: Enable to turn off UART12 Tx Discard
+        "usb_uart12_tx_discard_off": "0x0",
+        // XLSX: row#120:0x413:"usb_uart12_mode":2 bits:1 bytes:1 words
+        // Description: UART12 Mode
+        // b'00: UART and Device both not connected
+        // b'01: UART Real mode, and Device connected
+        // b'10: UART Pseduo mode, and Device connected
+        // b'11: UART not connected, but Device connected
+        "usb_uart12_mode": "0x0",
+        // XLSX: row#121:0x413:"usb_uart11_tx_discard_off":1 bits:1 bytes:1 words
+        // Description: Enable to turn off UART11 Tx Discard
+        "usb_uart11_tx_discard_off": "0x0",
+        // XLSX: row#122:0x414:"en_auto_load_cptra0":1 bits:1 bytes:1 words
+        // Description: Enable auto load OTP cptra0 ctrl setting of OTP register.
+        // Once it's enabled, r/w protection, offset, and size of OTP cptra0 value below would be loaded into
+        // OTP controller registers as a hardware default value.
+        "en_auto_load_cptra0": "0x0",
+        // XLSX: row#123:0x414:"rd_protect_otp_cptra0":1 bits:1 bytes:1 words
+        // Description: Enable Read protect for OTP region cptra 0
+        "rd_protect_otp_cptra0": "0x0",
+        // XLSX: row#124:0x414:"wr_protect_otp_cptra0":1 bits:1 bytes:1 words
+        // Description: Enable Write protect for OTP region cptra 0
+        "wr_protect_otp_cptra0": "0x0",
+        // XLSX: row#125:0x414:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_414_12": "0x0",
+        // XLSX: row#126:0x414:"cptra0_region_start_offset":12 bits:2 bytes:1 words
+        // Description: cptra 0 region start offset
+        "cptra0_region_start_offset": "0x0",
+        // XLSX: row#127:0x415:"cptra0_region_size":16 bits:2 bytes:1 words
+        // Description: cptra 0 region size
+        "cptra0_region_size": "0x0",
+        // XLSX: row#128:0x416:"Reserved":16 bits:2 bytes:1 words
+        // Description: Reserved
+        "reserved_416_0": "0x0",
+        // XLSX: row#129:0x417:"Reserved":16 bits:2 bytes:1 words
+        // Description: Reserved
+        "reserved_417_0": "0x0",
+        // XLSX: row#130:0x418:"Reserved":5 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_418_11": "0x0",
+        // XLSX: row#131:0x418:"OTP Patch Code location 3":10 bits:2 bytes:1 words
+        // Description: OTP patch code offset
+        // The OTP patch code location in OTPROM Region.
+        "otp_patch_code_location_3": "0x320",
+        // XLSX: row#132:0x418:"otp_patch_vld 3":1 bits:1 bytes:1 words
+        // Description: Enable otp patch 3
+        // 0: otp rom patch 3 is invalid
+        // 1: otp rom patch 3 is valid
+        "otp_patch_vld_3": "0x1",
+        // XLSX: row#133:0x419:"Reserved":6 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_419_10": "0x0",
+        // XLSX: row#134:0x419:"OTP Patch Size 3":10 bits:2 bytes:1 words
+        // Description: OTP Patch 3 code size (unit: word)
+        // The Boot ROM can execute OTP patch codes in OTPROM region. The OTP patch code size is limited to
+        // 16Kbit.
+        "otp_patch_size_3": "0xb1",
+        // XLSX: row#135:0x41A:"Reserved":5 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_41a_11": "0x0",
+        // XLSX: row#136:0x41A:"OTP Patch Code location 4":10 bits:2 bytes:1 words
+        // Description: OTP patch code offset
+        // The OTP patch code location in OTPROM Region.
+        "otp_patch_code_location_4": "0x0",
+        // XLSX: row#137:0x41A:"otp_patch_vld 4":1 bits:1 bytes:1 words
+        // Description: Enable otp patch 4
+        // 0: otp rom patch 4 is invalid
+        // 1: otp rom patch 4 is valid
+        "otp_patch_vld_4": "0x0",
+        // XLSX: row#138:0x41B:"Reserved":6 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_41b_10": "0x0",
+        // XLSX: row#139:0x41B:"OTP Patch Size 4":10 bits:2 bytes:1 words
+        // Description: OTP Patch 4 code size (unit: word)
+        // The Boot ROM can execute OTP patch codes in OTPROM region. The OTP patch code size is limited to
+        // 16Kbit.
+        "otp_patch_size_4": "0x0",
+        // XLSX: row#140:0x41C:"Reserved":5 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_41c_11": "0x0",
+        // XLSX: row#141:0x41C:"OTP Patch Code location 5":10 bits:2 bytes:1 words
+        // Description: OTP patch code offset
+        // The OTP patch code location in OTPROM Region.
+        "otp_patch_code_location_5": "0x0",
+        // XLSX: row#142:0x41C:"otp_patch_vld 5":1 bits:1 bytes:1 words
+        // Description: Enable otp patch 5
+        // 0: otp rom patch 5 is invalid
+        // 1: otp rom patch 5 is valid
+        "otp_patch_vld_5": "0x0",
+        // XLSX: row#143:0x41D:"Reserved":6 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_41d_10": "0x0",
+        // XLSX: row#144:0x41D:"OTP Patch Size 5":10 bits:2 bytes:1 words
+        // Description: OTP Patch 5 code size (unit: word)
+        // The Boot ROM can execute OTP patch codes in OTPROM region. The OTP patch code size is limited to
+        // 16Kbit.
+        "otp_patch_size_5": "0x0",
+        // XLSX: row#145:0x41E:"Reserved":16 bits:2 bytes:1 words
+        // Description: Reserved
+        "reserved_41e_0": "0x0",
+        // XLSX: row#146:0x41F:"Reserved":16 bits:2 bytes:1 words
+        // Description: Reserved
+        "reserved_41f_0": "0x0"
+    },
+    "strap_region": {
+        // XLSX: row#2:0x420:"otpstrap_wr_prot_lsb":16 bits:2 bytes:1 words
+        // Description: Write protection of OTPSTRAP[15: 0]
+        "otpstrap_wr_prot_lsb": "0x0",
+        // XLSX: row#3:0x421:"otpstrap_wr_prot_msb":16 bits:2 bytes:1 words
+        // Description: Write protection of OTPSTRAP[31:16]
+        "otpstrap_wr_prot_msb": "0x0",
+        // XLSX: row#4:0x422:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_422_0": "0x0",
+        // XLSX: row#5:0x422:"BootSPI":1 bits:1 bytes:1 words
+        // Description: Boot from CPU die SPI
+        // 0: Boot from IO die SPI
+        // 1: Boot from CPU die SPI
+        "bootspi": "0x0",
+        // XLSX: row#6:0x422:"HPLLFreq":2 bits:1 bytes:1 words
+        // Description: HPLL default frequency
+        // 00: 2.0GHz, 01: 1.9GHz, 10: 1.8GHz, 11: 1.7GHz
+        "hpllfreq": "0x0",
+        // XLSX: row#7:0x422:"CPUHPLL":1 bits:1 bytes:1 words
+        // Description: CPU clock PLL
+        // 0: MPLL, 1: HPLL
+        "cpuhpll": "0x0",
+        // XLSX: row#8:0x422:"HCLKSel":2 bits:1 bytes:1 words
+        // Description: AXI/AHB clock selection
+        // 0x: 400MHz, 10: 266MHz, 11: 200MHz when HCLKPLL=0
+        // 0x: 500MHz, 10: 333MHz, 11: 250MHz when HCLKPLL=1
+        "hclksel": "0x0",
+        // XLSX: row#9:0x422:"HCLKHPLL":1 bits:1 bytes:1 words
+        // Description: AXI/AHB clock PLL
+        // 0: MPLL, 1: HPLL
+        "hclkhpll": "0x0",
+        // XLSX: row#10:0x422:"DisDebug":1 bits:1 bytes:1 words
+        // Description: Disable Debug Interfaces for CPU die
+        // all debug interface SCU0_0C8
+        "disdebug": "0x0",
+        // XLSX: row#11:0x422:"TSPRsntSel":1 bits:1 bytes:1 words
+        // Description: TSP reset pin selection
+        // 0: SSPRSTN, 1: GPIO18E0
+        "tsprsntsel": "0x0",
+        // XLSX: row#12:0x422:"VGALinearSize[0]":1 bits:1 bytes:1 words
+        // Description: VGA linear memory size
+        // SW-ROM write to DRAMC100[0]
+        "vgalinearsize[0]": "0x0",
+        // XLSX: row#13:0x422:"VGALinearSize[1]":1 bits:1 bytes:1 words
+        // Description: VGA linear memory size
+        // SW-ROM write to DRAMC100[0]
+        "vgalinearsize[1]": "0x0",
+        // XLSX: row#14:0x422:"DisSSP":1 bits:1 bytes:1 words
+        // Description: Disable SSP running
+        // 0: disable 1: enable
+        "disssp": "0x0",
+        // XLSX: row#15:0x422:"DisTSP":1 bits:1 bytes:1 words
+        // Description: Disable TSP running
+        // 0: disable 1: enable
+        "distsp": "0x0",
+        // XLSX: row#16:0x422:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_422_14": "0x0",
+        // XLSX: row#17:0x422:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_422_15": "0x0",
+        // XLSX: row#18:0x423:"En_SecBoot":1 bits:1 bytes:1 words
+        // Description: Enable Secure Boot
+        // 0: disable 1: enable
+        "en_secboot": "0x0",
+        // XLSX: row#19:0x423:"DisDebug1":1 bits:1 bytes:1 words
+        // Description: Disable Debug Interfaces for IO die
+        // all debug interface SCU1_0C8
+        "disdebug1": "0x0",
+        // XLSX: row#20:0x423:"Dis_WDTfull":1 bits:1 bytes:1 words
+        // Description: Disable WDT reset full
+        // 0: enable 1: disable
+        "dis_wdtfull": "0x0",
+        // XLSX: row#21:0x423:"Dis_UartDbg":1 bits:1 bytes:1 words
+        // Description: Disable Uart Debug
+        // 0: enable 1: disable
+        "dis_uartdbg": "0x0",
+        // XLSX: row#22:0x423:"UartDbgSel":1 bits:1 bytes:1 words
+        // Description: Selection of IO for Uart Debug
+        // 0: IO12 1: IO0
+        "uartdbgsel": "0x0",
+        // XLSX: row#23:0x423:"Dis_CptraJTag":1 bits:1 bytes:1 words
+        // Description: Disable JTAG to Caliptra permanently
+        // 0: enable 1: disable
+        "dis_cptrajtag": "0x0",
+        // XLSX: row#24:0x423:"En_ROM_Intr":1 bits:1 bytes:1 words
+        // Description: Enable ROM interrupt
+        // 0: disable 1: enable
+        "en_rom_intr": "0x0",
+        // XLSX: row#25:0x423:"Dis_ROM":1 bits:1 bytes:1 words
+        // Description: Disable BootMCU ROM & jump to FMC
+        // 0: enable 1: disable
+        // (wlock)
+        "dis_rom": "0x0",
+        // XLSX: row#26:0x423:"eMMC_UFS_Boot":1 bits:1 bytes:1 words
+        // Description: Boot from eMMC or UFS selection
+        // 0: eMMC 1: UFS
+        "emmc_ufs_boot": "0x0",
+        // XLSX: row#27:0x423:"SPI_Flash_Wait_Ready":1 bits:1 bytes:1 words
+        // Description: Allow BROM to wait SPI flash ready bit
+        // 0: disable 1: enable
+        "spi_flash_wait_ready": "0x0",
+        // XLSX: row#28:0x423:"SPI_Flash_4_Byte_Mode":1 bits:1 bytes:1 words
+        // Description: Use 4-byte command to read flash
+        // 0: disable 1: enable
+        "spi_flash_4_byte_mode": "0x0",
+        // XLSX: row#29:0x423:"Recovery_mode_selection":2 bits:1 bytes:1 words
+        // Description: Recovery from Uart or USB selection
+        // 0: Uart
+        // 1: USB
+        // 2: I2C
+        // 3: I3C
+        "recovery_mode_selection": "0x0",
+        // XLSX: row#30:0x423:"RecUSBSel":2 bits:1 bytes:1 words
+        // Description: Boot from USB port selection
+        // 0: port A
+        // 1: port B
+        // 2: port C
+        // 3: port D
+        "recusbsel": "0x0",
+        // XLSX: row#31:0x423:"Dis_Cptra":1 bits:1 bytes:1 words
+        // Description: Disable Caliptra booting
+        // 0: enable 1: disable
+        "dis_cptra": "0x0",
+        // XLSX: row#32:0x424:"Duplicate of 422":16 bits:2 bytes:1 words
+        // Description: Duplicate of 422
+        "duplicate_of_422_424_0": "0x0",
+        // XLSX: row#33:0x425:"Duplicate of 423":16 bits:2 bytes:1 words
+        // Description: Duplicate of 423
+        "duplicate_of_423_425_0": "0x0",
+        // XLSX: row#34:0x426:"Duplicate of 422":16 bits:2 bytes:1 words
+        // Description: Duplicate of 422
+        "duplicate_of_422_426_0": "0x0",
+        // XLSX: row#35:0x427:"Duplicate of 423":16 bits:2 bytes:1 words
+        // Description: Duplicate of 423
+        "duplicate_of_423_427_0": "0x0",
+        // XLSX: row#36:0x428:"Duplicate of 422":16 bits:2 bytes:1 words
+        // Description: Duplicate of 422
+        "duplicate_of_422_428_0": "0x0",
+        // XLSX: row#37:0x429:"Duplicate of 423":16 bits:2 bytes:1 words
+        // Description: Duplicate of 423
+        "duplicate_of_423_429_0": "0x0",
+        // XLSX: row#38:0x42A:"Duplicate of 422":16 bits:2 bytes:1 words
+        // Description: Duplicate of 422
+        "duplicate_of_422_42a_0": "0x0",
+        // XLSX: row#39:0x42B:"Duplicate of 423":16 bits:2 bytes:1 words
+        // Description: Duplicate of 423
+        "duplicate_of_423_42b_0": "0x0",
+        // XLSX: row#40:0x42C:"Duplicate of 422":16 bits:2 bytes:1 words
+        // Description: Duplicate of 422
+        "duplicate_of_422_42c_0": "0x0",
+        // XLSX: row#41:0x42D:"Duplicate of 423":16 bits:2 bytes:1 words
+        // Description: Duplicate of 423
+        "duplicate_of_423_42d_0": "0x0",
+        // XLSX: row#42:0x42E:"Reserved":15 bits:2 bytes:1 words
+        // Description: Reserved
+        "reserved_42e_1": "0x0",
+        // XLSX: row#43:0x42E:"eccbrp_en":1 bits:1 bytes:1 words
+        // Description: enable ecc/brp (except otpstrap/otprbp)
+        "eccbrp_en": "0x0",
+        // XLSX: row#44:0x42F:"Reserved":16 bits:2 bytes:1 words
+        // Description: Reserved
+        "reserved_42f_0": "0x0"
+    },
+    "strap_ext_region": {
+        // XLSX: row#2:0x430:"Reserved":16 bits:2 bytes:1 words
+        // Description: Reserved
+        "reserved_430_0": "0x0",
+        // XLSX: row#3:0x431:"DisARMICE":1 bits:1 bytes:1 words
+        // Description: Disable ARM ICE
+        "disarmice": "0x0",
+        // XLSX: row#4:0x431:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_431_1": "0x0",
+        // XLSX: row#5:0x431:"VGA_CC":1 bits:1 bytes:1 words
+        // Description: VGA0/1 Class Code
+        // 0: Class Code of VGA device
+        // 1: Class code for video device
+        "vga_cc": "0x0",
+        // XLSX: row#6:0x431:"ufs_clk_sel":1 bits:1 bytes:1 words
+        // Description: UFS reference clock selection
+        // 0: Internal clk
+        // 1: External clk (OSC)
+        "ufs_clk_sel": "0x0",
+        // XLSX: row#7:0x431:"BooteMMCSpeed":1 bits:1 bytes:1 words
+        // Description: eMMC Boot Speed
+        // 0: low speed(25Mhz) 1: 50Mhz
+        "bootemmcspeed": "0x0",
+        // XLSX: row#8:0x431:"Disable_XHCI":1 bits:1 bytes:1 words
+        // Description: Disable XHCI0/1
+        "disable_xhci": "0x0",
+        // XLSX: row#9:0x431:"DisARMICE_TZ":1 bits:1 bytes:1 words
+        // Description: Disable ARM ICE in Trust World
+        "disarmice_tz": "0x0",
+        // XLSX: row#10:0x431:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_431_7": "0x0",
+        // XLSX: row#11:0x431:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_431_8": "0x0",
+        // XLSX: row#12:0x431:"Dis_WDTfull":1 bits:1 bytes:1 words
+        // Description: Disable WDT reset full
+        "dis_wdtfull": "0x0",
+        // XLSX: row#21:0x432:"udbg_to_sel":2 bits:1 bytes:1 words
+        // Description: Uart Debug timeout selection
+        "udbg_to_sel": "0x0",
+        // XLSX: row#14:0x431:"DAC_Src":1 bits:1 bytes:1 words
+        // Description: DAC's source selection
+        // 0: PCIE VGA0
+        // 1: PCIE VGA1
+        "dac_src": "0x0",
+        // XLSX: row#15:0x431:"DP_Src":1 bits:1 bytes:1 words
+        // Description: DisplayPort's source selection
+        // 0: PCIE VGA0
+        // 1: PCIE VGA1
+        "dp_src": "0x0",
+        // XLSX: row#16:0x431:"Dis_RVAS":1 bits:1 bytes:1 words
+        // Description: Disable RVAS0/1
+        "dis_rvas": "0x0",
+        // XLSX: row#17:0x431:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_431_15": "0x0",
+        // XLSX: row#18:0x432:"ABR":1 bits:1 bytes:1 words
+        // Description: boot storage ABR enable
+        // 0: disable 1: enable
+        "abr": "0x0",
+        // XLSX: row#19:0x432:"ROM_Clear_SRAM":1 bits:1 bytes:1 words
+        // Description: ROM clear SRAM
+        // 0: disable 1: enable
+        "rom_clear_sram": "0x0",
+        // XLSX: row#20:0x432:"Reserved":5 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_432_2": "0x0",
+        // XLSX: row#22:0x432:"Reserved":2 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_432_9": "0x0",
+        // XLSX: row#23:0x432:"En_Cptra_debug":1 bits:1 bytes:1 words
+        // Description: Enable Caliptra debug state
+        // 0: disable 1: enable
+        "en_cptra_debug": "0x0",
+        // XLSX: row#24:0x432:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_432_12": "0x0",
+        // XLSX: row#25:0x432:"FWSPISize":3 bits:1 bytes:1 words
+        // Description: Size of FW SPI Flash
+        // 7: 512MB. 6: 256MB. 5: 128MB. 4: 64MB. 3: 32MB. 2: 16MB. 1: 8MB. 0: disable
+        "fwspisize": "0x0",
+        // XLSX: row#26:0x433:"En_FWSPIAux":1 bits:1 bytes:1 words
+        // Description: Enable FWSPI auxiliary pins
+        // FWSPIDQ2/FWSPIDQ3/FWSPIABR/FWSPIWP#
+        "en_fwspiaux": "0x0",
+        // XLSX: row#27:0x433:"Reserved":2 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_433_1": "0x0",
+        // XLSX: row#28:0x433:"Reserved":3 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_433_3": "0x0",
+        // XLSX: row#29:0x433:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_433_6": "0x0",
+        // XLSX: row#30:0x433:"Boot_SPI_Freq":2 bits:1 bytes:1 words
+        // Description: Boot SPI Frequency Selection
+        // 2b'00: 12.5MHz (by default)
+        // 2b'01: 25MHz
+        // 2b'10: 40MHz
+        // 2b'11: 50MHz
+        "boot_spi_freq": "0x0",
+        // XLSX: row#31:0x433:"Check_Flash_Access":1 bits:1 bytes:1 words
+        // Description: check flash is ready for accessing
+        // 0: disable 1: enable
+        "check_flash_access": "0x0",
+        // XLSX: row#32:0x433:"ABR_dis_B":1 bits:1 bytes:1 words
+        // Description: disable B if ABR enabled
+        // 0: enable 1: disable
+        "abr_dis_b": "0x0",
+        // XLSX: row#33:0x433:"ABR_RECOVERY_DIS":1 bits:1 bytes:1 words
+        // Description: disable recovery mode after ABR
+        // 0: enable 1: disable
+        "abr_recovery_dis": "0x0",
+        // XLSX: row#34:0x433:"FMC_ABR_CS_SWAP_DIS":1 bits:1 bytes:1 words
+        // Description: Disable CS swap after dual flash ABR is triggerred
+        // 0: enable 1: disable
+        "fmc_abr_cs_swap_dis": "0x0",
+        // XLSX: row#35:0x433:"FMC_ABR_MODE":1 bits:1 bytes:1 words
+        // Description: FMC abr mode
+        // 0: dual flash ABR
+        // 1: single flash ABR
+        "fmc_abr_mode": "0x0",
+        // XLSX: row#36:0x433:"Reserved":2 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_433_14": "0x0",
+        // XLSX: row#37:0x434:"Reserved":3 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_434_0": "0x0",
+        // XLSX: row#38:0x434:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_434_3": "0x0",
+        // XLSX: row#39:0x434:"Reserved":2 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_434_4": "0x0",
+        // XLSX: row#40:0x434:"Node0_SIODecSel":1 bits:1 bytes:1 words
+        // Description: Selection of SIO decode address
+        // 0: 0x2E. 1: 0x4E
+        "node0_siodecsel": "0x0",
+        // XLSX: row#41:0x434:"Node0_Dis_SIODec":1 bits:1 bytes:1 words
+        // Description: Disable SIO Decoding
+        "node0_dis_siodec": "0x0",
+        // XLSX: row#42:0x434:"Node0_En_ACPI":1 bits:1 bytes:1 words
+        // Description: Enable ACPI
+        "node0_en_acpi": "0x0",
+        // XLSX: row#43:0x434:"Node0_En_LPC":1 bits:1 bytes:1 words
+        // Description: Enable LPC
+        "node0_en_lpc": "0x0",
+        // XLSX: row#44:0x434:"Node0_En_eDAF":1 bits:1 bytes:1 words
+        // Description: Enable eDAF
+        // Only takes effect for eSPI mode
+        "node0_en_edaf": "0x0",
+        // XLSX: row#45:0x434:"Node0_En_eRTC":1 bits:1 bytes:1 words
+        // Description: Enable eSPI RTC
+        "node0_en_ertc": "0x0",
+        // XLSX: row#46:0x434:"Reserved":4 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_434_12": "0x0",
+        // XLSX: row#47:0x435:"Reserved":16 bits:2 bytes:1 words
+        // Description: Reserved
+        "reserved_435_0": "0x0",
+        // XLSX: row#48:0x436:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_436_0": "0x0",
+        // XLSX: row#49:0x436:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_436_1": "0x0",
+        // XLSX: row#50:0x436:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_436_2": "0x0",
+        // XLSX: row#51:0x436:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_436_3": "0x0",
+        // XLSX: row#52:0x436:"VRSize":1 bits:1 bytes:1 words
+        // Description: Node0: Size of VGA RAM
+        // 0: 32MB 1: 64MB (DRAMC100[0])
+        "vrsize": "0x0",
+        // XLSX: row#53:0x436:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_436_5": "0x0",
+        // XLSX: row#54:0x436:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_436_6": "0x0",
+        // XLSX: row#55:0x436:"En_PCIeVGA0":1 bits:1 bytes:1 words
+        // Description: Enable PCIe VGA0
+        "en_pcievga0": "0x0",
+        // XLSX: row#56:0x436:"En_PCIeIPMI0":1 bits:1 bytes:1 words
+        // Description: Enable PCIe IPMI0
+        "en_pcieipmi0": "0x0",
+        // XLSX: row#57:0x436:"En_PCIeEHCI0":1 bits:1 bytes:1 words
+        // Description: Enable PCIe EHCI0
+        "en_pcieehci0": "0x0",
+        // XLSX: row#58:0x436:"En_PCIeXHCI0":1 bits:1 bytes:1 words
+        // Description: Enable PCIe XHCI0
+        "en_pciexhci0": "0x0",
+        // XLSX: row#59:0x436:"En_PCIeVGA1":1 bits:1 bytes:1 words
+        // Description: Enable PCIe VGA1
+        "en_pcievga1": "0x0",
+        // XLSX: row#60:0x436:"En_PCIeIPMI1":1 bits:1 bytes:1 words
+        // Description: Enable PCIe IPMI1
+        "en_pcieipmi1": "0x0",
+        // XLSX: row#61:0x436:"En_PCIeEHCI1":1 bits:1 bytes:1 words
+        // Description: Enable PCIe EHCI1
+        "en_pcieehci1": "0x0",
+        // XLSX: row#62:0x436:"En_PCIeXHCI1":1 bits:1 bytes:1 words
+        // Description: Enable PCIe XHCI1
+        "en_pciexhci1": "0x0",
+        // XLSX: row#63:0x436:"Reserved":1 bits:1 bytes:1 words
+        // Description: Reserved
+        "reserved_436_15": "0x0",
+        // XLSX: row#64:0x437:"Reserved":16 bits:2 bytes:1 words
+        // Description: Reserved
+        "reserved_437_0": "0x0",
+        // XLSX: row#65:0x438:"otpstrap_ext0_valid":16 bits:2 bytes:1 words
+        // Description: OTPSTRAP_EXT source valid
+        // 0: SCU result keep as is
+        // 1: SCU result always sel from OTPSTRAP_EXT
+        "otpstrap_ext0_valid": "0x0",
+        // XLSX: row#66:0x439:"otpstrap_ext1_valid":16 bits:2 bytes:1 words
+        // Description: OTPSTRAP_EXT source valid
+        // 0: SCU result keep as is
+        // 1: SCU result always sel from OTPSTRAP_EXT
+        "otpstrap_ext1_valid": "0x0",
+        // XLSX: row#67:0x43A:"otpstrap_ext2_valid":16 bits:2 bytes:1 words
+        // Description: OTPSTRAP_EXT source valid
+        // 0: SCU result keep as is
+        // 1: SCU result always sel from OTPSTRAP_EXT
+        "otpstrap_ext2_valid": "0x0",
+        // XLSX: row#68:0x43B:"otpstrap_ext3_valid":16 bits:2 bytes:1 words
+        // Description: OTPSTRAP_EXT source valid
+        // 0: SCU result keep as is
+        // 1: SCU result always sel from OTPSTRAP_EXT
+        "otpstrap_ext3_valid": "0x0",
+        // XLSX: row#69:0x43C:"otpstrap_ext4_valid":16 bits:2 bytes:1 words
+        // Description: OTPSTRAP_EXT source valid
+        // 0: SCU result keep as is
+        // 1: SCU result always sel from OTPSTRAP_EXT
+        "otpstrap_ext4_valid": "0x0",
+        // XLSX: row#70:0x43D:"otpstrap_ext5_valid":16 bits:2 bytes:1 words
+        // Description: OTPSTRAP_EXT source valid
+        // 0: SCU result keep as is
+        // 1: SCU result always sel from OTPSTRAP_EXT
+        "otpstrap_ext5_valid": "0x0",
+        // XLSX: row#71:0x43E:"otpstrap_ext6_valid":16 bits:2 bytes:1 words
+        // Description: OTPSTRAP_EXT source valid
+        // 0: SCU result keep as is
+        // 1: SCU result always sel from OTPSTRAP_EXT
+        "otpstrap_ext6_valid": "0x0",
+        // XLSX: row#72:0x43F:"otpstrap_ext7_valid":16 bits:2 bytes:1 words
+        // Description: OTPSTRAP_EXT source valid
+        // 0: SCU result keep as is
+        // 1: SCU result always sel from OTPSTRAP_EXT
+        "otpstrap_ext7_valid": "0x0"
+    },
+    "user_region": {
+        // XLSX: row#2:0x440:"Reserved for usr0":5120 bits:640 bytes:320 words
+        // Description: Reserved for customers (OEM/ODM)
+        "reserved_440_0": "0x0",
+        // XLSX: row#3:0x580:"Reserved for usr1":5120 bits:640 bytes:320 words
+        // Description: Reserved for customers (OEM/ODM)
+        "reserved_580_0": "0x0",
+        // XLSX: row#4:0x6C0:"ROM patch":37888 bits:4736 bytes:2368 words
+        // Description: Used for ROM patch code. (usr2 & usr3)
+        "rom_patch": [
+            "0x14b0422214b0416214b06b5814b06c6814b0694e000000000000000014b01136",
+            "0000000014bba50e14bba80014bba3fc14bba7fc14b0659214bba7f814b04bc6",
+            "14bba7f414b0582c14bba7f014b04b6c14bba7ec14b02a8014bba7e814b0266c",
+            "14bba7e414bba00c14bba7e014b01f1c14bba7dc14b04b1214bba7d800000000",
+            "14bba7d40000724f00006d53000066410000664600006d4100006d4600006643",
+            "00007243000062430000734300006346000033500f406d7efba193a1a1179741",
+            "fb10365b00008082614550b2853e47f20007a423ea07879314bbf7b7c3d84709",
+            "ea07879314bbf7b70007a0230347879314bbd7b70007802303d7879314bbd7b7",
+            "cfd8431843dc47b20487871314bbd7b7a809ce3e47a900f775634702439c0487",
+            "879314bbd7b7a025ce3e0077e7930792479cea07879314bbf7b700f71c6347a9",
+            "43d8ea07879314bbf7b70001a0110001bfc1e78187aaf32500efe79147f2ce3e",
+            "87aaf4a500efc79867056807879314bbe7b700f76863678547986807879314bb",
+            "e7b70007a0230487879314bbd7b7c39847020447879314bbd7b7c39847120407",
+            "879314bbd7b7a8e94795e39987aaf054e0efc036c232c42ec62ad60671798082",
+            "612150f2853e8fd98ff516fd66c10742016157038fd98ff576c18f75177d6741",
+            "014156834781ca3e47c200f108a30ff7f7930207e79301114783978255025592",
+            "562256b22227879314b047b7d63e83b98ff967914772d43e83b58ff967894772",
+            "d23e83c147f2d03e8ff917fd67854772c7a18ff967a14772ce3e439c8a878793",
+            "14c037b700f108a30ff7f7930407e79301114783978255025592562256b21627",
+            "879314b047b7d63e83f98ff9400007b74772d43e83f58ff9200007b74772d23e",
+            "8ff917fd67c1439889c7879314c037b7d03e83c18ff90fff07b747720407de63",
+            "47f2ce3e439c8987879314c037b700f108a30ff7f793f807e79301114783aa34",
+            "e0ef3dcd1585051314c0753715c5859314c075b73c0006138006869366858b85",
+            "839d47e20017f713839947e23f311505051314c075371545859314c075b72800",
+            "0613140006938b85839547e20017f713839147e237911485051314c0753714c5",
+            "859314c075b714000613140006938b85838d47e20017f713838947e237b51405",
+            "051314c075371445859314c075b74601140006938b85838547e20017f71347e2",
+            "b334e0efcc3e83c1439c8947879314c037b7c802c62ade067139808261450001",
+            "c3988f558000073756b247f2c398573247f2d63e0ff7e79357b2e78947b2d63e",
+            "8fd9f007879367c15732e79947a2c3988f5547e28f7d17fd67c1475201079693",
+            "47c2d602c43ec63ac836ca32cc2ece2a71798082614550b2853e8fd98ff516fd",
+            "66c1074201a157038fd98ff576c18f75177d6741018156834781cc3e47d20001",
+            "0aa300010a23a039cc3e47d200f10aa30ff7f79347f200f10a234795cf8147f2",
+            "ce2a9782b587879314b077b7a815cc3e47d200f10aa30ff7f79347f200f10a23",
+            "4791cf8147f2ce2a9782c687879314b077b7a8a9cc3e47d200f10aa30ff7f793",
+            "47f200f10a23478dcf8147f2ce2a3d5da89500f10a234789e78943fc47b200f1",
+            "0a234785ca02c62ad606717980826149442a40ba8536d5a4c0ef00f704630247",
+            "a783577614bbd7b786be47a20001a0194781e39947a2c42a9402853e85ba8636",
+            "00dc18d886be87aae8b560ef853e18dc94e7841314b077b7f8e7fce347ad4742",
+            "c83e078547c2fce7a22397b60114078a47c28f5d07e2f947a78397b60114078a",
+            "47c28f5d8ff5f007879367c10087d693f947a78397b60114078a47c28f5d8ff5",
+            "00ff07b700879693f947a78397b60114078a47c20187d713f947a78397ba0118",
+            "078a47c2a09dc80294e530efbd2530ef853e085cfce7d8e3f7f7879367894732",
+            "c63e078947b2b40530ef853e4591005ca0d9978530efc78147a2c42a8544f0ef",
+            "853e85ba005847b2a02dc602afe530ef4501ffed87aa96e530ef000106010c23",
+            "dabe44f787934d5057b7debe0247a78314bbd7b7c522c70671758082611d19c1",
+            "20838536e884c0ef00f704630247a78318c1270314bbd7b786be8fd98ff516fd",
+            "66c1074201a157038fd98ff576c18f75177d6741018156834781cc3e47c2fe75",
+            "60ef853e458115000613187c00f11923ead7879377f9c79187aade6ff0efc915",
+            "40efc39947fc47b2cf9901014783dfd8470547b2000108a300010823a80100f1",
+            "08a30ff7f793579200f1082347a900f70b6347915712d23e83e58ff90e0007b7",
+            "439803c7879314c707b7a83d00f108a30ff7f793578200f1082347a5cb915782",
+            "d02a3335853e47bc47b2a8b900f108a30ff7f793578200f1082347a1cb915782",
+            "d02ae39520ef853e187ca8bd00f108a30ff7f793578200f10823478dcb915782",
+            "d02a87dff0ef853e45b2187ca04500f108a30ff7f793578200f10823479dcb91",
+            "5782d02a394d853e47bc47b2d4b520ef00f714634785475200f7066347954752",
+            "a8d100f108a30ff7f793578200f1082347adcb915782d02a942530ef557d55fd",
+            "a8d500f108a30ff7f793578200f108234795cb915782d02ae5f520ef12178513",
+            "212127b7aa2100f108a30ff7f793578200f108234799cb915782d02aebb520ef",
+            "12178513212127b7aa3500f108a30ff7f793578200f108234791cb915782d02a",
+            "e31520ef853e4585103cd43e12178793212127b7970550ef45814505c3982000",
+            "07132247879314c027b7c39847721307879314c027b7ce3e0017e793439c1307",
+            "879314c027b7c39847721307879314c027b7ce3e8fd947727007f79307a247d2",
+            "ce3e8ff7f79347f2ce3e439c1307879314c027b7a2e100f108a30ff7f7935782",
+            "00f108234789cb915782d02a9ba490ef853e085cc398200007132207879314c0",
+            "27b7c39847721307879314c027b7ce3e9bf9439c1307879314c027b7ac010001",
+            "08a300f1082347b1e7995f9c47b2a40d00f108a3478500010823c79987aa3509",
+            "00f1082357fdc80218f126230247a78314bbd7b7c62a18112e23712580826121",
+            "54d2546250f2853e47c20001b785a6a550ef45814505a031c83e57fd00f6f563",
+            "87ba56a200c69963863e56b200c6ea63863e56b287b6410786b340b687b30106",
+            "3833883a40a607335592550286ae862a94c460efa0a9c83e57fd00f775638722",
+            "47e200e79963872647f200f76a63872647f24481843e47b2ce3ecc3a87b600f8",
+            "06b300b687b300c83833883a00a607334581450546f24662c7d98ff9400007b7",
+            "4752ca3e439c03c7879314c707b7d602d43e02f707b30c8007934732d22ed02a",
+            "9bc460efce42cc3e48014781c802c62ada26dc22de0671398082612154d25462",
+            "50f2853e47c20001b785b46550ef45814505a031c83e57fd00f6f56387ba56a2",
+            "00c69963863e56b200c6ea63863e56b287b6410786b340b687b301063833883a",
+            "40a607335592550286ae862aa28460efa0a9c83e57fd00f77563872247e200e7",
+            "9963872647f200f76a63872647f24481843e47b2ce3ecc3a87b600f806b300b6",
+            "87b300c83833883a00a607334581450546f24662e7d98ff9400007b74752ca3e",
+            "439c03c7879314c707b7d602d43e02f707b30c8007934732d22ed02aa98460ef",
+            "ce42cc3e48014781c802c62ada26dc22de0671398082853e4781a0114785c399",
+            "0407f793439c8047879314c037b7eb898ff9400007b7439807c114c027b78082",
+            "614d50ba8536b2b4c0ef00f704630247a783477a14bbd7b786be478114e7a623",
+            "47b240f0073357a2fee7d2e3052007935732d63e078557b2d43e97ba5722439c",
+            "d23a004787135792a821d602d23e47b214e7a42347b20107d713439c14c027b7",
+            "a0a157c200f70463fc3007935742a801f8e7dbe347ad5732d63e078557b2c3d8",
+            "97b6078a0207879357b246b28f5d07e2f947a78397b61114078a57b28f5d8ff5",
+            "f007879367c10087d693f947a78397b61114078a57b28f5d8ff500ff07b70087",
+            "9693f947a78397b61114078a57b20187d713f947a78397ba1118078a57b2a0a5",
+            "d602b264f0efc3988f55800007371d07879314c077b700f776b317fd67c1873e",
+            "00f717b347055782b3a4f0efe3c557c2d82a3e45452285be863a185c101814e7",
+            "a22347b2476a08e7a02347b200f7f71309415783f8e7dce347ad5732d63e0785",
+            "57b2c39897b6078a07d157b246b28f5d07e2fc47a78397b61114078a57b28f5d",
+            "8ff5f007879367c10087d693fc47a78397b61114078a57b28f5d8ff500ff07b7",
+            "00879693fc47a78397b61114078a57b20187d713fc47a78397ba1118078a57b2",
+            "a09dd602a27157c2c39957c2d82aee64f0ef3f30051385be0347879310dca25d",
+            "57c2c39957c2d82af724f0ef3f20051385be0307879310dcfce7d7e347ad5732",
+            "d63e078557b2a2f957c2c39957c2d82af284f0ef853685be97ba078a57b210d8",
+            "86be078697bae097879367855732a805d602fce7d4e3478d5732d63e078557b2",
+            "a42157c2c39957c2d82af624f0ef853685be07b197ba4732078a0487879357b2",
+            "86be078697bae2d7879367855732a81dd602fce7d4e347dd5732d63e078557b2",
+            "a4a157c2c39957c2d82afa24f0ef853685be07b197ba4732078a0307879357b2",
+            "86be078697bae157879367855732a81dd6020ce7a42347b20017f71301e15783",
+            "a46157c2c39957c2d82a8554f0efc0178513678985be01e1079314e7a02347b2",
+            "0017f71301e15783ac4557c2c39957c2d82a87d4f0efc0078513678985be01e1",
+            "0793fce7d6e3478d5732d63e078557b2ace157c2c39957c2d82a8334f0ef8536",
+            "85be07a197ba4732078a02c7879357b286be07861f57879357b2a80dd602a619",
+            "57c2c39957c2d82a8614f0ef3e80051385be0b47879347b2fce7d6e3479d5732",
+            "d63e078557b2a63d57c2c39957c2d82a8894f0ef853685be97ba4732078a07b1",
+            "57b286be078697bae017879367855732a80dd602db84f0efc39847411a078793",
+            "14c077b7db64f0effce7d7e347ad5732d63e078557b2aebd57c2c39957c2d82a",
+            "8d94f0ef853685be97ba4732078a57b286be078697bafd87879367855732a805",
+            "d60280b570ef4532458115000613ae5d57a9e39947b2d402cf3e0247a78314bb",
+            "d7b7c42ec62ad70671718082614d50ba8536f174c0ef00f704630247a783477a",
+            "14bbd7b786befc300793a01957f9c399017147830001a011f0e7d5e304f00793",
+            "5702d03e07855782eb918ff967a14762a0354781c3984792873e0ff7f7938bbd",
+            "47e2fee7d0e347ad4772ce3e078547f2c31cf8c7a78397b61114078a47f2973e",
+            "4722078a47f2a839ce02ef9587aaa13570ef853e85ba0300061308fc1078fae7",
+            "dfe347ad4772ce3e078547f2a0615792c3995792d22a9cf4f0ef853685be97ba",
+            "078a47f2107886be97ba6785973e078647f2873e83c107c28ff917fd6785873e",
+            "83c147e2a081ce02efc957a2d43e87aa3f19853e0ff7f7938bbd47e200f10ba3",
+            "47850af71f63040007930707f71347e2a0f55792c3995792d22aa334f0ef853a",
+            "85be083c873e078697ba8007879367855702a8cdd002aa095792c3995792d22a",
+            "9682853a09000593863e08fc873e97bae4478793678557d847b2439414bb97b7",
+            "aa3557a9e3994792c39947a200010ba3cf3e0247a78314bbd7b7c232c42ec62a",
+            "d70671718082614550b285368904d0ef00f704630247a783477214bbd7b786be",
+            "0ff7f79300f037b38b8540f757b347b2873e01a15783a8214781c39987aab494",
+            "f0ef3e30051385be01a10793ce3e0247a78314bbd7b7c62ad60671798082853e",
+            "0ff7f7930017c7930207b7930207f793439c07c114c027b7808201410001c398",
+            "47b28047871314bbb7b7c7986ca7071314bba737479c4bfc47a2cb89479c4bfc",
+            "47a200f71e63478d4bb847a2c3954bfc47a2c63eefc7879314bb97b7c43ef007",
+            "879314bb97b71141"
+        ]
+    },
+    "secure_region": {
+        // XLSX: row#2:0x1000:"Owner Key Hash 0 header":32 bits:4 bytes:2 words
+        // Description: Header used to describe the key type, offset, etc.
+        "owner_key_hash_0_header": "0x0",
+        // XLSX: row#3:0x1002:"Owner Key Hash 1 header":32 bits:4 bytes:2 words
+        // Description: Header used to describe the key type, offset, etc.
+        "owner_key_hash_1_header": "0x0",
+        // XLSX: row#4:0x1004:"Owner Key Hash 2 header":32 bits:4 bytes:2 words
+        // Description: Header used to describe the key type, offset, etc.
+        "owner_key_hash_2_header": "0x0",
+        // XLSX: row#5:0x1006:"Owner Key Hash 3 header":32 bits:4 bytes:2 words
+        // Description: Header used to describe the key type, offset, etc.
+        "owner_key_hash_3_header": "0x0",
+        // XLSX: row#6:0x1008:"Owner Key Hash 4 header":32 bits:4 bytes:2 words
+        // Description: Header used to describe the key type, offset, etc.
+        "owner_key_hash_4_header": "0x0",
+        // XLSX: row#7:0x100A:"Owner Key Hash 5 header":32 bits:4 bytes:2 words
+        // Description: Header used to describe the key type, offset, etc.
+        "owner_key_hash_5_header": "0x0",
+        // XLSX: row#8:0x100C:"Owner Key Hash 6 header":32 bits:4 bytes:2 words
+        // Description: Header used to describe the key type, offset, etc.
+        "owner_key_hash_6_header": "0x0",
+        // XLSX: row#9:0x100E:"Owner Key Hash 7 header":32 bits:4 bytes:2 words
+        // Description: Header used to describe the key type, offset, etc.
+        "owner_key_hash_7_header": "0x0",
+        // XLSX: row#10:0x1010:"Owner Key Hash 8 header":32 bits:4 bytes:2 words
+        // Description: Header used to describe the key type, offset, etc.
+        "owner_key_hash_8_header": "0x0",
+        // XLSX: row#11:0x1012:"Owner Key Hash 9 header":32 bits:4 bytes:2 words
+        // Description: Header used to describe the key type, offset, etc.
+        "owner_key_hash_9_header": "0x0",
+        // XLSX: row#12:0x1014:"Owner Key Hash 10 header":32 bits:4 bytes:2 words
+        // Description: Header used to describe the key type, offset, etc.
+        "owner_key_hash_10_header": "0x0",
+        // XLSX: row#13:0x1016:"Owner Key Hash 11 header":32 bits:4 bytes:2 words
+        // Description: Header used to describe the key type, offset, etc.
+        "owner_key_hash_11_header": "0x0",
+        // XLSX: row#14:0x1018:"Owner Key Hash 12 header":32 bits:4 bytes:2 words
+        // Description: Header used to describe the key type, offset, etc.
+        "owner_key_hash_12_header": "0x0",
+        // XLSX: row#15:0x101A:"Owner Key Hash 13 header":32 bits:4 bytes:2 words
+        // Description: Header used to describe the key type, offset, etc.
+        "owner_key_hash_13_header": "0x0",
+        // XLSX: row#16:0x101C:"Owner Key Hash 14 header":32 bits:4 bytes:2 words
+        // Description: Header used to describe the key type, offset, etc.
+        "owner_key_hash_14_header": "0x0",
+        // XLSX: row#17:0x101E:"Owner Key Hash 15 header":32 bits:4 bytes:2 words
+        // Description: Header used to describe the key type, offset, etc.
+        "owner_key_hash_15_header": "0x0",
+        // XLSX: row#18:0x1020:"Vault Key 0 header":32 bits:4 bytes:2 words
+        // Description: Header used to describe the key type, offset, etc.
+        "vault_key_0_header": "0x0",
+        // XLSX: row#19:0x1022:"Vault Key 1 header":32 bits:4 bytes:2 words
+        // Description: Header used to describe the key type, offset, etc.
+        "vault_key_1_header": "0x0",
+        // XLSX: row#20:0x1024:"Vault Key 2 header":32 bits:4 bytes:2 words
+        // Description: Header used to describe the key type, offset, etc.
+        "vault_key_2_header": "0x0",
+        // XLSX: row#21:0x1026:"Vault Key 3 header":32 bits:4 bytes:2 words
+        // Description: Header used to describe the key type, offset, etc.
+        "vault_key_3_header": "0x0",
+        // XLSX: row#22:0x1028:"Reserved (60)":1920 bits:240 bytes:120 words
+        // Description: Reserved
+        "reserved_1028_0": "0x0",
+        // XLSX: row#23:0x10A0:"Owner Key Hash 0":384 bits:48 bytes:24 words
+        // Description: Caliptra fuse: OWNER PK HASH
+        "owner_key_hash_0": "0x0",
+        // XLSX: row#24:0x10B8:"Owner Key Hash 1":384 bits:48 bytes:24 words
+        // Description: Caliptra fuse: OWNER PK HASH
+        "owner_key_hash_1": "0x0",
+        // XLSX: row#25:0x10D0:"Owner Key Hash 2":384 bits:48 bytes:24 words
+        // Description: Caliptra fuse: OWNER PK HASH
+        "owner_key_hash_2": "0x0",
+        // XLSX: row#26:0x10E8:"Owner Key Hash 3":384 bits:48 bytes:24 words
+        // Description: Caliptra fuse: OWNER PK HASH
+        "owner_key_hash_3": "0x0",
+        // XLSX: row#27:0x1100:"Owner Key Hash 4":384 bits:48 bytes:24 words
+        // Description: Caliptra fuse: OWNER PK HASH
+        "owner_key_hash_4": "0x0",
+        // XLSX: row#28:0x1118:"Owner Key Hash 5":384 bits:48 bytes:24 words
+        // Description: Caliptra fuse: OWNER PK HASH
+        "owner_key_hash_5": "0x0",
+        // XLSX: row#29:0x1130:"Owner Key Hash 6":384 bits:48 bytes:24 words
+        // Description: Caliptra fuse: OWNER PK HASH
+        "owner_key_hash_6": "0x0",
+        // XLSX: row#30:0x1148:"Owner Key Hash 7":384 bits:48 bytes:24 words
+        // Description: Caliptra fuse: OWNER PK HASH
+        "owner_key_hash_7": "0x0",
+        // XLSX: row#31:0x1160:"Owner Key Hash 8":384 bits:48 bytes:24 words
+        // Description: Caliptra fuse: OWNER PK HASH
+        "owner_key_hash_8": "0x0",
+        // XLSX: row#32:0x1178:"Owner Key Hash 9":384 bits:48 bytes:24 words
+        // Description: Caliptra fuse: OWNER PK HASH
+        "owner_key_hash_9": "0x0",
+        // XLSX: row#33:0x1190:"Owner Key Hash 10":384 bits:48 bytes:24 words
+        // Description: Caliptra fuse: OWNER PK HASH
+        "owner_key_hash_10": "0x0",
+        // XLSX: row#34:0x11A8:"Owner Key Hash 11":384 bits:48 bytes:24 words
+        // Description: Caliptra fuse: OWNER PK HASH
+        "owner_key_hash_11": "0x0",
+        // XLSX: row#35:0x11C0:"Owner Key Hash 12":384 bits:48 bytes:24 words
+        // Description: Caliptra fuse: OWNER PK HASH
+        "owner_key_hash_12": "0x0",
+        // XLSX: row#36:0x11D8:"Owner Key Hash 13":384 bits:48 bytes:24 words
+        // Description: Caliptra fuse: OWNER PK HASH
+        "owner_key_hash_13": "0x0",
+        // XLSX: row#37:0x11F0:"Owner Key Hash 14":384 bits:48 bytes:24 words
+        // Description: Caliptra fuse: OWNER PK HASH
+        "owner_key_hash_14": "0x0",
+        // XLSX: row#38:0x1208:"Owner Key Hash 15":384 bits:48 bytes:24 words
+        // Description: Caliptra fuse: OWNER PK HASH
+        "owner_key_hash_15": "0x0",
+        // XLSX: row#39:0x1220:"Vault Key 0":256 bits:32 bytes:16 words
+        // Description: Secure vault key is dedicated to encryption/decryption.
+        "vault_key_0": "0x0",
+        // XLSX: row#40:0x1230:"Vault Key 1":256 bits:32 bytes:16 words
+        // Description: Secure vault key is dedicated to encryption/decryption.
+        "vault_key_1": "0x0",
+        // XLSX: row#41:0x1240:"Vault Key 2":256 bits:32 bytes:16 words
+        // Description: Secure vault key is dedicated to encryption/decryption.
+        "vault_key_2": "0x0",
+        // XLSX: row#42:0x1250:"Vault Key 3":256 bits:32 bytes:16 words
+        // Description: Secure vault key is dedicated to encryption/decryption.
+        "vault_key_3": "0x0",
+        // XLSX: row#43:0x1260:"Reserved":39424 bits:4928 bytes:2464 words
+        // Description: Reserved
+        "reserved_1260_0": "0x0"
+    },
+    "caliptra_region": {
+        // XLSX: row#2:0x1C00:"Enable LMS verify":1 bits:1 bytes:1 words
+        // Description: Caliptra fuse: LMS VERIFY
+        // Verify Caliptra firmware images with both ECDSA and LMS
+        "enable_lms_verify": "0x0",
+        // XLSX: row#3:0x1C00:"Reserved":15 bits:2 bytes:1 words
+        // Description: reserved
+        "reserved_1c00_1": "0x0",
+        // XLSX: row#4:0x1C01:"Anti-rollback disable":1 bits:1 bytes:1 words
+        // Description: Caliptra fuse: ANTI-ROLLBACK DISABLE
+        // Disable anti-rollback support from Caliptra
+        "anti-rollback_disable": "0x0",
+        // XLSX: row#5:0x1C01:"Reserved":15 bits:2 bytes:1 words
+        // Description: reserved
+        "reserved_1c01_1": "0x0",
+        // XLSX: row#6:0x1C02:"Field Entropy":256 bits:32 bytes:16 words
+        // Description: Caliptra fuse: FIELD ENTROPY
+        // Owner secret to hedge against UDS disclosure in the supply chain
+        "field_entropy": "0x0",
+        // XLSX: row#7:0x1C12:"Manufacture Key Hash":384 bits:48 bytes:24 words
+        // Description: Caliptra fuse: KEY MANIFEST PK HASH
+        // Manufacture/Vendor key hash
+        // Single-HSM:
+        // 428d18b0b49192c0163b4e0b2e231d20eef3ae37f8046c09
+        // a31911e3f6875a9a287342c58c7f8d68b69fafe1dd27b2dc
+        // Dual-HSM:
+        // ddd4b37b7773fb84c5fabf2ce55f6035b64190f9ae4cc3c1
+        // 0b385b81f11b1aebd813ae0f6e8be8f0c2c3575ea0bbd9fd
+        "manufacture_key_hash": "0x0",
+        // XLSX: row#8:0x1C2A:"IDEVID Cert attr":768 bits:96 bytes:48 words
+        // Description: Caliptra fuse: IDEVID CERT IDEVID ATTR
+        // The information for generating IDEVID CSR
+        // DW 0: X509 key ID algorithm
+        // 0: SHA1
+        // 1: SHA256
+        // 2: SHA384
+        // 3: Fuse → already programmed DW 1/2/3/4/5, not runtime gen
+        // DW 1/2/3/4/5: Subject Key ID
+        // DW 6: ueid_type (0x1: random)
+        // DW 7/8/9/10: Unique endpoint ID (Manufacture Serial number)
+        "idevid_cert_attr": "0x0",
+        // XLSX: row#9:0x1C5A:"IDEVID manuf HSM identifier":128 bits:16 bytes:8 words
+        // Description: Caliptra fuse: IDEVID MANUF HSM IDENTIFIER
+        // Vendor IDevID provisioner CA identifiers
+        "idevid_manuf_hsm_identifier": "0x0",
+        // XLSX: row#10:0x1C62:"IDEVID TBS":8192 bits:1024 bytes:512 words
+        // Description: to-be-signed (TBS) payload.
+        // The TBS is the certificate template already patched with the IDevID public key, Subject Key
+        // Identifier, serial number, and any extensions that are unique to the device that the vendor may have
+        // included.
+        // Maximum size is 916 bytes according to mailbox command
+        "idevid_tbs": "0x0",
+        // XLSX: row#11:0x1E62:"IDEVID Cert Signature":768 bits:96 bytes:48 words
+        // Description: IDEVID Certificate Signature R & S
+        "idevid_cert_signature": "0x0",
+        // XLSX: row#12:0x1E92:"Reserved":3808 bits:476 bytes:238 words
+        // Description: reserved
+        "reserved_1e92_0": "0x0"
+    },
+    "puf_region": {}
+}
