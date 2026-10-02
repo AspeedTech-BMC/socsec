@@ -11,7 +11,7 @@ import os
 import argparse
 
 # Global configuration
-TARGET_VERSION = "rt-1.2.5"
+TARGET_VERSION = "rt-1.3.0"
 OFFICIAL_README_URL = "https://raw.githubusercontent.com/chipsalliance/caliptra-sw/main/README.md"
 DEFAULT_FW_URL = "https://raw.githubusercontent.com/AspeedTech-BMC/bmc-pb/refs/heads/master/ast2700a2/caliptra-fw.bin"
 DEFAULT_FW_NAME = "caliptra-fw.bin"
@@ -89,10 +89,8 @@ def split_caliptra_measurements(caliptra_image: bytes) -> tuple[bytes, bytes]:
         image_offset = int.from_bytes(toc[48:52], 'little')
         image_size = int.from_bytes(toc[52:56], 'little')
 
-        # Caliptra stores images in flash byte order (each 32-bit word byte-swapped).
-        # The official hashes are computed over the word-swapped digest.
         digest = _sha384(caliptra_image[image_offset:][:image_size])
-        standard_hash = swap_word_endianness(digest)
+        standard_hash = digest
 
         if toc_id == TOC_ID_FMC:
             fmc_hash = standard_hash
