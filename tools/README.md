@@ -23,6 +23,12 @@ $ python3 scripts/e2j.py \
         --input {otp_memory_map_file} \
         --strap {otp_strap_file}
 ```
+Example:
+```bash
+$ python3 scripts/e2j.py \
+	--input memory_map/AST2700A2_OTP_memory_map.xlsx \
+	--strap memory_map/AST2700A2_OTP_memory_map.xlsx
+```
 
 ## OTP full sample jsonc generation
 

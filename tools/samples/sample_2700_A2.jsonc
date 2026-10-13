@@ -466,6 +466,12 @@
         // OTPCFG21[15: 0]
         // cptra 0 region size
         "cptra0_region_size": "0x0",
+        // OTPCFG22[15: 0]
+        // SCU0 hardware strap lock autoload
+        "scu0_hwstrap_lock_0": "0x0",
+        // OTPCFG23[15: 0]
+        // SCU0 hardware strap lock autoload
+        "scu0_hwstrap_lock_1": "0x0",
         // OTPCFG24[10: 1]
         // OTP patch code offset
         // The OTP patch code location in OTPROM Region.
@@ -507,7 +513,13 @@
         // OTP Patch 5 code size (unit: word)
         // The Boot ROM can execute OTP patch codes in OTPROM region. The OTP patch code size is
         // limited to 16Kbit.
-        "OTP_Patch_Size_5": "0x0"
+        "OTP_Patch_Size_5": "0x0",
+        // OTPCFG30[15: 0]
+        // SCU1 hardware strap lock autoload
+        "scu1_hwstrap_lock_0": "0x0",
+        // OTPCFG31[15: 0]
+        // SCU1 hardware strap lock autoload
+        "scu1_hwstrap_lock_1": "0x0"
     },
     "strap_region": {
         // OTPSTRAP[1]/SCU0_010[1]
