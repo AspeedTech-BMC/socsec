@@ -41,7 +41,28 @@
         "Caliptra_Manufacture_ECC_key_mask": "0x0",
         // OTPRBP19 - 32 bits
         // Caliptra fuse: LMS REVOCATION
-        "Caliptra_Manufacture_LMS_key_mask": "0x0"
+        "Caliptra_Manufacture_LMS_key_mask": "0x0",
+        // OTPRBP21 - 16 bits
+        // BANK of 3E3
+        "Caliptra_owner_public_key_hash_retire_BK": "0x0",
+        // OTPRBP22 - 4 bits
+        // BANK of 3F2
+        "Caliptra_Manufacture_ECC_key_mask_BK": "0x0",
+        // OTPRBP23 - 32 bits
+        // BANK of 3F4
+        "Caliptra_Manufacture_LMS_key_mask_BK": "0x0",
+        // OTPRBP25 - 16 bits
+        // nan
+        "otpstrap_wr_prot_lsb_BK": "0x0",
+        // OTPRBP26 - 16 bits
+        // nan
+        "otpstrap_wr_prot_msb_BK": "0x0",
+        // OTPRBP27 - 16 bits
+        // nan
+        "otpstrap_lsb_BK": "0x0",
+        // OTPRBP28 - 16 bits
+        // nan
+        "otpstrap_msb_BK": "0x0"
     },
     "config_region": {
         // OTPCFG0[15]
@@ -959,8 +980,8 @@
         }
     },
     "user_region": {
-        // OTPUSR 0x6C0 - 37888 bits
-        // Used for ROM patch code. (usr2 & usr3)
+        // OTPUSR 0x580 - 43008 bits
+        // Used for ROM patch code
         "ROM_patch": "0x0"
     },
     "secure_region": {
