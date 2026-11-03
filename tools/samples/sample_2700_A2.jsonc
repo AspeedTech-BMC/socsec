@@ -23,19 +23,6 @@
         // Boot up Policy: SoC Manifest SVN >= HW SoC Manifest SVN
         "SoC_Manifest_Hardware_SVN_0": "0x0",
         "SoC_Manifest_Hardware_SVN_1": "0x0",
-        // OTPRBP8 - 32 bits
-        // Caliptra fuse: FMC KEY MANIFEST SVN
-        // Effect: Secure boot is enabled
-        // Policy: FMC SVN >= HW FMC SVN
-        "Caliptra_FMC_Hardware_SVN": "0x0",
-        // OTPRBP10 - 128 bits
-        // Caliptra fuse: RUNTIME SVN
-        // Effect: Secure boot is enabled
-        // Policy: RUNTIME SVN >= HW RUNTIME SVN
-        "Caliptra_Runtime_Hardware_SVN_0": "0x0",
-        "Caliptra_Runtime_Hardware_SVN_1": "0x0",
-        "Caliptra_Runtime_Hardware_SVN_2": "0x0",
-        "Caliptra_Runtime_Hardware_SVN_3": "0x0",
         // OTPRBP18 - 4 bits
         // Caliptra fuse: KEY MANIFEST PK HASH MASK
         "Caliptra_Manufacture_ECC_key_mask": "0x0",
@@ -52,16 +39,16 @@
         // BANK of 3F4
         "Caliptra_Manufacture_LMS_key_mask_BK": "0x0",
         // OTPRBP25 - 16 bits
-        // nan
+        // BANK of 420
         "otpstrap_wr_prot_lsb_BK": "0x0",
         // OTPRBP26 - 16 bits
-        // nan
+        // BANK of 421
         "otpstrap_wr_prot_msb_BK": "0x0",
         // OTPRBP27 - 16 bits
-        // nan
+        // BANK of otpstrap lsb
         "otpstrap_lsb_BK": "0x0",
         // OTPRBP28 - 16 bits
-        // nan
+        // BANK of otpstrap msb
         "otpstrap_msb_BK": "0x0"
     },
     "config_region": {
@@ -534,13 +521,7 @@
         // OTP Patch 5 code size (unit: word)
         // The Boot ROM can execute OTP patch codes in OTPROM region. The OTP patch code size is
         // limited to 16Kbit.
-        "OTP_Patch_Size_5": "0x0",
-        // OTPCFG30[15: 0]
-        // SCU1 hardware strap lock autoload
-        "scu1_hwstrap_lock_0": "0x0",
-        // OTPCFG31[15: 0]
-        // SCU1 hardware strap lock autoload
-        "scu1_hwstrap_lock_1": "0x0"
+        "OTP_Patch_Size_5": "0x0"
     },
     "strap_region": {
         // OTPSTRAP[1]/SCU0_010[1]
@@ -1156,6 +1137,486 @@
         "IDEVID_TBS": "",
         // OTPCAL610
         // IDEVID Certificate Signature R & S
-        "IDEVID_Cert_Signature": ""
+        "IDEVID_Cert_Signature": "",
+        // OTPCAL658
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[0]
+        "Caliptra_FMC_Hardware_SVN_word_0": "",
+        // OTPCAL659
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[1]
+        "Caliptra_FMC_Hardware_SVN_word_1": "",
+        // OTPCAL660
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[2]
+        "Caliptra_FMC_Hardware_SVN_word_2": "",
+        // OTPCAL661
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[3]
+        "Caliptra_FMC_Hardware_SVN_word_3": "",
+        // OTPCAL662
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[4]
+        "Caliptra_FMC_Hardware_SVN_word_4": "",
+        // OTPCAL663
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[5]
+        "Caliptra_FMC_Hardware_SVN_word_5": "",
+        // OTPCAL664
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[6]
+        "Caliptra_FMC_Hardware_SVN_word_6": "",
+        // OTPCAL665
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[7]
+        "Caliptra_FMC_Hardware_SVN_word_7": "",
+        // OTPCAL666
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[8]
+        "Caliptra_FMC_Hardware_SVN_word_8": "",
+        // OTPCAL667
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[9]
+        "Caliptra_FMC_Hardware_SVN_word_9": "",
+        // OTPCAL668
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[10]
+        "Caliptra_FMC_Hardware_SVN_word_10": "",
+        // OTPCAL669
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[11]
+        "Caliptra_FMC_Hardware_SVN_word_11": "",
+        // OTPCAL670
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[12]
+        "Caliptra_FMC_Hardware_SVN_word_12": "",
+        // OTPCAL671
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[13]
+        "Caliptra_FMC_Hardware_SVN_word_13": "",
+        // OTPCAL672
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[14]
+        "Caliptra_FMC_Hardware_SVN_word_14": "",
+        // OTPCAL673
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[15]
+        "Caliptra_FMC_Hardware_SVN_word_15": "",
+        // OTPCAL674
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[16]
+        "Caliptra_FMC_Hardware_SVN_word_16": "",
+        // OTPCAL675
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[17]
+        "Caliptra_FMC_Hardware_SVN_word_17": "",
+        // OTPCAL676
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[18]
+        "Caliptra_FMC_Hardware_SVN_word_18": "",
+        // OTPCAL677
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[19]
+        "Caliptra_FMC_Hardware_SVN_word_19": "",
+        // OTPCAL678
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[20]
+        "Caliptra_FMC_Hardware_SVN_word_20": "",
+        // OTPCAL679
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[21]
+        "Caliptra_FMC_Hardware_SVN_word_21": "",
+        // OTPCAL680
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[22]
+        "Caliptra_FMC_Hardware_SVN_word_22": "",
+        // OTPCAL681
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[23]
+        "Caliptra_FMC_Hardware_SVN_word_23": "",
+        // OTPCAL682
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[24]
+        "Caliptra_FMC_Hardware_SVN_word_24": "",
+        // OTPCAL683
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[25]
+        "Caliptra_FMC_Hardware_SVN_word_25": "",
+        // OTPCAL684
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[26]
+        "Caliptra_FMC_Hardware_SVN_word_26": "",
+        // OTPCAL685
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[27]
+        "Caliptra_FMC_Hardware_SVN_word_27": "",
+        // OTPCAL686
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[28]
+        "Caliptra_FMC_Hardware_SVN_word_28": "",
+        // OTPCAL687
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[29]
+        "Caliptra_FMC_Hardware_SVN_word_29": "",
+        // OTPCAL688
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[30]
+        "Caliptra_FMC_Hardware_SVN_word_30": "",
+        // OTPCAL689
+        // Caliptra fuse: FMC KEY MANIFEST SVN bit[31]
+        "Caliptra_FMC_Hardware_SVN_word_31": "",
+        // OTPCAL690
+        // Caliptra fuse: RUNTIME SVN bit[0]
+        "Caliptra_Runtime_Hardware_SVN_word_0": "",
+        // OTPCAL691
+        // Caliptra fuse: RUNTIME SVN bit[1]
+        "Caliptra_Runtime_Hardware_SVN_word_1": "",
+        // OTPCAL692
+        // Caliptra fuse: RUNTIME SVN bit[2]
+        "Caliptra_Runtime_Hardware_SVN_word_2": "",
+        // OTPCAL693
+        // Caliptra fuse: RUNTIME SVN bit[3]
+        "Caliptra_Runtime_Hardware_SVN_word_3": "",
+        // OTPCAL694
+        // Caliptra fuse: RUNTIME SVN bit[4]
+        "Caliptra_Runtime_Hardware_SVN_word_4": "",
+        // OTPCAL695
+        // Caliptra fuse: RUNTIME SVN bit[5]
+        "Caliptra_Runtime_Hardware_SVN_word_5": "",
+        // OTPCAL696
+        // Caliptra fuse: RUNTIME SVN bit[6]
+        "Caliptra_Runtime_Hardware_SVN_word_6": "",
+        // OTPCAL697
+        // Caliptra fuse: RUNTIME SVN bit[7]
+        "Caliptra_Runtime_Hardware_SVN_word_7": "",
+        // OTPCAL698
+        // Caliptra fuse: RUNTIME SVN bit[8]
+        "Caliptra_Runtime_Hardware_SVN_word_8": "",
+        // OTPCAL699
+        // Caliptra fuse: RUNTIME SVN bit[9]
+        "Caliptra_Runtime_Hardware_SVN_word_9": "",
+        // OTPCAL700
+        // Caliptra fuse: RUNTIME SVN bit[10]
+        "Caliptra_Runtime_Hardware_SVN_word_10": "",
+        // OTPCAL701
+        // Caliptra fuse: RUNTIME SVN bit[11]
+        "Caliptra_Runtime_Hardware_SVN_word_11": "",
+        // OTPCAL702
+        // Caliptra fuse: RUNTIME SVN bit[12]
+        "Caliptra_Runtime_Hardware_SVN_word_12": "",
+        // OTPCAL703
+        // Caliptra fuse: RUNTIME SVN bit[13]
+        "Caliptra_Runtime_Hardware_SVN_word_13": "",
+        // OTPCAL704
+        // Caliptra fuse: RUNTIME SVN bit[14]
+        "Caliptra_Runtime_Hardware_SVN_word_14": "",
+        // OTPCAL705
+        // Caliptra fuse: RUNTIME SVN bit[15]
+        "Caliptra_Runtime_Hardware_SVN_word_15": "",
+        // OTPCAL706
+        // Caliptra fuse: RUNTIME SVN bit[16]
+        "Caliptra_Runtime_Hardware_SVN_word_16": "",
+        // OTPCAL707
+        // Caliptra fuse: RUNTIME SVN bit[17]
+        "Caliptra_Runtime_Hardware_SVN_word_17": "",
+        // OTPCAL708
+        // Caliptra fuse: RUNTIME SVN bit[18]
+        "Caliptra_Runtime_Hardware_SVN_word_18": "",
+        // OTPCAL709
+        // Caliptra fuse: RUNTIME SVN bit[19]
+        "Caliptra_Runtime_Hardware_SVN_word_19": "",
+        // OTPCAL710
+        // Caliptra fuse: RUNTIME SVN bit[20]
+        "Caliptra_Runtime_Hardware_SVN_word_20": "",
+        // OTPCAL711
+        // Caliptra fuse: RUNTIME SVN bit[21]
+        "Caliptra_Runtime_Hardware_SVN_word_21": "",
+        // OTPCAL712
+        // Caliptra fuse: RUNTIME SVN bit[22]
+        "Caliptra_Runtime_Hardware_SVN_word_22": "",
+        // OTPCAL713
+        // Caliptra fuse: RUNTIME SVN bit[23]
+        "Caliptra_Runtime_Hardware_SVN_word_23": "",
+        // OTPCAL714
+        // Caliptra fuse: RUNTIME SVN bit[24]
+        "Caliptra_Runtime_Hardware_SVN_word_24": "",
+        // OTPCAL715
+        // Caliptra fuse: RUNTIME SVN bit[25]
+        "Caliptra_Runtime_Hardware_SVN_word_25": "",
+        // OTPCAL716
+        // Caliptra fuse: RUNTIME SVN bit[26]
+        "Caliptra_Runtime_Hardware_SVN_word_26": "",
+        // OTPCAL717
+        // Caliptra fuse: RUNTIME SVN bit[27]
+        "Caliptra_Runtime_Hardware_SVN_word_27": "",
+        // OTPCAL718
+        // Caliptra fuse: RUNTIME SVN bit[28]
+        "Caliptra_Runtime_Hardware_SVN_word_28": "",
+        // OTPCAL719
+        // Caliptra fuse: RUNTIME SVN bit[29]
+        "Caliptra_Runtime_Hardware_SVN_word_29": "",
+        // OTPCAL720
+        // Caliptra fuse: RUNTIME SVN bit[30]
+        "Caliptra_Runtime_Hardware_SVN_word_30": "",
+        // OTPCAL721
+        // Caliptra fuse: RUNTIME SVN bit[31]
+        "Caliptra_Runtime_Hardware_SVN_word_31": "",
+        // OTPCAL722
+        // Caliptra fuse: RUNTIME SVN bit[32]
+        "Caliptra_Runtime_Hardware_SVN_word_32": "",
+        // OTPCAL723
+        // Caliptra fuse: RUNTIME SVN bit[33]
+        "Caliptra_Runtime_Hardware_SVN_word_33": "",
+        // OTPCAL724
+        // Caliptra fuse: RUNTIME SVN bit[34]
+        "Caliptra_Runtime_Hardware_SVN_word_34": "",
+        // OTPCAL725
+        // Caliptra fuse: RUNTIME SVN bit[35]
+        "Caliptra_Runtime_Hardware_SVN_word_35": "",
+        // OTPCAL726
+        // Caliptra fuse: RUNTIME SVN bit[36]
+        "Caliptra_Runtime_Hardware_SVN_word_36": "",
+        // OTPCAL727
+        // Caliptra fuse: RUNTIME SVN bit[37]
+        "Caliptra_Runtime_Hardware_SVN_word_37": "",
+        // OTPCAL728
+        // Caliptra fuse: RUNTIME SVN bit[38]
+        "Caliptra_Runtime_Hardware_SVN_word_38": "",
+        // OTPCAL729
+        // Caliptra fuse: RUNTIME SVN bit[39]
+        "Caliptra_Runtime_Hardware_SVN_word_39": "",
+        // OTPCAL730
+        // Caliptra fuse: RUNTIME SVN bit[40]
+        "Caliptra_Runtime_Hardware_SVN_word_40": "",
+        // OTPCAL731
+        // Caliptra fuse: RUNTIME SVN bit[41]
+        "Caliptra_Runtime_Hardware_SVN_word_41": "",
+        // OTPCAL732
+        // Caliptra fuse: RUNTIME SVN bit[42]
+        "Caliptra_Runtime_Hardware_SVN_word_42": "",
+        // OTPCAL733
+        // Caliptra fuse: RUNTIME SVN bit[43]
+        "Caliptra_Runtime_Hardware_SVN_word_43": "",
+        // OTPCAL734
+        // Caliptra fuse: RUNTIME SVN bit[44]
+        "Caliptra_Runtime_Hardware_SVN_word_44": "",
+        // OTPCAL735
+        // Caliptra fuse: RUNTIME SVN bit[45]
+        "Caliptra_Runtime_Hardware_SVN_word_45": "",
+        // OTPCAL736
+        // Caliptra fuse: RUNTIME SVN bit[46]
+        "Caliptra_Runtime_Hardware_SVN_word_46": "",
+        // OTPCAL737
+        // Caliptra fuse: RUNTIME SVN bit[47]
+        "Caliptra_Runtime_Hardware_SVN_word_47": "",
+        // OTPCAL738
+        // Caliptra fuse: RUNTIME SVN bit[48]
+        "Caliptra_Runtime_Hardware_SVN_word_48": "",
+        // OTPCAL739
+        // Caliptra fuse: RUNTIME SVN bit[49]
+        "Caliptra_Runtime_Hardware_SVN_word_49": "",
+        // OTPCAL740
+        // Caliptra fuse: RUNTIME SVN bit[50]
+        "Caliptra_Runtime_Hardware_SVN_word_50": "",
+        // OTPCAL741
+        // Caliptra fuse: RUNTIME SVN bit[51]
+        "Caliptra_Runtime_Hardware_SVN_word_51": "",
+        // OTPCAL742
+        // Caliptra fuse: RUNTIME SVN bit[52]
+        "Caliptra_Runtime_Hardware_SVN_word_52": "",
+        // OTPCAL743
+        // Caliptra fuse: RUNTIME SVN bit[53]
+        "Caliptra_Runtime_Hardware_SVN_word_53": "",
+        // OTPCAL744
+        // Caliptra fuse: RUNTIME SVN bit[54]
+        "Caliptra_Runtime_Hardware_SVN_word_54": "",
+        // OTPCAL745
+        // Caliptra fuse: RUNTIME SVN bit[55]
+        "Caliptra_Runtime_Hardware_SVN_word_55": "",
+        // OTPCAL746
+        // Caliptra fuse: RUNTIME SVN bit[56]
+        "Caliptra_Runtime_Hardware_SVN_word_56": "",
+        // OTPCAL747
+        // Caliptra fuse: RUNTIME SVN bit[57]
+        "Caliptra_Runtime_Hardware_SVN_word_57": "",
+        // OTPCAL748
+        // Caliptra fuse: RUNTIME SVN bit[58]
+        "Caliptra_Runtime_Hardware_SVN_word_58": "",
+        // OTPCAL749
+        // Caliptra fuse: RUNTIME SVN bit[59]
+        "Caliptra_Runtime_Hardware_SVN_word_59": "",
+        // OTPCAL750
+        // Caliptra fuse: RUNTIME SVN bit[60]
+        "Caliptra_Runtime_Hardware_SVN_word_60": "",
+        // OTPCAL751
+        // Caliptra fuse: RUNTIME SVN bit[61]
+        "Caliptra_Runtime_Hardware_SVN_word_61": "",
+        // OTPCAL752
+        // Caliptra fuse: RUNTIME SVN bit[62]
+        "Caliptra_Runtime_Hardware_SVN_word_62": "",
+        // OTPCAL753
+        // Caliptra fuse: RUNTIME SVN bit[63]
+        "Caliptra_Runtime_Hardware_SVN_word_63": "",
+        // OTPCAL754
+        // Caliptra fuse: RUNTIME SVN bit[64]
+        "Caliptra_Runtime_Hardware_SVN_word_64": "",
+        // OTPCAL755
+        // Caliptra fuse: RUNTIME SVN bit[65]
+        "Caliptra_Runtime_Hardware_SVN_word_65": "",
+        // OTPCAL756
+        // Caliptra fuse: RUNTIME SVN bit[66]
+        "Caliptra_Runtime_Hardware_SVN_word_66": "",
+        // OTPCAL757
+        // Caliptra fuse: RUNTIME SVN bit[67]
+        "Caliptra_Runtime_Hardware_SVN_word_67": "",
+        // OTPCAL758
+        // Caliptra fuse: RUNTIME SVN bit[68]
+        "Caliptra_Runtime_Hardware_SVN_word_68": "",
+        // OTPCAL759
+        // Caliptra fuse: RUNTIME SVN bit[69]
+        "Caliptra_Runtime_Hardware_SVN_word_69": "",
+        // OTPCAL760
+        // Caliptra fuse: RUNTIME SVN bit[70]
+        "Caliptra_Runtime_Hardware_SVN_word_70": "",
+        // OTPCAL761
+        // Caliptra fuse: RUNTIME SVN bit[71]
+        "Caliptra_Runtime_Hardware_SVN_word_71": "",
+        // OTPCAL762
+        // Caliptra fuse: RUNTIME SVN bit[72]
+        "Caliptra_Runtime_Hardware_SVN_word_72": "",
+        // OTPCAL763
+        // Caliptra fuse: RUNTIME SVN bit[73]
+        "Caliptra_Runtime_Hardware_SVN_word_73": "",
+        // OTPCAL764
+        // Caliptra fuse: RUNTIME SVN bit[74]
+        "Caliptra_Runtime_Hardware_SVN_word_74": "",
+        // OTPCAL765
+        // Caliptra fuse: RUNTIME SVN bit[75]
+        "Caliptra_Runtime_Hardware_SVN_word_75": "",
+        // OTPCAL766
+        // Caliptra fuse: RUNTIME SVN bit[76]
+        "Caliptra_Runtime_Hardware_SVN_word_76": "",
+        // OTPCAL767
+        // Caliptra fuse: RUNTIME SVN bit[77]
+        "Caliptra_Runtime_Hardware_SVN_word_77": "",
+        // OTPCAL768
+        // Caliptra fuse: RUNTIME SVN bit[78]
+        "Caliptra_Runtime_Hardware_SVN_word_78": "",
+        // OTPCAL769
+        // Caliptra fuse: RUNTIME SVN bit[79]
+        "Caliptra_Runtime_Hardware_SVN_word_79": "",
+        // OTPCAL770
+        // Caliptra fuse: RUNTIME SVN bit[80]
+        "Caliptra_Runtime_Hardware_SVN_word_80": "",
+        // OTPCAL771
+        // Caliptra fuse: RUNTIME SVN bit[81]
+        "Caliptra_Runtime_Hardware_SVN_word_81": "",
+        // OTPCAL772
+        // Caliptra fuse: RUNTIME SVN bit[82]
+        "Caliptra_Runtime_Hardware_SVN_word_82": "",
+        // OTPCAL773
+        // Caliptra fuse: RUNTIME SVN bit[83]
+        "Caliptra_Runtime_Hardware_SVN_word_83": "",
+        // OTPCAL774
+        // Caliptra fuse: RUNTIME SVN bit[84]
+        "Caliptra_Runtime_Hardware_SVN_word_84": "",
+        // OTPCAL775
+        // Caliptra fuse: RUNTIME SVN bit[85]
+        "Caliptra_Runtime_Hardware_SVN_word_85": "",
+        // OTPCAL776
+        // Caliptra fuse: RUNTIME SVN bit[86]
+        "Caliptra_Runtime_Hardware_SVN_word_86": "",
+        // OTPCAL777
+        // Caliptra fuse: RUNTIME SVN bit[87]
+        "Caliptra_Runtime_Hardware_SVN_word_87": "",
+        // OTPCAL778
+        // Caliptra fuse: RUNTIME SVN bit[88]
+        "Caliptra_Runtime_Hardware_SVN_word_88": "",
+        // OTPCAL779
+        // Caliptra fuse: RUNTIME SVN bit[89]
+        "Caliptra_Runtime_Hardware_SVN_word_89": "",
+        // OTPCAL780
+        // Caliptra fuse: RUNTIME SVN bit[90]
+        "Caliptra_Runtime_Hardware_SVN_word_90": "",
+        // OTPCAL781
+        // Caliptra fuse: RUNTIME SVN bit[91]
+        "Caliptra_Runtime_Hardware_SVN_word_91": "",
+        // OTPCAL782
+        // Caliptra fuse: RUNTIME SVN bit[92]
+        "Caliptra_Runtime_Hardware_SVN_word_92": "",
+        // OTPCAL783
+        // Caliptra fuse: RUNTIME SVN bit[93]
+        "Caliptra_Runtime_Hardware_SVN_word_93": "",
+        // OTPCAL784
+        // Caliptra fuse: RUNTIME SVN bit[94]
+        "Caliptra_Runtime_Hardware_SVN_word_94": "",
+        // OTPCAL785
+        // Caliptra fuse: RUNTIME SVN bit[95]
+        "Caliptra_Runtime_Hardware_SVN_word_95": "",
+        // OTPCAL786
+        // Caliptra fuse: RUNTIME SVN bit[96]
+        "Caliptra_Runtime_Hardware_SVN_word_96": "",
+        // OTPCAL787
+        // Caliptra fuse: RUNTIME SVN bit[97]
+        "Caliptra_Runtime_Hardware_SVN_word_97": "",
+        // OTPCAL788
+        // Caliptra fuse: RUNTIME SVN bit[98]
+        "Caliptra_Runtime_Hardware_SVN_word_98": "",
+        // OTPCAL789
+        // Caliptra fuse: RUNTIME SVN bit[99]
+        "Caliptra_Runtime_Hardware_SVN_word_99": "",
+        // OTPCAL790
+        // Caliptra fuse: RUNTIME SVN bit[100]
+        "Caliptra_Runtime_Hardware_SVN_word_100": "",
+        // OTPCAL791
+        // Caliptra fuse: RUNTIME SVN bit[101]
+        "Caliptra_Runtime_Hardware_SVN_word_101": "",
+        // OTPCAL792
+        // Caliptra fuse: RUNTIME SVN bit[102]
+        "Caliptra_Runtime_Hardware_SVN_word_102": "",
+        // OTPCAL793
+        // Caliptra fuse: RUNTIME SVN bit[103]
+        "Caliptra_Runtime_Hardware_SVN_word_103": "",
+        // OTPCAL794
+        // Caliptra fuse: RUNTIME SVN bit[104]
+        "Caliptra_Runtime_Hardware_SVN_word_104": "",
+        // OTPCAL795
+        // Caliptra fuse: RUNTIME SVN bit[105]
+        "Caliptra_Runtime_Hardware_SVN_word_105": "",
+        // OTPCAL796
+        // Caliptra fuse: RUNTIME SVN bit[106]
+        "Caliptra_Runtime_Hardware_SVN_word_106": "",
+        // OTPCAL797
+        // Caliptra fuse: RUNTIME SVN bit[107]
+        "Caliptra_Runtime_Hardware_SVN_word_107": "",
+        // OTPCAL798
+        // Caliptra fuse: RUNTIME SVN bit[108]
+        "Caliptra_Runtime_Hardware_SVN_word_108": "",
+        // OTPCAL799
+        // Caliptra fuse: RUNTIME SVN bit[109]
+        "Caliptra_Runtime_Hardware_SVN_word_109": "",
+        // OTPCAL800
+        // Caliptra fuse: RUNTIME SVN bit[110]
+        "Caliptra_Runtime_Hardware_SVN_word_110": "",
+        // OTPCAL801
+        // Caliptra fuse: RUNTIME SVN bit[111]
+        "Caliptra_Runtime_Hardware_SVN_word_111": "",
+        // OTPCAL802
+        // Caliptra fuse: RUNTIME SVN bit[112]
+        "Caliptra_Runtime_Hardware_SVN_word_112": "",
+        // OTPCAL803
+        // Caliptra fuse: RUNTIME SVN bit[113]
+        "Caliptra_Runtime_Hardware_SVN_word_113": "",
+        // OTPCAL804
+        // Caliptra fuse: RUNTIME SVN bit[114]
+        "Caliptra_Runtime_Hardware_SVN_word_114": "",
+        // OTPCAL805
+        // Caliptra fuse: RUNTIME SVN bit[115]
+        "Caliptra_Runtime_Hardware_SVN_word_115": "",
+        // OTPCAL806
+        // Caliptra fuse: RUNTIME SVN bit[116]
+        "Caliptra_Runtime_Hardware_SVN_word_116": "",
+        // OTPCAL807
+        // Caliptra fuse: RUNTIME SVN bit[117]
+        "Caliptra_Runtime_Hardware_SVN_word_117": "",
+        // OTPCAL808
+        // Caliptra fuse: RUNTIME SVN bit[118]
+        "Caliptra_Runtime_Hardware_SVN_word_118": "",
+        // OTPCAL809
+        // Caliptra fuse: RUNTIME SVN bit[119]
+        "Caliptra_Runtime_Hardware_SVN_word_119": "",
+        // OTPCAL810
+        // Caliptra fuse: RUNTIME SVN bit[120]
+        "Caliptra_Runtime_Hardware_SVN_word_120": "",
+        // OTPCAL811
+        // Caliptra fuse: RUNTIME SVN bit[121]
+        "Caliptra_Runtime_Hardware_SVN_word_121": "",
+        // OTPCAL812
+        // Caliptra fuse: RUNTIME SVN bit[122]
+        "Caliptra_Runtime_Hardware_SVN_word_122": "",
+        // OTPCAL813
+        // Caliptra fuse: RUNTIME SVN bit[123]
+        "Caliptra_Runtime_Hardware_SVN_word_123": "",
+        // OTPCAL814
+        // Caliptra fuse: RUNTIME SVN bit[124]
+        "Caliptra_Runtime_Hardware_SVN_word_124": "",
+        // OTPCAL815
+        // Caliptra fuse: RUNTIME SVN bit[125]
+        "Caliptra_Runtime_Hardware_SVN_word_125": "",
+        // OTPCAL816
+        // Caliptra fuse: RUNTIME SVN bit[126]
+        "Caliptra_Runtime_Hardware_SVN_word_126": "",
+        // OTPCAL817
+        // Caliptra fuse: RUNTIME SVN bit[127]
+        "Caliptra_Runtime_Hardware_SVN_word_127": ""
     }
 }

@@ -1121,25 +1121,5 @@
         "info": [
             "OTP Patch 5 code size (unit: word)"
         ]
-    },
-    {
-        "key": "scu1_hwstrap_lock_0",
-        "type": "string",
-        "w_offset": 30,
-        "bit_offset": 0,
-        "bit_length": 16,
-        "info": [
-            "SCU1 hardware strap lock autoload"
-        ]
-    },
-    {
-        "key": "scu1_hwstrap_lock_1",
-        "type": "string",
-        "w_offset": 31,
-        "bit_offset": 0,
-        "bit_length": 16,
-        "info": [
-            "SCU1 hardware strap lock autoload"
-        ]
     }
 ]

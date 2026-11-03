@@ -78,5 +78,1605 @@
         "info": [
             "IDEVID Cert Signature"
         ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_0",
+        "type": "string",
+        "w_offset": 658,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 0"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_1",
+        "type": "string",
+        "w_offset": 659,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 1"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_2",
+        "type": "string",
+        "w_offset": 660,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 2"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_3",
+        "type": "string",
+        "w_offset": 661,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 3"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_4",
+        "type": "string",
+        "w_offset": 662,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 4"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_5",
+        "type": "string",
+        "w_offset": 663,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 5"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_6",
+        "type": "string",
+        "w_offset": 664,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 6"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_7",
+        "type": "string",
+        "w_offset": 665,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 7"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_8",
+        "type": "string",
+        "w_offset": 666,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 8"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_9",
+        "type": "string",
+        "w_offset": 667,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 9"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_10",
+        "type": "string",
+        "w_offset": 668,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 10"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_11",
+        "type": "string",
+        "w_offset": 669,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 11"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_12",
+        "type": "string",
+        "w_offset": 670,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 12"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_13",
+        "type": "string",
+        "w_offset": 671,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 13"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_14",
+        "type": "string",
+        "w_offset": 672,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 14"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_15",
+        "type": "string",
+        "w_offset": 673,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 15"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_16",
+        "type": "string",
+        "w_offset": 674,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 16"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_17",
+        "type": "string",
+        "w_offset": 675,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 17"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_18",
+        "type": "string",
+        "w_offset": 676,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 18"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_19",
+        "type": "string",
+        "w_offset": 677,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 19"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_20",
+        "type": "string",
+        "w_offset": 678,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 20"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_21",
+        "type": "string",
+        "w_offset": 679,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 21"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_22",
+        "type": "string",
+        "w_offset": 680,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 22"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_23",
+        "type": "string",
+        "w_offset": 681,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 23"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_24",
+        "type": "string",
+        "w_offset": 682,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 24"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_25",
+        "type": "string",
+        "w_offset": 683,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 25"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_26",
+        "type": "string",
+        "w_offset": 684,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 26"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_27",
+        "type": "string",
+        "w_offset": 685,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 27"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_28",
+        "type": "string",
+        "w_offset": 686,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 28"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_29",
+        "type": "string",
+        "w_offset": 687,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 29"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_30",
+        "type": "string",
+        "w_offset": 688,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 30"
+        ]
+    },
+    {
+        "key": "Caliptra_FMC_Hardware_SVN_word_31",
+        "type": "string",
+        "w_offset": 689,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra FMC Hardware SVN word 31"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_0",
+        "type": "string",
+        "w_offset": 690,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 0"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_1",
+        "type": "string",
+        "w_offset": 691,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 1"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_2",
+        "type": "string",
+        "w_offset": 692,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 2"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_3",
+        "type": "string",
+        "w_offset": 693,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 3"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_4",
+        "type": "string",
+        "w_offset": 694,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 4"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_5",
+        "type": "string",
+        "w_offset": 695,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 5"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_6",
+        "type": "string",
+        "w_offset": 696,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 6"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_7",
+        "type": "string",
+        "w_offset": 697,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 7"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_8",
+        "type": "string",
+        "w_offset": 698,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 8"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_9",
+        "type": "string",
+        "w_offset": 699,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 9"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_10",
+        "type": "string",
+        "w_offset": 700,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 10"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_11",
+        "type": "string",
+        "w_offset": 701,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 11"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_12",
+        "type": "string",
+        "w_offset": 702,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 12"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_13",
+        "type": "string",
+        "w_offset": 703,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 13"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_14",
+        "type": "string",
+        "w_offset": 704,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 14"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_15",
+        "type": "string",
+        "w_offset": 705,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 15"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_16",
+        "type": "string",
+        "w_offset": 706,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 16"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_17",
+        "type": "string",
+        "w_offset": 707,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 17"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_18",
+        "type": "string",
+        "w_offset": 708,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 18"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_19",
+        "type": "string",
+        "w_offset": 709,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 19"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_20",
+        "type": "string",
+        "w_offset": 710,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 20"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_21",
+        "type": "string",
+        "w_offset": 711,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 21"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_22",
+        "type": "string",
+        "w_offset": 712,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 22"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_23",
+        "type": "string",
+        "w_offset": 713,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 23"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_24",
+        "type": "string",
+        "w_offset": 714,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 24"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_25",
+        "type": "string",
+        "w_offset": 715,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 25"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_26",
+        "type": "string",
+        "w_offset": 716,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 26"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_27",
+        "type": "string",
+        "w_offset": 717,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 27"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_28",
+        "type": "string",
+        "w_offset": 718,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 28"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_29",
+        "type": "string",
+        "w_offset": 719,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 29"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_30",
+        "type": "string",
+        "w_offset": 720,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 30"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_31",
+        "type": "string",
+        "w_offset": 721,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 31"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_32",
+        "type": "string",
+        "w_offset": 722,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 32"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_33",
+        "type": "string",
+        "w_offset": 723,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 33"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_34",
+        "type": "string",
+        "w_offset": 724,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 34"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_35",
+        "type": "string",
+        "w_offset": 725,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 35"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_36",
+        "type": "string",
+        "w_offset": 726,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 36"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_37",
+        "type": "string",
+        "w_offset": 727,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 37"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_38",
+        "type": "string",
+        "w_offset": 728,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 38"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_39",
+        "type": "string",
+        "w_offset": 729,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 39"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_40",
+        "type": "string",
+        "w_offset": 730,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 40"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_41",
+        "type": "string",
+        "w_offset": 731,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 41"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_42",
+        "type": "string",
+        "w_offset": 732,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 42"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_43",
+        "type": "string",
+        "w_offset": 733,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 43"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_44",
+        "type": "string",
+        "w_offset": 734,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 44"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_45",
+        "type": "string",
+        "w_offset": 735,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 45"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_46",
+        "type": "string",
+        "w_offset": 736,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 46"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_47",
+        "type": "string",
+        "w_offset": 737,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 47"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_48",
+        "type": "string",
+        "w_offset": 738,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 48"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_49",
+        "type": "string",
+        "w_offset": 739,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 49"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_50",
+        "type": "string",
+        "w_offset": 740,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 50"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_51",
+        "type": "string",
+        "w_offset": 741,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 51"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_52",
+        "type": "string",
+        "w_offset": 742,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 52"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_53",
+        "type": "string",
+        "w_offset": 743,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 53"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_54",
+        "type": "string",
+        "w_offset": 744,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 54"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_55",
+        "type": "string",
+        "w_offset": 745,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 55"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_56",
+        "type": "string",
+        "w_offset": 746,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 56"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_57",
+        "type": "string",
+        "w_offset": 747,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 57"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_58",
+        "type": "string",
+        "w_offset": 748,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 58"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_59",
+        "type": "string",
+        "w_offset": 749,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 59"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_60",
+        "type": "string",
+        "w_offset": 750,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 60"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_61",
+        "type": "string",
+        "w_offset": 751,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 61"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_62",
+        "type": "string",
+        "w_offset": 752,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 62"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_63",
+        "type": "string",
+        "w_offset": 753,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 63"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_64",
+        "type": "string",
+        "w_offset": 754,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 64"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_65",
+        "type": "string",
+        "w_offset": 755,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 65"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_66",
+        "type": "string",
+        "w_offset": 756,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 66"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_67",
+        "type": "string",
+        "w_offset": 757,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 67"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_68",
+        "type": "string",
+        "w_offset": 758,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 68"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_69",
+        "type": "string",
+        "w_offset": 759,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 69"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_70",
+        "type": "string",
+        "w_offset": 760,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 70"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_71",
+        "type": "string",
+        "w_offset": 761,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 71"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_72",
+        "type": "string",
+        "w_offset": 762,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 72"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_73",
+        "type": "string",
+        "w_offset": 763,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 73"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_74",
+        "type": "string",
+        "w_offset": 764,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 74"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_75",
+        "type": "string",
+        "w_offset": 765,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 75"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_76",
+        "type": "string",
+        "w_offset": 766,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 76"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_77",
+        "type": "string",
+        "w_offset": 767,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 77"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_78",
+        "type": "string",
+        "w_offset": 768,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 78"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_79",
+        "type": "string",
+        "w_offset": 769,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 79"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_80",
+        "type": "string",
+        "w_offset": 770,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 80"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_81",
+        "type": "string",
+        "w_offset": 771,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 81"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_82",
+        "type": "string",
+        "w_offset": 772,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 82"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_83",
+        "type": "string",
+        "w_offset": 773,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 83"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_84",
+        "type": "string",
+        "w_offset": 774,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 84"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_85",
+        "type": "string",
+        "w_offset": 775,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 85"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_86",
+        "type": "string",
+        "w_offset": 776,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 86"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_87",
+        "type": "string",
+        "w_offset": 777,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 87"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_88",
+        "type": "string",
+        "w_offset": 778,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 88"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_89",
+        "type": "string",
+        "w_offset": 779,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 89"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_90",
+        "type": "string",
+        "w_offset": 780,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 90"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_91",
+        "type": "string",
+        "w_offset": 781,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 91"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_92",
+        "type": "string",
+        "w_offset": 782,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 92"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_93",
+        "type": "string",
+        "w_offset": 783,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 93"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_94",
+        "type": "string",
+        "w_offset": 784,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 94"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_95",
+        "type": "string",
+        "w_offset": 785,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 95"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_96",
+        "type": "string",
+        "w_offset": 786,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 96"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_97",
+        "type": "string",
+        "w_offset": 787,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 97"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_98",
+        "type": "string",
+        "w_offset": 788,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 98"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_99",
+        "type": "string",
+        "w_offset": 789,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 99"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_100",
+        "type": "string",
+        "w_offset": 790,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 100"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_101",
+        "type": "string",
+        "w_offset": 791,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 101"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_102",
+        "type": "string",
+        "w_offset": 792,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 102"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_103",
+        "type": "string",
+        "w_offset": 793,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 103"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_104",
+        "type": "string",
+        "w_offset": 794,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 104"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_105",
+        "type": "string",
+        "w_offset": 795,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 105"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_106",
+        "type": "string",
+        "w_offset": 796,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 106"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_107",
+        "type": "string",
+        "w_offset": 797,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 107"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_108",
+        "type": "string",
+        "w_offset": 798,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 108"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_109",
+        "type": "string",
+        "w_offset": 799,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 109"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_110",
+        "type": "string",
+        "w_offset": 800,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 110"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_111",
+        "type": "string",
+        "w_offset": 801,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 111"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_112",
+        "type": "string",
+        "w_offset": 802,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 112"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_113",
+        "type": "string",
+        "w_offset": 803,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 113"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_114",
+        "type": "string",
+        "w_offset": 804,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 114"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_115",
+        "type": "string",
+        "w_offset": 805,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 115"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_116",
+        "type": "string",
+        "w_offset": 806,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 116"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_117",
+        "type": "string",
+        "w_offset": 807,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 117"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_118",
+        "type": "string",
+        "w_offset": 808,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 118"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_119",
+        "type": "string",
+        "w_offset": 809,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 119"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_120",
+        "type": "string",
+        "w_offset": 810,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 120"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_121",
+        "type": "string",
+        "w_offset": 811,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 121"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_122",
+        "type": "string",
+        "w_offset": 812,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 122"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_123",
+        "type": "string",
+        "w_offset": 813,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 123"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_124",
+        "type": "string",
+        "w_offset": 814,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 124"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_125",
+        "type": "string",
+        "w_offset": 815,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 125"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_126",
+        "type": "string",
+        "w_offset": 816,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 126"
+        ]
+    },
+    {
+        "key": "Caliptra_Runtime_Hardware_SVN_word_127",
+        "type": "string",
+        "w_offset": 817,
+        "bit_offset": 0,
+        "bit_length": 16,
+        "info": [
+            "Caliptra Runtime Hardware SVN word 127"
+        ]
     }
 ]
