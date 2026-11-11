@@ -554,3 +554,57 @@ The output JSON contains the individual component hashes and the final PCR31 val
 ```
 
 With `--fw`, additional per-component entries (e.g. `FMC`, `ATF`, `KERNEL`) are included.
+
+---
+
+# Calculate Reference Measurements (ROM patch v10)
+
+`scripts/calculate_measurements_v2.py` targets the ROM patch v10 `STASH_MEASUREMENT` flow. Use it instead of `calculate_measurements.py` when the device runs ROM patch v10 or later.
+
+ROM patch v10 only runs `patch_stash_measurement_otp()` when Caliptra FW is present, so **this script only supports secure boot** (i.e. `--fw` is required).
+
+## Differences from v1
+
+| | `calculate_measurements.py` | `calculate_measurements_v2.py` |
+|---|---|---|
+| Caliptra measurement tag | `"OTP"` | `"OTPM"` |
+| OTP aging recovery | — | ORs backup copies of ECC/LMS key masks and owner key retire bits into their primary OTP words before hashing |
+| RBP backup zone (pairs 0x3F6–0x3FE) | hashed as-is | zeroed |
+| STRAP region 0x422–0x42C | hashed as-is | zeroed (captured by HW strap stash separately) |
+| Normal boot | supported | not supported |
+
+## Usage
+
+```bash
+# Calculate measurement offline
+python3 scripts/calculate_measurements_v2.py \
+    --efuse=samples/ast27x0_efuse.json \
+    --hwstrap=samples/ast27x0_hwstrap.json \
+    --otp=samples/otp-ast2700.bin \
+    --fw=samples/ast27x0_fw.json \
+    --image-dir=/path/to/fw/images/ \
+    --output=reference_measurements.json
+```
+
+Input file formats are identical to v1; see the section above.
+
+## Output
+
+```json
+{
+    "FMC":    "<sha384hex>",
+    "DP":     "<sha384hex>",
+    "DDR0":   "<sha384hex>",
+    "DDR1":   "<sha384hex>",
+    "ATF":    "<sha384hex>",
+    "OPTEE":  "<sha384hex>",
+    "UBOOT":  "<sha384hex>",
+    "SSP":    "<sha384hex>",
+    "TSP":    "<sha384hex>",
+    "KERNEL": "<sha384hex>",
+    "OTPM":   "<sha384hex>",
+    "STRA":   "<sha384hex>",
+    "EFUS":   "<sha384hex>",
+    "PCR31":  "<sha384hex>"
+}
+```
